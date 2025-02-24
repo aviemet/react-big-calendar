@@ -8,6 +8,7 @@ import clear from 'rollup-plugin-clear'
 // removed sizeSnapshot, as it is not compatible with ESM
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json' with { type: 'json' }
+import typescript from '@rollup/plugin-typescript'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
@@ -50,6 +51,13 @@ export default [
       }),
       nodeResolve(),
       commonjs(commonjsOptions),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declarationDir: './dist',
+        jsx: 'react-jsx',
+        include: ['*.ts+(|x)', '**/*.ts+(|x)'],
+        exclude: ['node_modules', 'dist'],
+      }),
       babel(babelOptions),
     ],
   },
@@ -71,6 +79,13 @@ export default [
       }),
       nodeResolve(),
       commonjs(commonjsOptions),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declarationDir: './dist',
+        jsx: 'react-jsx',
+        include: ['*.ts+(|x)', '**/*.ts+(|x)'],
+        exclude: ['node_modules', 'dist'],
+      }),
       babel(babelOptions),
       terser(),
     ],
@@ -86,6 +101,13 @@ export default [
     // prevent bundling all dependencies
     external: (id) => !id.startsWith('.') && !id.startsWith('/'),
     plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        declarationDir: './dist',
+        jsx: 'react-jsx',
+        include: ['*.ts+(|x)', '**/*.ts+(|x)'],
+        exclude: ['node_modules', 'dist'],
+      }),
       babel({
         ...babelOptions,
         configFile: path.join(__dirname, 'babel.config.esm.js'),

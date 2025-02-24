@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { useRef, useEffect } from 'react'
 import addClass from 'dom-helpers/addClass'
 import removeClass from 'dom-helpers/removeClass'
