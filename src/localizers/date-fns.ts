@@ -1,6 +1,8 @@
 import * as dates from '../utils/dates'
 import { DateLocalizer } from '../localizer'
 
+import { Formats } from './types'
+
 let dateRangeFormat = ({ start, end }, culture, local) =>
   `${local.format(start, 'P', culture)} – ${local.format(end, 'P', culture)}`
 
@@ -20,7 +22,7 @@ let weekRangeFormat = ({ start, end }, culture, local) =>
     culture
   )}`
 
-export let formats = {
+export let formats: Formats = {
   dateFormat: 'dd',
   dayFormat: 'dd eee',
   weekdayFormat: 'ccc',

@@ -11,6 +11,8 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 import minMax from 'dayjs/plugin/minMax'
 import utc from 'dayjs/plugin/utc'
 
+import { Formats } from './types'
+
 const weekRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, 'MMMM DD', culture) +
   ' – ' +
@@ -29,7 +31,7 @@ const timeRangeStartFormat = ({ start }, culture, local) =>
 const timeRangeEndFormat = ({ end }, culture, local) =>
   ' – ' + local.format(end, 'LT', culture)
 
-export const formats = {
+export const formats: Formats = {
   dateFormat: 'DD',
   dayFormat: 'DD ddd',
   weekdayFormat: 'ddd',

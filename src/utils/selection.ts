@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 
 export function isSelected(event, selected) {
-  if (!event || selected == null) return false
+  if (!event || selected === null) return false
   return isEqual(event, selected)
 }
 

@@ -1,11 +1,11 @@
 import invariant from 'invariant'
 import { navigate } from './constants'
-import VIEWS from '../Views'
+import VIEWS, { ViewStatic } from '../Views'
 
-export default function moveDate(View, { action, date, today, ...props }) {
+export default function moveDate(View: ViewStatic, { action, date, today, ...props }) {
   View = typeof View === 'string' ? VIEWS[View] : View
 
-  switch (action) {
+  switch(action) {
     case navigate.TODAY:
       date = today || new Date()
       break

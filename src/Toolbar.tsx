@@ -1,7 +1,21 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import clsx from 'clsx'
-import { navigate } from './utils/constants'
+import { navigate, NavigateAction, View } from './utils/constants'
+import { ViewsProps } from './Views';
+import { Messages } from './utils/messages';
+
+export interface ToolbarProps<TEvent extends object = Event, TResource extends object = object> {
+  date: Date;
+  view: View;
+  views: ViewsProps<TEvent, TResource>;
+  label: string;
+  localizer: { messages: Messages<TEvent> };
+  onNavigate: (navigate: NavigateAction, date?: Date) => void;
+  onView: (view: View) => void;
+  children?: React.ReactNode | undefined;
+}
+
 
 class Toolbar extends React.Component {
   render() {
