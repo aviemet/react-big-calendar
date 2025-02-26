@@ -1,10 +1,12 @@
 import { NavigateAction, View, views } from './utils/constants'
-import Month from './Month'
+import Month from './components/Month'
 import Day from './Day'
 import Week from './Week'
 import WorkWeek from './WorkWeek'
 import Agenda from './Agenda'
-import { Culture, DateFormat } from './localizers/types'
+import { type Culture, type DateFormat } from './localizers'
+import { CalendarProps } from './components/Calendar'
+import { Components, SlotInfo } from './types'
 
 export interface TitleOptions {
   formats: DateFormat[]
@@ -17,25 +19,59 @@ export interface ViewStatic {
   title(date: Date, options: TitleOptions): string
 }
 
-export type ViewsProps<TEvent extends object = Event, TResource extends object = object> =
+export type ViewsProps =
     | View[]
     | {
-      work_week?: boolean | (React.ComponentType<any> & ViewStatic) | undefined
-      day?: boolean | (React.ComponentType<any> & ViewStatic) | undefined
-      agenda?: boolean | (React.ComponentType<any> & ViewStatic) | undefined
-      month?: boolean | (React.ComponentType<any> & ViewStatic) | undefined
-      week?: boolean | (React.ComponentType<any> & ViewStatic) | undefined
+      work_week?: boolean | (React.ReactNode & ViewStatic) | undefined
+      day?: boolean | (React.ReactNode & ViewStatic) | undefined
+      agenda?: boolean | (React.ReactNode & ViewStatic) | undefined
+      month?: boolean | (React.ReactNode & ViewStatic) | undefined
+      week?: boolean | (React.ReactNode & ViewStatic) | undefined
     };
 
 
-interface BaseViewProps {
-  date: Date
+export interface BaseViewProps<TEvent extends object = Event, TResource extends object = object> {
+  date?: string | Date | undefined
+  eventOffset: number
+  events?: TEvent[] | undefined
+  backgroundEvents?: TEvent[] | undefined
+  resources?: TResource[] | undefined
+  step?: number | undefined
+  timeslots?: number | undefined
+  range?: Date[] | undefined
+  min?: Date | undefined
+  max?: Date | undefined
+  getNow?: (() => Date) | undefined
+  scrollToTime?: Date | undefined
+  showMultiDayTimes?: boolean | undefined
+  rtl?: boolean | undefined
+  width?: number | undefined
+  accessors?: object | undefined
+  components?: Components<TEvent, TResource> | undefined
+  getters?: object | undefined
+  selected?: object | undefined
+  selectable?: boolean | "ignoreEvents" | undefined
+  longPressThreshold?: number | undefined
+  onNavigate?: ((action: NavigateAction) => void) | undefined
+  onSelectSlot?: ((slotInfo: SlotInfo) => void) | undefined
+  onSelectEnd?: ((...args: any[]) => any) | undefined
+  onSelectStart?: ((...args: any[]) => any) | undefined
+  onSelectEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
+  onDoubleClickEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
+  onKeyPressEvent?: ((...args: any[]) => any) | undefined
+  onDrillDown?: ((date: Date, view: View) => void) | undefined
+  getDrilldownView?:
+      | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
+      | null
+      | undefined
+  dayLayoutAlgorithm?: any
+  className?: string | undefined
 }
 
-export type BaseViewComponent = React.ComponentType<BaseViewProps> & {
-  range: (date: Date) => Date[]
-  navigate: (date: Date, action: NavigateAction) => Date
-  title: (date: Date) => string
+export type ViewComponent<TProps extends BaseViewProps> = React.ComponentType<TProps> & {
+  range: (date: Date, props?: Partial<CalendarProps>) => { start: Date, end: Date }
+  navigate: (date: Date, action: NavigateAction, props?: Partial<CalendarProps>) => Date
+  title: (date: Date, props?: Partial<CalendarProps>) => string
 }
 
 const VIEW_COMPONENTS = {

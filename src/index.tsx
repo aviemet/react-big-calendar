@@ -7,12 +7,15 @@ export const components = {
   dateCellWrapper: BackgroundWrapper,
 }
 
-export { default as Calendar } from './Calendar'
-export { DateLocalizer } from './localizer'
-export { default as momentLocalizer } from './localizers/moment'
-export { default as luxonLocalizer } from './localizers/luxon'
-export { default as globalizeLocalizer } from './localizers/globalize'
-export { default as dateFnsLocalizer } from './localizers/date-fns'
-export { default as dayjsLocalizer } from './localizers/dayjs'
+export { default as Calendar } from './components/Calendar'
+export {
+  DateLocalizer,
+  momentLocalizer,
+  luxonLocalizer,
+  globalizeLocalizer,
+  dateFnsLocalizer,
+  dayjsLocalizer,
+} from './localizers'
 export { default as move } from './utils/move'
-export { views as Views, navigate as Navigate } from './utils/constants'
+export { views as Views,
+  navigate as Navigate } from './utils/constants'

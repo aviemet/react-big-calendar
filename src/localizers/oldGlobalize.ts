@@ -1,5 +1,5 @@
 import * as dates from '../utils/dates'
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, 'd', culture) + ' – ' + local.format(end, 'd', culture)

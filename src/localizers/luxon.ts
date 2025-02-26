@@ -1,4 +1,4 @@
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 function pluralizeUnit(unit) {
   return /s$/.test(unit) ? unit : unit + 's'

@@ -1,4 +1,4 @@
-import findIndex from 'lodash/findIndex'
+import { findIndex } from 'lodash-es'
 
 export function endOfRange({ dateRange, unit = 'day', localizer }) {
   return {

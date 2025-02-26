@@ -1,5 +1,5 @@
 import * as dates from '../utils/dates'
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 import { Formats } from './types'
 

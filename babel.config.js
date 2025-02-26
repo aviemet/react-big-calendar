@@ -1,5 +1,6 @@
 module.exports = function (api) {
   const isESMBuild = process.env.RBC_ESM_BUILD === 'true'
+  const isTest = api.env('test')
   const optionalPlugins = []
 
   if (isESMBuild) {
@@ -16,7 +17,7 @@ module.exports = function (api) {
       [
         '@babel/preset-env',
         {
-          ...(api.env('test') && {
+          ...(isTest && {
             targets: {
               node: 'current',
             },
@@ -24,6 +25,7 @@ module.exports = function (api) {
         },
       ],
       ['@babel/preset-react'],
+      ['@babel/preset-typescript', { allowNamespaces: true }],
     ],
     plugins: [
       ['@babel/plugin-transform-runtime'],

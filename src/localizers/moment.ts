@@ -1,4 +1,4 @@
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 const weekRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, 'MMMM DD', culture) +

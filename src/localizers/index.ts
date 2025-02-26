@@ -1,4 +1,11 @@
-import PropTypes from 'prop-types'
+export { default as dayjsLocalizer } from './dayjs'
+export { default as dateFnsLocalizer } from './date-fns'
+export { default as momentLocalizer } from './moment'
+export { default as globalizeLocalizer } from './globalize'
+export { default as luxonLocalizer } from './luxon'
+
+export * from './types'
+
 import invariant from 'invariant'
 import {
   merge,
@@ -23,7 +30,7 @@ import {
   visibleDays,
   minutes,
   isJustDate,
-} from './utils/dates'
+} from '../utils/dates'
 
 const localePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 

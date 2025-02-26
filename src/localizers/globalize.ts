@@ -2,7 +2,7 @@
 
 import * as dates from '../utils/dates'
 import oldGlobalize from './oldGlobalize'
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
   local.format(start, { date: 'short' }, culture) +

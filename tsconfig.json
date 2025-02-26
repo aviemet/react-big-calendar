@@ -24,7 +24,11 @@
     "typeRoots": ["./node_modules/@types"],
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "types": ["react", "node"]
+    "types": ["react"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "tests"]
 }

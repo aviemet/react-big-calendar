@@ -1,4 +1,4 @@
-import { DateLocalizer } from '../localizer'
+import { DateLocalizer } from '.'
 
 // import dayjs plugins
 // Note that the timezone plugin is not imported here

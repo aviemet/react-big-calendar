@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { DateLocalizer } from './localizer';
+import { DateLocalizer } from './localizers';
 
 export interface HeaderProps {
   date: Date;

@@ -1,53 +1,51 @@
-import clsx from 'clsx'
-import PropTypes from 'prop-types'
-import React, { useMemo } from 'react'
-// import { uncontrollable } from 'uncontrollable'
+import React, { useCallback, useMemo } from 'react'
 import {
-  accessor,
-  views as componentViews,
-  dateFormat,
-  dateRangeFormat,
-  DayLayoutAlgorithmPropType,
-} from './utils/propTypes'
+  DateLocalizer,
+  mergeWithDefaults,
+  type Culture,
+  type Formats,
+} from '@/localizers'
+import {
+  navigate,
+  NavigateAction,
+  View,
+  views as viewStrings,
+} from '@/utils/constants'
+import { coerceDate, notify } from '@/utils/helpers'
+import moveDate from '@/utils/move'
+import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
+import message, { Messages } from '@/utils/messages'
+import {  } from '@/localizers/types'
+import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
+import { wrapAccessor } from '@/utils/accessors'
+import NoopWrapper from '@/NoopWrapper'
+import Toolbar from '@/Toolbar'
+import VIEWS, { ViewComponent, ViewsProps, BaseViewProps } from '@/Views'
+import createContext from '@/hooks/createContext'
+import {
+  Components,
+  DayPropGetter,
+  EventPropGetter,
+  EventProps,
+  SlotGroupPropGetter,
+  SlotInfo,
+  SlotPropGetter,
+} from '../../types'
+import clsx from 'clsx'
 
-import { DateLocalizer, mergeWithDefaults } from './localizer'
-import NoopWrapper from './NoopWrapper'
-import Toolbar from './Toolbar'
-import { navigate, NavigateAction, View, views as viewStrings } from './utils/constants'
-import { notify } from './utils/helpers'
-import message, { Messages } from './utils/messages'
-import moveDate from './utils/move'
-import VIEWS, { ViewsProps, ViewStatic } from './Views'
-
-import defaults from 'lodash/defaults'
-import mapValues from 'lodash/mapValues'
-import omit from 'lodash/omit'
-import transform from 'lodash/transform'
-import { wrapAccessor } from './utils/accessors'
-import { Components, DayPropGetter, EventPropGetter, SlotGroupPropGetter, SlotInfo, SlotPropGetter } from './types'
-import { Culture, Formats } from './localizers/types'
-import { DayLayoutAlgorithm, DayLayoutFunction } from './utils/layout-algorithms/types'
-
-function viewNames(views) {
-  if(Array.isArray(views)) {
-    return views
-  }
-
-  const viewsFromObject = []
-  for(const [key, value] of Object.entries(views)) {
-    if(value) {
-      viewsFromObject.push(key)
-    }
-  }
-  return viewsFromObject
+type CalendarContext = {
+  localizer: DateLocalizer
+  components: Components
 }
 
-function isValidView(view, { views }) {
-  let names = viewNames(views)
-  return names.indexOf(view) !== -1
-}
+const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
+export { useCalendarContext }
 
-interface CalendarProps<TEvent extends object = Event, TResource extends object = object> {
+export interface CalendarProps<TEvent extends object = Event, TResource extends object = object> {
+  children?: React.ReactNode
+  className?: string | undefined
+  style?: React.CSSProperties | undefined
+
   /**
      * The localizer used for formatting dates and times according to the `format` and `culture`
      *
@@ -239,7 +237,7 @@ import useMemo from 'react';
    * @type {(func|string)}
    */
   // TODO: Figure out how to type this
-  // eventIdAccessor: accessor,
+  eventIdAccessor: accessor
 
   /**
    * Returns the id of the `resource` that the event is a member of. This
@@ -316,7 +314,7 @@ import useMemo from 'react';
    * Callback fired when date header, or the truncated events links are clicked
    *
    */
-  onDrillDown?: ((date: Date, view: View) => void) | undefined
+  onDrillDown?: ((date: Date, view: View, drilldownView?: View) => void) | undefined
 
   /**
    *
@@ -623,7 +621,7 @@ import useMemo from 'react';
   /**
    * Determines a maximum amount of rows of events to display in the all day
    * section for Week and Day views, will display `showMore` button if
-   * events excede this number.
+   * events exceed this number.
    *
    * Defaults to `Infinity`
    */
@@ -770,15 +768,9 @@ import useMemo from 'react';
      * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
      */
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
-
-  children?: React.ReactNode
-
-  className?: string | undefined
-
-  style?: React.CSSProperties | undefined
 }
 
-const Calendar = (props: CalendarProps) => {
+const Calendar = <TEvent extends object, TResource extends object>(props: CalendarProps<TEvent, TResource>) => {
   const {
     date,
     events = [],
@@ -820,6 +812,8 @@ const Calendar = (props: CalendarProps) => {
     onSelectSlot,
     onSelecting,
     onShowMore,
+    onView,
+    onDrillDown,
     localizer = mergeWithDefaults(props.localizer, props.culture, props.formats, message(props.messages)),
     showMultiDayTimes,
     messages,
@@ -838,23 +832,22 @@ const Calendar = (props: CalendarProps) => {
     resourceGroupingLayout,
   } = props
 
-  const viewComponents = useMemo(() => {
-    if(Array.isArray(views)) {
-      return transform(views, (obj, name) => (obj[name] = VIEWS[name]), {})
+  const viewNames = useMemo(() => {
+    if(Array.isArray(views)) return views
+
+    const viewsFromObject = []
+    for(const [key, value] of Object.entries(views)) {
+      if(value) {
+        viewsFromObject.push(key)
+      }
     }
-
-    if(typeof views === 'object') {
-      return mapValues(views, (value, key) => {
-        if(value === true) {
-          return VIEWS[key]
-        }
-
-        return value
-      })
-    }
-
-    return VIEWS
+    return viewsFromObject
   }, [views])
+
+  const isValidView = useCallback(
+    (view: View) => viewNames.indexOf(view) !== -1,
+    [viewNames]
+  )
 
   const accessors = useMemo(() => {
     return {
@@ -871,29 +864,57 @@ const Calendar = (props: CalendarProps) => {
   }, [allDayAccessor, endAccessor, eventIdAccessor, resourceAccessor, resourceIdAccessor, resourceTitleAccessor, startAccessor, titleAccessor, tooltipAccessor])
 
   const components = useMemo(() => {
-    return defaults(props.components[view] || {}, omit(props.components, viewNames(views)), {
-      eventWrapper: NoopWrapper,
-      backgroundEventWrapper: NoopWrapper,
-      eventContainerWrapper: NoopWrapper,
-      dateCellWrapper: NoopWrapper,
-      weekWrapper: NoopWrapper,
-      timeSlotWrapper: NoopWrapper,
-      timeGutterWrapper: NoopWrapper,
-    })
-  }, [props.components, view, views])
+    return defaults(
+      props.components[view] || {},
+      omit(props.components, viewNames),
+      {
+        eventWrapper: NoopWrapper,
+        backgroundEventWrapper: NoopWrapper,
+        eventContainerWrapper: NoopWrapper,
+        dateCellWrapper: NoopWrapper,
+        weekWrapper: NoopWrapper,
+        timeSlotWrapper: NoopWrapper,
+        timeGutterWrapper: NoopWrapper,
+      }
+    )
+  }, [props.components, view, viewNames])
+
+
+  const viewComponents = useMemo(() => {
+    if(Array.isArray(views)) {
+      return transform(
+        views,
+        (obj, name) => obj[name] = VIEWS[name],
+        {} as Record<string, ViewComponent>
+      )
+    }
+
+    if(typeof views === 'object') {
+      return mapValues(views, (value, key) => {
+        if(value === true) {
+          return VIEWS[key]
+        }
+
+        return value
+      })
+    }
+
+    return VIEWS
+  }, [views])
 
   const getters = useMemo(() => {
     return {
-      eventProp: (...args) =>
+      eventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
         (eventPropGetter && eventPropGetter(...args)) || {},
-      backgroundEventProp: (...args) =>
-        (backgroundEventPropGetter && backgroundEventPropGetter(...args)) ||
-      {},
-      slotProp: (...args) =>
+      // TODO: Is this used? because it's not defined or a prop
+      // backgroundEventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
+      //   (backgroundEventPropGetter && backgroundEventPropGetter(...args)) || {},
+      slotProp: (...args: Parameters<SlotPropGetter>) =>
         (slotPropGetter && slotPropGetter(...args)) || {},
-      slotGroupProp: (...args) =>
+      slotGroupProp: (...args: Parameters<SlotGroupPropGetter>) =>
         (slotGroupPropGetter && slotGroupPropGetter(...args)) || {},
-      dayProp: (...args) => (dayPropGetter && dayPropGetter(...args)) || {},
+      dayProp: (...args: Parameters<DayPropGetter>) =>
+        (dayPropGetter && dayPropGetter(...args)) || {},
     }
   }, [dayPropGetter, eventPropGetter, slotGroupPropGetter, slotPropGetter])
 
@@ -906,19 +927,20 @@ const Calendar = (props: CalendarProps) => {
    * when you need to have both: range and view type at once, i.e. for manage rbc
    * state via url
    */
-  const handleRangeChange = (date: Date, viewComponent: ViewStatic, view?: View) => {
+  const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: View) => {
     if(onRangeChange) {
       if(viewComponent.range) {
         onRangeChange(viewComponent.range(date, { localizer }), view)
       } else {
-        if(process.env.NODE_ENV !== 'production') {
-          console.error('onRangeChange prop not supported for this view')
-        }
+        // TODO: Why only in production?
+        // if(process.env.NODE_ENV !== 'production') {
+        //   console.error('onRangeChange prop not supported for this view')
+        // }
       }
     }
   }
 
-  const handleNavigate = (action, newDate) => {
+  const handleNavigate = (action: NavigateAction, newDate: Date) => {
     let today = getNow()
 
     const movedDate = moveDate(ViewComponent, {
@@ -932,13 +954,13 @@ const Calendar = (props: CalendarProps) => {
     handleRangeChange(movedDate, ViewComponent)
   }
 
-  const handleViewChange = (view) => {
+  const handleViewChange = (view: View) => {
     if(view !== view && isValidView(view, props)) {
       onView(view)
     }
 
     handleRangeChange(
-      date || getNow(),
+      coerceDate(date || getNow()),
       views[view],
       viewComponents
     )
@@ -960,8 +982,7 @@ const Calendar = (props: CalendarProps) => {
     notify(onSelectSlot, slotInfo)
   }
 
-  const handleDrillDown = (date: Date, view) => {
-    const { onDrillDown } = props
+  const handleDrillDown = (date: Date, view: View) => {
     if(onDrillDown) {
       onDrillDown(date, view, drilldownView)
       return
@@ -977,52 +998,53 @@ const Calendar = (props: CalendarProps) => {
     return getDrilldownView(date, view, Object.keys(viewComponents))
   }
 
-  const current = date || getNow()
+  const current = coerceDate(date || getNow())
 
-  const ViewComponent = views[viewComponents]
+  const ViewComponent: React.ComponentType<BaseViewProps<TEvent, TResource>> = views[viewComponents]
 
   const ToolbarComponent = components.toolbar || Toolbar
 
   return (
-    <div
-      { ...elementProps }
-      className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
-      style={ style }
-    >
-      { toolbar && (
-        <ToolbarComponent
+    <CalendarProvider value={ { localizer, components } }>
+      <div
+        { ...elementProps }
+        className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
+        style={ style }
+      >
+        { toolbar && (
+          <ToolbarComponent
+            date={ current }
+            view={ view }
+            views={ viewNames }
+            label={ ViewComponent.title(current, { localizer, length }) }
+            onView={ handleViewChange }
+            onNavigate={ handleNavigate }
+          />
+        ) }
+        <ViewComponent
+          { ...props }
+          events={ events }
+          backgroundEvents={ backgroundEvents }
           date={ current }
-          view={ view }
-          views={ viewNames }
-          label={ ViewComponent.title(current, { localizer, length }) }
-          onView={ handleViewChange }
+          getNow={ getNow }
+          length={ length }
+          getters={ getters }
+          accessors={ accessors }
+          showMultiDayTimes={ showMultiDayTimes }
+          getDrilldownView={ handleGetDrilldownView }
           onNavigate={ handleNavigate }
-          localizer={ localizer }
+          onDrillDown={ handleDrillDown }
+          onSelectEvent={ handleSelectEvent }
+          onDoubleClickEvent={ handleDoubleClickEvent }
+          onKeyPressEvent={ handleKeyPressEvent }
+          onSelectSlot={ handleSelectSlot }
+          onShowMore={ onShowMore }
+          doShowMoreDrillDown={ doShowMoreDrillDown }
+          resourceGroupingLayout={ resourceGroupingLayout }
         />
-      ) }
-      <ViewComponent
-        { ...props }
-        events={ events }
-        backgroundEvents={ backgroundEvents }
-        date={ current }
-        getNow={ getNow }
-        length={ length }
-        localizer={ localizer }
-        getters={ getters }
-        components={ components }
-        accessors={ accessors }
-        showMultiDayTimes={ showMultiDayTimes }
-        getDrilldownView={ handleGetDrilldownView }
-        onNavigate={ handleNavigate }
-        onDrillDown={ handleDrillDown }
-        onSelectEvent={ handleSelectEvent }
-        onDoubleClickEvent={ handleDoubleClickEvent }
-        onKeyPressEvent={ handleKeyPressEvent }
-        onSelectSlot={ handleSelectSlot }
-        onShowMore={ onShowMore }
-        doShowMoreDrillDown={ doShowMoreDrillDown }
-        resourceGroupingLayout={ resourceGroupingLayout }
-      />
-    </div>
+      </div>
+    </CalendarProvider>
   )
 }
+
+export default Calendar

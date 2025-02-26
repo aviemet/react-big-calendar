@@ -19,3 +19,10 @@ export function isFirstFocusedRender(component) {
     (component.state.focused && (component._firstFocus = true))
   )
 }
+
+export function coerceDate(date: string | Date) {
+  if(typeof date === 'string') {
+    return new Date(date)
+  }
+  return date
+}

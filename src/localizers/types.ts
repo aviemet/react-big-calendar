@@ -1,4 +1,4 @@
-import { DateLocalizer } from "../localizer";
+import { DateLocalizer } from ".";
 
 export interface DateRange {
 	start: Date;

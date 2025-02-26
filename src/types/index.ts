@@ -1,10 +1,9 @@
 import React from "react";
 import { DateHeaderProps } from "../DateHeader";
 import { HeaderProps } from "../Header";
-import { DateLocalizer } from "../localizer";
+import { DateLocalizer } from "../localizers";
 import { ResourceHeaderProps } from "../ResourceHeader";
 import { ToolbarProps } from "../Toolbar";
-import { NavigateAction } from "../utils/constants";
 
 export interface SlotInfo {
   start: Date
