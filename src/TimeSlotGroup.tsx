@@ -15,7 +15,7 @@ const TimeSlotGroup = ({
   group,
   getters,
 }: TimeSlotGroupProps) => {
-  const { components: { timeSlotWrapper: Wrapper = NoopWrapper } } = useCalendarContext()
+  const { components: { timeslotWrapper: Wrapper = NoopWrapper } } = useCalendarContext()
 
   const groupProps = getters ? getters.slotGroupProp(group) : {}
 

@@ -701,7 +701,7 @@ import useMemo from 'react';
      *   eventWrapper: MyEventWrapper,
      *   eventContainerWrapper: MyEventContainerWrapper,
      *   dateCellWrapper: MyDateCellWrapper,
-     *   timeSlotWrapper: MyTimeSlotWrapper,
+     *   timeslotWrapper: MyTimeSlotWrapper,
      *   timeGutterHeader: MyTimeGutterWrapper,
      *   timeGutterWrapper: MyTimeGutterWrapper,
      *   resourceHeader: MyResourceHeader,
@@ -876,7 +876,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
         eventContainerWrapper: NoopWrapper,
         dateCellWrapper: NoopWrapper,
         weekWrapper: NoopWrapper,
-        timeSlotWrapper: NoopWrapper,
+        timeslotWrapper: NoopWrapper,
         timeGutterWrapper: NoopWrapper,
       }
     )

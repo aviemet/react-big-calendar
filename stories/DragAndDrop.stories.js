@@ -84,7 +84,7 @@ WithCustomDateCellWrapper.args = {
 
 export const WithCustomTimeslotWrapper = Template.bind({})
 WithCustomTimeslotWrapper.storyName =
-  'draggable and resizable with custom timeSlotWrapper'
+  'draggable and resizable with custom timeslotWrapper'
 WithCustomTimeslotWrapper.args = {
   defaultDate: new Date(),
   defaultView: Views.WEEK,
@@ -94,7 +94,7 @@ WithCustomTimeslotWrapper.args = {
   onEventDrop: action('event dropped'),
   onEventResize: action('event resized'),
   components: {
-    timeSlotWrapper: customComponents.timeSlotWrapper,
+    timeslotWrapper: customComponents.timeslotWrapper,
   },
 }
 

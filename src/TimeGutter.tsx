@@ -7,7 +7,7 @@ import clsx from 'clsx'
 interface TimeGutterProps {
   min: Date
   max: Date
-  timeSlots: number
+  timeslots: number
   step: number
   getNow: () => Date
   resource: any
@@ -18,7 +18,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   {
     min,
     max,
-    timeSlots,
+    timeslots,
     step,
     getNow,
     resource,
@@ -48,7 +48,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
     getSlotMetrics({
       min: start,
       max: end,
-      timeSlots,
+      timeslots,
       step,
       localizer,
     })
@@ -60,7 +60,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
         slotMetrics.update({
           min: start,
           max: end,
-          timeSlots,
+          timeslots,
           step,
           localizer,
         })
@@ -70,7 +70,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
      * We don't want this to fire when slotMetrics is updated as it would recursively bomb
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start?.toISOString(), end?.toISOString(), timeSlots, step])
+  }, [start?.toISOString(), end?.toISOString(), timeslots, step])
 
   const renderSlot = useCallback((value: Date, index: number) => {
     if(index === 0) return null

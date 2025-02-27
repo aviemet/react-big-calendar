@@ -3,7 +3,7 @@ import BackgroundWrapper from './BackgroundWrapper'
 
 export const components = {
   eventWrapper: EventWrapper,
-  timeSlotWrapper: BackgroundWrapper,
+  timeslotWrapper: BackgroundWrapper,
   dateCellWrapper: BackgroundWrapper,
 }
 

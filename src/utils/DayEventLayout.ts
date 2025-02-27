@@ -1,14 +1,15 @@
 import overlap from './layout-algorithms/overlap'
 import noOverlap from './layout-algorithms/no-overlap'
 import { Accessors } from '@/types'
+import { SlotMetrics } from './TimeSlots'
 
 const DefaultAlgorithms = {
   overlap: overlap,
   'no-overlap': noOverlap,
 }
 
-function isFunction(a: unknown): a is Function {
-  return !!(a && a.constructor && a?.call && a?.apply)
+function isFunction(a: string | Function): a is Function {
+  return typeof a === 'function'
 }
 
 export function getStyledEvents({
@@ -21,7 +22,7 @@ export function getStyledEvents({
 }: {
   events: Event[]
   minimumStartDifference: number
-  slotMetrics: any // TODO: need SlotMetrics type
+  slotMetrics: SlotMetrics
   accessors: Accessors
   dayLayoutAlgorithm: string | ((...args: unknown[]) => unknown[])
 }) {

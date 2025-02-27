@@ -26,3 +26,7 @@ export function coerceDate(date: string | Date) {
   }
   return date
 }
+
+export function stringifyPercent(v: number | string) {
+  return typeof v === 'string' ? v : v + '%'
+}

@@ -33,15 +33,15 @@ export interface SlotInfo {
 			| undefined
 }
 
-export type DayPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>;
+export type DayPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>
 export type EventPropGetter<T> = (
   event: T,
   start: Date,
   end: Date,
   isSelected: boolean,
-) => { className?: string | undefined, style?: React.CSSProperties };
-export type SlotPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>;
-export type SlotGroupPropGetter = () => React.HTMLAttributes<HTMLDivElement>;
+) => { className?: string | undefined, style?: React.CSSProperties }
+export type SlotPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>
+export type SlotGroupPropGetter = () => React.HTMLAttributes<HTMLDivElement>
 
 export type Getters<TEvent extends object = Event> = {
   eventProp?: EventPropGetter<TEvent> | undefined
@@ -63,7 +63,7 @@ export interface Components<TEvent extends object = Event, TResource extends obj
   eventContainerWrapper?: React.ComponentType | undefined
   dateCellWrapper?: React.ComponentType<DateCellWrapperProps> | undefined
   dayColumnWrapper?: React.ComponentType | undefined
-  timeSlotWrapper?: React.ComponentType | undefined
+  timeslotWrapper?: React.ComponentType | undefined
   timeGutterHeader?: React.ComponentType | undefined
   timeGutterWrapper?: React.ComponentType | undefined
   toolbar?: React.ComponentType | undefined

@@ -1,12 +1,14 @@
-import { NavigateAction, View, views } from './utils/constants'
-import Month from './Views/MonthView'
-import Week from './Views/WeekView'
-import WorkWeek from './Views/WorkWeekView'
-import Day from './Views/DayView'
-import Agenda from './Views/AgendaView'
-import { type Culture, type DateFormat } from './localizers'
-import { CalendarProps } from './components/Calendar'
-import { type Accessors, type Components, type Getters, type SlotInfo } from './types'
+import React from 'react'
+import { NavigateAction, View, views } from '../utils/constants'
+import Month from './MonthView'
+import Week from './WeekView'
+import WorkWeek from './WorkWeekView'
+import Day from './DayView'
+import Agenda from './AgendaView'
+import { type Culture, type DateFormat } from '../localizers'
+import { CalendarProps } from '../components/Calendar'
+import { type Accessors, type Components, type Getters, type SlotInfo } from '../types'
+import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 
 export interface TitleOptions {
   formats: DateFormat[]
@@ -65,12 +67,12 @@ export interface BaseViewProps<TEvent extends object = Event, TResource extends 
       | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
       | null
       | undefined
-  dayLayoutAlgorithm?: any
+  dayLayoutAlgorithm?: DayLayoutAlgorithm
   className?: string | undefined
 }
 
 export type ViewComponent<TProps extends BaseViewProps> = React.ComponentType<TProps> & {
-  range: (date: Date, props?: Partial<CalendarProps>) => { start: Date, end: Date }
+  range: (date: Date, props?: Partial<CalendarProps>) => { start: Date, end: Date } | Date[]
   navigate: (date: Date, action: NavigateAction, props?: Partial<CalendarProps>) => Date
   title: (date: Date, props?: Partial<CalendarProps>) => string
 }

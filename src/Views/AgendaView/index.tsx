@@ -3,98 +3,44 @@ import addClass from 'dom-helpers/addClass'
 import removeClass from 'dom-helpers/removeClass'
 import getWidth from 'dom-helpers/width'
 import scrollbarSize from 'dom-helpers/scrollbarSize'
-
-import { navigate } from '../../utils/constants'
-import { inRange } from '../../utils/eventLevels'
-import { isSelected } from '../../utils/eventSelectionHelpers'
+import { navigate } from '@/utils/constants'
+import { inRange } from '@/utils/eventLevels'
+import { isSelected } from '@/utils/eventSelectionHelpers'
+import { BaseViewProps, ViewComponent } from '..'
+import { useCalendarContext } from '@/components/Calendar'
+import { Components } from '@/types'
+import { Accessors } from '@/types'
+import { DateLocalizer } from '@/localizers'
+import { Getters } from '@/types'
 
 const DEFAULT_LENGTH = 30
-function Agenda({
+
+interface AgendaViewProps extends BaseViewProps {
+  length?: number
+}
+
+
+const AgendaView: ViewComponent<AgendaViewProps> = ({
   accessors,
   components,
   date,
   events,
   getters,
   length = DEFAULT_LENGTH,
-  localizer,
   onDoubleClickEvent,
   onSelectEvent,
   selected,
-}) {
-  const headerRef = useRef(null)
-  const dateColRef = useRef(null)
-  const timeColRef = useRef(null)
-  const contentRef = useRef(null)
-  const tbodyRef = useRef(null)
+}) => {
+  const { localizer } = useCalendarContext()
+  const headerRef = useRef<HTMLTableElement>(null)
+  const dateColRef = useRef<HTMLTableCellElement>(null)
+  const timeColRef = useRef<HTMLTableCellElement>(null)
+  const contentRef = useRef<HTMLTableElement>(null)
+  const tbodyRef = useRef<HTMLTableSectionElement>(null)
 
   useEffect(() => {
-    _adjustHeader()
+    adjustHeader()
   })
-
-  const renderDay = (day, events, dayKey) => {
-    const { event: Event, date: AgendaDate } = components
-
-    events = events.filter((e) =>
-      inRange(
-        e,
-        localizer.startOf(day, 'day'),
-        localizer.endOf(day, 'day'),
-        accessors,
-        localizer
-      )
-    )
-
-    return events.map((event, Index) => {
-      let title = accessors.title(event)
-      let end = accessors.end(event)
-      let start = accessors.start(event)
-
-      const userProps = getters.eventProp(
-        event,
-        start,
-        end,
-        isSelected(event, selected)
-      )
-
-      let dateLabel = Index === 0 && localizer.format(day, 'agendaDateFormat')
-      let first =
-        Index === 0
-          ? (
-            <td rowSpan={ events.length } className="rbc-agenda-date-cell">
-              { AgendaDate
-                ? (
-                  <AgendaDate day={ day } label={ dateLabel } />
-                )
-                : (
-                  dateLabel
-                ) }
-            </td>
-          )
-          : (
-            false
-          )
-
-      return (
-        <tr
-          key={ dayKey + '_' + Index }
-          className={ userProps.className }
-          style={ userProps.style }
-        >
-          { first }
-          <td className="rbc-agenda-time-cell">{ timeRangeLabel(day, event) }</td>
-          <td
-            className="rbc-agenda-event-cell"
-            onClick={ (e) => onSelectEvent && onSelectEvent(event, e) }
-            onDoubleClick={ (e) =>
-              onDoubleClickEvent && onDoubleClickEvent(event, e)
-            }
-          >
-            { Event ? <Event event={ event } title={ title } /> : title }
-          </td>
-        </tr>
-      )
-    }, [])
-  }
 
   const timeRangeLabel = (day, event) => {
     let labelClass = '',
@@ -132,7 +78,7 @@ function Agenda({
     )
   }
 
-  const _adjustHeader = () => {
+  const adjustHeader = () => {
     if(!tbodyRef.current) return
 
     let header = headerRef.current
@@ -212,25 +158,12 @@ function Agenda({
   )
 }
 
-Agenda.propTypes = {
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  date: PropTypes.instanceOf(Date),
-  events: PropTypes.array,
-  getters: PropTypes.object.isRequired,
-  length: PropTypes.number.isRequired,
-  localizer: PropTypes.object.isRequired,
-  onSelectEvent: PropTypes.func,
-  onDoubleClickEvent: PropTypes.func,
-  selected: PropTypes.object,
-}
-
-Agenda.range = (start, { length = DEFAULT_LENGTH, localizer }) => {
+AgendaView.range = (start, { length = DEFAULT_LENGTH, localizer }) => {
   let end = localizer.add(start, length, 'day')
   return { start, end }
 }
 
-Agenda.navigate = (
+AgendaView.navigate = (
   date,
   action,
   { length = DEFAULT_LENGTH, localizer }
@@ -247,9 +180,96 @@ Agenda.navigate = (
   }
 }
 
-Agenda.title = (start, { length = DEFAULT_LENGTH, localizer }) => {
+AgendaView.title = (start, { length = DEFAULT_LENGTH, localizer }) => {
   let end = localizer.add(start, length, 'day')
   return localizer.format({ start, end }, 'agendaHeaderFormat')
 }
 
-export default Agenda
+export default AgendaView
+
+
+
+
+
+
+
+
+
+
+
+const renderDay = (
+  day: Date,
+  events: Event[],
+  dayKey: string,
+  localizer: DateLocalizer,
+  accessors: Accessors<Event>,
+  getters: Getters<Event>,
+  selected: Event[],
+  components: Components<Event, object>,
+  timeRangeLabel: (day: Date, event: Event) => React.ReactNode,
+  onSelectEvent: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void,
+  onDoubleClickEvent: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void,
+) => {
+  const { event: Event, date: AgendaDate } = components
+
+  events = events.filter((e) =>
+    inRange(
+      e,
+      localizer.startOf(day, 'day'),
+      localizer.endOf(day, 'day'),
+      accessors,
+      localizer
+    )
+  )
+
+  return events.map((event, Index) => {
+    let title = accessors.title(event)
+    let end = accessors.end(event)
+    let start = accessors.start(event)
+
+    const userProps = getters.eventProp(
+      event,
+      start,
+      end,
+      isSelected(event, selected)
+    )
+
+    let dateLabel = Index === 0 && localizer.format(day, 'agendaDateFormat')
+    let first =
+      Index === 0
+        ? (
+          <td rowSpan={ events.length } className="rbc-agenda-date-cell">
+            { AgendaDate
+              ? (
+                <AgendaDate day={ day } label={ dateLabel } />
+              )
+              : (
+                dateLabel
+              ) }
+          </td>
+        )
+        : (
+          false
+        )
+
+    return (
+      <tr
+        key={ dayKey + '_' + Index }
+        className={ userProps.className }
+        style={ userProps.style }
+      >
+        { first }
+        <td className="rbc-agenda-time-cell">{ timeRangeLabel(day, event) }</td>
+        <td
+          className="rbc-agenda-event-cell"
+          onClick={ (e) => onSelectEvent && onSelectEvent(event, e) }
+          onDoubleClick={ (e) =>
+            onDoubleClickEvent && onDoubleClickEvent(event, e)
+          }
+        >
+          { Event ? <Event event={ event } title={ title } /> : title }
+        </td>
+      </tr>
+    )
+  }, [])
+}

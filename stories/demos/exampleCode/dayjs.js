@@ -30,7 +30,7 @@ export default function Dayjs({ ...props }) {
   const { components, defaultDate, max, views } = useMemo(
     () => ({
       components: {
-        timeSlotWrapper: ColoredDateCellWrapper,
+        timeslotWrapper: ColoredDateCellWrapper,
       },
       defaultDate: new Date(2015, 3, 1),
       max: dayjs().endOf('day').subtract(1, 'hours').toDate(),

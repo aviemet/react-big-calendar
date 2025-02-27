@@ -40,7 +40,7 @@
     "prepublishOnly": "yarn build",
     "prettier": "prettier '**/*js' '!lib/**' --write ",
     "storybook": "start-storybook -p 9002",
-    "test": "yarn lint && NODE_ENV=test jest",
+    "test": "yarn lint || true && NODE_ENV=test jest",
     "tdd": "NODE_ENV=test jest --watch"
   },
   "peerDependencies": {

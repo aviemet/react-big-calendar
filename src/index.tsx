@@ -2,7 +2,7 @@ import NoopWrapper from './NoopWrapper'
 
 export const components = {
   eventWrapper: NoopWrapper,
-  timeSlotWrapper: NoopWrapper,
+  timeslotWrapper: NoopWrapper,
   dateCellWrapper: NoopWrapper,
 }
 

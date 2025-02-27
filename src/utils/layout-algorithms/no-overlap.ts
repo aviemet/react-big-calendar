@@ -1,4 +1,6 @@
+import CalendarEvent from './CalendarEvent'
 import overlap from './overlap'
+import { DayLayoutFunction } from './types'
 
 function getMaxIndexDFS(node, maxIndex, visited) {
   for(let i = 0; i < node.friends.length; ++i) {
@@ -12,12 +14,12 @@ function getMaxIndexDFS(node, maxIndex, visited) {
   return maxIndex
 }
 
-export default function ({
+const noOverlap: DayLayoutFunction = ({
   events,
   minimumStartDifference,
   slotMetrics,
   accessors,
-}) {
+}) => {
   const styledEvents = overlap({
     events,
     minimumStartDifference,
@@ -26,12 +28,13 @@ export default function ({
   })
 
   styledEvents.sort((a, b) => {
-    a = a.style
-    b = b.style
-    if(a.top !== b.top) return a.top > b.top ? 1 : -1
-    else if(a.height !== b.height)
-      return a.top + a.height < b.top + b.height ? 1 : -1
-    else return 0
+    if(a.style.top !== b.style.top) {
+      return a.style.top > b.style.top ? 1 : -1
+    } else if(a.style.height !== b.style.height){
+      return a.style.top + a.style.height < b.style.top + b.style.height ? 1 : -1
+    } else {
+      return 0
+    }
   })
 
   for(let i = 0; i < styledEvents.length; ++i) {
@@ -111,3 +114,5 @@ export default function ({
 
   return styledEvents
 }
+
+export default noOverlap

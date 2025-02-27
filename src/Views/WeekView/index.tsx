@@ -1,107 +1,94 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-
-import { navigate } from '@/utils/constants'
-
+import { navigate, NavigateAction, View } from '@/utils/constants'
 import TimeGrid from '../TimeGridView'
+import { BaseViewProps, ViewComponent } from '..'
+import { DateLocalizer } from '@/localizers'
+import { Accessors, Components, Getters, SlotInfo } from '@/types'
+import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { useCalendarContext } from '@/components/Calendar'
 
-class Week extends React.Component {
-  render() {
-    /**
-     * This allows us to default min, max, and scrollToTime
-     * using our localizer. This is necessary until such time
-     * as TimeGrid is converted to a functional component.
-     */
-    let {
-      date,
-      localizer,
-      min = localizer.startOf(new Date(), 'day'),
-      max = localizer.endOf(new Date(), 'day'),
-      scrollToTime = localizer.startOf(new Date(), 'day'),
-      enableAutoScroll = true,
-      ...props
-    } = this.props
-    let range = Week.range(date, this.props)
-
-    return (
-      <TimeGrid
-        { ...props }
-        range={ range }
-        eventOffset={ 15 }
-        localizer={ localizer }
-        min={ min }
-        max={ max }
-        scrollToTime={ scrollToTime }
-        enableAutoScroll={ enableAutoScroll }
-      />
-    )
-  }
+interface WeekViewProps extends BaseViewProps {
+  date: Date
+  events: Event[]
+  backgroundEvents: Event[]
+  resources: Resource[]
+  step?: number
+  timeslots?: number
+  range?: Date[]
+  min?: Date
+  max?: Date
+  getNow: () => Date
+  scrollToTime?: Date
+  enableAutoScroll?: boolean
+  showMultiDayTimes?: boolean
+  rtl?: boolean
+  resizable?: boolean
+  width?: number
+  accessors: Accessors
+  components: Components
+  getters: Getters
+  allDayMaxRows?: number
+  selected?: object
+  selectable?: boolean | 'ignoreEvents'
+  longPressThreshold?: number
+  onNavigate?: (action: NavigateAction) => void
+  onSelectSlot?: (slotInfo: SlotInfo) => void
+  onSelectEnd?: (...args: any[]) => any
+  onSelectStart?: (...args: any[]) => any
+  onSelectEvent?: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void
+  onDoubleClickEvent?: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void
+  onKeyPressEvent?: (...args: any[]) => any
+  onShowMore?: (...args: any[]) => any
+  onDrillDown?: (date: Date, view: View) => void
+  getDrilldownView?: (targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void
+  dayLayoutAlgorithm?: DayLayoutAlgorithm
+  showAllEvents?: boolean
+  doShowMoreDrillDown?: boolean
+  popup?: boolean
+  handleDragStart?: (e: React.DragEvent<HTMLElement>) => void
+  popupOffset?: number | { x: number, y: number }
+  className?: string
 }
 
-Week.propTypes = {
-  date: PropTypes.instanceOf(Date).isRequired,
+const weekViewRange = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
+  let firstOfWeek = localizer.startOfWeek()
+  let start = localizer.startOf(date, 'week', firstOfWeek)
+  let end = localizer.endOf(date, 'week', firstOfWeek)
 
-  events: PropTypes.array.isRequired,
-  backgroundEvents: PropTypes.array.isRequired,
-  resources: PropTypes.array,
-
-  step: PropTypes.number,
-  timeslots: PropTypes.number,
-  range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-  min: PropTypes.instanceOf(Date),
-  max: PropTypes.instanceOf(Date),
-  getNow: PropTypes.func.isRequired,
-
-  scrollToTime: PropTypes.instanceOf(Date),
-  enableAutoScroll: PropTypes.bool,
-  showMultiDayTimes: PropTypes.bool,
-
-  rtl: PropTypes.bool,
-  resizable: PropTypes.bool,
-  width: PropTypes.number,
-
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
-  allDayMaxRows: PropTypes.number,
-
-  selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
-
-  onNavigate: PropTypes.func,
-  onSelectSlot: PropTypes.func,
-  onSelectEnd: PropTypes.func,
-  onSelectStart: PropTypes.func,
-  onSelectEvent: PropTypes.func,
-  onDoubleClickEvent: PropTypes.func,
-  onKeyPressEvent: PropTypes.func,
-  onShowMore: PropTypes.func,
-  onDrillDown: PropTypes.func,
-  getDrilldownView: PropTypes.func.isRequired,
-
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
-
-  showAllEvents: PropTypes.bool,
-  doShowMoreDrillDown: PropTypes.bool,
-
-  popup: PropTypes.bool,
-  handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
+  return localizer.range(start, end)
 }
 
-Week.defaultProps = TimeGrid.defaultProps
+const WeekView: ViewComponent<WeekViewProps> = (props) => {
+  const { localizer } = useCalendarContext()
 
-Week.navigate = (date, action, { localizer }) => {
+  /**
+   * This allows us to default min, max, and scrollToTime
+   * using our localizer. This is necessary until such time
+   * as TimeGrid is converted to a functional component.
+   */
+  const {
+    date,
+    min = localizer.startOf(new Date(), 'day'),
+    max = localizer.endOf(new Date(), 'day'),
+    scrollToTime = localizer.startOf(new Date(), 'day'),
+    enableAutoScroll = true,
+  } = props
+
+  return (
+    <TimeGrid
+      { ...props }
+      range={ weekViewRange(date, { localizer }) }
+      eventOffset={ 15 }
+      localizer={ localizer }
+      min={ min }
+      max={ max }
+      scrollToTime={ scrollToTime }
+      enableAutoScroll={ enableAutoScroll }
+    />
+  )
+
+}
+
+WeekView.navigate = (date, action, { localizer }) => {
   switch(action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'week')
@@ -114,17 +101,11 @@ Week.navigate = (date, action, { localizer }) => {
   }
 }
 
-Week.range = (date, { localizer }) => {
-  let firstOfWeek = localizer.startOfWeek()
-  let start = localizer.startOf(date, 'week', firstOfWeek)
-  let end = localizer.endOf(date, 'week', firstOfWeek)
+WeekView.range = weekViewRange
 
-  return localizer.range(start, end)
-}
-
-Week.title = (date, { localizer }) => {
-  let [start, ...rest] = Week.range(date, { localizer })
+WeekView.title = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
+  let [start, ...rest] = WeekView.range(date, { localizer })
   return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
 }
 
-export default Week
+export default WeekView

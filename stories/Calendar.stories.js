@@ -79,12 +79,12 @@ CustomDateCellWrapper.args = {
 }
 
 export const CustomTimeSlotWrapper = Template.bind({})
-CustomTimeSlotWrapper.storyName = 'add custom timeSlotWrapper'
+CustomTimeSlotWrapper.storyName = 'add custom timeslotWrapper'
 CustomTimeSlotWrapper.args = {
   defaultView: Views.DAY,
   events,
   components: {
-    timeSlotWrapper: customComponents.timeSlotWrapper,
+    timeslotWrapper: customComponents.timeslotWrapper,
   },
 }
 

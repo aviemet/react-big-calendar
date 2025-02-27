@@ -1,40 +1,56 @@
 import { DateLocalizer } from "@/localizers"
 
-const getKey = ({ min, max, step, timeSlots, localizer }: { min: Date, max: Date, step: number, timeSlots: number, localizer: DateLocalizer }) =>
+export type SlotMetrics = {
+  groups: Date[][]
+  update: (args: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) => SlotMetrics
+  dateIsInGroup: (date: Date, groupIndex: number) => boolean
+  nextSlot: (slot: Date) => Date
+  closestSlotToPosition: (percent: number) => Date
+  closestSlotFromPoint: (point: { x: number, y: number }, boundaryRect: { top: number, bottom: number }) => Date
+  closestSlotFromDate: (date: Date, offset?: number) => Date
+  startsBeforeDay: (date: Date) => boolean
+  startsAfterDay: (date: Date) => boolean
+  startsBefore: (date: Date) => boolean
+  startsAfter: (date: Date) => boolean
+  getRange: (rangeStart: Date, rangeEnd: Date, options?: { ignoreMin?: boolean, ignoreMax?: boolean }) => { top: number, height: number, start: number, startDate: Date, end: number, endDate: Date }
+  getCurrentTimePosition: (rangeStart: Date) => number
+}
+
+const getKey = ({ min, max, step, timeslots, localizer }: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) =>
   `${+localizer.startOf(min, 'minutes')}` +
   `${+localizer.startOf(max, 'minutes')}` +
-  `${step}-${timeSlots}`
+  `${step}-${timeslots}`
 
 export function getSlotMetrics({
   min,
   max,
   step,
-  timeSlots,
+  timeslots,
   localizer,
 }: {
   min: Date
   max: Date
   step: number
-  timeSlots: number
+  timeslots: number
   localizer: DateLocalizer
-}) {
-  const key = getKey({ min, max, step, timeSlots, localizer })
+}): SlotMetrics {
+  const key = getKey({ min, max, step, timeslots, localizer })
 
   // DST differences are handled inside the localizer
   const totalMin = 1 + localizer.getTotalMin(min, max)
   const minutesFromMidnight = localizer.getMinutesFromMidnight(min)
-  const numGroups = Math.ceil((totalMin - 1) / (step * timeSlots))
-  const numSlots = numGroups * timeSlots
+  const numGroups = Math.ceil((totalMin - 1) / (step * timeslots))
+  const numSlots = numGroups * timeslots
 
   const groups = new Array(numGroups)
   const slots = new Array(numSlots)
   // Each slot date is created from "zero", instead of adding `step` to
   // the previous one, in order to avoid DST oddities
   for(let grp = 0; grp < numGroups; grp++) {
-    groups[grp] = new Array(timeSlots)
+    groups[grp] = new Array(timeslots)
 
-    for(let slot = 0; slot < timeSlots; slot++) {
-      const slotIndex = grp * timeSlots + slot
+    for(let slot = 0; slot < timeslots; slot++) {
+      const slotIndex = grp * timeslots + slot
       const minFromStart = slotIndex * step
       // A date with total minutes calculated from the start of the day
       slots[slotIndex] = groups[grp][slot] = localizer.getSlotDate(
@@ -51,7 +67,7 @@ export function getSlotMetrics({
     localizer.getSlotDate(min, minutesFromMidnight, lastSlotMinFromStart)
   )
 
-  function positionFromDate(date) {
+  function positionFromDate(date: Date) {
     const diff =
       localizer.diff(min, date, 'minutes') +
       localizer.getDstOffset(min, date)
@@ -126,16 +142,16 @@ export function getSlotMetrics({
       return localizer.gt(localizer.merge(max, date), max, 'minutes')
     },
 
-    getRange(rangeStart, rangeEnd, ignoreMin, ignoreMax) {
-      if(!ignoreMin)
-        rangeStart = localizer.min(end, localizer.max(start, rangeStart))
-      if(!ignoreMax)
-        rangeEnd = localizer.min(end, localizer.max(start, rangeEnd))
+    getRange(rangeStart, rangeEnd, options) {
+      if(!options?.ignoreMin)
+        rangeStart = localizer.min(max, localizer.max(min, rangeStart))
+      if(!options?.ignoreMax)
+        rangeEnd = localizer.min(max, localizer.max(min, rangeEnd))
 
       const rangeStartMin = positionFromDate(rangeStart)
       const rangeEndMin = positionFromDate(rangeEnd)
       const top =
-        rangeEndMin > step * numSlots && !localizer.eq(end, rangeEnd)
+        rangeEndMin > step * numSlots && !localizer.eq(max, rangeEnd)
           ? ((rangeStartMin - step) / (step * numSlots)) * 100
           : (rangeStartMin / (step * numSlots)) * 100
 

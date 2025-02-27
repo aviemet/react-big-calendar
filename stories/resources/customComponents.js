@@ -29,10 +29,10 @@ const customComponents = {
     )
   },
   dayColumnWrapper: CustomDayColumnWrapper,
-  timeSlotWrapper: (timeSlotWrapperProps) => {
+  timeslotWrapper: (timeslotWrapperProps) => {
     // Show different styles at arbitrary time
-    const hasCustomInfo = timeSlotWrapperProps.value
-      ? timeSlotWrapperProps.value.getHours() === 4
+    const hasCustomInfo = timeslotWrapperProps.value
+      ? timeslotWrapperProps.value.getHours() === 4
       : false
     const style = {
       display: 'flex',
@@ -42,7 +42,7 @@ const customComponents = {
     return (
       <div style={ style }>
         { hasCustomInfo && 'Custom Day Wrapper' }
-        { timeSlotWrapperProps.children }
+        { timeslotWrapperProps.children }
       </div>
     )
   },
@@ -55,21 +55,21 @@ const customComponents = {
     }
     return <div style={ style }>{ eventWrapperProps.children }</div>
   },
-  timeSlotWrapper: (timeSlotWrapperProps) => {
+  timeslotWrapper: (timeslotWrapperProps) => {
     const style =
-      timeSlotWrapperProps.resource === null ||
-      timeSlotWrapperProps.value.getMinutes() !== 0
+      timeslotWrapperProps.resource === null ||
+      timeslotWrapperProps.value.getMinutes() !== 0
         ? {}
         : {
           border: '4px solid',
           backgroundColor:
-              timeSlotWrapperProps.value.getHours() >= 8 &&
-              timeSlotWrapperProps.value.getHours() <= 17
+              timeslotWrapperProps.value.getHours() >= 8 &&
+              timeslotWrapperProps.value.getHours() <= 17
                 ? 'green'
                 : 'red',
           padding: '5px',
         }
-    return <div style={ style }>{ timeSlotWrapperProps.children }</div>
+    return <div style={ style }>{ timeslotWrapperProps.children }</div>
   },
   timeGutterWrapper: (timeGutterWrapperProps) => {
     return (

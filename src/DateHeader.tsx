@@ -1,12 +1,14 @@
+import React from "react"
+
 export interface DateHeaderProps {
   date: Date
   drilldownView: string
   isOffRange: boolean
   label: string
-  onDrillDown: () => void
+  onDrillDown: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const DateHeader = ({ label, drilldownView, onDrillDown }) => {
+const DateHeader = ({ label, drilldownView, onDrillDown }: DateHeaderProps) => {
   if(!drilldownView) {
     return <span>{ label }</span>
   }
@@ -16,14 +18,6 @@ const DateHeader = ({ label, drilldownView, onDrillDown }) => {
       { label }
     </button>
   )
-}
-
-DateHeader.propTypes = {
-  label: PropTypes.node,
-  date: PropTypes.instanceOf(Date),
-  drilldownView: PropTypes.string,
-  onDrillDown: PropTypes.func,
-  isOffRange: PropTypes.bool,
 }
 
 export default DateHeader

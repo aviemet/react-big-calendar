@@ -1,110 +1,190 @@
-import React, { Component, createRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import memoize from 'memoize-one'
 import getPosition from 'dom-helpers/position'
 import getWidth from 'dom-helpers/width'
-import DayColumn from '@/DayColumn'
+import DayColumn from '@/Views/TimeGridView/DayColumn'
 import PopOverlay from '@/components/PopOverlay'
 import TimeGridHeader from '@/Views/TimeGridView/TimeGridHeader'
 import TimeGridHeaderResources from '@/Views/TimeGridView/TimeGridHeaderResources'
 import TimeGutter from '@/TimeGutter'
-import { views } from '@/utils/constants'
+import { NavigateAction, views } from '@/utils/constants'
 import { inRange, sortEvents } from '@/utils/eventLevels'
 import { notify } from '@/utils/helpers'
 import Resources from '@/utils/Resources'
-
+import { type DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { type Accessors, type Components, type Getters } from '@/types'
+import { type DateLocalizer } from '@/localizers'
+import { BaseViewProps, type ViewComponent } from '@/Views'
 import clsx from 'clsx'
+import { CalendarProps, useCalendarContext } from '@/components/Calendar'
 
-export default class TimeGrid extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = { gutterWidth: undefined, isOverflowing: null }
-
-    this.scrollRef = React.createRef()
-    this.contentRef = React.createRef()
-    this.containerRef = React.createRef()
-    this._scrollRatio = null
-    this.gutterRef = createRef()
+interface TimeGridViewProps extends BaseViewProps {
+  resourceGroupingLayout?: boolean
+  enableAutoScroll?: boolean
+  resizable?: boolean
+  allDayMaxRows?: number
+  showAllEvents?: boolean
+  doShowMoreDrillDown?: boolean
+  popup?: boolean
+  handleDragStart?: () => void
+  onShowMore?: (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
+  popupOffset?: number | {
+    x: number
+    y: number
   }
+}
 
-  getSnapshotBeforeUpdate() {
-    this.checkOverflow()
-    return null
-  }
+const TimeGridView: ViewComponent<TimeGridViewProps> = ({
+  events,
+  backgroundEvents,
+  min,
+  max,
+  getNow,
+  scrollToTime,
+  accessors,
+  components,
+  getters,
+  getDrilldownView,
+  resources,
+  resourceGroupingLayout,
+  step,
+  timeslots,
+  range,
+  enableAutoScroll,
+  showMultiDayTimes,
+  rtl,
+  resizable,
+  width,
+  allDayMaxRows,
+  selected,
+  selectable,
+  longPressThreshold,
+  onNavigate,
+  onSelectSlot,
+  onSelectEnd,
+  onSelectStart,
+  onSelectEvent,
+  onShowMore,
+  onDoubleClickEvent,
+  onKeyPressEvent,
+  onDrillDown,
+  dayLayoutAlgorithm,
+  showAllEvents,
+  doShowMoreDrillDown,
+  popup,
+  handleDragStart,
+  popupOffset,
+}) => {
+  const { localizer } = useCalendarContext()
 
-  componentDidMount() {
-    if(this.props.width === null) {
-      this.measureGutter()
+  const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
+  const [scrollRatio, setScrollRatio] = useState<number | null>(null)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+  const [overlay, setOverlay] = useState<Overlay | null>(null)
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const gutterRef = useRef<HTMLDivElement>(null)
+  const scrollRatioRef = useRef<number>(null)
+  const updatingOverflowRef = useRef<boolean>(false)
+  const rafHandle = useRef<number>(null)
+
+  const applyScroll = useCallback(() => {
+    // If auto-scroll is disabled, we don't actually apply the scroll
+    if(scrollRatioRef.current !== null && enableAutoScroll === true) {
+      const content = contentRef.current
+      content.scrollTop = content.scrollHeight * scrollRatioRef.current
+      // Only do this once
+      scrollRatioRef.current = null
+    }
+  }, [enableAutoScroll])
+
+  const checkOverflow = useCallback(() => {
+    if(updatingOverflowRef.current) return
+
+    const content = contentRef.current
+
+    if(!content?.scrollHeight) return
+
+    const isOverflowingLocal = content.scrollHeight > content.clientHeight
+
+    if(isOverflowing !== isOverflowingLocal) {
+      updatingOverflowRef.current = true
+
+      //TODO: This probably will cause an infinite render
+      setIsOverflowing(() => {
+        updatingOverflowRef.current = false
+        return isOverflowingLocal
+      })
+    }
+  }, [isOverflowing])
+
+  useLayoutEffect(() => {
+    checkOverflow()
+    applyScroll()
+  }, [applyScroll, checkOverflow])
+
+  useEffect(() => {
+    if(width === null) {
+      measureGutter()
     }
 
-    this.calculateScroll()
-    this.applyScroll()
+    calculateScroll()
+    applyScroll()
 
-    window.addEventListener('resize', this.handleResize)
-  }
+    window.addEventListener('resize', handleResize)
 
-  handleScroll = (e) => {
-    if(this.scrollRef.current) {
-      this.scrollRef.current.scrollLeft = e.target.scrollLeft
+    return () => {
+      window.removeEventListener('resize', handleResize)
+
+      animationFrame.cancel(rafHandle.current)
+
+      if(measureGutterAnimationFrameRequest) {
+        window.cancelAnimationFrame(measureGutterAnimationFrameRequest)
+      }
+    }
+  }, [width])
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if(scrollRef.current) {
+      scrollRef.current.scrollLeft = e.target.scrollLeft
     }
   }
 
-  handleResize = () => {
-    animationFrame.cancel(this.rafHandle)
-    this.rafHandle = animationFrame.request(this.checkOverflow)
+  const handleResize = () => {
+    animationFrame.cancel(rafHandle.current)
+    rafHandle.current = animationFrame.request(checkOverflow)
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
-
-    animationFrame.cancel(this.rafHandle)
-
-    if(this.measureGutterAnimationFrameRequest) {
-      window.cancelAnimationFrame(this.measureGutterAnimationFrameRequest)
-    }
+  const handleKeyPressEvent = (...args: any[]) => {
+    clearSelection()
+    notify(onKeyPressEvent, args)
   }
 
-  componentDidUpdate() {
-    this.applyScroll()
-  }
-
-  handleKeyPressEvent = (...args) => {
-    this.clearSelection()
-    notify(this.props.onKeyPressEvent, args)
-  }
-
-  handleSelectEvent = (...args) => {
+  const handleSelectEvent = (...args: any[]) => {
     //cancel any pending selections so only the event click goes through.
-    this.clearSelection()
-    notify(this.props.onSelectEvent, args)
+    clearSelection()
+    notify(onSelectEvent, args)
   }
 
-  handleDoubleClickEvent = (...args) => {
-    this.clearSelection()
-    notify(this.props.onDoubleClickEvent, args)
+  const handleDoubleClickEvent = (...args: any[]) => {
+    clearSelection()
+    notify(onDoubleClickEvent, args)
   }
 
-  handleShowMore = (events, date, cell, slot, target) => {
-    const {
-      popup,
-      onDrillDown,
-      onShowMore,
-      getDrilldownView,
-      doShowMoreDrillDown,
-    } = this.props
-    this.clearSelection()
+  const handleShowMore = (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => {
+    clearSelection()
 
     if(popup) {
-      let position = getPosition(cell, this.containerRef.current)
+      let position = getPosition(cell, containerRef.current)
 
-      this.setState({
-        overlay: {
-          date,
-          events,
-          position: { ...position, width: '200px' },
-          target,
-        },
+      setOverlay({
+        date,
+        events,
+        position: { ...position, width: '200px' },
+        target,
       })
     } else if(doShowMoreDrillDown) {
       notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
@@ -113,9 +193,7 @@ export default class TimeGrid extends Component {
     notify(onShowMore, [events, date, slot])
   }
 
-  handleSelectAllDaySlot = (slots, slotInfo) => {
-    const { onSelectSlot } = this.props
-
+  const handleSelectAllDaySlot = (slots: Date[], slotInfo: { action: string, resourceId: string }) => {
     const start = new Date(slots[0])
     const end = new Date(slots[slots.length - 1])
     end.setDate(slots[slots.length - 1].getDate() + 1)
@@ -129,367 +207,29 @@ export default class TimeGrid extends Component {
     })
   }
 
-  renderDayColumn(
-    date,
-    id,
-    resource,
-    groupedEvents,
-    groupedBackgroundEvents,
-    localizer,
-    accessors,
-    components,
-    dayLayoutAlgorithm,
-    now
-  ) {
-    let { min, max } = this.props
-
-    let daysEvents = (groupedEvents.get(id) || []).filter((event) =>
-      localizer.inRange(
-        date,
-        accessors.start(event),
-        accessors.end(event),
-        'day'
-      )
-    )
-
-    let daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(
-      (event) =>
-        localizer.inRange(
-          date,
-          accessors.start(event),
-          accessors.end(event),
-          'day'
-        )
-    )
-
-    return (
-      <DayColumn
-        { ...this.props }
-        localizer={ localizer }
-        min={ localizer.merge(date, min) }
-        max={ localizer.merge(date, max) }
-        resource={ resource && id }
-        components={ components }
-        isNow={ localizer.isSameDate(date, now) }
-        key={ `${id}-${date}` }
-        date={ date }
-        events={ daysEvents }
-        backgroundEvents={ daysBackgroundEvents }
-        dayLayoutAlgorithm={ dayLayoutAlgorithm }
-      />
-    )
+  const clearSelection = () => {
+    clearTimeout(_selectTimer)
+    _pendingSelection = []
   }
 
-  renderResourcesFirst(
-    range,
-    resources,
-    groupedEvents,
-    groupedBackgroundEvents,
-    localizer,
-    accessors,
-    now,
-    components,
-    dayLayoutAlgorithm
-  ) {
-    return resources.map(([id, resource]) =>
-      range.map((date) =>
-        this.renderDayColumn(
-          date,
-          id,
-          resource,
-          groupedEvents,
-          groupedBackgroundEvents,
-          localizer,
-          accessors,
-          components,
-          dayLayoutAlgorithm,
-          now
-        )
-      )
-    )
-  }
-
-  renderRangeFirst(
-    range,
-    resources,
-    groupedEvents,
-    groupedBackgroundEvents,
-    localizer,
-    accessors,
-    now,
-    components,
-    dayLayoutAlgorithm
-  ) {
-    return range.map((date) => (
-      <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date }>
-        { resources.map(([id, resource]) => (
-          <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
-            { this.renderDayColumn(
-              date,
-              id,
-              resource,
-              groupedEvents,
-              groupedBackgroundEvents,
-              localizer,
-              accessors,
-              components,
-              dayLayoutAlgorithm,
-              now
-            ) }
-          </div>
-        )) }
-      </div>
-    ))
-  }
-
-  renderEvents(range, events, backgroundEvents, now) {
-    let {
-      accessors,
-      localizer,
-      resourceGroupingLayout,
-      components,
-      dayLayoutAlgorithm,
-    } = this.props
-
-    const resources = this.memoizedResources(this.props.resources, accessors)
-    const groupedEvents = resources.groupEvents(events)
-    const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
-
-    if(!resourceGroupingLayout) {
-      return this.renderResourcesFirst(
-        range,
-        resources,
-        groupedEvents,
-        groupedBackgroundEvents,
-        localizer,
-        accessors,
-        now,
-        components,
-        dayLayoutAlgorithm
-      )
-    } else {
-      return this.renderRangeFirst(
-        range,
-        resources,
-        groupedEvents,
-        groupedBackgroundEvents,
-        localizer,
-        accessors,
-        now,
-        components,
-        dayLayoutAlgorithm
-      )
+  const measureGutter = () => {
+    if(measureGutterAnimationFrameRequest) {
+      window.cancelAnimationFrame(measureGutterAnimationFrameRequest)
     }
-  }
-
-  render() {
-    let {
-      events,
-      backgroundEvents,
-      range,
-      width,
-      rtl,
-      selected,
-      getNow,
-      resources,
-      components,
-      accessors,
-      getters,
-      localizer,
-      min,
-      max,
-      showMultiDayTimes,
-      longPressThreshold,
-      resizable,
-      resourceGroupingLayout,
-    } = this.props
-
-    width = width || this.state.gutterWidth
-
-    let start = range[0],
-        end = range[range.length - 1]
-
-    this.slots = range.length
-
-    let allDayEvents = [],
-        rangeEvents = [],
-        rangeBackgroundEvents = []
-
-    events.forEach((event) => {
-      if(inRange(event, start, end, accessors, localizer)) {
-        let eStart = accessors.start(event),
-            eEnd = accessors.end(event)
-
-        if(
-          accessors.allDay(event) ||
-          localizer.startAndEndAreDateOnly(eStart, eEnd) ||
-          (!showMultiDayTimes && !localizer.isSameDate(eStart, eEnd))
-        ) {
-          allDayEvents.push(event)
-        } else {
-          rangeEvents.push(event)
-        }
-      }
-    })
-
-    backgroundEvents.forEach((event) => {
-      if(inRange(event, start, end, accessors, localizer)) {
-        rangeBackgroundEvents.push(event)
-      }
-    })
-
-    allDayEvents.sort((a, b) => sortEvents(a, b, accessors, localizer))
-
-    const headerProps = {
-      range,
-      events: allDayEvents,
-      width,
-      rtl,
-      getNow,
-      localizer,
-      selected,
-      allDayMaxRows: this.props.showAllEvents
-        ? Infinity
-        : this.props.allDayMaxRows ?? Infinity,
-      resources: this.memoizedResources(resources, accessors),
-      selectable: this.props.selectable,
-      accessors,
-      getters,
-      components,
-      scrollRef: this.scrollRef,
-      isOverflowing: this.state.isOverflowing,
-      longPressThreshold,
-      onSelectSlot: this.handleSelectAllDaySlot,
-      onSelectEvent: this.handleSelectEvent,
-      onShowMore: this.handleShowMore,
-      onDoubleClickEvent: this.props.onDoubleClickEvent,
-      onKeyPressEvent: this.props.onKeyPressEvent,
-      onDrillDown: this.props.onDrillDown,
-      getDrilldownView: this.props.getDrilldownView,
-      resizable,
-    }
-
-    return (
-      <div
-        className={ clsx(
-          'rbc-time-view',
-          resources && 'rbc-time-view-resources'
-        ) }
-        ref={ this.containerRef }
-      >
-        { resources && resources.length > 1 && resourceGroupingLayout
-          ? (
-            <TimeGridHeaderResources { ...headerProps } />
-          )
-          : (
-            <TimeGridHeader { ...headerProps } />
-          ) }
-        { this.props.popup && this.renderOverlay() }
-        <div
-          ref={ this.contentRef }
-          className="rbc-time-content"
-          onScroll={ this.handleScroll }
-        >
-          <TimeGutter
-            date={ start }
-            ref={ this.gutterRef }
-            localizer={ localizer }
-            min={ localizer.merge(start, min) }
-            max={ localizer.merge(start, max) }
-            step={ this.props.step }
-            getNow={ this.props.getNow }
-            timeslots={ this.props.timeslots }
-            components={ components }
-            className="rbc-time-gutter"
-            getters={ getters }
-          />
-          { this.renderEvents(
-            range,
-            rangeEvents,
-            rangeBackgroundEvents,
-            getNow()
-          ) }
-        </div>
-      </div>
-    )
-  }
-
-  renderOverlay() {
-    let overlay = this.state?.overlay ?? {}
-    let {
-      accessors,
-      localizer,
-      components,
-      getters,
-      selected,
-      popupOffset,
-      handleDragStart,
-    } = this.props
-
-    const onHide = () => this.setState({ overlay: null })
-
-    return (
-      <PopOverlay
-        overlay={ overlay }
-        accessors={ accessors }
-        localizer={ localizer }
-        components={ components }
-        getters={ getters }
-        selected={ selected }
-        popupOffset={ popupOffset }
-        ref={ this.containerRef }
-        handleKeyPressEvent={ this.handleKeyPressEvent }
-        handleSelectEvent={ this.handleSelectEvent }
-        handleDoubleClickEvent={ this.handleDoubleClickEvent }
-        handleDragStart={ handleDragStart }
-        show={ !!overlay.position }
-        overlayDisplay={ this.overlayDisplay }
-        onHide={ onHide }
-      />
-    )
-  }
-
-  overlayDisplay = () => {
-    this.setState({
-      overlay: null,
-    })
-  }
-
-  clearSelection() {
-    clearTimeout(this._selectTimer)
-    this._pendingSelection = []
-  }
-
-  measureGutter() {
-    if(this.measureGutterAnimationFrameRequest) {
-      window.cancelAnimationFrame(this.measureGutterAnimationFrameRequest)
-    }
-    this.measureGutterAnimationFrameRequest = window.requestAnimationFrame(
+    measureGutterAnimationFrameRequest = window.requestAnimationFrame(
       () => {
-        const width = this.gutterRef?.current
-          ? getWidth(this.gutterRef.current)
+        const width = gutterRef?.current
+          ? getWidth(gutterRef.current)
           : undefined
 
-        if(width && this.state.gutterWidth !== width) {
-          this.setState({ gutterWidth: width })
+        if(width && gutterWidth !== width) {
+          setGutterWidth(width)
         }
       }
     )
   }
 
-  applyScroll() {
-    // If auto-scroll is disabled, we don't actually apply the scroll
-    if(this._scrollRatio != null && this.props.enableAutoScroll === true) {
-      const content = this.contentRef.current
-      content.scrollTop = content.scrollHeight * this._scrollRatio
-      // Only do this once
-      this._scrollRatio = null
-    }
-  }
-
-  calculateScroll(props = this.props) {
-    const { min, max, scrollToTime, localizer } = props
-
+  const calculateScroll = () => {
     const diffMillis = localizer.diff(
       localizer.merge(scrollToTime, min),
       scrollToTime,
@@ -497,94 +237,367 @@ export default class TimeGrid extends Component {
     )
     const totalMillis = localizer.diff(min, max, 'milliseconds')
 
-    this._scrollRatio = diffMillis / totalMillis
+    scrollRatioRef.current = diffMillis / totalMillis
   }
 
-  checkOverflow = () => {
-    if(this._updatingOverflow) return
-
-    const content = this.contentRef.current
-
-    if(!content?.scrollHeight) return
-    let isOverflowing = content.scrollHeight > content.clientHeight
-
-    if(this.state.isOverflowing !== isOverflowing) {
-      this._updatingOverflow = true
-      this.setState({ isOverflowing }, () => {
-        this._updatingOverflow = false
-      })
-    }
-  }
-
-  memoizedResources = memoize((resources, accessors) =>
+  const memoizedResources = memoize((resources, accessors) =>
     Resources(resources, accessors)
+  )
+
+  width = width || gutterWidth
+
+  const start = range[0]
+  const end = range[range.length - 1]
+
+  const slots = range.length
+
+  const allDayEvents = []
+  const rangeEvents = []
+  const rangeBackgroundEvents = []
+
+  events.forEach((event) => {
+    if(inRange(event, start, end, accessors, localizer)) {
+      let eStart = accessors.start(event),
+          eEnd = accessors.end(event)
+
+      if(
+        accessors.allDay(event) ||
+        localizer.startAndEndAreDateOnly(eStart, eEnd) ||
+        (!showMultiDayTimes && !localizer.isSameDate(eStart, eEnd))
+      ) {
+        allDayEvents.push(event)
+      } else {
+        rangeEvents.push(event)
+      }
+    }
+  })
+
+  backgroundEvents.forEach((event) => {
+    if(inRange(event, start, end, accessors, localizer)) {
+      rangeBackgroundEvents.push(event)
+    }
+  })
+
+  allDayEvents.sort((a, b) => sortEvents(a, b, accessors, localizer))
+
+  const headerProps = {
+    range,
+    events: allDayEvents,
+    width,
+    rtl,
+    getNow,
+    localizer,
+    selected,
+    allDayMaxRows: showAllEvents
+      ? Infinity
+      : allDayMaxRows ?? Infinity,
+    resources: memoizedResources(resources, accessors),
+    selectable: selectable,
+    accessors,
+    getters,
+    components,
+    scrollRef: scrollRef,
+    isOverflowing: state.isOverflowing,
+    longPressThreshold,
+    onSelectSlot: handleSelectAllDaySlot,
+    onSelectEvent: handleSelectEvent,
+    onShowMore: handleShowMore,
+    onDoubleClickEvent: onDoubleClickEvent,
+    onKeyPressEvent: onKeyPressEvent,
+    onDrillDown: onDrillDown,
+    getDrilldownView: getDrilldownView,
+    resizable,
+  }
+
+  return (
+    <div
+      ref={ containerRef }
+      className={ clsx(
+        'rbc-time-view',
+        { 'rbc-time-view-resources': resources }
+      ) }
+    >
+      {
+        resources && resources.length > 1 && resourceGroupingLayout
+          ? <TimeGridHeaderResources { ...headerProps } />
+          : <TimeGridHeader { ...headerProps } />
+      }
+      { popup && renderOverlay() }
+      <div
+        ref={ contentRef }
+        className="rbc-time-content"
+        onScroll={ handleScroll }
+      >
+        <TimeGutter
+          date={ start }
+          ref={ gutterRef }
+          localizer={ localizer }
+          min={ localizer.merge(start, min) }
+          max={ localizer.merge(start, max) }
+          step={ step }
+          getNow={ getNow }
+          timeslots={ timeslots }
+          components={ components }
+          className="rbc-time-gutter"
+          getters={ getters }
+        />
+        { renderEvents(
+          range,
+          rangeEvents,
+          rangeBackgroundEvents,
+          getNow()
+        ) }
+      </div>
+    </div>
   )
 }
 
-TimeGrid.propTypes = {
-  events: PropTypes.array.isRequired,
-  backgroundEvents: PropTypes.array.isRequired,
-  resources: PropTypes.array,
-
-  resourceGroupingLayout: PropTypes.bool,
-
-  step: PropTypes.number,
-  timeslots: PropTypes.number,
-  range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-  min: PropTypes.instanceOf(Date).isRequired,
-  max: PropTypes.instanceOf(Date).isRequired,
-  getNow: PropTypes.func.isRequired,
-
-  scrollToTime: PropTypes.instanceOf(Date).isRequired,
-  enableAutoScroll: PropTypes.bool,
-  showMultiDayTimes: PropTypes.bool,
-
-  rtl: PropTypes.bool,
-  resizable: PropTypes.bool,
-  width: PropTypes.number,
-
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
-  allDayMaxRows: PropTypes.number,
-
-  selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
-
-  onNavigate: PropTypes.func,
-  onSelectSlot: PropTypes.func,
-  onSelectEnd: PropTypes.func,
-  onSelectStart: PropTypes.func,
-  onSelectEvent: PropTypes.func,
-  onShowMore: PropTypes.func,
-  onDoubleClickEvent: PropTypes.func,
-  onKeyPressEvent: PropTypes.func,
-  onDrillDown: PropTypes.func,
-  getDrilldownView: PropTypes.func.isRequired,
-
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
-
-  showAllEvents: PropTypes.bool,
-  doShowMoreDrillDown: PropTypes.bool,
-
-  popup: PropTypes.bool,
-  handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
+TimeGridView.range = (date: Date, { localizer }: CalendarProps) => {
+  const start = localizer.startOf(date, 'day')
+  const end = localizer.endOf(date, 'day')
+  return { start, end }
 }
 
-TimeGrid.defaultProps = {
-  step: 30,
-  timeslots: 2,
-  // To be compatible with old versions, default as `false`.
-  resourceGroupingLayout: false,
+TimeGridView.navigate = (date: Date, action: NavigateAction) => {
+  switch(action) {
+    case 'PREV':
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)
+    case 'NEXT':
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+    default:
+      return date
+  }
+}
+
+TimeGridView.title = (date: Date, { localizer }: CalendarProps) => {
+  return localizer.format(date, 'dayHeaderFormat')
+}
+
+export default TimeGridView
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const renderDayColumn = (
+  date: Date,
+  id: string,
+  resource: Resource,
+  groupedEvents: Map<string, Event[]>,
+  groupedBackgroundEvents: Map<string, Event[]>,
+  localizer: Localizer,
+  accessors,
+  components: Components,
+  dayLayoutAlgorithm: DayLayoutAlgorithm,
+  now: Date,
+  ...props: any
+) => {
+  let { min, max } = props
+
+  let daysEvents = (groupedEvents.get(id) || []).filter((event) =>
+    localizer.inRange(
+      date,
+      accessors.start(event),
+      accessors.end(event),
+      'day'
+    )
+  )
+
+  let daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(
+    (event) =>
+      localizer.inRange(
+        date,
+        accessors.start(event),
+        accessors.end(event),
+        'day'
+      )
+  )
+
+  return (
+    <DayColumn
+      { ...props }
+      localizer={ localizer }
+      min={ localizer.merge(date, min) }
+      max={ localizer.merge(date, max) }
+      resource={ resource && id }
+      components={ components }
+      isNow={ localizer.isSameDate(date, now) }
+      key={ `${id}-${date}` }
+      date={ date }
+      events={ daysEvents }
+      backgroundEvents={ daysBackgroundEvents }
+      dayLayoutAlgorithm={ dayLayoutAlgorithm }
+    />
+  )
+}
+
+const renderResourcesFirst = (
+  range: Date[],
+  resources: Resource[],
+  groupedEvents: Map<string, Event[]>,
+  groupedBackgroundEvents: Map<string, Event[]>,
+  localizer: DateLocalizer,
+  accessors: Accessors,
+  now: Date,
+  components: Components,
+  dayLayoutAlgorithm: DayLayoutAlgorithm
+) => {
+  return resources.map(([id, resource]) =>
+    range.map((date) =>
+      renderDayColumn(
+        date,
+        id,
+        resource,
+        groupedEvents,
+        groupedBackgroundEvents,
+        localizer,
+        accessors,
+        components,
+        dayLayoutAlgorithm,
+        now
+      )
+    )
+  )
+}
+
+const renderRangeFirst = (
+  range: Date[],
+  resources: Resource[],
+  groupedEvents: Map<string, Event[]>,
+  groupedBackgroundEvents: Map<string, Event[]>,
+  localizer: DateLocalizer,
+  accessors: Accessors,
+  now: Date,
+  components: Components,
+  dayLayoutAlgorithm: DayLayoutAlgorithm
+) => {
+  return range.map((date) => (
+    <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date }>
+      { resources.map(([id, resource]) => (
+        <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+          { renderDayColumn(
+            date,
+            id,
+            resource,
+            groupedEvents,
+            groupedBackgroundEvents,
+            localizer,
+            accessors,
+            components,
+            dayLayoutAlgorithm,
+            now
+          ) }
+        </div>
+      )) }
+    </div>
+  ))
+}
+
+const renderEvents = (
+  range: Date[],
+  events: Event[],
+  backgroundEvents: Event[],
+  now: Date,
+  ...props: any
+) => {
+  let {
+    accessors,
+    localizer,
+    resourceGroupingLayout,
+    components,
+    dayLayoutAlgorithm,
+  } = props
+
+  const resources = memoizedResources(props.resources, accessors)
+  const groupedEvents = resources.groupEvents(events)
+  const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
+
+  if(!resourceGroupingLayout) {
+    return renderResourcesFirst(
+      range,
+      resources,
+      groupedEvents,
+      groupedBackgroundEvents,
+      localizer,
+      accessors,
+      now,
+      components,
+      dayLayoutAlgorithm
+    )
+  } else {
+    return renderRangeFirst(
+      range,
+      resources,
+      groupedEvents,
+      groupedBackgroundEvents,
+      localizer,
+      accessors,
+      now,
+      components,
+      dayLayoutAlgorithm
+    )
+  }
+}
+
+
+const renderOverlay = (
+  setOverlay: (overlay: Overlay | null) => void,
+  overlay: Overlay,
+  accessors: Accessors,
+  localizer: DateLocalizer,
+  components: Components,
+  getters: Getters,
+  selected: Event[],
+  popupOffset: number | { x: number, y: number },
+  containerRef: React.RefObject<HTMLDivElement>,
+  handleKeyPressEvent: (...args: any[]) => void,
+  handleSelectEvent: (...args: any[]) => void,
+  handleDoubleClickEvent: (...args: any[]) => void,
+  handleDragStart: () => void,
+) => {
+  const onHide = () => setOverlay(null)
+
+  return (
+    <PopOverlay
+      overlay={ overlay }
+      accessors={ accessors }
+      localizer={ localizer }
+      components={ components }
+      getters={ getters }
+      selected={ selected }
+      popupOffset={ popupOffset }
+      ref={ containerRef }
+      handleKeyPressEvent={ handleKeyPressEvent }
+      handleSelectEvent={ handleSelectEvent }
+      handleDoubleClickEvent={ handleDoubleClickEvent }
+      handleDragStart={ handleDragStart }
+      show={ !!overlay.position }
+      overlayDisplay={ setOverlay }
+      onHide={ onHide }
+    />
+  )
 }

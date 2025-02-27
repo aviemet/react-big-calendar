@@ -8,7 +8,7 @@ import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
 } from '../../utils/Selection'
-import TimeGridEvent from '../../Views/TimeGridView/TimeGridEvent'
+import TimeGridEvent from '../../Views/TimeGridView/TimeGridEvents'
 import { dragAccessors, eventTimes, pointInColumn } from './common'
 
 class EventContainerWrapper extends React.Component {

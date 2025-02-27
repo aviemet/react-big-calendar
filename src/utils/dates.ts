@@ -1,6 +1,6 @@
 /* eslint no-fallthrough: off */
 import { DateLocalizer } from '@/localizers'
-import * as dates from 'date-arithmetic'
+import * as dateArithmetic from 'date-arithmetic'
 import { Unit } from 'date-arithmetic'
 import { StartOfWeek } from 'date-arithmetic'
 
@@ -36,19 +36,19 @@ const MONTHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 export function monthsInYear(year: number) {
   let date = new Date(year, 0, 1)
 
-  return MONTHS.map((i) => dates.month(date, i))
+  return MONTHS.map((i) => dateArithmetic.month(date, i))
 }
 
 export function firstVisibleDay(date: Date, localizer: DateLocalizer) {
-  let firstOfMonth = dates.startOf(date, 'month')
+  let firstOfMonth = dateArithmetic.startOf(date, 'month')
 
-  return dates.startOf(firstOfMonth, 'week', localizer.startOfWeek())
+  return dateArithmetic.startOf(firstOfMonth, 'week', localizer.startOfWeek())
 }
 
 export function lastVisibleDay(date: Date, localizer: DateLocalizer) {
-  let endOfMonth = dates.endOf(date, 'month')
+  let endOfMonth = dateArithmetic.endOf(date, 'month')
 
-  return dates.endOf(endOfMonth, 'week', localizer.startOfWeek())
+  return dateArithmetic.endOf(endOfMonth, 'week', localizer.startOfWeek())
 }
 
 export function visibleDays(date: Date, localizer: DateLocalizer) {
@@ -56,27 +56,32 @@ export function visibleDays(date: Date, localizer: DateLocalizer) {
       last = lastVisibleDay(date, localizer),
       days = []
 
-  while(dates.lte(current, last, 'day')) {
+  while(dateArithmetic.lte(current, last, 'day')) {
     days.push(current)
-    current = dates.add(current, 1, 'day')
+    current = dateArithmetic.add(current, 1, 'day')
   }
 
   return days
 }
 
-export function ceil(date: Date, unit: Unit) {
-  let floor = dates.startOf(date, unit)
+export function ceil(date: Date, unit: Unit, startOfWeek?: StartOfWeek) {
+  let floor
+  if(unit === 'week') {
+    floor = dateArithmetic.startOf(date, unit, startOfWeek)
+  } else {
+    floor = dateArithmetic.startOf(date, unit)
+  }
 
-  return dates.eq(floor, date) ? floor : dates.add(floor, 1, unit)
+  return dateArithmetic.eq(floor, date) ? floor : dateArithmetic.add(floor, 1, unit)
 }
 
 export function range(start: Date, end: Date, unit: Unit = 'day') {
   let current = start,
       days = []
 
-  while(dates.lte(current, end, unit)) {
+  while(dateArithmetic.lte(current, end, unit)) {
     days.push(current)
-    current = dates.add(current, 1, unit)
+    current = dateArithmetic.add(current, 1, unit)
   }
 
   return days
@@ -88,37 +93,48 @@ export function merge(date: Date, time: Date) {
   if(time === null) time = new Date()
   if(date === null) date = new Date()
 
-  date = dates.startOf(date, 'day')
-  date = dates.hours(date, dates.hours(time))
-  date = dates.minutes(date, dates.minutes(time))
-  date = dates.seconds(date, dates.seconds(time))
-  return dates.milliseconds(date, dates.milliseconds(time))
+  date = dateArithmetic.startOf(date, 'day')
+  date = dateArithmetic.hours(date, dateArithmetic.hours(time))
+  date = dateArithmetic.minutes(date, dateArithmetic.minutes(time))
+  date = dateArithmetic.seconds(date, dateArithmetic.seconds(time))
+  return dateArithmetic.milliseconds(date, dateArithmetic.milliseconds(time))
 }
 
 export function eqTime(dateA: Date, dateB: Date) {
   return (
-    dates.hours(dateA) === dates.hours(dateB) &&
-    dates.minutes(dateA) === dates.minutes(dateB) &&
-    dates.seconds(dateA) === dates.seconds(dateB)
+    dateArithmetic.hours(dateA) === dateArithmetic.hours(dateB) &&
+    dateArithmetic.minutes(dateA) === dateArithmetic.minutes(dateB) &&
+    dateArithmetic.seconds(dateA) === dateArithmetic.seconds(dateB)
   )
 }
 
 export function isJustDate(date: Date) {
   return (
-    dates.hours(date) === 0 &&
-    dates.minutes(date) === 0 &&
-    dates.seconds(date) === 0 &&
-    dates.milliseconds(date) === 0
+    dateArithmetic.hours(date) === 0 &&
+    dateArithmetic.minutes(date) === 0 &&
+    dateArithmetic.seconds(date) === 0 &&
+    dateArithmetic.milliseconds(date) === 0
   )
 }
 
-export function duration(start: Date, end: Date, unit: Unit, firstOfWeek: StartOfWeek) {
-  if(unit === 'day') unit = 'date'
-  return Math.abs(
-    // eslint-disable-next-line import/namespace
-    dates[unit](start, undefined, firstOfWeek) -
-      // eslint-disable-next-line import/namespace
-      dates[unit](end, undefined, firstOfWeek)
+type DurationUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'day' | 'week' | 'month' | 'year'
+export function duration(start: Date, end: Date, unit: 'week', firstOfWeek: StartOfWeek): number
+export function duration(start: Date, end: Date, unit: Exclude<DurationUnit, 'week'>): number
+export function duration(start: Date, end: Date, unit: DurationUnit, firstOfWeek?: StartOfWeek) {
+  if(unit === 'week') {
+    return dateArithmetic.diff(
+      dateArithmetic.weekday(start, undefined, firstOfWeek),
+      dateArithmetic.weekday(end, undefined, firstOfWeek),
+      'seconds',
+    )
+  }
+
+  const timeMethod = dateArithmetic[unit === 'day' ? 'date' : unit]
+
+  return dateArithmetic.diff(
+    timeMethod(start, undefined),
+    timeMethod(end, undefined),
+    'seconds',
   )
 }
 
@@ -130,8 +146,8 @@ export function diff(dateA: Date, dateB: Date, unit: Unit) {
   // since one day in the range may be shorter/longer by an hour
   return Math.round(
     Math.abs(
-      +dates.startOf(dateA, unit) / MILLI[unit] -
-        +dates.startOf(dateB, unit) / MILLI[unit]
+      +dateArithmetic.startOf(dateA, unit) / MILLI[unit] -
+        +dateArithmetic.startOf(dateB, unit) / MILLI[unit]
     )
   )
 }
@@ -164,13 +180,13 @@ export function week(date: Date) {
 }
 
 export function today() {
-  return dates.startOf(new Date(), 'day')
+  return dateArithmetic.startOf(new Date(), 'day')
 }
 
 export function yesterday() {
-  return dates.add(dates.startOf(new Date(), 'day'), -1, 'day')
+  return dateArithmetic.add(dateArithmetic.startOf(new Date(), 'day'), -1, 'day')
 }
 
 export function tomorrow() {
-  return dates.add(dates.startOf(new Date(), 'day'), 1, 'day')
+  return dateArithmetic.add(dateArithmetic.startOf(new Date(), 'day'), 1, 'day')
 }

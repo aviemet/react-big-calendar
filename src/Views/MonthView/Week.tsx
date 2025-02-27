@@ -55,7 +55,7 @@ const Week = ({ week,
     return evts.filter((e) => inRange(e, start, end, accessors, localizer))
   }
 
-  const { needLimitMeasure, rowLimit } = state
+  // const { needLimitMeasure, rowLimit } = state
 
   // let's not mutate props
   const weeksEvents = eventsForWeek(
