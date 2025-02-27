@@ -15,27 +15,27 @@ class Toolbar extends React.Component {
         <span className="rbc-btn-group">
           <button
             type="button"
-            onClick={this.navigate.bind(null, navigate.TODAY)}
+            onClick={ this.navigate.bind(null, navigate.TODAY) }
           >
-            {messages.today}
+            { messages.today }
           </button>
           <button
             type="button"
-            onClick={this.navigate.bind(null, navigate.PREVIOUS)}
+            onClick={ this.navigate.bind(null, navigate.PREVIOUS) }
           >
-            {messages.previous}
+            { messages.previous }
           </button>
           <button
             type="button"
-            onClick={this.navigate.bind(null, navigate.NEXT)}
+            onClick={ this.navigate.bind(null, navigate.NEXT) }
           >
-            {messages.next}
+            { messages.next }
           </button>
         </span>
 
-        <span className="rbc-toolbar-label">{label}</span>
+        <span className="rbc-toolbar-label">{ label }</span>
 
-        <span className="rbc-btn-group">{this.viewNamesGroup(messages)}</span>
+        <span className="rbc-btn-group">{ this.viewNamesGroup(messages) }</span>
       </div>
     )
   }
@@ -52,15 +52,15 @@ class Toolbar extends React.Component {
     let viewNames = this.props.views
     const view = this.props.view
 
-    if (viewNames.length > 1) {
+    if(viewNames.length > 1) {
       return viewNames.map((name) => (
         <button
           type="button"
-          key={name}
-          className={clsx({ 'rbc-active': view === name })}
-          onClick={this.view.bind(null, name)}
+          key={ name }
+          className={ clsx({ 'rbc-active': view === name }) }
+          onClick={ this.view.bind(null, name) }
         >
-          {messages[name]}
+          { messages[name] }
         </button>
       ))
     }

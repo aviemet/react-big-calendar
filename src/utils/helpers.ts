@@ -1,7 +1,7 @@
 var idCount = 0
 
-function uniqueId(prefix) {
-  return '' + ((prefix === null ? '' : prefix) + ++idCount)
+function uniqueId(prefix?: string) {
+  return '' + ((prefix ?? '') + ++idCount)
 }
 
 export function notify(handler, args) {

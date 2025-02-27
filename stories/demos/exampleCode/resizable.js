@@ -66,8 +66,8 @@ export default function Resizable({ localizer }) {
             <label>
               <input
                 type="checkbox"
-                checked={resizable}
-                onChange={toggleResizing}
+                checked={ resizable }
+                onChange={ toggleResizing }
               />
               Allow Event Resizing
             </label>
@@ -76,15 +76,15 @@ export default function Resizable({ localizer }) {
       </DemoLink>
       <div className="height600">
         <DragAndDropCalendar
-          defaultDate={defaultDate}
-          defaultView={Views.MONTH}
+          defaultDate={ defaultDate }
+          defaultView={ Views.MONTH }
           draggableAccessor="isDraggable"
-          eventPropGetter={eventPropGetter}
-          events={myEvents}
-          localizer={localizer}
-          onEventResize={resizeEvent}
-          resizable={resizable}
-          resizableAccessor={resizable ? 'isResizable' : 'fakeKey'}
+          eventPropGetter={ eventPropGetter }
+          events={ myEvents }
+          localizer={ localizer }
+          onEventResize={ resizeEvent }
+          resizable={ resizable }
+          resizableAccessor={ resizable ? 'isResizable' : 'fakeKey' }
         />
       </div>
     </Fragment>

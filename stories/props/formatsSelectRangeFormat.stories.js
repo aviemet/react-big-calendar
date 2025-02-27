@@ -34,13 +34,13 @@ export function FormatsSelectRangeFormat() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.WEEK}
-        events={demoEvents}
-        formats={formats}
-        localizer={mLocalizer}
+        defaultDate={ defaultDate }
+        defaultView={ Views.WEEK }
+        events={ demoEvents }
+        formats={ formats }
+        localizer={ mLocalizer }
         selectable
-        views={views}
+        views={ views }
       />
     </div>
   )

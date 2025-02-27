@@ -25,9 +25,9 @@ class BackgroundCells extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.selectable && this.props.selectable) this._selectable()
+    if(!prevProps.selectable && this.props.selectable) this._selectable()
 
-    if (prevProps.selectable && !this.props.selectable)
+    if(prevProps.selectable && !this.props.selectable)
       this._teardownSelectable()
   }
 
@@ -40,20 +40,20 @@ class BackgroundCells extends React.Component {
       components: { dateCellWrapper: Wrapper },
       localizer,
     } = this.props
-    let { selecting, startIdx, endIdx } = this.state
+    let { selecting, startIndex, endIndex } = this.state
     let current = getNow()
 
     return (
-      <div className="rbc-row-bg" ref={this.containerRef}>
-        {range.map((date, index) => {
-          let selected = selecting && index >= startIdx && index <= endIdx
+      <div className="rbc-row-bg" ref={ this.containerRef }>
+        { range.map((date, index) => {
+          let selected = selecting && index >= startIndex && index <= endIndex
           const { className, style } = getters.dayProp(date)
 
           return (
-            <Wrapper key={index} value={date} range={range}>
+            <Wrapper key={ index } value={ date } range={ range }>
               <div
-                style={style}
-                className={clsx(
+                style={ style }
+                className={ clsx(
                   'rbc-day-bg',
                   className,
                   selected && 'rbc-selected-cell',
@@ -61,11 +61,11 @@ class BackgroundCells extends React.Component {
                   currentDate &&
                     localizer.neq(currentDate, date, 'month') &&
                     'rbc-off-range-bg'
-                )}
+                ) }
               />
             </Wrapper>
           )
-        })}
+        }) }
       </div>
     )
   }
@@ -77,16 +77,16 @@ class BackgroundCells extends React.Component {
     }))
 
     let selectorClicksHandler = (point, actionType) => {
-      if (!isEvent(node, point) && !isShowMore(node, point)) {
+      if(!isEvent(node, point) && !isShowMore(node, point)) {
         let rowBox = getBoundsForNode(node)
         let { range, rtl } = this.props
 
-        if (pointInBox(rowBox, point)) {
+        if(pointInBox(rowBox, point)) {
           let currentCell = getSlotAtX(rowBox, point.x, rtl, range.length)
 
           this._selectSlot({
-            startIdx: currentCell,
-            endIdx: currentCell,
+            startIndex: currentCell,
+            endIndex: currentCell,
             action: actionType,
             box: point,
           })
@@ -100,16 +100,16 @@ class BackgroundCells extends React.Component {
     selector.on('selecting', (box) => {
       let { range, rtl } = this.props
 
-      let startIdx = -1
-      let endIdx = -1
+      let startIndex = -1
+      let endIndex = -1
 
-      if (!this.state.selecting) {
+      if(!this.state.selecting) {
         notify(this.props.onSelectStart, [box])
         this._initial = { x: box.x, y: box.y }
       }
-      if (selector.isSelected(node)) {
+      if(selector.isSelected(node)) {
         let nodeBox = getBoundsForNode(node)
-        ;({ startIdx, endIdx } = dateCellSelection(
+        ;({ startIndex, endIndex } = dateCellSelection(
           this._initial,
           nodeBox,
           box,
@@ -120,13 +120,13 @@ class BackgroundCells extends React.Component {
 
       this.setState({
         selecting: true,
-        startIdx,
-        endIdx,
+        startIndex,
+        endIndex,
       })
     })
 
     selector.on('beforeSelect', (box) => {
-      if (this.props.selectable !== 'ignoreEvents') return
+      if(this.props.selectable !== 'ignoreEvents') return
 
       return !isEvent(this.containerRef.current, box)
     })
@@ -146,17 +146,17 @@ class BackgroundCells extends React.Component {
   }
 
   _teardownSelectable() {
-    if (!this._selector) return
+    if(!this._selector) return
     this._selector.teardown()
     this._selector = null
   }
 
-  _selectSlot({ endIdx, startIdx, action, bounds, box }) {
-    if (endIdx !== -1 && startIdx !== -1)
+  _selectSlot({ endIndex, startIndex, action, bounds, box }) {
+    if(endIndex !== -1 && startIndex !== -1)
       this.props.onSelectSlot &&
         this.props.onSelectSlot({
-          start: startIdx,
-          end: endIdx,
+          start: startIndex,
+          end: endIndex,
           action,
           bounds,
           box,

@@ -7,8 +7,8 @@ const customComponents = {
     // Show 'click me' text in arbitrary places by using the range prop
     const hasAlert = dateCellWrapperProps.range
       ? dateCellWrapperProps.range.some((date) => {
-          return date.getDate() % 12 === 0
-        })
+        return date.getDate() % 12 === 0
+      })
       : false
 
     const style = {
@@ -18,13 +18,13 @@ const customComponents = {
       backgroundColor: hasAlert ? '#f5f5dc' : '#fff',
     }
     return (
-      <div style={style}>
-        {hasAlert && (
-          <a onClick={action('custom dateCellWrapper component clicked')}>
+      <div style={ style }>
+        { hasAlert && (
+          <a onClick={ action('custom dateCellWrapper component clicked') }>
             Click me
           </a>
-        )}
-        {dateCellWrapperProps.children}
+        ) }
+        { dateCellWrapperProps.children }
       </div>
     )
   },
@@ -40,9 +40,9 @@ const customComponents = {
       backgroundColor: hasCustomInfo ? '#f5f5dc' : '#fff',
     }
     return (
-      <div style={style}>
-        {hasCustomInfo && 'Custom Day Wrapper'}
-        {timeSlotWrapperProps.children}
+      <div style={ style }>
+        { hasCustomInfo && 'Custom Day Wrapper' }
+        { timeSlotWrapperProps.children }
       </div>
     )
   },
@@ -53,7 +53,7 @@ const customComponents = {
         eventWrapperProps.event.start.getHours() % 2 === 0 ? 'green' : 'red',
       padding: '5px',
     }
-    return <div style={style}>{eventWrapperProps.children}</div>
+    return <div style={ style }>{ eventWrapperProps.children }</div>
   },
   timeSlotWrapper: (timeSlotWrapperProps) => {
     const style =
@@ -61,23 +61,23 @@ const customComponents = {
       timeSlotWrapperProps.value.getMinutes() !== 0
         ? {}
         : {
-            border: '4px solid',
-            backgroundColor:
+          border: '4px solid',
+          backgroundColor:
               timeSlotWrapperProps.value.getHours() >= 8 &&
               timeSlotWrapperProps.value.getHours() <= 17
                 ? 'green'
                 : 'red',
-            padding: '5px',
-          }
-    return <div style={style}>{timeSlotWrapperProps.children}</div>
+          padding: '5px',
+        }
+    return <div style={ style }>{ timeSlotWrapperProps.children }</div>
   },
   timeGutterWrapper: (timeGutterWrapperProps) => {
     return (
       <div
         id="my-custom-time-gutter-wrapper"
-        style={{ backgroundColor: 'gray' }}
+        style={ { backgroundColor: 'gray' } }
       >
-        {timeGutterWrapperProps.children}
+        { timeGutterWrapperProps.children }
       </div>
     )
   },
@@ -85,20 +85,20 @@ const customComponents = {
     return (
       <button
         id="my-custom-show-more"
-        style={{ border: '4px solid red', cursor: 'pointer' }}
-        onClick={() => {
+        style={ { border: '4px solid red', cursor: 'pointer' } }
+        onClick={ () => {
           console.log('showMoreProps', showMoreProps)
           window.alert(`
             Clicked ${showMoreProps.slotDate
-              .toISOString()
-              .substr(0, 10)} with ${
-            showMoreProps.remainingEvents.length
-          } remaining events.
+        .toISOString()
+        .substr(0, 10)} with ${
+        showMoreProps.remainingEvents.length
+      } remaining events.
             Open the console for the full set of props.
           `)
-        }}
+        } }
       >
-        {showMoreProps.count} more!
+        { showMoreProps.count } more!
       </button>
     )
   },

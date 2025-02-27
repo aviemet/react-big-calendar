@@ -77,29 +77,29 @@ export default function CulturesDemo({ localizer }) {
     <Fragment>
       <DemoLink fileName="cultures">
         <Layout direction="column" align="center">
-          <label>Select a Culture</label>{' '}
+          <label>Select a Culture</label>{ ' ' }
           <select
             className="form-control"
-            style={{ width: 200, display: 'inline-block' }}
-            defaultValue={'fr'}
-            onChange={cultureOnClick}
+            style={ { width: 200, display: 'inline-block' } }
+            defaultValue={ 'fr' }
+            onChange={ cultureOnClick }
           >
-            {cultures.map((c, idx) => (
-              <option key={idx} value={c}>
-                {c}
+            { cultures.map((c, Index) => (
+              <option key={ Index } value={ c }>
+                { c }
               </option>
-            ))}
+            )) }
           </select>
         </Layout>
       </DemoLink>
       <div className="height600">
         <Calendar
-          culture={culture}
-          defaultDate={defaultDate}
-          events={events}
-          localizer={localizer}
-          messages={messages}
-          rtl={rightToLeft}
+          culture={ culture }
+          defaultDate={ defaultDate }
+          events={ events }
+          localizer={ localizer }
+          messages={ messages }
+          rtl={ rightToLeft }
         />
       </div>
     </Fragment>

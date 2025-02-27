@@ -1,22 +1,19 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-
 export interface DateHeaderProps {
-  date: Date;
-  drilldownView: string;
-  isOffRange: boolean;
-  label: string;
-  onDrillDown: () => void;
+  date: Date
+  drilldownView: string
+  isOffRange: boolean
+  label: string
+  onDrillDown: () => void
 }
 
 const DateHeader = ({ label, drilldownView, onDrillDown }) => {
-  if (!drilldownView) {
-    return <span>{label}</span>
+  if(!drilldownView) {
+    return <span>{ label }</span>
   }
 
   return (
-    <button type="button" className="rbc-button-link" onClick={onDrillDown}>
-      {label}
+    <button type="button" className="rbc-button-link" onClick={ onDrillDown }>
+      { label }
     </button>
   )
 }

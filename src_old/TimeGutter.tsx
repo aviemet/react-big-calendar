@@ -12,7 +12,7 @@ import TimeSlotGroup from './TimeSlotGroup'
  * used.
  */
 function adjustForDST({ min, max, localizer }) {
-  if (localizer.getTimezoneOffset(min) !== localizer.getTimezoneOffset(max)) {
+  if(localizer.getTimezoneOffset(min) !== localizer.getTimezoneOffset(max)) {
     return {
       start: localizer.add(min, -1, 'day'),
       end: localizer.add(max, -1, 'day'),
@@ -50,7 +50,7 @@ const TimeGutter = ({
   )
 
   useEffect(() => {
-    if (slotMetrics) {
+    if(slotMetrics) {
       setSlotMetrics(
         slotMetrics.update({
           min: start,
@@ -68,13 +68,13 @@ const TimeGutter = ({
   }, [start?.toISOString(), end?.toISOString(), timeslots, step])
 
   const renderSlot = useCallback(
-    (value, idx) => {
-      if (idx) return null // don't return the first (0) idx
+    (value, Index) => {
+      if(Index) return null // don't return the first (0) Index
 
-      const isNow = slotMetrics.dateIsInGroup(getNow(), idx)
+      const isNow = slotMetrics.dateIsInGroup(getNow(), Index)
       return (
-        <span className={clsx('rbc-label', isNow && 'rbc-now')}>
-          {localizer.format(value, 'timeGutterFormat')}
+        <span className={ clsx('rbc-label', isNow && 'rbc-now') }>
+          { localizer.format(value, 'timeGutterFormat') }
         </span>
       )
     },
@@ -82,20 +82,20 @@ const TimeGutter = ({
   )
 
   return (
-    <TimeGutterWrapper slotMetrics={slotMetrics}>
-      <div className="rbc-time-gutter rbc-time-column" ref={gutterRef}>
-        {slotMetrics.groups.map((grp, idx) => {
+    <TimeGutterWrapper slotMetrics={ slotMetrics }>
+      <div className="rbc-time-gutter rbc-time-column" ref={ gutterRef }>
+        { slotMetrics.groups.map((grp, Index) => {
           return (
             <TimeSlotGroup
-              key={idx}
-              group={grp}
-              resource={resource}
-              components={components}
-              renderSlot={renderSlot}
-              getters={getters}
+              key={ Index }
+              group={ grp }
+              resource={ resource }
+              components={ components }
+              renderSlot={ renderSlot }
+              getters={ getters }
             />
           )
-        })}
+        }) }
       </div>
     </TimeGutterWrapper>
   )
@@ -116,5 +116,5 @@ TimeGutter.propTypes = {
 }
 
 export default React.forwardRef((props, ref) => (
-  <TimeGutter gutterRef={ref} {...props} />
+  <TimeGutter gutterRef={ ref } { ...props } />
 ))

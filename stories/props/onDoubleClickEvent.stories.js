@@ -64,11 +64,11 @@ export function OnDoubleClickEvent() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onDoubleClickEvent={onDoubleClickEvent}
-        onSelectEvent={onSelectEvent}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onDoubleClickEvent={ onDoubleClickEvent }
+        onSelectEvent={ onSelectEvent }
       />
     </div>
   )

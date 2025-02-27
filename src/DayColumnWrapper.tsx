@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-const DayColumnWrapper = ({ children, className, style, innerRef }) => {
-  return (
-    <div className={className} style={style} ref={innerRef}>
-      {children}
-    </div>
-  )
+interface DayColumnWrapperProps {
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
 }
 
-export default React.forwardRef((props, ref) => (
-  <DayColumnWrapper {...props} innerRef={ref} />
-))
+const DayColumnWrapper = forwardRef<HTMLDivElement, DayColumnWrapperProps>((
+  { children, className, style },
+  ref
+) => {
+  return (
+    <div className={ className } style={ style } ref={ ref }>
+      { children }
+    </div>
+  )
+})
+
+export default DayColumnWrapper

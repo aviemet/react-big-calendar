@@ -9,7 +9,7 @@ const MyOtherNestedComponent = () => <div>NESTED COMPONENT</div>
 const MyCustomHeader = ({ label }) => (
   <div>
     CUSTOM HEADER:
-    <div>{label}</div>
+    <div>{ label }</div>
     <MyOtherNestedComponent />
   </div>
 )
@@ -35,10 +35,10 @@ export default function CustomHeader({ localizer }) {
       <DemoLink fileName="customHeader" />
       <div className="height600">
         <Calendar
-          components={components}
-          defaultDate={defaultDate}
-          events={events}
-          localizer={localizer}
+          components={ components }
+          defaultDate={ defaultDate }
+          events={ events }
+          localizer={ localizer }
         />
       </div>
     </Fragment>

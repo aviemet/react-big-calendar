@@ -14,7 +14,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div style={{ height: 800 }}>
+      <div style={ { height: 800 } }>
         <Story />
       </div>
     ),
@@ -27,9 +27,9 @@ export function Localizer() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={new Date(2015, 3, 13)}
-        events={demoEvents}
-        localizer={localizer}
+        defaultDate={ new Date(2015, 3, 13) }
+        events={ demoEvents }
+        localizer={ localizer }
       />
     </div>
   )

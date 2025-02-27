@@ -7,8 +7,8 @@ import qsa from 'dom-helpers/cjs/querySelectorAll'
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
-} from '../../Selection'
-import TimeGridEvent from '../../TimeGridEvent'
+} from '../../utils/Selection'
+import TimeGridEvent from '../../Views/TimeGridView/TimeGridEvent'
 import { dragAccessors, eventTimes, pointInColumn } from './common'
 
 class EventContainerWrapper extends React.Component {
@@ -38,13 +38,13 @@ class EventContainerWrapper extends React.Component {
   }
 
   reset() {
-    if (this.state.event)
+    if(this.state.event)
       this.setState({ event: null, top: null, height: null })
   }
 
   update(event, { startDate, endDate, top, height }) {
     const { event: lastEvent } = this.state
-    if (
+    if(
       lastEvent &&
       startDate === lastEvent.start &&
       endDate === lastEvent.end
@@ -60,7 +60,7 @@ class EventContainerWrapper extends React.Component {
   }
 
   handleMove = (point, bounds) => {
-    if (!pointInColumn(bounds, point)) return this.reset()
+    if(!pointInColumn(bounds, point)) return this.reset()
     const { event } = this.context.draggable.dragAndDropAction
     const { accessors, slotMetrics } = this.props
 
@@ -81,7 +81,7 @@ class EventContainerWrapper extends React.Component {
 
     let { start, end } = eventTimes(event, accessors, localizer)
     let newRange
-    if (direction === 'UP') {
+    if(direction === 'UP') {
       const newStart = localizer.min(
         newTime,
         slotMetrics.closestSlotFromDate(end, -1)
@@ -93,7 +93,7 @@ class EventContainerWrapper extends React.Component {
         ...newRange,
         endDate: end,
       }
-    } else if (direction === 'DOWN') {
+    } else if(direction === 'DOWN') {
       // Get the new range based on the new end
       // but don't overwrite the start date as it could be outside this day boundary.
       const newEnd = localizer.max(
@@ -147,7 +147,7 @@ class EventContainerWrapper extends React.Component {
 
     let end = slotMetrics.nextSlot(start)
     const eventHasDuration = !isNaN(eventDuration)
-    if (eventHasDuration) {
+    if(eventHasDuration) {
       const eventEndSlot = localizer.add(start, eventDuration, 'milliseconds')
       end = new Date(Math.max(eventEndSlot, end))
     }
@@ -157,10 +157,10 @@ class EventContainerWrapper extends React.Component {
   updateParentScroll = (parent, node) => {
     setTimeout(() => {
       const draggedEl = qsa(node, '.rbc-addons-dnd-drag-preview')[0]
-      if (draggedEl) {
-        if (draggedEl.offsetTop < parent.scrollTop) {
+      if(draggedEl) {
+        if(draggedEl.offsetTop < parent.scrollTop) {
           scrollTop(parent, Math.max(draggedEl.offsetTop, 0))
-        } else if (
+        } else if(
           draggedEl.offsetTop + draggedEl.offsetHeight >
           parent.scrollTop + parent.clientHeight
         ) {
@@ -190,13 +190,13 @@ class EventContainerWrapper extends React.Component {
     selector.on('beforeSelect', (point) => {
       const { dragAndDropAction } = this.context.draggable
 
-      if (!dragAndDropAction.action) return false
-      if (dragAndDropAction.action === 'resize') {
+      if(!dragAndDropAction.action) return false
+      if(dragAndDropAction.action === 'resize') {
         return pointInColumn(getBoundsForNode(node), point)
       }
 
       const eventNode = getEventNodeFromPoint(node, point)
-      if (!eventNode) return false
+      if(!eventNode) return false
 
       // eventOffsetTop is distance from the top of the event to the initial
       // mouseDown position. We need this later to compute the new top of the
@@ -211,28 +211,28 @@ class EventContainerWrapper extends React.Component {
       const bounds = getBoundsForNode(node)
       const { dragAndDropAction } = this.context.draggable
 
-      if (dragAndDropAction.action === 'move') {
+      if(dragAndDropAction.action === 'move') {
         this.updateParentScroll(parent, node)
         this.handleMove(box, bounds)
       }
-      if (dragAndDropAction.action === 'resize') {
+      if(dragAndDropAction.action === 'resize') {
         this.updateParentScroll(parent, node)
         this.handleResize(box, bounds)
       }
     })
 
     selector.on('dropFromOutside', (point) => {
-      if (!this.context.draggable.onDropFromOutside) return
+      if(!this.context.draggable.onDropFromOutside) return
       const bounds = getBoundsForNode(node)
-      if (!pointInColumn(bounds, point)) return
+      if(!pointInColumn(bounds, point)) return
       this.handleDropFromOutside(point, bounds)
     })
 
     selector.on('dragOverFromOutside', (point) => {
       const item = this.context.draggable.dragFromOutsideItem ? this.context.draggable.dragFromOutsideItem() : null
-      if (!item) return
+      if(!item) return
       const bounds = getBoundsForNode(node)
-      if (!pointInColumn(bounds, point)) return this.reset()
+      if(!pointInColumn(bounds, point)) return this.reset()
       this.handleDragOverFromOutside(point, bounds)
     })
 
@@ -245,9 +245,9 @@ class EventContainerWrapper extends React.Component {
       const bounds = getBoundsForNode(node)
       isBeingDragged = false
       const { dragAndDropAction } = this.context.draggable
-      if (dragAndDropAction.action === 'resize') {
+      if(dragAndDropAction.action === 'resize') {
         this.handleInteractionEnd()
-      } else if (!this.state.event || !pointInColumn(bounds, point)) {
+      } else if(!this.state.event || !pointInColumn(bounds, point)) {
         return
       } else {
         this.handleInteractionEnd()
@@ -255,7 +255,7 @@ class EventContainerWrapper extends React.Component {
     })
 
     selector.on('click', () => {
-      if (isBeingDragged) this.reset()
+      if(isBeingDragged) this.reset()
       this.context.draggable.onEnd(null)
     })
     selector.on('reset', () => {
@@ -277,7 +277,7 @@ class EventContainerWrapper extends React.Component {
   }
 
   _teardownSelectable = () => {
-    if (!this._selector) return
+    if(!this._selector) return
     this._selector.teardown()
     this._selector = null
   }
@@ -287,7 +287,7 @@ class EventContainerWrapper extends React.Component {
       this.props
 
     let { event, top, height } = this.state
-    if (!event) return children
+    if(!event) return children
 
     const events = children.props.children
     const { start, end } = event
@@ -298,37 +298,37 @@ class EventContainerWrapper extends React.Component {
     const startsBeforeDay = slotMetrics.startsBeforeDay(start)
     const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-    if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
-    else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
+    if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
+    else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
 
-    if (startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
+    if(startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
     else label = localizer.format({ start, end }, format)
 
     return React.cloneElement(children, {
       children: (
         <React.Fragment>
-          {events}
+          { events }
 
-          {event && (
+          { event && (
             <TimeGridEvent
-              event={event}
-              label={label}
+              event={ event }
+              label={ label }
               className="rbc-addons-dnd-drag-preview"
-              style={{ top, height, width: 100 }}
-              getters={getters}
-              components={components}
-              accessors={{ ...accessors, ...dragAccessors }}
-              continuesPrior={startsBeforeDay}
-              continuesAfter={startsAfterDay}
+              style={ { top, height, width: 100 } }
+              getters={ getters }
+              components={ components }
+              accessors={ { ...accessors, ...dragAccessors } }
+              continuesPrior={ startsBeforeDay }
+              continuesAfter={ startsAfterDay }
             />
-          )}
+          ) }
         </React.Fragment>
       ),
     })
   }
 
   render() {
-    return <div ref={this.ref}>{this.renderContent()}</div>
+    return <div ref={ this.ref }>{ this.renderContent() }</div>
   }
 }
 

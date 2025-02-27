@@ -4,7 +4,7 @@ import React from 'react'
 const Header = ({ label }) => {
   return (
     <span role="columnheader" aria-sort="none">
-      {label}
+      { label }
     </span>
   )
 }

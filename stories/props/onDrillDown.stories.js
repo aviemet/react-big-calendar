@@ -31,13 +31,13 @@ export function OnDrillDown() {
   return (
     <div className="height600">
       <Calendar
-        date={date}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onDrillDown={onDrillDown}
-        onNavigate={onNavigate}
-        onView={onView}
-        view={view}
+        date={ date }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onDrillDown={ onDrillDown }
+        onNavigate={ onNavigate }
+        onView={ onView }
+        view={ view }
       />
     </div>
   )

@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example2() {
-  return <DnDResource localizer={localizer} />
+  return <DnDResource localizer={ localizer } />
 }
 Example2.storyName = 'Resource Drag and Drop'

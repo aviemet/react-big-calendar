@@ -1,9 +1,6 @@
-import PropTypes from 'prop-types'
-import React from 'react'
 import EventCell from './EventCell'
-import { isSelected } from './utils/selection'
+import { isSelected } from '../../utils/eventSelectionHelpers'
 
-/* eslint-disable react/prop-types */
 export default {
   propTypes: {
     slotMetrics: PropTypes.object.isRequired,
@@ -46,20 +43,20 @@ export default {
 
     return (
       <EventCell
-        event={event}
-        getters={getters}
-        localizer={localizer}
-        accessors={accessors}
-        components={components}
-        onSelect={onSelect}
-        onDoubleClick={onDoubleClick}
-        onKeyPress={onKeyPress}
-        continuesPrior={continuesPrior}
-        continuesAfter={continuesAfter}
-        slotStart={slotMetrics.first}
-        slotEnd={slotMetrics.last}
-        selected={isSelected(event, selected)}
-        resizable={resizable}
+        event={ event }
+        getters={ getters }
+        localizer={ localizer }
+        accessors={ accessors }
+        components={ components }
+        onSelect={ onSelect }
+        onDoubleClick={ onDoubleClick }
+        onKeyPress={ onKeyPress }
+        continuesPrior={ continuesPrior }
+        continuesAfter={ continuesAfter }
+        slotStart={ slotMetrics.first }
+        slotEnd={ slotMetrics.last }
+        selected={ isSelected(event, selected) }
+        resizable={ resizable }
       />
     )
   },
@@ -69,12 +66,12 @@ export default {
 
     return (
       <div
-        key={key}
+        key={ key }
         className="rbc-row-segment"
         // IE10/11 need max-width. flex-basis doesn't respect box-sizing
-        style={{ WebkitFlexBasis: per, flexBasis: per, maxWidth: per }}
+        style={ { WebkitFlexBasis: per, flexBasis: per, maxWidth: per } }
       >
-        {content}
+        { content }
       </div>
     )
   },

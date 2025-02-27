@@ -43,7 +43,7 @@ export default function Resource({ localizer }) {
   const handleSelectSlot = useCallback(
     ({ start, end, resourceId }) => {
       const title = window.prompt('New Event Name')
-      if (title) {
+      if(title) {
         setEvents((prev) => [...prev, { start, end, title, resourceId }])
       }
     },
@@ -63,7 +63,7 @@ export default function Resource({ localizer }) {
       isAllDay: droppedOnAllDaySlot = false,
     }) => {
       const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
+      if(!allDay && droppedOnAllDaySlot) {
         event.allDay = true
       }
 
@@ -91,28 +91,28 @@ export default function Resource({ localizer }) {
     <Fragment>
       <DemoLink fileName="resource" />
       <strong>
-        The calendar below uses the{' '}
+        The calendar below uses the{ ' ' }
         <LinkTo kind="props" story="resource-id-accessor">
           resourceIdAccessor
         </LinkTo>
-        ,{' '}
+        ,{ ' ' }
         <LinkTo kind="props" story="resource-title-accessor">
           resourceTitleAccessor
-        </LinkTo>{' '}
-        and{' '}
+        </LinkTo>{ ' ' }
+        and{ ' ' }
         <LinkTo kind="props" story="resources">
           resources
-        </LinkTo>{' '}
+        </LinkTo>{ ' ' }
         props to show events scheduled for different resources.
         <br />
         Events can be mapped to a single resource, or multiple resources.
       </strong>
-      <div style={{ margin: '10px 0 20px 0' }}>
+      <div style={ { margin: '10px 0 20px 0' } }>
         <label>
           <input
             type="checkbox"
-            checked={groupResourcesOnWeek}
-            onChange={() => setGroupResourcesOnWeek(!groupResourcesOnWeek)}
+            checked={ groupResourcesOnWeek }
+            onChange={ () => setGroupResourcesOnWeek(!groupResourcesOnWeek) }
           />
           Group resources on week view.
         </label>
@@ -120,20 +120,20 @@ export default function Resource({ localizer }) {
       <div className="height600">
         <DragAndDropCalendar
           selectable
-          defaultDate={defaultDate}
-          defaultView={Views.DAY}
-          events={myEvents}
-          localizer={localizer}
-          resources={resources}
+          defaultDate={ defaultDate }
+          defaultView={ Views.DAY }
+          events={ myEvents }
+          localizer={ localizer }
+          resources={ resources }
           resourceIdAccessor="resourceId"
           resourceTitleAccessor="resourceTitle"
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={handleSelectEvent}
-          onEventDrop={moveEvent}
-          onEventResize={resizeEvent}
-          step={60}
-          views={views}
-          resourceGroupingLayout={groupResourcesOnWeek}
+          onSelectSlot={ handleSelectSlot }
+          onSelectEvent={ handleSelectEvent }
+          onEventDrop={ moveEvent }
+          onEventResize={ resizeEvent }
+          step={ 60 }
+          views={ views }
+          resourceGroupingLayout={ groupResourcesOnWeek }
         />
       </div>
     </Fragment>

@@ -39,10 +39,10 @@ export function Messages() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        messages={messages}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        messages={ messages }
       />
     </div>
   )

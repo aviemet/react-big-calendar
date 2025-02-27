@@ -22,8 +22,8 @@ const localizer = momentLocalizer(moment)
 export const date = (...args) => moment(...args).toDate()
 
 export const Calendar = (props) => (
-  <div style={{ height: 650 }}>
-    <BaseCalendar localizer={localizer} {...props} />
+  <div style={ { height: 650 } }>
+    <BaseCalendar localizer={ localizer } { ...props } />
   </div>
 )
 
@@ -34,11 +34,11 @@ export const DragableCalendar = (props) => {
     <DragAndDropCalendar
       popup
       selectable
-      localizer={localizer}
-      onEventDrop={action('event dropped')}
-      onSelectEvent={action('event selected')}
-      onSelectSlot={action('slot selected')}
-      {...props}
+      localizer={ localizer }
+      onEventDrop={ action('event dropped') }
+      onSelectEvent={ action('event selected') }
+      onSelectSlot={ action('slot selected') }
+      { ...props }
     />
   )
 }

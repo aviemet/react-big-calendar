@@ -43,17 +43,17 @@ export default function Basic({
 
   return (
     <Fragment>
-      {showDemoLink ? <DemoLink fileName="basic" /> : null}
-      <div className="height600" {...props}>
+      { showDemoLink ? <DemoLink fileName="basic" /> : null }
+      <div className="height600" { ...props }>
         <Calendar
-          components={components}
-          defaultDate={defaultDate}
-          events={events}
-          localizer={localizer}
-          max={max}
+          components={ components }
+          defaultDate={ defaultDate }
+          events={ events }
+          localizer={ localizer }
+          max={ max }
           showMultiDayTimes
-          step={60}
-          views={views}
+          step={ 60 }
+          views={ views }
         />
       </div>
     </Fragment>

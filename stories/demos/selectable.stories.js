@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example2() {
-  return <Selectable localizer={localizer} />
+  return <Selectable localizer={ localizer } />
 }
 Example2.storyName = 'Create Events'

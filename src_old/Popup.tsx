@@ -72,38 +72,38 @@ function Pop({
     minWidth: width + width / 2,
   }
   return (
-    <div style={style} className="rbc-overlay" ref={popperRef}>
+    <div style={ style } className="rbc-overlay" ref={ popperRef }>
       <div className="rbc-overlay-header">
-        {localizer.format(slotStart, 'dayHeaderFormat')}
+        { localizer.format(slotStart, 'dayHeaderFormat') }
       </div>
-      {events.map((event, idx) => (
+      { events.map((event, Index) => (
         <EventCell
-          key={idx}
+          key={ Index }
           type="popup"
-          localizer={localizer}
-          event={event}
-          getters={getters}
-          onSelect={onSelect}
-          accessors={accessors}
-          components={components}
-          onDoubleClick={onDoubleClick}
-          onKeyPress={onKeyPress}
-          continuesPrior={localizer.lt(accessors.end(event), slotStart, 'day')}
-          continuesAfter={localizer.gte(accessors.start(event), slotEnd, 'day')}
-          slotStart={slotStart}
-          slotEnd={slotEnd}
-          selected={isSelected(event, selected)}
-          draggable={true}
-          onDragStart={() => handleDragStart(event)}
-          onDragEnd={() => show()}
+          localizer={ localizer }
+          event={ event }
+          getters={ getters }
+          onSelect={ onSelect }
+          accessors={ accessors }
+          components={ components }
+          onDoubleClick={ onDoubleClick }
+          onKeyPress={ onKeyPress }
+          continuesPrior={ localizer.lt(accessors.end(event), slotStart, 'day') }
+          continuesAfter={ localizer.gte(accessors.start(event), slotEnd, 'day') }
+          slotStart={ slotStart }
+          slotEnd={ slotEnd }
+          selected={ isSelected(event, selected) }
+          draggable={ true }
+          onDragStart={ () => handleDragStart(event) }
+          onDragEnd={ () => show() }
         />
-      ))}
+      )) }
     </div>
   )
 }
 
 const Popup = React.forwardRef((props, ref) => (
-  <Pop {...props} popperRef={ref} />
+  <Pop { ...props } popperRef={ ref } />
 ))
 Popup.propTypes = {
   accessors: PropTypes.object.isRequired,

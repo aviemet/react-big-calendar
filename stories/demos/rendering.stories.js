@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example8() {
-  return <Rendering localizer={localizer} />
+  return <Rendering localizer={ localizer } />
 }
 Example8.storyName = 'Customized Component Rendering'

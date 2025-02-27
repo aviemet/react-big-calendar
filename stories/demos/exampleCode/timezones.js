@@ -38,19 +38,19 @@ export default function Timezones() {
     <Fragment>
       <DemoLink fileName="timezones">
         <TimezoneSelect
-          defaultTZ={defaultTZ}
-          setTimezone={setTimezone}
-          timezone={timezone}
+          defaultTZ={ defaultTZ }
+          setTimezone={ setTimezone }
+          timezone={ timezone }
         />
       </DemoLink>
       <div className="height600">
         <Calendar
-          defaultDate={defaultDate}
-          defaultView={Views.WEEK}
-          events={myEvents}
-          getNow={getNow}
-          localizer={localizer}
-          scrollToTime={scrollToTime}
+          defaultDate={ defaultDate }
+          defaultView={ Views.WEEK }
+          events={ myEvents }
+          getNow={ getNow }
+          localizer={ localizer }
+          scrollToTime={ scrollToTime }
         />
       </div>
     </Fragment>

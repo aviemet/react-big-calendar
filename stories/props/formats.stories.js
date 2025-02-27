@@ -40,10 +40,10 @@ export function Formats() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        formats={formats}
-        localizer={mLocalizer}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        formats={ formats }
+        localizer={ mLocalizer }
       />
     </div>
   )

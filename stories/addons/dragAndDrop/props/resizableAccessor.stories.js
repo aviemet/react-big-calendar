@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function ResizableAccessor() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 ResizableAccessor.storyName = 'resizableAccessor'

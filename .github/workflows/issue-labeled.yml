@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: missing demo
-        if: github.event.label.name == 'missing demo'
+        if: github.event.label.name === 'missing demo'
         uses: actions-cool/issues-helper@v2.2.1
         with:
           actions: 'create-comment, remove-labels'

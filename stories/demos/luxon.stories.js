@@ -16,5 +16,5 @@ export default {
 const localizer = luxonLocalizer(DateTime)
 
 export function LuxonLocalizer() {
-  return <Luxon localizer={localizer} />
+  return <Luxon localizer={ localizer } />
 }

@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 
 export function isSelected(event, selected) {
-  if (!event || selected == null) return false
+  if(!event || selected === null) return false
   return isEqual(event, selected)
 }
 
@@ -24,9 +24,9 @@ export function pointInBox(box, { x, y }) {
 }
 
 export function dateCellSelection(start, rowBox, box, slots, rtl) {
-  let startIdx = -1
-  let endIdx = -1
-  let lastSlotIdx = slots - 1
+  let startIndex = -1
+  let endIndex = -1
+  let lastSlotIndex = slots - 1
 
   let cellWidth = slotWidth(rowBox, slots)
 
@@ -44,39 +44,39 @@ export function dateCellSelection(start, rowBox, box, slots, rtl) {
   let isBetween = box.top < rowBox.top && box.bottom > rowBox.bottom
 
   // this row is between the current and start rows, so entirely selected
-  if (isBetween) {
-    startIdx = 0
-    endIdx = lastSlotIdx
+  if(isBetween) {
+    startIndex = 0
+    endIndex = lastSlotIndex
   }
 
-  if (isCurrentRow) {
-    if (isBelowStart) {
-      startIdx = 0
-      endIdx = currentSlot
-    } else if (isAboveStart) {
-      startIdx = currentSlot
-      endIdx = lastSlotIdx
+  if(isCurrentRow) {
+    if(isBelowStart) {
+      startIndex = 0
+      endIndex = currentSlot
+    } else if(isAboveStart) {
+      startIndex = currentSlot
+      endIndex = lastSlotIndex
     }
   }
 
-  if (isStartRow) {
+  if(isStartRow) {
     // select the cell under the initial point
-    startIdx = endIdx = rtl
-      ? lastSlotIdx - Math.floor((start.x - rowBox.left) / cellWidth)
+    startIndex = endIndex = rtl
+      ? lastSlotIndex - Math.floor((start.x - rowBox.left) / cellWidth)
       : Math.floor((start.x - rowBox.left) / cellWidth)
 
-    if (isCurrentRow) {
-      if (currentSlot < startIdx) startIdx = currentSlot
-      else endIdx = currentSlot //select current range
-    } else if (start.y < box.y) {
+    if(isCurrentRow) {
+      if(currentSlot < startIndex) startIndex = currentSlot
+      else endIndex = currentSlot //select current range
+    } else if(start.y < box.y) {
       // the current row is below start row
       // select cells to the right of the start cell
-      endIdx = lastSlotIdx
+      endIndex = lastSlotIndex
     } else {
       // select cells to the left of the start cell
-      startIdx = 0
+      startIndex = 0
     }
   }
 
-  return { startIdx, endIdx }
+  return { startIndex, endIndex }
 }

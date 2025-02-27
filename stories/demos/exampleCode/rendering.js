@@ -8,8 +8,8 @@ import styles from './rendering.module.scss'
 function Event({ event }) {
   return (
     <span>
-      <strong>{event.title}</strong>
-      {event.desc && ':  ' + event.desc}
+      <strong>{ event.title }</strong>
+      { event.desc && ':  ' + event.desc }
     </span>
   )
 }
@@ -20,8 +20,8 @@ Event.propTypes = {
 function EventAgenda({ event }) {
   return (
     <span>
-      <em style={{ color: 'magenta' }}>{event.title}</em>
-      <p>{event.desc}</p>
+      <em style={ { color: 'magenta' } }>{ event.title }</em>
+      <p>{ event.desc }</p>
     </span>
   )
 }
@@ -30,7 +30,7 @@ EventAgenda.propTypes = {
 }
 
 const customDayPropGetter = (date) => {
-  if (date.getDate() === 7 || date.getDate() === 15)
+  if(date.getDate() === 7 || date.getDate() === 15)
     return {
       className: styles.specialDay,
       style: {
@@ -41,7 +41,7 @@ const customDayPropGetter = (date) => {
 }
 
 const customSlotPropGetter = (date) => {
-  if (date.getDate() === 7 || date.getDate() === 15)
+  if(date.getDate() === 7 || date.getDate() === 15)
     return {
       className: styles.specialDay,
     }
@@ -67,13 +67,13 @@ export default function Rendering({ localizer }) {
       <DemoLink fileName="rendering" />
       <div className="height600">
         <Calendar
-          components={components}
-          dayPropGetter={customDayPropGetter}
-          defaultDate={defaultDate}
-          defaultView={Views.AGENDA}
-          events={events}
-          localizer={localizer}
-          slotPropGetter={customSlotPropGetter}
+          components={ components }
+          dayPropGetter={ customDayPropGetter }
+          defaultDate={ defaultDate }
+          defaultView={ Views.AGENDA }
+          events={ events }
+          localizer={ localizer }
+          slotPropGetter={ customSlotPropGetter }
         />
       </div>
     </Fragment>

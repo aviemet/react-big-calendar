@@ -32,11 +32,11 @@ export function SlotGroupPropGetter() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.WEEK}
-        slotGroupPropGetter={slotGroupPropGetter}
-        events={demoEvents}
-        localizer={mLocalizer}
+        defaultDate={ defaultDate }
+        defaultView={ Views.WEEK }
+        slotGroupPropGetter={ slotGroupPropGetter }
+        events={ demoEvents }
+        localizer={ mLocalizer }
       />
     </div>
   )

@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function OnDragStart() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 OnDragStart.storyName = 'onDragStart'

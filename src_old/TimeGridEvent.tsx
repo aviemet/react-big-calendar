@@ -33,10 +33,10 @@ function TimeGridEvent(props) {
 
   const inner = [
     <div key="1" className="rbc-event-label">
-      {label}
+      { label }
     </div>,
     <div key="2" className="rbc-event-content">
-      {Event ? <Event event={event} title={title} /> : title}
+      { Event ? <Event event={ event } title={ title } /> : title }
     </div>,
   ]
 
@@ -51,20 +51,20 @@ function TimeGridEvent(props) {
   }
 
   return (
-    <EventWrapper type="time" {...props}>
+    <EventWrapper type="time" { ...props }>
       <div
         role="button"
-        tabIndex={0}
-        onClick={onClick}
-        onDoubleClick={onDoubleClick}
-        style={eventStyle}
-        onKeyDown={onKeyPress}
+        tabIndex={ 0 }
+        onClick={ onClick }
+        onDoubleClick={ onDoubleClick }
+        style={ eventStyle }
+        onKeyDown={ onKeyPress }
         title={
           tooltip
             ? (typeof label === 'string' ? label + ': ' : '') + tooltip
             : undefined
         }
-        className={clsx(
+        className={ clsx(
           isBackgroundEvent ? 'rbc-background-event' : 'rbc-event',
           className,
           userProps.className,
@@ -73,9 +73,9 @@ function TimeGridEvent(props) {
             'rbc-event-continues-earlier': continuesPrior,
             'rbc-event-continues-later': continuesAfter,
           }
-        )}
+        ) }
       >
-        {inner}
+        { inner }
       </div>
     </EventWrapper>
   )

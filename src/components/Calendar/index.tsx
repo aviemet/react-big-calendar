@@ -22,18 +22,21 @@ import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, { ViewComponent, ViewsProps, BaseViewProps } from '@/Views'
 import createContext from '@/hooks/createContext'
+
 import {
-  Components,
-  DayPropGetter,
-  EventPropGetter,
-  EventProps,
-  SlotGroupPropGetter,
-  SlotInfo,
-  SlotPropGetter,
-} from '../../types'
+  type Components,
+  type DayPropGetter,
+  type EventPropGetter,
+  type EventProps,
+  type Getters,
+  type SlotGroupPropGetter,
+  type SlotInfo,
+  type SlotPropGetter,
+} from '@/types'
 import clsx from 'clsx'
 
 type CalendarContext = {
+  date: Date
   localizer: DateLocalizer
   components: Components
 }
@@ -902,7 +905,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
     return VIEWS
   }, [views])
 
-  const getters = useMemo(() => {
+  const getters: Getters<TEvent> = useMemo(() => {
     return {
       eventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
         (eventPropGetter && eventPropGetter(...args)) || {},
@@ -1005,7 +1008,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
   const ToolbarComponent = components.toolbar || Toolbar
 
   return (
-    <CalendarProvider value={ { localizer, components } }>
+    <CalendarProvider value={ { localizer, components, date: current } }>
       <div
         { ...elementProps }
         className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
@@ -1048,3 +1051,4 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
 }
 
 export default Calendar
+

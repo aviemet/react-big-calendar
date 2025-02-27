@@ -24,10 +24,10 @@ export function CalDate() {
   return (
     <div className="height600">
       <Calendar
-        date={date}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onNavigate={onNavigate}
+        date={ date }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onNavigate={ onNavigate }
       />
     </div>
   )

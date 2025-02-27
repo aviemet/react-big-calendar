@@ -27,7 +27,7 @@ export default {
 
 const Template = (args) => (
   <div className="height600">
-    <Calendar {...args} />
+    <Calendar { ...args } />
   </div>
 )
 

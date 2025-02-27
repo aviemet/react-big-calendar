@@ -5,8 +5,8 @@
  *    accessor(data, func)    // => retrieves func(data)
  *    ... otherwise null
  */
-export function accessor(data, field) {
-  var value = null
+export function accessor(data: Record<string, unknown>, field: string | ((data: Record<string, unknown>) => unknown)) {
+  let value = null
 
   if(typeof field === 'function') value = field(data)
   else if(
@@ -20,4 +20,6 @@ export function accessor(data, field) {
   return value
 }
 
-export const wrapAccessor = (acc) => (data) => accessor(data, acc)
+export const wrapAccessor = (
+  acc: string | ((data: Record<string, unknown>) => unknown)
+) => (data: Record<string, unknown>) => accessor(data, acc)

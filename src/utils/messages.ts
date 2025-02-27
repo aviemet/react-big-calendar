@@ -1,20 +1,20 @@
 export interface Messages<TEvent extends object = Event> {
-  date?: React.ReactNode | undefined;
-  time?: React.ReactNode | undefined;
-  event?: React.ReactNode | undefined;
-  allDay?: React.ReactNode | undefined;
-  week?: React.ReactNode | undefined;
-  work_week?: React.ReactNode | undefined;
-  day?: React.ReactNode | undefined;
-  month?: React.ReactNode | undefined;
-  previous?: React.ReactNode | undefined;
-  next?: React.ReactNode | undefined;
-  yesterday?: React.ReactNode | undefined;
-  tomorrow?: React.ReactNode | undefined;
-  today?: React.ReactNode | undefined;
-  agenda?: React.ReactNode | undefined;
-  showMore?: ((count: number, remainingEvents: TEvent[], events: TEvent[]) => React.ReactNode) | undefined;
-  noEventsInRange?: React.ReactNode | undefined;
+  date?: React.ReactNode | undefined
+  time?: React.ReactNode | undefined
+  event?: React.ReactNode | undefined
+  allDay?: React.ReactNode | undefined
+  week?: React.ReactNode | undefined
+  work_week?: React.ReactNode | undefined
+  day?: React.ReactNode | undefined
+  month?: React.ReactNode | undefined
+  previous?: React.ReactNode | undefined
+  next?: React.ReactNode | undefined
+  yesterday?: React.ReactNode | undefined
+  tomorrow?: React.ReactNode | undefined
+  today?: React.ReactNode | undefined
+  agenda?: React.ReactNode | undefined
+  showMore?: ((count: number, remainingEvents: TEvent[], events: TEvent[]) => React.ReactNode) | undefined
+  noEventsInRange?: React.ReactNode | undefined
 }
 
 let defaultMessages: Messages = {
@@ -38,7 +38,7 @@ let defaultMessages: Messages = {
   showMore: (total) => `+${total} more`,
 }
 
-export default function messages(msgs) {
+export default function messages(msgs: Messages) {
   return {
     ...defaultMessages,
     ...msgs,

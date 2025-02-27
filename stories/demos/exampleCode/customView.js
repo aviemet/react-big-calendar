@@ -22,14 +22,14 @@ function MyWeek({
 
   return (
     <TimeGrid
-      date={date}
-      eventOffset={15}
-      localizer={localizer}
-      max={max}
-      min={min}
-      range={currRange}
-      scrollToTime={scrollToTime}
-      {...props}
+      date={ date }
+      eventOffset={ 15 }
+      localizer={ localizer }
+      max={ max }
+      min={ min }
+      range={ currRange }
+      scrollToTime={ scrollToTime }
+      { ...props }
     />
   )
 }
@@ -49,7 +49,7 @@ MyWeek.range = (date, { localizer }) => {
   let current = start
   const range = []
 
-  while (localizer.lte(current, end, 'day')) {
+  while(localizer.lte(current, end, 'day')) {
     range.push(current)
     current = localizer.add(current, 1, 'day')
   }
@@ -58,7 +58,7 @@ MyWeek.range = (date, { localizer }) => {
 }
 
 MyWeek.navigate = (date, action, { localizer }) => {
-  switch (action) {
+  switch(action) {
     case Navigate.PREVIOUS:
       return localizer.add(date, -3, 'day')
 
@@ -93,11 +93,11 @@ export default function CustomView({ localizer }) {
       </DemoLink>
       <div className="height600">
         <Calendar
-          defaultDate={defaultDate}
-          defaultView={Views.WEEK}
-          events={events}
-          localizer={localizer}
-          views={views}
+          defaultDate={ defaultDate }
+          defaultView={ Views.WEEK }
+          events={ events }
+          localizer={ localizer }
+          views={ views }
         />
       </div>
     </Fragment>

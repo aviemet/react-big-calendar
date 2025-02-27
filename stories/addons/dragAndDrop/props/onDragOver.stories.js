@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function OnDragOver() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 OnDragOver.storyName = 'onDragOver'

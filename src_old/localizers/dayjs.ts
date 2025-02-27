@@ -53,9 +53,9 @@ export const formats = {
 
 function fixUnit(unit) {
   let datePart = unit ? unit.toLowerCase() : unit
-  if (datePart === 'FullYear') {
+  if(datePart === 'FullYear') {
     datePart = 'year'
-  } else if (!datePart) {
+  } else if(!datePart) {
     datePart = undefined
   }
   return datePart
@@ -87,7 +87,7 @@ export default function (dayjsLib) {
     const st = dayjs(start)
     const ed = dayjs(end)
     // if not using the dayjs timezone plugin
-    if (!dayjs.tz) {
+    if(!dayjs.tz) {
       return st.toDate().getTimezoneOffset() - ed.toDate().getTimezoneOffset()
     }
     /**
@@ -117,7 +117,7 @@ export default function (dayjsLib) {
 
   function startOf(date = null, unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       return dayjs(date).startOf(datePart).toDate()
     }
     return dayjs(date).toDate()
@@ -125,7 +125,7 @@ export default function (dayjsLib) {
 
   function endOf(date = null, unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       return dayjs(date).endOf(datePart).toDate()
     }
     return dayjs(date).toDate()
@@ -185,7 +185,7 @@ export default function (dayjsLib) {
   }
 
   function merge(date, time) {
-    if (!date && !time) return null
+    if(!date && !time) return null
 
     const tm = dayjs(time).format('HH:mm:ss')
     const dt = dayjs(date).startOf('day').format('MM/DD/YYYY')
@@ -204,7 +204,7 @@ export default function (dayjsLib) {
     let current = dayjs(start).toDate()
     const days = []
 
-    while (lte(current, end)) {
+    while(lte(current, end)) {
       days.push(current)
       current = add(current, 1, datePart)
     }
@@ -250,7 +250,7 @@ export default function (dayjsLib) {
     const last = lastVisibleDay(date)
     const days = []
 
-    while (lte(current, last)) {
+    while(lte(current, last)) {
       days.push(current)
       current = add(current, 1, 'd')
     }

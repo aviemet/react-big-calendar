@@ -5,7 +5,7 @@ import VIEWS from '../Views'
 export default function moveDate(View, { action, date, today, ...props }) {
   View = typeof View === 'string' ? VIEWS[View] : View
 
-  switch (action) {
+  switch(action) {
     case navigate.TODAY:
       date = today || new Date()
       break

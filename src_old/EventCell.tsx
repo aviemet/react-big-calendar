@@ -40,40 +40,42 @@ class EventCell extends React.Component {
     let userProps = getters.eventProp(event, start, end, selected)
 
     const content = (
-      <div className="rbc-event-content" title={tooltip || undefined}>
-        {Event ? (
-          <Event
-            event={event}
-            continuesPrior={continuesPrior}
-            continuesAfter={continuesAfter}
-            title={title}
-            isAllDay={allDay}
-            localizer={localizer}
-            slotStart={slotStart}
-            slotEnd={slotEnd}
-          />
-        ) : (
-          title
-        )}
+      <div className="rbc-event-content" title={ tooltip || undefined }>
+        { Event
+          ? (
+            <Event
+              event={ event }
+              continuesPrior={ continuesPrior }
+              continuesAfter={ continuesAfter }
+              title={ title }
+              isAllDay={ allDay }
+              localizer={ localizer }
+              slotStart={ slotStart }
+              slotEnd={ slotEnd }
+            />
+          )
+          : (
+            title
+          ) }
       </div>
     )
 
     return (
-      <EventWrapper {...this.props} type="date">
+      <EventWrapper { ...this.props } type="date">
         <div
-          {...props}
-          style={{ ...userProps.style, ...style }}
-          className={clsx('rbc-event', className, userProps.className, {
+          { ...props }
+          style={ { ...userProps.style, ...style } }
+          className={ clsx('rbc-event', className, userProps.className, {
             'rbc-selected': selected,
             'rbc-event-allday': showAsAllDay,
             'rbc-event-continues-prior': continuesPrior,
             'rbc-event-continues-after': continuesAfter,
-          })}
-          onClick={(e) => onSelect && onSelect(event, e)}
-          onDoubleClick={(e) => onDoubleClick && onDoubleClick(event, e)}
-          onKeyDown={(e) => onKeyPress && onKeyPress(event, e)}
+          }) }
+          onClick={ (e) => onSelect && onSelect(event, e) }
+          onDoubleClick={ (e) => onDoubleClick && onDoubleClick(event, e) }
+          onKeyDown={ (e) => onKeyPress && onKeyPress(event, e) }
         >
-          {typeof children === 'function' ? children(content) : content}
+          { typeof children === 'function' ? children(content) : content }
         </div>
       </EventWrapper>
     )

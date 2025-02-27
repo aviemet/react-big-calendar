@@ -32,30 +32,32 @@ class TimeGridHeader extends React.Component {
       const { className, style } = dayProp(date)
 
       let header = (
-        <HeaderComponent date={date} label={label} localizer={localizer} />
+        <HeaderComponent date={ date } label={ label } localizer={ localizer } />
       )
 
       return (
         <div
-          key={i}
-          style={style}
-          className={clsx(
+          key={ i }
+          style={ style }
+          className={ clsx(
             'rbc-header',
             className,
             localizer.isSameDate(date, today) && 'rbc-today'
-          )}
+          ) }
         >
-          {drilldownView ? (
-            <button
-              type="button"
-              className="rbc-button-link"
-              onClick={(e) => this.handleHeaderClick(date, drilldownView, e)}
-            >
-              {header}
-            </button>
-          ) : (
-            <span>{header}</span>
-          )}
+          { drilldownView
+            ? (
+              <button
+                type="button"
+                className="rbc-button-link"
+                onClick={ (e) => this.handleHeaderClick(date, drilldownView, e) }
+              >
+                { header }
+              </button>
+            )
+            : (
+              <span>{ header }</span>
+            ) }
         </div>
       )
     })
@@ -82,28 +84,28 @@ class TimeGridHeader extends React.Component {
     return (
       <DateContentRow
         isAllDay
-        rtl={rtl}
-        getNow={getNow}
-        minRows={2}
+        rtl={ rtl }
+        getNow={ getNow }
+        minRows={ 2 }
         // Add +1 to include showMore button row in the row limit
-        maxRows={this.props.allDayMaxRows + 1}
-        range={range}
-        events={eventsToDisplay}
-        resourceId={resourceId}
+        maxRows={ this.props.allDayMaxRows + 1 }
+        range={ range }
+        events={ eventsToDisplay }
+        resourceId={ resourceId }
         className="rbc-allday-cell"
-        selectable={selectable}
-        selected={this.props.selected}
-        components={components}
-        accessors={accessors}
-        getters={getters}
-        localizer={localizer}
-        onSelect={this.props.onSelectEvent}
-        onShowMore={this.props.onShowMore}
-        onDoubleClick={this.props.onDoubleClickEvent}
-        onKeyPress={this.props.onKeyPressEvent}
-        onSelectSlot={this.props.onSelectSlot}
-        longPressThreshold={this.props.longPressThreshold}
-        resizable={resizable}
+        selectable={ selectable }
+        selected={ this.props.selected }
+        components={ components }
+        accessors={ accessors }
+        getters={ getters }
+        localizer={ localizer }
+        onSelect={ this.props.onSelectEvent }
+        onShowMore={ this.props.onShowMore }
+        onDoubleClick={ this.props.onDoubleClickEvent }
+        onKeyPress={ this.props.onKeyPressEvent }
+        onSelectSlot={ this.props.onSelectSlot }
+        longPressThreshold={ this.props.longPressThreshold }
+        resizable={ resizable }
       />
     )
   }
@@ -131,7 +133,7 @@ class TimeGridHeader extends React.Component {
     } = this.props
 
     let style = {}
-    if (isOverflowing) {
+    if(isOverflowing) {
       style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize() - 1}px`
     }
 
@@ -139,64 +141,64 @@ class TimeGridHeader extends React.Component {
 
     return (
       <div
-        style={style}
-        ref={scrollRef}
-        className={clsx('rbc-time-header', isOverflowing && 'rbc-overflowing')}
+        style={ style }
+        ref={ scrollRef }
+        className={ clsx('rbc-time-header', isOverflowing && 'rbc-overflowing') }
       >
         <div
           className="rbc-label rbc-time-header-gutter"
-          style={{ width, minWidth: width, maxWidth: width }}
+          style={ { width, minWidth: width, maxWidth: width } }
         >
-          {TimeGutterHeader && <TimeGutterHeader />}
+          { TimeGutterHeader && <TimeGutterHeader /> }
         </div>
 
-        {resources.map(([id, resource], idx) => (
-          <div className="rbc-time-header-content" key={id || idx}>
-            {resource && (
-              <div className="rbc-row rbc-row-resource" key={`resource_${idx}`}>
+        { resources.map(([id, resource], Index) => (
+          <div className="rbc-time-header-content" key={ id || Index }>
+            { resource && (
+              <div className="rbc-row rbc-row-resource" key={ `resource_${Index}` }>
                 <div className="rbc-header">
                   <ResourceHeaderComponent
-                    index={idx}
-                    label={accessors.resourceTitle(resource)}
-                    resource={resource}
+                    index={ Index }
+                    label={ accessors.resourceTitle(resource) }
+                    resource={ resource }
                   />
                 </div>
               </div>
-            )}
+            ) }
             <div
-              className={`rbc-row rbc-time-header-cell${
+              className={ `rbc-row rbc-time-header-cell${
                 range.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
-              }`}
+              }` }
             >
-              {this.renderHeaderCells(range)}
+              { this.renderHeaderCells(range) }
             </div>
             <DateContentRow
               isAllDay
-              rtl={rtl}
-              getNow={getNow}
-              minRows={2}
+              rtl={ rtl }
+              getNow={ getNow }
+              minRows={ 2 }
               // Add +1 to include showMore button row in the row limit
-              maxRows={this.props.allDayMaxRows + 1}
-              range={range}
-              events={groupedEvents.get(id) || []}
-              resourceId={resource && id}
+              maxRows={ this.props.allDayMaxRows + 1 }
+              range={ range }
+              events={ groupedEvents.get(id) || [] }
+              resourceId={ resource && id }
               className="rbc-allday-cell"
-              selectable={selectable}
-              selected={this.props.selected}
-              components={components}
-              accessors={accessors}
-              getters={getters}
-              localizer={localizer}
-              onSelect={this.props.onSelectEvent}
-              onShowMore={this.props.onShowMore}
-              onDoubleClick={this.props.onDoubleClickEvent}
-              onKeyDown={this.props.onKeyPressEvent}
-              onSelectSlot={this.props.onSelectSlot}
-              longPressThreshold={this.props.longPressThreshold}
-              resizable={resizable}
+              selectable={ selectable }
+              selected={ this.props.selected }
+              components={ components }
+              accessors={ accessors }
+              getters={ getters }
+              localizer={ localizer }
+              onSelect={ this.props.onSelectEvent }
+              onShowMore={ this.props.onShowMore }
+              onDoubleClick={ this.props.onDoubleClickEvent }
+              onKeyDown={ this.props.onKeyPressEvent }
+              onSelectSlot={ this.props.onSelectSlot }
+              longPressThreshold={ this.props.longPressThreshold }
+              resizable={ resizable }
             />
           </div>
-        ))}
+        )) }
       </div>
     )
   }

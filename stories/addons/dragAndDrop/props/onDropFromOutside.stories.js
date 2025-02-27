@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function OnDropFromOutside() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 OnDropFromOutside.storyName = 'onDropFromOutside'

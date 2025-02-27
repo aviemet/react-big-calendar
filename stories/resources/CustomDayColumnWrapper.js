@@ -2,8 +2,8 @@ import React from 'react'
 
 const DayColumnWrapper = ({ children, className, style, innerRef }) => {
   return (
-    <div className={className} style={style} ref={innerRef}>
-      {children}
+    <div className={ className } style={ style } ref={ innerRef }>
+      { children }
     </div>
   )
 }
@@ -17,6 +17,6 @@ export default React.forwardRef((dayColumnWrapperProps, ref) => {
   }
 
   return (
-    <DayColumnWrapper {...dayColumnWrapperProps} style={style} innerRef={ref} />
+    <DayColumnWrapper { ...dayColumnWrapperProps } style={ style } innerRef={ ref } />
   )
 })

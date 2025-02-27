@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example6() {
-  return <PopupDemo localizer={localizer} />
+  return <PopupDemo localizer={ localizer } />
 }
 Example6.storyName = 'Show more via a popup'

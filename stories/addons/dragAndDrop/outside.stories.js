@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example3() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 Example3.storyName = 'Drag and Drop (from outside calendar)'

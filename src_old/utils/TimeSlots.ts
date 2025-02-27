@@ -22,14 +22,14 @@ export function getSlotMetrics({
   const slots = new Array(numSlots)
   // Each slot date is created from "zero", instead of adding `step` to
   // the previous one, in order to avoid DST oddities
-  for (let grp = 0; grp < numGroups; grp++) {
+  for(let grp = 0; grp < numGroups; grp++) {
     groups[grp] = new Array(timeslots)
 
-    for (let slot = 0; slot < timeslots; slot++) {
-      const slotIdx = grp * timeslots + slot
-      const minFromStart = slotIdx * step
+    for(let slot = 0; slot < timeslots; slot++) {
+      const slotIndex = grp * timeslots + slot
+      const minFromStart = slotIndex * step
       // A date with total minutes calculated from the start of the day
-      slots[slotIdx] = groups[grp][slot] = localizer.getSlotDate(
+      slots[slotIndex] = groups[grp][slot] = localizer.getSlotDate(
         start,
         minutesFromMidnight,
         minFromStart
@@ -53,7 +53,7 @@ export function getSlotMetrics({
   return {
     groups,
     update(args) {
-      if (getKey(args) !== key) return getSlotMetrics(args)
+      if(getKey(args) !== key) return getSlotMetrics(args)
       return this
     },
 
@@ -78,7 +78,7 @@ export function getSlotMetrics({
           )
         ]
       // in the case of the last slot we won't a long enough range so manually get it
-      if (localizer.eq(next, slot)) next = localizer.add(slot, step, 'minutes')
+      if(localizer.eq(next, slot)) next = localizer.add(slot, step, 'minutes')
       return next
     },
     closestSlotToPosition(percent) {
@@ -95,8 +95,8 @@ export function getSlotMetrics({
     },
 
     closestSlotFromDate(date, offset = 0) {
-      if (localizer.lt(date, start, 'minutes')) return slots[0]
-      if (localizer.gt(date, end, 'minutes')) return slots[slots.length - 1]
+      if(localizer.lt(date, start, 'minutes')) return slots[0]
+      if(localizer.gt(date, end, 'minutes')) return slots[slots.length - 1]
 
       const diffMins = localizer.diff(start, date, 'minutes')
       return slots[(diffMins - (diffMins % step)) / step + offset]
@@ -119,9 +119,9 @@ export function getSlotMetrics({
     },
 
     getRange(rangeStart, rangeEnd, ignoreMin, ignoreMax) {
-      if (!ignoreMin)
+      if(!ignoreMin)
         rangeStart = localizer.min(end, localizer.max(start, rangeStart))
-      if (!ignoreMax)
+      if(!ignoreMax)
         rangeEnd = localizer.min(end, localizer.max(start, rangeEnd))
 
       const rangeStartMin = positionFromDate(rangeStart)

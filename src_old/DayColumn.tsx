@@ -28,7 +28,7 @@ class DayColumn extends React.Component {
   componentDidMount() {
     this.props.selectable && this._selectable()
 
-    if (this.props.isNow) {
+    if(this.props.isNow) {
       this.setTimeIndicatorPositionUpdateInterval()
     }
   }
@@ -39,17 +39,17 @@ class DayColumn extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.selectable && !prevProps.selectable) this._selectable()
-    if (!this.props.selectable && prevProps.selectable)
+    if(this.props.selectable && !prevProps.selectable) this._selectable()
+    if(!this.props.selectable && prevProps.selectable)
       this._teardownSelectable()
 
     const { getNow, isNow, localizer, date, min, max } = this.props
     const getNowChanged = localizer.neq(prevProps.getNow(), getNow(), 'minutes')
 
-    if (prevProps.isNow !== isNow || getNowChanged) {
+    if(prevProps.isNow !== isNow || getNowChanged) {
       this.clearTimeIndicatorInterval()
 
-      if (isNow) {
+      if(isNow) {
         const tail =
           !getNowChanged &&
           localizer.eq(prevProps.date, date, 'minutes') &&
@@ -57,7 +57,7 @@ class DayColumn extends React.Component {
 
         this.setTimeIndicatorPositionUpdateInterval(tail)
       }
-    } else if (
+    } else if(
       isNow &&
       (localizer.neq(prevProps.min, min, 'minutes') ||
         localizer.neq(prevProps.max, max, 'minutes'))
@@ -71,7 +71,7 @@ class DayColumn extends React.Component {
    *   deferred or called upon setting interval (`true` - if deferred);
    */
   setTimeIndicatorPositionUpdateInterval(tail = false) {
-    if (!this.intervalTriggered && !tail) {
+    if(!this.intervalTriggered && !tail) {
       this.positionTimeIndicator()
     }
 
@@ -91,7 +91,7 @@ class DayColumn extends React.Component {
     const { min, max, getNow } = this.props
     const current = getNow()
 
-    if (current >= min && current <= max) {
+    if(current >= min && current <= max) {
       const top = this.slotMetrics.getCurrentTimePosition(current)
       this.intervalTriggered = true
       this.setState({ timeIndicatorPosition: top })
@@ -127,57 +127,57 @@ class DayColumn extends React.Component {
 
     return (
       <DayColumnWrapperComponent
-        ref={this.containerRef}
-        date={date}
-        style={style}
-        className={clsx(
+        ref={ this.containerRef }
+        date={ date }
+        style={ style }
+        className={ clsx(
           className,
           'rbc-day-slot',
           'rbc-time-column',
           isNow && 'rbc-now',
           isNow && 'rbc-today', // WHY
           selecting && 'rbc-slot-selecting'
-        )}
-        slotMetrics={slotMetrics}
-        resource={resource}
+        ) }
+        slotMetrics={ slotMetrics }
+        resource={ resource }
       >
-        {slotMetrics.groups.map((grp, idx) => (
+        { slotMetrics.groups.map((grp, Index) => (
           <TimeSlotGroup
-            key={idx}
-            group={grp}
-            resource={resource}
-            getters={getters}
-            components={components}
+            key={ Index }
+            group={ grp }
+            resource={ resource }
+            getters={ getters }
+            components={ components }
           />
-        ))}
+        )) }
         <EventContainer
-          localizer={localizer}
-          resource={resource}
-          accessors={accessors}
-          getters={getters}
-          components={components}
-          slotMetrics={slotMetrics}
+          localizer={ localizer }
+          resource={ resource }
+          accessors={ accessors }
+          getters={ getters }
+          components={ components }
+          slotMetrics={ slotMetrics }
         >
-          <div className={clsx('rbc-events-container', rtl && 'rtl')}>
-            {this.renderEvents({
+          <div className={ clsx('rbc-events-container', rtl && 'rtl') }>
+            { this.renderEvents({
               events: this.props.backgroundEvents,
               isBackgroundEvent: true,
-            })}
-            {this.renderEvents({ events: this.props.events })}
+            }) }
+            { this.renderEvents({ events: this.props.events }) }
           </div>
         </EventContainer>
 
-        {selecting && (
-          <div className="rbc-slot-selection" style={{ top, height }}>
-            <span>{localizer.format(selectDates, 'selectRangeFormat')}</span>
+        { selecting && (
+          <div className="rbc-slot-selection" style={ { top, height } }>
+            <span>{ localizer.format(selectDates, 'selectRangeFormat') }</span>
           </div>
-        )}
-        {isNow && this.intervalTriggered && (
+        ) }
+        { isNow && this.intervalTriggered && (
           <div
             className="rbc-current-time-indicator"
-            style={{ top: `${this.state.timeIndicatorPosition}%` }}
+            style={ { top: `${this.state.timeIndicatorPosition}%` } }
           />
-        )}
+        ) }
       </DayColumnWrapperComponent>
     )
   }
@@ -207,20 +207,20 @@ class DayColumn extends React.Component {
       dayLayoutAlgorithm,
     })
 
-    return styledEvents.map(({ event, style }, idx) => {
+    return styledEvents.map(({ event, style }, Index) => {
       let end = accessors.end(event)
       let start = accessors.start(event)
-      let key = accessors.eventId(event) ?? 'evt_' + idx
+      let key = accessors.eventId(event) ?? 'evt_' + Index
       let format = 'eventTimeRangeFormat'
       let label
 
       const startsBeforeDay = slotMetrics.startsBeforeDay(start)
       const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-      if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
-      else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
+      if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
+      else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
 
-      if (startsBeforeDay && startsAfterDay) label = messages.allDay
+      if(startsBeforeDay && startsAfterDay) label = messages.allDay
       else label = localizer.format({ start, end }, format)
 
       let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
@@ -228,19 +228,19 @@ class DayColumn extends React.Component {
 
       return (
         <TimeGridEvent
-          style={style}
-          event={event}
-          label={label}
-          key={key}
-          getters={getters}
-          rtl={rtl}
-          components={components}
-          continuesPrior={continuesPrior}
-          continuesAfter={continuesAfter}
-          accessors={accessors}
-          resource={this.props.resource}
-          selected={isSelected(event, selected)}
-          onClick={(e) =>
+          style={ style }
+          event={ event }
+          label={ label }
+          key={ key }
+          getters={ getters }
+          rtl={ rtl }
+          components={ components }
+          continuesPrior={ continuesPrior }
+          continuesAfter={ continuesAfter }
+          accessors={ accessors }
+          resource={ this.props.resource }
+          selected={ isSelected(event, selected) }
+          onClick={ (e) =>
             this._select(
               {
                 ...event,
@@ -252,10 +252,10 @@ class DayColumn extends React.Component {
               e
             )
           }
-          onDoubleClick={(e) => this._doubleClick(event, e)}
-          isBackgroundEvent={isBackgroundEvent}
-          onKeyPress={(e) => this._keyPress(event, e)}
-          resizable={resizable}
+          onDoubleClick={ (e) => this._doubleClick(event, e) }
+          isBackgroundEvent={ isBackgroundEvent }
+          onKeyPress={ (e) => this._keyPress(event, e) }
+          resizable={ resizable }
         />
       )
     })
@@ -274,8 +274,8 @@ class DayColumn extends React.Component {
       let state = selectionState(box)
       let { startDate: start, endDate: end } = state
 
-      if (onSelecting) {
-        if (
+      if(onSelecting) {
+        if(
           (localizer.eq(current.startDate, start, 'minutes') &&
             localizer.eq(current.endDate, end, 'minutes')) ||
           onSelecting({ start, end, resourceId: this.props.resource }) === false
@@ -283,7 +283,7 @@ class DayColumn extends React.Component {
           return
       }
 
-      if (
+      if(
         this.state.start !== state.start ||
         this.state.end !== state.end ||
         this.state.selecting !== state.selecting
@@ -298,14 +298,14 @@ class DayColumn extends React.Component {
         getBoundsForNode(node)
       )
 
-      if (!this.state.selecting) {
+      if(!this.state.selecting) {
         this._initialSlot = currentSlot
       }
 
       let initialSlot = this._initialSlot
-      if (localizer.lte(initialSlot, currentSlot)) {
+      if(localizer.lte(initialSlot, currentSlot)) {
         currentSlot = this.slotMetrics.nextSlot(currentSlot)
-      } else if (localizer.gt(initialSlot, currentSlot)) {
+      } else if(localizer.gt(initialSlot, currentSlot)) {
         initialSlot = this.slotMetrics.nextSlot(initialSlot)
       }
 
@@ -324,7 +324,7 @@ class DayColumn extends React.Component {
     }
 
     let selectorClicksHandler = (box, actionType) => {
-      if (!isEvent(this.containerRef.current, box)) {
+      if(!isEvent(this.containerRef.current, box)) {
         const { startDate, endDate } = selectionState(box)
         this._selectSlot({
           startDate,
@@ -340,7 +340,7 @@ class DayColumn extends React.Component {
     selector.on('selectStart', maybeSelect)
 
     selector.on('beforeSelect', (box) => {
-      if (this.props.selectable !== 'ignoreEvents') return
+      if(this.props.selectable !== 'ignoreEvents') return
 
       return !isEvent(this.containerRef.current, box)
     })
@@ -352,30 +352,30 @@ class DayColumn extends React.Component {
     )
 
     selector.on('select', (bounds) => {
-      if (this.state.selecting) {
+      if(this.state.selecting) {
         this._selectSlot({ ...this.state, action: 'select', bounds })
         this.setState({ selecting: false })
       }
     })
 
     selector.on('reset', () => {
-      if (this.state.selecting) {
+      if(this.state.selecting) {
         this.setState({ selecting: false })
       }
     })
   }
 
   _teardownSelectable = () => {
-    if (!this._selector) return
+    if(!this._selector) return
     this._selector.teardown()
     this._selector = null
   }
 
   _selectSlot = ({ startDate, endDate, action, bounds, box }) => {
     let current = startDate,
-      slots = []
+        slots = []
 
-    while (this.props.localizer.lte(current, endDate)) {
+    while(this.props.localizer.lte(current, endDate)) {
       slots.push(current)
       current = new Date(+current + this.props.step * 60 * 1000) // using Date ensures not to create an endless loop the day DST begins
     }

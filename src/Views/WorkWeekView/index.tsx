@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import Week from './Week'
-import TimeGrid from './TimeGrid'
+import Week from '../WeekView'
+import TimeGrid from '../TimeGridView'
 
 function workWeekRange(date, options) {
   return Week.range(date, options).filter(
@@ -29,14 +29,14 @@ class WorkWeek extends React.Component {
     let range = workWeekRange(date, this.props)
     return (
       <TimeGrid
-        {...props}
-        range={range}
-        eventOffset={15}
-        localizer={localizer}
-        min={min}
-        max={max}
-        scrollToTime={scrollToTime}
-        enableAutoScroll={enableAutoScroll}
+        { ...props }
+        range={ range }
+        eventOffset={ 15 }
+        localizer={ localizer }
+        min={ min }
+        max={ max }
+        scrollToTime={ scrollToTime }
+        enableAutoScroll={ enableAutoScroll }
       />
     )
   }

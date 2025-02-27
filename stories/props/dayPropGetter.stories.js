@@ -38,11 +38,11 @@ export function DayPropGetter() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.WEEK}
-        dayPropGetter={dayPropGetter}
-        events={demoEvents}
-        localizer={mLocalizer}
+        defaultDate={ defaultDate }
+        defaultView={ Views.WEEK }
+        dayPropGetter={ dayPropGetter }
+        events={ demoEvents }
+        localizer={ mLocalizer }
       />
     </div>
   )

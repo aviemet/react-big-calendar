@@ -3,7 +3,7 @@ import { eventSegments, endOfRange, eventLevels } from './eventLevels'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
 
-const isEqual = (a, b) =>
+const isEqual = <T extends Iterable<any>>(a: T, b: T) =>
   a[0].range === b[0].range && a[0].events === b[0].events
 
 export function getSlotMetrics() {
@@ -19,7 +19,7 @@ export function getSlotMetrics() {
     // Subtract 1 from minRows to not include showMore button row when
     // it would be rendered
     const minEventRows = extra.length > 0 ? minRows - 1 : minRows
-    while (levels.length < minEventRows) levels.push([])
+    while(levels.length < minEventRows) levels.push([])
 
     return {
       first,

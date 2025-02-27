@@ -28,10 +28,10 @@ export function CalViews() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        views={views}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        views={ views }
       />
     </div>
   )

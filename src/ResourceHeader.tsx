@@ -1,20 +1,13 @@
-import PropTypes from 'prop-types'
 import React from 'react'
 
 export interface ResourceHeaderProps<TResource extends object = object> {
-  label: React.ReactNode;
-  index: number;
-  resource: TResource;
+  label: React.ReactNode
+  index: number
+  resource: TResource
 }
 
-const ResourceHeader = ({ label }) => {
-  return <React.Fragment>{label}</React.Fragment>
-}
-
-ResourceHeader.propTypes = {
-  label: PropTypes.node,
-  index: PropTypes.number,
-  resource: PropTypes.object,
+const ResourceHeader = ({ label, ...props }: ResourceHeaderProps) => {
+  return <>{ label }</>
 }
 
 export default ResourceHeader

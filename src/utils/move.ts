@@ -1,8 +1,11 @@
 import invariant from 'invariant'
-import { navigate } from './constants'
+import { navigate, NavigateAction } from './constants'
 import VIEWS, { ViewStatic } from '../Views'
 
-export default function moveDate(View: ViewStatic, { action, date, today, ...props }) {
+export default function moveDate(
+  View: ViewStatic,
+  { action, date, today, ...props }: { action: NavigateAction, date: Date, today: Date, props: any }
+) {
   View = typeof View === 'string' ? VIEWS[View] : View
 
   switch(action) {

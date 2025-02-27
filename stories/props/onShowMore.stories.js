@@ -33,10 +33,10 @@ export function OnShowMore() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onShowMore={onShowMore}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onShowMore={ onShowMore }
       />
     </div>
   )

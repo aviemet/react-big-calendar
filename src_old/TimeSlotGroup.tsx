@@ -16,20 +16,20 @@ export default class TimeSlotGroup extends Component {
 
     const groupProps = getters ? getters.slotGroupProp(group) : {}
     return (
-      <div className="rbc-timeslot-group" {...groupProps}>
-        {group.map((value, idx) => {
+      <div className="rbc-timeslot-group" { ...groupProps }>
+        { group.map((value, Index) => {
           const slotProps = getters ? getters.slotProp(value, resource) : {}
           return (
-            <Wrapper key={idx} value={value} resource={resource}>
+            <Wrapper key={ Index } value={ value } resource={ resource }>
               <div
-                {...slotProps}
-                className={clsx('rbc-time-slot', slotProps.className)}
+                { ...slotProps }
+                className={ clsx('rbc-time-slot', slotProps.className) }
               >
-                {renderSlot && renderSlot(value, idx)}
+                { renderSlot && renderSlot(value, Index) }
               </div>
             </Wrapper>
           )
-        })}
+        }) }
       </div>
     )
   }

@@ -22,16 +22,16 @@ export default function BackgroundEventsCalendar({ localizer }) {
       <DemoLink fileName="backgroundEvents" />
       <div className="height600">
         <Calendar
-          backgroundEvents={backgroundEvents}
+          backgroundEvents={ backgroundEvents }
           dayLayoutAlgorithm="no-overlap"
-          defaultDate={defaultDate}
-          defaultView={Views.DAY}
-          events={events}
-          localizer={localizer}
-          max={max}
+          defaultDate={ defaultDate }
+          defaultView={ Views.DAY }
+          events={ events }
+          localizer={ localizer }
+          max={ max }
           showMultiDayTimes
-          step={60}
-          views={allViews}
+          step={ 60 }
+          views={ allViews }
         />
       </div>
     </Fragment>

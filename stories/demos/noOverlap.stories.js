@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example3() {
-  return <CreateEventWithNoOverlap localizer={localizer} />
+  return <CreateEventWithNoOverlap localizer={ localizer } />
 }
 Example3.storyName = 'Create events with no-overlap algorithm'

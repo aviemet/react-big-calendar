@@ -1,6 +1,10 @@
+import { DateLocalizer } from '@/localizers'
+import { Accessors } from '@/types'
 import { findIndex } from 'lodash-es'
 
-export function endOfRange({ dateRange, unit = 'day', localizer }) {
+export function endOfRange(
+  { dateRange, unit = 'day', localizer }: { dateRange: Date[], unit?: 'day', localizer: DateLocalizer }
+) {
   return {
     first: dateRange[0],
     last: localizer.add(dateRange[dateRange.length - 1], 1, unit),
@@ -9,7 +13,7 @@ export function endOfRange({ dateRange, unit = 'day', localizer }) {
 
 // properly calculating segments requires working with dates in
 // the timezone we're working with, so we use the localizer
-export function eventSegments(event, range, accessors, localizer) {
+export function eventSegments(event: Event, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
   let { first, last } = endOfRange({ dateRange: range, localizer })
 
   let slots = localizer.diff(first, last, 'day')
@@ -37,25 +41,25 @@ export function eventSegments(event, range, accessors, localizer) {
 
 export function eventLevels(rowSegments, limit = Infinity) {
   let i,
-    j,
-    seg,
-    levels = [],
-    extra = []
+      j,
+      seg,
+      levels = [],
+      extra = []
 
-  for (i = 0; i < rowSegments.length; i++) {
+  for(i = 0; i < rowSegments.length; i++) {
     seg = rowSegments[i]
 
-    for (j = 0; j < levels.length; j++) if (!segsOverlap(seg, levels[j])) break
+    for(j = 0; j < levels.length; j++) if(!segsOverlap(seg, levels[j])) break
 
-    if (j >= limit) {
+    if(j >= limit) {
       extra.push(seg)
     } else {
       ;(levels[j] || (levels[j] = [])).push(seg)
     }
   }
 
-  for (i = 0; i < levels.length; i++) {
-    levels[i].sort((a, b) => a.left - b.left) //eslint-disable-line
+  for(i = 0; i < levels.length; i++) {
+    levels[i].sort((a, b) => a.left - b.left)
   }
 
   return { levels, extra }
@@ -83,7 +87,7 @@ export function sortWeekEvents(events, accessors, localizer) {
   base.forEach((event) => {
     const startCheck = accessors.start(event)
     const endCheck = accessors.end(event)
-    if (localizer.daySpan(startCheck, endCheck) > 1) {
+    if(localizer.daySpan(startCheck, endCheck) > 1) {
       multiDayEvents.push(event)
     } else {
       standardEvents.push(event)

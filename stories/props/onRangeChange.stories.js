@@ -17,17 +17,17 @@ export default {
 }
 
 function buildMessage(range) {
-  if (!range) {
+  if(!range) {
     return 'no range'
   }
-  if (!Array.isArray(range)) {
+  if(!Array.isArray(range)) {
     return `[onRangeChange] was given an object with
     a start of ${range.start.toLocaleString()}
     and an end of ${range.end.toLocaleString()}.
     An object with 'start' and 'end' is passed
     when in the 'month' or 'agenda' views.`
   }
-  if (range.length === 1) {
+  if(range.length === 1) {
     return `[onRangeChange] was given an array with
     a single item of ${range[0].toLocaleString()},
     which only occurs within the 'day' view.`
@@ -50,11 +50,11 @@ export function OnRangeChange() {
   return (
     <div className="height600">
       <Calendar
-        date={date}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onNavigate={onNavigate}
-        onRangeChange={onRangeChange}
+        date={ date }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onNavigate={ onNavigate }
+        onRangeChange={ onRangeChange }
       />
     </div>
   )

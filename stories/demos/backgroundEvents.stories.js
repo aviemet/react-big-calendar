@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example10() {
-  return <BackgroundCalendar localizer={localizer} />
+  return <BackgroundCalendar localizer={ localizer } />
 }
 Example10.storyName = 'Background Events'

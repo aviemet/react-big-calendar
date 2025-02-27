@@ -35,7 +35,7 @@ export default {
 
 const Template = ({ localizer: loc = 'moment', ...args }) => {
   const localizer = localizers[loc]
-  return <DraggableCalendar localizer={localizer} {...args} />
+  return <DraggableCalendar localizer={ localizer } { ...args } />
 }
 
 export const DaylightSavingsStarts = Template.bind({})

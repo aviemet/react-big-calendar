@@ -16,7 +16,7 @@ export default {
   ],
 }
 
-const Template = (args) => <BaseCalendar {...args} />
+const Template = (args) => <BaseCalendar { ...args } />
 
 export const SelectableStep15x4Slot = Template.bind({})
 SelectableStep15x4Slot.storyName = 'selectable, step 15, 4 timeslots'

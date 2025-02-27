@@ -1,4 +1,4 @@
-export default function createEvents(idx = 0, date = new Date()) {
+export default function createEvents(Index = 0, date = new Date()) {
   const y = date.getFullYear()
   const m = date.getMonth()
   const d = date.getDate()
@@ -211,5 +211,5 @@ export default function createEvents(idx = 0, date = new Date()) {
     ],
   ]
 
-  return sets[idx]
+  return sets[Index]
 }

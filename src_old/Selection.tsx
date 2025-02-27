@@ -31,7 +31,7 @@ export function isShowMore(node, bounds) {
 function getEventCoordinates(e) {
   let target = e
 
-  if (e.touches && e.touches.length) {
+  if(e.touches && e.touches.length) {
     target = e.touches[0]
   }
 
@@ -96,8 +96,8 @@ class Selection {
 
     return {
       remove() {
-        let idx = handlers.indexOf(handler)
-        if (idx !== -1) handlers.splice(idx, 1)
+        let Index = handlers.indexOf(handler)
+        if(Index !== -1) handlers.splice(Index, 1)
       },
     }
   }
@@ -106,7 +106,7 @@ class Selection {
     let result
     let handlers = this._listeners[type] || []
     handlers.forEach((fn) => {
-      if (result === undefined) result = fn(...args)
+      if(result === undefined) result = fn(...args)
     })
     return result
   }
@@ -134,7 +134,7 @@ class Selection {
   isSelected(node) {
     let box = this._selectRect
 
-    if (!box || !this.selecting) return false
+    if(!box || !this.selecting) return false
 
     return objectsCollide(box, getBoundsForNode(node))
   }
@@ -143,7 +143,7 @@ class Selection {
     let box = this._selectRect
 
     //not selecting
-    if (!box || !this.selecting) return []
+    if(!box || !this.selecting) return []
 
     return items.filter(this.isSelected, this)
   }
@@ -167,13 +167,13 @@ class Selection {
       handleTouchStart
     )
     const cleanup = () => {
-      if (timer) {
+      if(timer) {
         clearTimeout(timer)
       }
-      if (removeTouchMoveListener) {
+      if(removeTouchMoveListener) {
         removeTouchMoveListener()
       }
-      if (removeTouchEndListener) {
+      if(removeTouchEndListener) {
         removeTouchEndListener()
       }
 
@@ -182,7 +182,7 @@ class Selection {
       removeTouchEndListener = null
     }
 
-    if (initialEvent) {
+    if(initialEvent) {
       handleTouchStart(initialEvent)
     }
 
@@ -245,24 +245,24 @@ class Selection {
 
   _handleInitialEvent(e) {
     this._initialEvent = e
-    if (this.isDetached) {
+    if(this.isDetached) {
       return
     }
 
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
     let node = this.container(),
-      collides,
-      offsetData
+        collides,
+        offsetData
 
     // Right clicks
-    if (
+    if(
       e.which === 3 ||
       e.button === 2 ||
       !isOverContainer(node, clientX, clientY)
     )
       return
 
-    if (!this.globalMouse && node && !contains(node, e.target)) {
+    if(!this.globalMouse && node && !contains(node, e.target)) {
       let { top, left, bottom, right } = normalizeDistance(0)
 
       offsetData = getBoundsForNode(node)
@@ -277,7 +277,7 @@ class Selection {
         { top: pageY, left: pageX }
       )
 
-      if (!collides) return
+      if(!collides) return
     }
 
     let result = this.emit(
@@ -291,9 +291,9 @@ class Selection {
       })
     )
 
-    if (result === false) return
+    if(result === false) return
 
-    switch (e.type) {
+    switch(e.type) {
       case 'mousedown':
         this._removeEndListener = addEventListener(
           'mouseup',
@@ -330,7 +330,7 @@ class Selection {
     const eventTarget = e.target
     const containers = this.validContainers
 
-    if (!containers || !containers.length || !eventTarget) {
+    if(!containers || !containers.length || !eventTarget) {
       return true
     }
 
@@ -341,7 +341,7 @@ class Selection {
     const selecting = this.selecting
     const bounds = this._selectRect
     // If it's not in selecting state, it's a click event
-    if (!selecting && e.type.includes('key')) {
+    if(!selecting && e.type.includes('key')) {
       e = this._initialEvent
     }
 
@@ -352,21 +352,21 @@ class Selection {
     this._selectRect = null
     this._initialEvent = null
     this._initialEventData = null
-    if (!e) return
+    if(!e) return
 
     let inRoot = !this.container || contains(this.container(), e.target)
     let isWithinValidContainer = this._isWithinValidContainer(e)
 
-    if (e.key === 'Escape' || !isWithinValidContainer) {
+    if(e.key === 'Escape' || !isWithinValidContainer) {
       return this.emit('reset')
     }
 
-    if (!selecting && inRoot) {
+    if(!selecting && inRoot) {
       return this._handleClickEvent(e)
     }
 
     // User drag-clicked in the Selectable area
-    if (selecting) return this.emit('select', bounds)
+    if(selecting) return this.emit('select', bounds)
 
     return this.emit('reset')
   }
@@ -375,7 +375,7 @@ class Selection {
     const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
     const now = new Date().getTime()
 
-    if (
+    if(
       this._lastClickData &&
       now - this._lastClickData.timestamp < clickInterval
     ) {
@@ -402,7 +402,7 @@ class Selection {
   }
 
   _handleMoveEvent(e) {
-    if (this._initialEventData === null || this.isDetached) {
+    if(this._initialEventData === null || this.isDetached) {
       return
     }
 
@@ -412,20 +412,20 @@ class Selection {
     let h = Math.abs(y - pageY)
 
     let left = Math.min(pageX, x),
-      top = Math.min(pageY, y),
-      old = this.selecting
+        top = Math.min(pageY, y),
+        old = this.selecting
     const click = this.isClick(pageX, pageY)
     // Prevent emitting selectStart event until mouse is moved.
     // in Chrome on Windows, mouseMove event may be fired just after mouseDown event.
-    if (click && !old && !(w || h)) {
+    if(click && !old && !(w || h)) {
       return
     }
 
-    if (!old && !click) {
+    if(!old && !click) {
       this.emit('selectStart', this._initialEventData)
     }
 
-    if (!click) {
+    if(!click) {
       this.selecting = true
       this._selectRect = {
         top,
@@ -460,7 +460,7 @@ class Selection {
  * @return {Object}
  */
 function normalizeDistance(distance = 0) {
-  if (typeof distance !== 'object')
+  if(typeof distance !== 'object')
     distance = {
       top: distance,
       left: distance,
@@ -512,11 +512,11 @@ export function objectsCollide(nodeA, nodeB, tolerance = 0) {
  * @return {Object}
  */
 export function getBoundsForNode(node) {
-  if (!node.getBoundingClientRect) return node
+  if(!node.getBoundingClientRect) return node
 
   let rect = node.getBoundingClientRect(),
-    left = rect.left + pageOffset('left'),
-    top = rect.top + pageOffset('top')
+      left = rect.left + pageOffset('left'),
+      top = rect.top + pageOffset('top')
 
   return {
     top,
@@ -527,7 +527,7 @@ export function getBoundsForNode(node) {
 }
 
 function pageOffset(dir) {
-  if (dir === 'left') return window.pageXOffset || document.body.scrollLeft || 0
-  if (dir === 'top') return window.pageYOffset || document.body.scrollTop || 0
+  if(dir === 'left') return window.pageXOffset || document.body.scrollLeft || 0
+  if(dir === 'top') return window.pageYOffset || document.body.scrollTop || 0
 }
 export default Selection

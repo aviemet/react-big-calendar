@@ -18,13 +18,13 @@ export default {
 
 function buildMessage(event, { altKey, ctrlKey, shiftKey, metaKey, key }) {
   let prefix = ''
-  if (altKey) {
+  if(altKey) {
     prefix = 'ALT + '
-  } else if (ctrlKey) {
+  } else if(ctrlKey) {
     prefix = 'CTRL + '
-  } else if (shiftKey) {
+  } else if(shiftKey) {
     prefix = 'SHIFT + '
-  } else if (metaKey) {
+  } else if(metaKey) {
     prefix = 'CMD + '
   }
   return `You pressed on the "${prefix}${key}" on "event":
@@ -56,10 +56,10 @@ export function OnKeyPressEvent() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onKeyPressEvent={onKeyPressEvent}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onKeyPressEvent={ onKeyPressEvent }
       />
     </div>
   )

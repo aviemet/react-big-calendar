@@ -42,9 +42,9 @@ export const formats = {
 
 function fixUnit(unit) {
   let datePart = unit ? unit.toLowerCase() : unit
-  if (datePart === 'FullYear') {
+  if(datePart === 'FullYear') {
     datePart = 'year'
-  } else if (!datePart) {
+  } else if(!datePart) {
     datePart = undefined
   }
   return datePart
@@ -65,7 +65,7 @@ export default function (moment) {
     const st = moment(start).local()
     const ed = moment(end).local()
     // if not using moment timezone
-    if (!moment.tz) {
+    if(!moment.tz) {
       return st.toDate().getTimezoneOffset() - ed.toDate().getTimezoneOffset()
     }
     /**
@@ -94,7 +94,7 @@ export default function (moment) {
 
   function startOf(date = null, unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       return moment(date).startOf(datePart).toDate()
     }
     return moment(date).toDate()
@@ -102,7 +102,7 @@ export default function (moment) {
 
   function endOf(date = null, unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       return moment(date).endOf(datePart).toDate()
     }
     return moment(date).toDate()
@@ -162,7 +162,7 @@ export default function (moment) {
   }
 
   function merge(date, time) {
-    if (!date && !time) return null
+    if(!date && !time) return null
 
     const tm = moment(time).format('HH:mm:ss')
     const dt = moment(date).startOf('day').format('MM/DD/YYYY')
@@ -181,7 +181,7 @@ export default function (moment) {
     let current = moment(start).toDate()
     const days = []
 
-    while (lte(current, end)) {
+    while(lte(current, end)) {
       days.push(current)
       current = add(current, 1, datePart)
     }
@@ -227,7 +227,7 @@ export default function (moment) {
     const last = lastVisibleDay(date)
     const days = []
 
-    while (lte(current, last)) {
+    while(lte(current, last)) {
       days.push(current)
       current = add(current, 1, 'd')
     }

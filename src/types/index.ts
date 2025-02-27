@@ -1,9 +1,8 @@
-import React from "react";
-import { DateHeaderProps } from "../DateHeader";
-import { HeaderProps } from "../Header";
-import { DateLocalizer } from "../localizers";
-import { ResourceHeaderProps } from "../ResourceHeader";
-import { ToolbarProps } from "../Toolbar";
+import React from "react"
+import { DateHeaderProps } from "../DateHeader"
+import { HeaderProps } from "../Header"
+import { DateLocalizer } from "../localizers"
+import { ResourceHeaderProps } from "../ResourceHeader"
 
 export interface SlotInfo {
   start: Date
@@ -44,6 +43,19 @@ export type EventPropGetter<T> = (
 export type SlotPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>;
 export type SlotGroupPropGetter = () => React.HTMLAttributes<HTMLDivElement>;
 
+export type Getters<TEvent extends object = Event> = {
+  eventProp?: EventPropGetter<TEvent> | undefined
+  slotProp?: SlotPropGetter | undefined
+  dayProp?: DayPropGetter | undefined
+  slotGroupProp?: SlotGroupPropGetter | undefined
+}
+
+export type Accessors<TEvent extends object = Event> = {
+  title?: ((event: TEvent) => string) | undefined
+  tooltip?: ((event: TEvent) => string) | undefined
+  end?: ((event: TEvent) => Date) | undefined
+  start?: ((event: TEvent) => Date) | undefined
+}
 
 export interface Components<TEvent extends object = Event, TResource extends object = object> {
   event?: React.ComponentType<EventProps<TEvent>> | undefined
@@ -54,7 +66,7 @@ export interface Components<TEvent extends object = Event, TResource extends obj
   timeSlotWrapper?: React.ComponentType | undefined
   timeGutterHeader?: React.ComponentType | undefined
   timeGutterWrapper?: React.ComponentType | undefined
-  toolbar?: React.ComponentType<ToolbarProps<TEvent, TResource>> | undefined
+  toolbar?: React.ComponentType | undefined
   agenda?:
 			| {
 			  date?: React.ComponentType | undefined
@@ -112,19 +124,10 @@ export interface EventWrapperProps<TEvent extends object = Event> {
   className: string
   event: TEvent
   isRtl: boolean
-  getters: {
-    eventProp?: EventPropGetter<TEvent> | undefined
-    slotProp?: SlotPropGetter | undefined
-    dayProp?: DayPropGetter | undefined
-  }
+  getters: Getters<TEvent>
   onClick: (e: React.MouseEvent<HTMLElement>) => void
   onDoubleClick: (e: React.MouseEvent<HTMLElement>) => void
-  accessors: {
-    title?: ((event: TEvent) => string) | undefined
-    tooltip?: ((event: TEvent) => string) | undefined
-    end?: ((event: TEvent) => Date) | undefined
-    start?: ((event: TEvent) => Date) | undefined
-  }
+  accessors: Accessors<TEvent>
   selected: boolean
   label: string
   continuesEarlier: boolean

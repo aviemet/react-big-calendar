@@ -32,12 +32,12 @@ export function FormatsAgendTimeFormat() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.AGENDA}
-        events={demoEvents}
-        formats={formats}
-        localizer={mLocalizer}
-        views={views}
+        defaultDate={ defaultDate }
+        defaultView={ Views.AGENDA }
+        events={ demoEvents }
+        formats={ formats }
+        localizer={ mLocalizer }
+        views={ views }
       />
     </div>
   )

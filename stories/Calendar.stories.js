@@ -27,7 +27,7 @@ export default {
   ],
 }
 
-const Template = (args) => <BaseCalendar {...args} />
+const Template = (args) => <BaseCalendar { ...args } />
 
 export const ComplexDayViewLayout = Template.bind({})
 ComplexDayViewLayout.storyName = 'complex day view layout'

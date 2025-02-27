@@ -38,20 +38,20 @@ export default function Luxon() {
     <Fragment>
       <DemoLink fileName="luxon">
         <TimezoneSelect
-          defaultTZ={defaultTZ}
-          setTimezone={setTimezone}
-          timezone={timezone}
-          title={`This calendar uses the 'luxonLocalizer'`}
+          defaultTZ={ defaultTZ }
+          setTimezone={ setTimezone }
+          timezone={ timezone }
+          title={ `This calendar uses the 'luxonLocalizer'` }
         />
       </DemoLink>
       <div className="height600">
         <Calendar
-          defaultDate={defaultDate}
-          defaultView={Views.WEEK}
-          events={myEvents}
-          getNow={getNow}
-          localizer={localizer}
-          scrollToTime={scrollToTime}
+          defaultDate={ defaultDate }
+          defaultView={ Views.WEEK }
+          events={ myEvents }
+          getNow={ getNow }
+          localizer={ localizer }
+          scrollToTime={ scrollToTime }
         />
       </div>
     </Fragment>

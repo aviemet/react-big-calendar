@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example5() {
-  return <CultureDemo localizer={localizer} />
+  return <CultureDemo localizer={ localizer } />
 }
 Example5.storyName = 'Localization'

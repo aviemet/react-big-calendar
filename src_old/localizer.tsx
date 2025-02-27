@@ -34,7 +34,7 @@ function _format(localizer, formatter, value, format, culture) {
       : formatter.call(localizer, value, format, culture)
 
   invariant(
-    result == null || typeof result === 'string',
+    result === null || typeof result === 'string',
     '`localizer format(..)` must return a string, null, or undefined'
   )
 

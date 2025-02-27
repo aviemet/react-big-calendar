@@ -26,14 +26,14 @@ class Day extends React.Component {
 
     return (
       <TimeGrid
-        {...props}
-        range={range}
-        eventOffset={10}
-        localizer={localizer}
-        min={min}
-        max={max}
-        scrollToTime={scrollToTime}
-        enableAutoScroll={enableAutoScroll}
+        { ...props }
+        range={ range }
+        eventOffset={ 10 }
+        localizer={ localizer }
+        min={ min }
+        max={ max }
+        scrollToTime={ scrollToTime }
+        enableAutoScroll={ enableAutoScroll }
       />
     )
   }
@@ -105,7 +105,7 @@ Day.range = (date, { localizer }) => {
 }
 
 Day.navigate = (date, action, { localizer }) => {
-  switch (action) {
+  switch(action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'day')
 

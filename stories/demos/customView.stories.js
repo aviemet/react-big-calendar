@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example9() {
-  return <CustomView localizer={localizer} />
+  return <CustomView localizer={ localizer } />
 }
 Example9.storyName = 'Custom Calendar Views'

@@ -42,16 +42,16 @@ export default function Dayjs({ ...props }) {
   return (
     <Fragment>
       <DemoLink fileName="dayjs" />
-      <div className="height600" {...props}>
+      <div className="height600" { ...props }>
         <Calendar
-          components={components}
-          defaultDate={defaultDate}
-          events={events}
-          localizer={djLocalizer}
-          max={max}
+          components={ components }
+          defaultDate={ defaultDate }
+          events={ events }
+          localizer={ djLocalizer }
+          max={ max }
           showMultiDayTimes
-          step={60}
-          views={views}
+          step={ 60 }
+          views={ views }
         />
       </div>
     </Fragment>

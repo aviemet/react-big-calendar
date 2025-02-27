@@ -32,12 +32,12 @@ export function FormatsTimeGutterFormat() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.WEEK}
-        events={demoEvents}
-        formats={formats}
-        localizer={mLocalizer}
-        views={views}
+        defaultDate={ defaultDate }
+        defaultView={ Views.WEEK }
+        events={ demoEvents }
+        formats={ formats }
+        localizer={ mLocalizer }
+        views={ views }
       />
     </div>
   )

@@ -46,9 +46,9 @@ export const formats = {
 
 function fixUnit(unit) {
   let datePart = unit ? pluralizeUnit(unit.toLowerCase()) : unit
-  if (datePart === 'FullYear') {
+  if(datePart === 'FullYear') {
     datePart = 'year'
-  } else if (!datePart) {
+  } else if(!datePart) {
     datePart = undefined
   }
   return datePart
@@ -84,9 +84,9 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
   // depending on locale, the firstDayOfWeek could also be Saturday, Sunday or Monday
   function startOfDTWeek(dtObj) {
     const weekday = dtObj.weekday
-    if (weekday === firstDayOfWeek) {
+    if(weekday === firstDayOfWeek) {
       return dtObj.startOf('day') // already beginning of week
-    } else if (firstDayOfWeek === 1) {
+    } else if(firstDayOfWeek === 1) {
       return dtObj.startOf('week') // fow is Monday, which is Luxon default
     }
     const diff = firstDayOfWeek === 7 ? weekday : weekday + (7 - firstDayOfWeek)
@@ -96,9 +96,9 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
   function endOfDTWeek(dtObj) {
     const weekday = dtObj.weekday
     const eow = firstDayOfWeek === 1 ? 7 : firstDayOfWeek - 1
-    if (weekday === eow) {
+    if(weekday === eow) {
       return dtObj.endOf('day') // already last day of the week
-    } else if (firstDayOfWeek === 1) {
+    } else if(firstDayOfWeek === 1) {
       return dtObj.endOf('week') // use Luxon default (Sunday)
     }
     const fromDate =
@@ -109,7 +109,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
   // This returns a DateTime instance
   function startOfDT(date = new Date(), unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       const dt = DateTime.fromJSDate(date)
       return datePart.includes('week')
         ? startOfDTWeek(dt)
@@ -130,7 +130,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
   // This returns a DateTime instance
   function endOfDT(date = new Date(), unit) {
     const datePart = fixUnit(unit)
-    if (datePart) {
+    if(datePart) {
       const dt = DateTime.fromJSDate(date)
       return datePart.includes('week') ? endOfDTWeek(dt) : dt.endOf(datePart)
     }
@@ -143,7 +143,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
 
   function eq(a, b, unit) {
     const [dtA, dtB] = defineComparators(a, b, unit)
-    return +dtA == +dtB
+    return +dtA === +dtB
   }
 
   function neq(a, b, unit) {
@@ -193,7 +193,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
   }
 
   function merge(date, time) {
-    if (!date && !time) return null
+    if(!date && !time) return null
 
     const tm = DateTime.fromJSDate(time)
     const dt = startOfDT(date, 'day')
@@ -219,7 +219,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
     let current = DateTime.fromJSDate(start).toJSDate() // this is to get it to tz
     const days = []
 
-    while (lte(current, end)) {
+    while(lte(current, end)) {
       days.push(current)
       current = add(current, 1, datePart)
     }
@@ -261,7 +261,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
     const last = lastVisibleDay(date)
     const days = []
 
-    while (lte(current, last)) {
+    while(lte(current, last)) {
       days.push(current)
       current = add(current, 1, 'day')
     }
@@ -381,7 +381,7 @@ export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
 
   return new DateLocalizer({
     format(value, format, culture) {
-      if (culture) {
+      if(culture) {
         return formatDateWithCulture(value, culture, format)
       }
       return formatDate(value, format)

@@ -1,21 +1,21 @@
 import * as dates from '../utils/dates'
-import { DateLocalizer } from '.'
+import { DateLocalizer, RangeFunction } from '.'
 
-import { Formats } from './types'
+import { FormatInput, Formats } from './types'
 
-let dateRangeFormat = ({ start, end }, culture, local) =>
+let dateRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
   `${local.format(start, 'P', culture)} – ${local.format(end, 'P', culture)}`
 
-let timeRangeFormat = ({ start, end }, culture, local) =>
+let timeRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
   `${local.format(start, 'p', culture)} – ${local.format(end, 'p', culture)}`
 
-let timeRangeStartFormat = ({ start }, culture, local) =>
+let timeRangeStartFormat: RangeFunction = ({ start }, culture, local) =>
   `${local.format(start, 'h:mma', culture)} – `
 
-let timeRangeEndFormat = ({ end }, culture, local) =>
+let timeRangeEndFormat: RangeFunction = ({ end }, culture, local) =>
   ` – ${local.format(end, 'h:mma', culture)}`
 
-let weekRangeFormat = ({ start, end }, culture, local) =>
+let weekRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
   `${local.format(start, 'MMMM dd', culture)} – ${local.format(
     end,
     dates.eq(start, end, 'month') ? 'dd' : 'MMMM dd',
@@ -49,6 +49,11 @@ const dateFnsLocalizer = function ({
   getDay,
   format: _format,
   locales,
+}: {
+  startOfWeek: (date: Date, options: { locale: any }) => Date
+  getDay: (date: Date) => number
+  format: (value: FormatInput, formatString: string, options: { locale: any }) => string
+  locales: Record<string, any>
 }) {
   return new DateLocalizer({
     formats,

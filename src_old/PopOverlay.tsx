@@ -20,10 +20,10 @@ function CalOverlay({
   overlayDisplay,
 }) {
   const popperRef = useRef(null)
-  if (!overlay.position) return null
+  if(!overlay.position) return null
 
   let offset = popupOffset
-  if (!isNaN(popupOffset)) {
+  if(!isNaN(popupOffset)) {
     offset = { x: popupOffset, y: popupOffset }
   }
 
@@ -34,38 +34,38 @@ function CalOverlay({
       flip
       show
       placement="bottom"
-      onHide={onHide}
-      target={overlay.target}
+      onHide={ onHide }
+      target={ overlay.target }
     >
-      {({ props }) => (
+      { ({ props }) => (
         <Popup
-          {...props}
-          containerRef={containerRef}
-          ref={popperRef}
-          target={overlay.target}
-          offset={offset}
-          accessors={accessors}
-          getters={getters}
-          selected={selected}
-          components={components}
-          localizer={localizer}
-          position={position}
-          show={overlayDisplay}
-          events={events}
-          slotStart={date}
-          slotEnd={end}
-          onSelect={handleSelectEvent}
-          onDoubleClick={handleDoubleClickEvent}
-          onKeyPress={handleKeyPressEvent}
-          handleDragStart={handleDragStart}
+          { ...props }
+          containerRef={ containerRef }
+          ref={ popperRef }
+          target={ overlay.target }
+          offset={ offset }
+          accessors={ accessors }
+          getters={ getters }
+          selected={ selected }
+          components={ components }
+          localizer={ localizer }
+          position={ position }
+          show={ overlayDisplay }
+          events={ events }
+          slotStart={ date }
+          slotEnd={ end }
+          onSelect={ handleSelectEvent }
+          onDoubleClick={ handleDoubleClickEvent }
+          onKeyPress={ handleKeyPressEvent }
+          handleDragStart={ handleDragStart }
         />
-      )}
+      ) }
     </Overlay>
   )
 }
 
 const PopOverlay = React.forwardRef((props, ref) => (
-  <CalOverlay {...props} containerRef={ref} />
+  <CalOverlay { ...props } containerRef={ ref } />
 ))
 
 PopOverlay.propTypes = {

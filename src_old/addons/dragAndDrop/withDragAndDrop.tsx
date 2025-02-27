@@ -64,16 +64,16 @@ export default function withDragAndDrop(Calendar) {
     handleBeginAction = (event, action, direction) => {
       this.setState({ event, action, direction })
       const { onDragStart } = this.props
-      if (onDragStart) onDragStart({ event, action, direction })
+      if(onDragStart) onDragStart({ event, action, direction })
     }
 
     handleInteractionStart = () => {
-      if (this.state.interacting === false) this.setState({ interacting: true })
+      if(this.state.interacting === false) this.setState({ interacting: true })
     }
 
     handleInteractionEnd = (interactionInfo) => {
       const { action, event } = this.state
-      if (!action) return
+      if(!action) return
 
       this.setState({
         action: null,
@@ -82,12 +82,12 @@ export default function withDragAndDrop(Calendar) {
         direction: null,
       })
 
-      if (interactionInfo == null) return
+      if(interactionInfo === null) return
 
       interactionInfo.event = event
       const { onEventDrop, onEventResize } = this.props
-      if (action === 'move' && onEventDrop) onEventDrop(interactionInfo)
-      if (action === 'resize' && onEventResize) onEventResize(interactionInfo)
+      if(action === 'move' && onEventDrop) onEventDrop(interactionInfo)
+      if(action === 'resize' && onEventResize) onEventResize(interactionInfo)
     }
 
     render() {
@@ -106,9 +106,9 @@ export default function withDragAndDrop(Calendar) {
 
       const elementPropsWithDropFromOutside = this.props.onDropFromOutside
         ? {
-            ...elementProps,
-            onDragOver: this.props.onDragOver || this.defaultOnDragOver,
-          }
+          ...elementProps,
+          onDragOver: this.props.onDragOver || this.defaultOnDragOver,
+        }
         : elementProps
 
       props.className = clsx(
@@ -119,11 +119,11 @@ export default function withDragAndDrop(Calendar) {
 
       const context = this.getDnDContextValue()
       return (
-        <DnDContext.Provider value={context}>
+        <DnDContext.Provider value={ context }>
           <Calendar
-            {...props}
-            elementProps={elementPropsWithDropFromOutside}
-            components={this.components}
+            { ...props }
+            elementProps={ elementPropsWithDropFromOutside }
+            components={ this.components }
           />
         </DnDContext.Provider>
       )

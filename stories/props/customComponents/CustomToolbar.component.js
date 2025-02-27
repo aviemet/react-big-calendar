@@ -7,11 +7,11 @@ function ViewNamesGroup({ views: viewNames, view, messages, onView }) {
   return viewNames.map((name) => (
     <button
       type="button"
-      key={name}
-      className={clsx({ 'rbc-active': view === name })}
-      onClick={() => onView(name)}
+      key={ name }
+      className={ clsx({ 'rbc-active': view === name }) }
+      onClick={ () => onView(name) }
     >
-      {messages[name]}
+      { messages[name] }
     </button>
   ))
 }
@@ -35,34 +35,34 @@ export default function CustomToolbar({
     <div className="rbc-toolbar">
       <span className="rbc-btn-group">
         <ViewNamesGroup
-          view={view}
-          views={views}
-          messages={messages}
-          onView={onView}
+          view={ view }
+          views={ views }
+          messages={ messages }
+          onView={ onView }
         />
       </span>
 
-      <span className="rbc-toolbar-label">{label}</span>
+      <span className="rbc-toolbar-label">{ label }</span>
 
-      <span className={clsx('rbc-btn-group', 'examples--custom-toolbar')}>
+      <span className={ clsx('rbc-btn-group', 'examples--custom-toolbar') }>
         <button
           type="button"
-          onClick={() => onNavigate(navigate.PREVIOUS)}
-          aria-label={messages.previous}
+          onClick={ () => onNavigate(navigate.PREVIOUS) }
+          aria-label={ messages.previous }
         >
           &#60;
         </button>
         <button
           type="button"
-          onClick={() => onNavigate(navigate.TODAY)}
-          aria-label={messages.today}
+          onClick={ () => onNavigate(navigate.TODAY) }
+          aria-label={ messages.today }
         >
           &#8226;
         </button>
         <button
           type="button"
-          onClick={() => onNavigate(navigate.NEXT)}
-          aria-label={messages.next}
+          onClick={ () => onNavigate(navigate.NEXT) }
+          aria-label={ messages.next }
         >
           &#62;
         </button>

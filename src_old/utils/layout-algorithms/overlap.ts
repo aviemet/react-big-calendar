@@ -20,7 +20,7 @@ class Event {
   get _width() {
     // The container event's width is determined by the maximum number of
     // events in any of its rows.
-    if (this.rows) {
+    if(this.rows) {
       const columns =
         this.rows.reduce(
           (max, row) => Math.max(max, row.leaves.length + 1), // add itself
@@ -32,7 +32,7 @@ class Event {
 
     // The row event's width is the space left by the container, divided
     // among itself and its leaves.
-    if (this.leaves) {
+    if(this.leaves) {
       const availableWidth = 100 - this.container._width
       return availableWidth / (this.leaves.length + 1)
     }
@@ -50,12 +50,12 @@ class Event {
     const overlap = Math.min(100, this._width * 1.7)
 
     // Containers can always grow.
-    if (this.rows) {
+    if(this.rows) {
       return overlap
     }
 
     // Rows can grow if they have leaves.
-    if (this.leaves) {
+    if(this.leaves) {
       return this.leaves.length > 0 ? overlap : noOverlap
     }
 
@@ -67,10 +67,10 @@ class Event {
 
   get xOffset() {
     // Containers have no offset.
-    if (this.rows) return 0
+    if(this.rows) return 0
 
     // Rows always start where their container ends.
-    if (this.leaves) return this.container._width
+    if(this.leaves) return this.container._width
 
     // Leaves are spread out evenly on the space left by its row.
     const { leaves, xOffset, _width } = this.row
@@ -95,20 +95,20 @@ function sortByRender(events) {
   const sortedByTime = sortBy(events, ['startMs', (e) => -e.endMs])
 
   const sorted = []
-  while (sortedByTime.length > 0) {
+  while(sortedByTime.length > 0) {
     const event = sortedByTime.shift()
     sorted.push(event)
 
-    for (let i = 0; i < sortedByTime.length; i++) {
+    for(let i = 0; i < sortedByTime.length; i++) {
       const test = sortedByTime[i]
 
       // Still inside this event, look for next.
-      if (event.endMs > test.startMs) continue
+      if(event.endMs > test.startMs) continue
 
       // We've found the first event of the next event group.
       // If that event is not right next to our current event, we have to
       // move it here.
-      if (i > 0) {
+      if(i > 0) {
         const event = sortedByTime.splice(i, 1)[0]
         sorted.push(event)
       }
@@ -138,7 +138,7 @@ export default function getStyledEvents({
   // Every event is always one of: container, row or leaf.
   // Containers can contain rows, and rows can contain leaves.
   const containerEvents = []
-  for (let i = 0; i < eventsInRenderOrder.length; i++) {
+  for(let i = 0; i < eventsInRenderOrder.length; i++) {
     const event = eventsInRenderOrder[i]
 
     // Check if this event can go into a container event.
@@ -149,7 +149,7 @@ export default function getStyledEvents({
     )
 
     // Couldn't find a container — that means this event is a container.
-    if (!container) {
+    if(!container) {
       event.rows = []
       containerEvents.push(event)
       continue
@@ -161,13 +161,13 @@ export default function getStyledEvents({
     // Check if the event can be placed in an existing row.
     // Start looking from behind.
     let row = null
-    for (let j = container.rows.length - 1; !row && j >= 0; j--) {
-      if (onSameRow(container.rows[j], event, minimumStartDifference)) {
+    for(let j = container.rows.length - 1; !row && j >= 0; j--) {
+      if(onSameRow(container.rows[j], event, minimumStartDifference)) {
         row = container.rows[j]
       }
     }
 
-    if (row) {
+    if(row) {
       // Found a row, so add it.
       row.leaves.push(event)
       event.row = row

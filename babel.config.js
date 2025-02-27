@@ -3,7 +3,7 @@ module.exports = function (api) {
   const isTest = api.env('test')
   const optionalPlugins = []
 
-  if (isESMBuild) {
+  if(isESMBuild) {
     optionalPlugins.push([
       'babel-plugin-transform-rename-import',
       {

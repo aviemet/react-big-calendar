@@ -16,9 +16,9 @@ export default function Popup({ localizer }) {
       </DemoLink>
       <div className="height600">
         <Calendar
-          defaultDate={defaultDate}
-          events={events}
-          localizer={localizer}
+          defaultDate={ defaultDate }
+          events={ events }
+          localizer={ localizer }
           popup
         />
       </div>

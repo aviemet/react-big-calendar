@@ -5,8 +5,8 @@ export let navigate = {
   DATE: 'DATE',
 } as const
 
-export type NavigateKey = keyof typeof navigate;
-export type NavigateAction = typeof navigate[NavigateKey];
+export type NavigateKey = keyof typeof navigate
+export type NavigateAction = typeof navigate[NavigateKey]
 
 export let views = {
   MONTH: 'month',
@@ -16,5 +16,5 @@ export let views = {
   AGENDA: 'agenda',
 } as const
 
-export type ViewKey = keyof typeof views;
-export type View = typeof views[ViewKey];
+export type ViewKey = keyof typeof views
+export type View = typeof views[ViewKey ]

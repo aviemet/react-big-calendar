@@ -10,11 +10,11 @@ export const cleanDocletValue = (str) =>
   str.trim().replace(/^\{/, '').replace(/\}$/, '')
 
 export function getDisplayTypeName(typeName) {
-  if (typeName === 'func') {
+  if(typeName === 'func') {
     return 'function'
-  } else if (typeName === 'bool') {
+  } else if(typeName === 'bool') {
     return 'boolean'
-  } else if (typeName === 'object') {
+  } else if(typeName === 'object') {
     return 'Object'
   }
 
@@ -26,7 +26,7 @@ export function simpleType(prop) {
   let name = getDisplayTypeName(type.name)
   let doclets = prop.doclets || {}
 
-  switch (name) {
+  switch(name) {
     case 'node':
       return 'any'
     case 'function':
@@ -35,7 +35,7 @@ export function simpleType(prop) {
       return 'ReactClass<any>'
     case 'object':
     case 'Object':
-      if (type.value) return renderObject(type.value)
+      if(type.value) return renderObject(type.value)
       return name
     case 'array':
     case 'Array': {

@@ -16,5 +16,5 @@ export default {
 const localizer = dayjsLocalizer(dayjs)
 
 export function DayjsLocalizer() {
-  return <Dayjs localizer={localizer} />
+  return <Dayjs localizer={ localizer } />
 }

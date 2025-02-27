@@ -23,10 +23,10 @@ export function getStyledEvents({
 }) {
   let algorithm = dayLayoutAlgorithm
 
-  if (dayLayoutAlgorithm in DefaultAlgorithms)
+  if(dayLayoutAlgorithm in DefaultAlgorithms)
     algorithm = DefaultAlgorithms[dayLayoutAlgorithm]
 
-  if (!isFunction(algorithm)) {
+  if(!isFunction(algorithm)) {
     // invalid algorithm
     return []
   }

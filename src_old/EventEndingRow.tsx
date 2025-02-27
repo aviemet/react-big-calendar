@@ -18,26 +18,26 @@ class EventEndingRow extends React.Component {
     let rowSegments = eventLevels(segments).levels[0]
 
     let current = 1,
-      lastEnd = 1,
-      row = []
+        lastEnd = 1,
+        row = []
 
-    while (current <= slots) {
+    while(current <= slots) {
       let key = '_lvl_' + current
 
       let { event, left, right, span } =
-        rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0] || {} //eslint-disable-line
+        rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0] || {}
 
-      if (!event) {
+      if(!event) {
         current++
         continue
       }
 
       let gap = Math.max(0, left - lastEnd)
 
-      if (this.canRenderSlotEvent(left, span)) {
+      if(this.canRenderSlotEvent(left, span)) {
         let content = EventRowMixin.renderEvent(this.props, event)
 
-        if (gap) {
+        if(gap) {
           row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
         }
 
@@ -45,7 +45,7 @@ class EventEndingRow extends React.Component {
 
         lastEnd = current = right + 1
       } else {
-        if (gap) {
+        if(gap) {
           row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
         }
 
@@ -61,7 +61,7 @@ class EventEndingRow extends React.Component {
       }
     }
 
-    return <div className="rbc-row">{row}</div>
+    return <div className="rbc-row">{ row }</div>
   }
 
   canRenderSlotEvent(slot, span) {
@@ -80,37 +80,41 @@ class EventEndingRow extends React.Component {
     const remainingEvents = eventsInSlot(segments, slot)
     const count = remainingEvents.length
 
-    if (components?.showMore) {
+    if(components?.showMore) {
       const ShowMore = components.showMore
       // The received slot seems to be 1-based, but the range we use to pull the date is 0-based
       const slotDate = slotMetrics.getDateForSlot(slot - 1)
 
-      return count ? (
-        <ShowMore
-          localizer={localizer}
-          slotDate={slotDate}
-          slot={slot}
-          count={count}
-          events={events}
-          remainingEvents={remainingEvents}
-        />
-      ) : (
-        false
-      )
+      return count
+        ? (
+          <ShowMore
+            localizer={ localizer }
+            slotDate={ slotDate }
+            slot={ slot }
+            count={ count }
+            events={ events }
+            remainingEvents={ remainingEvents }
+          />
+        )
+        : (
+          false
+        )
     }
 
-    return count ? (
-      <button
-        type="button"
-        key={'sm_' + slot}
-        className={clsx('rbc-button-link', 'rbc-show-more')}
-        onClick={(e) => this.showMore(slot, e)}
-      >
-        {localizer.messages.showMore(count, remainingEvents, events)}
-      </button>
-    ) : (
-      false
-    )
+    return count
+      ? (
+        <button
+          type="button"
+          key={ 'sm_' + slot }
+          className={ clsx('rbc-button-link', 'rbc-show-more') }
+          onClick={ (e) => this.showMore(slot, e) }
+        >
+          { localizer.messages.showMore(count, remainingEvents, events) }
+        </button>
+      )
+      : (
+        false
+      )
   }
 
   showMore(slot, e) {

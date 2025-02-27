@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function DraggableAccessor() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 DraggableAccessor.storyName = 'draggableAccessor'

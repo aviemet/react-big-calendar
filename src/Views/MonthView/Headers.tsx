@@ -1,6 +1,6 @@
 import Header from '@/Header'
 import clsx from 'clsx'
-import { useCalendarContext } from '../Calendar'
+import { useCalendarContext } from '../../components/Calendar'
 
 interface HeadersProps {
   row: Date[]

@@ -25,6 +25,7 @@ export default [
 			parser: tsParser,
 			parserOptions: {
 				ecmaFeatures: {
+					project: './tsconfig.json',
 					jsx: true,
 				},
 			},
@@ -101,6 +102,7 @@ export default [
           '!!': false,
         },
       }],
+			'@stylistic/semi': ['error', 'never'],
 			'no-trailing-spaces': ['error', {
         skipBlankLines: false,
         ignoreComments: false
@@ -113,16 +115,6 @@ export default [
 			'no-console': 'warn',
 			'eol-last': ['error', 'always'],
 			...reactHooksPlugin.configs.recommended.rules,
-		},
-	},
-	// Typescript declaration files
-	{
-		files: ['**/*.d.ts'],
-		ignores,
-		rules: {
-			'no-unused-vars': 'off',
-			'@typescript-eslint/member-delimiter-style': 'off',
-			'@stylistic/ts/indent': 'off',
 		},
 	},
 	// Storybook

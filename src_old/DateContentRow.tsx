@@ -34,7 +34,7 @@ class DateContentRow extends React.Component {
     let row = qsa(this.containerRef.current, '.rbc-row-bg')[0]
 
     let cell
-    if (row) cell = row.children[slot - 1]
+    if(row) cell = row.children[slot - 1]
 
     let events = metrics.getEventsForSlot(slot)
     onShowMore(events, range[slot - 1], cell, slot, target)
@@ -72,19 +72,19 @@ class DateContentRow extends React.Component {
   renderDummy = () => {
     let { className, range, renderHeader, showAllEvents } = this.props
     return (
-      <div className={className} ref={this.containerRef}>
+      <div className={ className } ref={ this.containerRef }>
         <div
-          className={clsx(
+          className={ clsx(
             'rbc-row-content',
             showAllEvents && 'rbc-row-content-scrollable'
-          )}
+          ) }
         >
-          {renderHeader && (
-            <div className="rbc-row" ref={this.headingRowRef}>
-              {range.map(this.renderHeadingCell)}
+          { renderHeader && (
+            <div className="rbc-row" ref={ this.headingRowRef }>
+              { range.map(this.renderHeadingCell) }
             </div>
-          )}
-          <div className="rbc-row" ref={this.eventRowRef}>
+          ) }
+          <div className="rbc-row" ref={ this.eventRowRef }>
             <div className="rbc-row-segment">
               <div className="rbc-event">
                 <div className="rbc-event-content">&nbsp;</div>
@@ -125,7 +125,7 @@ class DateContentRow extends React.Component {
       showAllEvents,
     } = this.props
 
-    if (renderForMeasure) return this.renderDummy()
+    if(renderForMeasure) return this.renderDummy()
 
     let metrics = this.slotMetrics(this.props)
     let { levels, extra } = metrics
@@ -150,48 +150,48 @@ class DateContentRow extends React.Component {
     }
 
     return (
-      <div className={className} role="rowgroup" ref={this.containerRef}>
+      <div className={ className } role="rowgroup" ref={ this.containerRef }>
         <BackgroundCells
-          localizer={localizer}
-          date={date}
-          getNow={getNow}
-          rtl={rtl}
-          range={range}
-          selectable={selectable}
-          container={this.getContainer}
-          getters={getters}
-          onSelectStart={onSelectStart}
-          onSelectEnd={onSelectEnd}
-          onSelectSlot={this.handleSelectSlot}
-          components={components}
-          longPressThreshold={longPressThreshold}
-          resourceId={resourceId}
+          localizer={ localizer }
+          date={ date }
+          getNow={ getNow }
+          rtl={ rtl }
+          range={ range }
+          selectable={ selectable }
+          container={ this.getContainer }
+          getters={ getters }
+          onSelectStart={ onSelectStart }
+          onSelectEnd={ onSelectEnd }
+          onSelectSlot={ this.handleSelectSlot }
+          components={ components }
+          longPressThreshold={ longPressThreshold }
+          resourceId={ resourceId }
         />
 
         <div
-          className={clsx(
+          className={ clsx(
             'rbc-row-content',
             showAllEvents && 'rbc-row-content-scrollable'
-          )}
+          ) }
           role="row"
         >
-          {renderHeader && (
-            <div className="rbc-row " ref={this.headingRowRef}>
-              {range.map(this.renderHeadingCell)}
+          { renderHeader && (
+            <div className="rbc-row " ref={ this.headingRowRef }>
+              { range.map(this.renderHeadingCell) }
             </div>
-          )}
+          ) }
           <ScrollableWeekComponent>
-            <WeekWrapper isAllDay={isAllDay} {...eventRowProps} rtl={this.props.rtl}>
-              {levels.map((segs, idx) => (
-                <EventRow key={idx} segments={segs} {...eventRowProps} />
-              ))}
-              {!!extra.length && (
+            <WeekWrapper isAllDay={ isAllDay } { ...eventRowProps } rtl={ this.props.rtl }>
+              { levels.map((segs, Index) => (
+                <EventRow key={ Index } segments={ segs } { ...eventRowProps } />
+              )) }
+              { !!extra.length && (
                 <EventEndingRow
-                  segments={extra}
-                  onShowMore={this.handleShowMore}
-                  {...eventRowProps}
+                  segments={ extra }
+                  onShowMore={ this.handleShowMore }
+                  { ...eventRowProps }
                 />
-              )}
+              ) }
             </WeekWrapper>
           </ScrollableWeekComponent>
         </div>

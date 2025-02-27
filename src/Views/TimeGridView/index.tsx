@@ -1,21 +1,19 @@
-import clsx from 'clsx'
+import React, { Component, createRef } from 'react'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import memoize from 'memoize-one'
-import PropTypes from 'prop-types'
-import React, { Component, createRef } from 'react'
-
 import getPosition from 'dom-helpers/position'
 import getWidth from 'dom-helpers/width'
-import DayColumn from './DayColumn'
-import PopOverlay from './PopOverlay'
-import TimeGridHeader from './TimeGridHeader'
-import TimeGridHeaderResources from './TimeGridHeaderResources'
-import TimeGutter from './TimeGutter'
-import { views } from './utils/constants'
-import { inRange, sortEvents } from './utils/eventLevels'
-import { notify } from './utils/helpers'
-import { DayLayoutAlgorithmPropType } from './utils/propTypes'
-import Resources from './utils/Resources'
+import DayColumn from '@/DayColumn'
+import PopOverlay from '@/components/PopOverlay'
+import TimeGridHeader from '@/Views/TimeGridView/TimeGridHeader'
+import TimeGridHeaderResources from '@/Views/TimeGridView/TimeGridHeaderResources'
+import TimeGutter from '@/TimeGutter'
+import { views } from '@/utils/constants'
+import { inRange, sortEvents } from '@/utils/eventLevels'
+import { notify } from '@/utils/helpers'
+import Resources from '@/utils/Resources'
+
+import clsx from 'clsx'
 
 export default class TimeGrid extends Component {
   constructor(props) {
@@ -36,7 +34,7 @@ export default class TimeGrid extends Component {
   }
 
   componentDidMount() {
-    if (this.props.width == null) {
+    if(this.props.width === null) {
       this.measureGutter()
     }
 
@@ -47,7 +45,7 @@ export default class TimeGrid extends Component {
   }
 
   handleScroll = (e) => {
-    if (this.scrollRef.current) {
+    if(this.scrollRef.current) {
       this.scrollRef.current.scrollLeft = e.target.scrollLeft
     }
   }
@@ -62,7 +60,7 @@ export default class TimeGrid extends Component {
 
     animationFrame.cancel(this.rafHandle)
 
-    if (this.measureGutterAnimationFrameRequest) {
+    if(this.measureGutterAnimationFrameRequest) {
       window.cancelAnimationFrame(this.measureGutterAnimationFrameRequest)
     }
   }
@@ -97,7 +95,7 @@ export default class TimeGrid extends Component {
     } = this.props
     this.clearSelection()
 
-    if (popup) {
+    if(popup) {
       let position = getPosition(cell, this.containerRef.current)
 
       this.setState({
@@ -108,7 +106,7 @@ export default class TimeGrid extends Component {
           target,
         },
       })
-    } else if (doShowMoreDrillDown) {
+    } else if(doShowMoreDrillDown) {
       notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
     }
 
@@ -166,18 +164,18 @@ export default class TimeGrid extends Component {
 
     return (
       <DayColumn
-        {...this.props}
-        localizer={localizer}
-        min={localizer.merge(date, min)}
-        max={localizer.merge(date, max)}
-        resource={resource && id}
-        components={components}
-        isNow={localizer.isSameDate(date, now)}
-        key={`${id}-${date}`}
-        date={date}
-        events={daysEvents}
-        backgroundEvents={daysBackgroundEvents}
-        dayLayoutAlgorithm={dayLayoutAlgorithm}
+        { ...this.props }
+        localizer={ localizer }
+        min={ localizer.merge(date, min) }
+        max={ localizer.merge(date, max) }
+        resource={ resource && id }
+        components={ components }
+        isNow={ localizer.isSameDate(date, now) }
+        key={ `${id}-${date}` }
+        date={ date }
+        events={ daysEvents }
+        backgroundEvents={ daysBackgroundEvents }
+        dayLayoutAlgorithm={ dayLayoutAlgorithm }
       />
     )
   }
@@ -223,10 +221,10 @@ export default class TimeGrid extends Component {
     dayLayoutAlgorithm
   ) {
     return range.map((date) => (
-      <div style={{ display: 'flex', minHeight: '100%', flex: 1 }} key={date}>
-        {resources.map(([id, resource]) => (
-          <div style={{ flex: 1 }} key={accessors.resourceId(resource)}>
-            {this.renderDayColumn(
+      <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date }>
+        { resources.map(([id, resource]) => (
+          <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+            { this.renderDayColumn(
               date,
               id,
               resource,
@@ -237,9 +235,9 @@ export default class TimeGrid extends Component {
               components,
               dayLayoutAlgorithm,
               now
-            )}
+            ) }
           </div>
-        ))}
+        )) }
       </div>
     ))
   }
@@ -257,7 +255,7 @@ export default class TimeGrid extends Component {
     const groupedEvents = resources.groupEvents(events)
     const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
 
-    if (!resourceGroupingLayout) {
+    if(!resourceGroupingLayout) {
       return this.renderResourcesFirst(
         range,
         resources,
@@ -309,20 +307,20 @@ export default class TimeGrid extends Component {
     width = width || this.state.gutterWidth
 
     let start = range[0],
-      end = range[range.length - 1]
+        end = range[range.length - 1]
 
     this.slots = range.length
 
     let allDayEvents = [],
-      rangeEvents = [],
-      rangeBackgroundEvents = []
+        rangeEvents = [],
+        rangeBackgroundEvents = []
 
     events.forEach((event) => {
-      if (inRange(event, start, end, accessors, localizer)) {
+      if(inRange(event, start, end, accessors, localizer)) {
         let eStart = accessors.start(event),
-          eEnd = accessors.end(event)
+            eEnd = accessors.end(event)
 
-        if (
+        if(
           accessors.allDay(event) ||
           localizer.startAndEndAreDateOnly(eStart, eEnd) ||
           (!showMultiDayTimes && !localizer.isSameDate(eStart, eEnd))
@@ -335,7 +333,7 @@ export default class TimeGrid extends Component {
     })
 
     backgroundEvents.forEach((event) => {
-      if (inRange(event, start, end, accessors, localizer)) {
+      if(inRange(event, start, end, accessors, localizer)) {
         rangeBackgroundEvents.push(event)
       }
     })
@@ -373,42 +371,44 @@ export default class TimeGrid extends Component {
 
     return (
       <div
-        className={clsx(
+        className={ clsx(
           'rbc-time-view',
           resources && 'rbc-time-view-resources'
-        )}
-        ref={this.containerRef}
+        ) }
+        ref={ this.containerRef }
       >
-        {resources && resources.length > 1 && resourceGroupingLayout ? (
-          <TimeGridHeaderResources {...headerProps} />
-        ) : (
-          <TimeGridHeader {...headerProps} />
-        )}
-        {this.props.popup && this.renderOverlay()}
+        { resources && resources.length > 1 && resourceGroupingLayout
+          ? (
+            <TimeGridHeaderResources { ...headerProps } />
+          )
+          : (
+            <TimeGridHeader { ...headerProps } />
+          ) }
+        { this.props.popup && this.renderOverlay() }
         <div
-          ref={this.contentRef}
+          ref={ this.contentRef }
           className="rbc-time-content"
-          onScroll={this.handleScroll}
+          onScroll={ this.handleScroll }
         >
           <TimeGutter
-            date={start}
-            ref={this.gutterRef}
-            localizer={localizer}
-            min={localizer.merge(start, min)}
-            max={localizer.merge(start, max)}
-            step={this.props.step}
-            getNow={this.props.getNow}
-            timeslots={this.props.timeslots}
-            components={components}
+            date={ start }
+            ref={ this.gutterRef }
+            localizer={ localizer }
+            min={ localizer.merge(start, min) }
+            max={ localizer.merge(start, max) }
+            step={ this.props.step }
+            getNow={ this.props.getNow }
+            timeslots={ this.props.timeslots }
+            components={ components }
             className="rbc-time-gutter"
-            getters={getters}
+            getters={ getters }
           />
-          {this.renderEvents(
+          { this.renderEvents(
             range,
             rangeEvents,
             rangeBackgroundEvents,
             getNow()
-          )}
+          ) }
         </div>
       </div>
     )
@@ -430,21 +430,21 @@ export default class TimeGrid extends Component {
 
     return (
       <PopOverlay
-        overlay={overlay}
-        accessors={accessors}
-        localizer={localizer}
-        components={components}
-        getters={getters}
-        selected={selected}
-        popupOffset={popupOffset}
-        ref={this.containerRef}
-        handleKeyPressEvent={this.handleKeyPressEvent}
-        handleSelectEvent={this.handleSelectEvent}
-        handleDoubleClickEvent={this.handleDoubleClickEvent}
-        handleDragStart={handleDragStart}
-        show={!!overlay.position}
-        overlayDisplay={this.overlayDisplay}
-        onHide={onHide}
+        overlay={ overlay }
+        accessors={ accessors }
+        localizer={ localizer }
+        components={ components }
+        getters={ getters }
+        selected={ selected }
+        popupOffset={ popupOffset }
+        ref={ this.containerRef }
+        handleKeyPressEvent={ this.handleKeyPressEvent }
+        handleSelectEvent={ this.handleSelectEvent }
+        handleDoubleClickEvent={ this.handleDoubleClickEvent }
+        handleDragStart={ handleDragStart }
+        show={ !!overlay.position }
+        overlayDisplay={ this.overlayDisplay }
+        onHide={ onHide }
       />
     )
   }
@@ -461,7 +461,7 @@ export default class TimeGrid extends Component {
   }
 
   measureGutter() {
-    if (this.measureGutterAnimationFrameRequest) {
+    if(this.measureGutterAnimationFrameRequest) {
       window.cancelAnimationFrame(this.measureGutterAnimationFrameRequest)
     }
     this.measureGutterAnimationFrameRequest = window.requestAnimationFrame(
@@ -470,7 +470,7 @@ export default class TimeGrid extends Component {
           ? getWidth(this.gutterRef.current)
           : undefined
 
-        if (width && this.state.gutterWidth !== width) {
+        if(width && this.state.gutterWidth !== width) {
           this.setState({ gutterWidth: width })
         }
       }
@@ -479,7 +479,7 @@ export default class TimeGrid extends Component {
 
   applyScroll() {
     // If auto-scroll is disabled, we don't actually apply the scroll
-    if (this._scrollRatio != null && this.props.enableAutoScroll === true) {
+    if(this._scrollRatio != null && this.props.enableAutoScroll === true) {
       const content = this.contentRef.current
       content.scrollTop = content.scrollHeight * this._scrollRatio
       // Only do this once
@@ -501,14 +501,14 @@ export default class TimeGrid extends Component {
   }
 
   checkOverflow = () => {
-    if (this._updatingOverflow) return
+    if(this._updatingOverflow) return
 
     const content = this.contentRef.current
 
-    if (!content?.scrollHeight) return
+    if(!content?.scrollHeight) return
     let isOverflowing = content.scrollHeight > content.clientHeight
 
-    if (this.state.isOverflowing !== isOverflowing) {
+    if(this.state.isOverflowing !== isOverflowing) {
       this._updatingOverflow = true
       this.setState({ isOverflowing }, () => {
         this._updatingOverflow = false

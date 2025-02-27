@@ -13,7 +13,7 @@ export default function CreateEventWithNoOverlap({
   const handleSelectSlot = useCallback(
     ({ start, end }) => {
       const title = window.prompt('New Event Name')
-      if (title) {
+      if(title) {
         setEvents((prev) => [...prev, { start, end, title }])
       }
     },
@@ -45,15 +45,15 @@ export default function CreateEventWithNoOverlap({
       </DemoLink>
       <div className="height600">
         <Calendar
-          dayLayoutAlgorithm={dayLayoutAlgorithm}
-          defaultDate={defaultDate}
-          defaultView={Views.WEEK}
-          events={myEvents}
-          localizer={localizer}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
+          dayLayoutAlgorithm={ dayLayoutAlgorithm }
+          defaultDate={ defaultDate }
+          defaultView={ Views.WEEK }
+          events={ myEvents }
+          localizer={ localizer }
+          onSelectEvent={ handleSelectEvent }
+          onSelectSlot={ handleSelectSlot }
           selectable
-          scrollToTime={scrollToTime}
+          scrollToTime={ scrollToTime }
         />
       </div>
     </Fragment>

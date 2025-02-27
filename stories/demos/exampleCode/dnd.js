@@ -16,11 +16,11 @@ export default function DragAndDrop({ localizer }) {
   const moveEvent = useCallback(
     ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
       const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
+      if(!allDay && droppedOnAllDaySlot) {
         event.allDay = true
       }
-      if (allDay && !droppedOnAllDaySlot) {
-          event.allDay = false;
+      if(allDay && !droppedOnAllDaySlot) {
+        event.allDay = false
       }
 
       setMyEvents((prev) => {
@@ -55,12 +55,12 @@ export default function DragAndDrop({ localizer }) {
       </DemoLink>
       <div className="height600">
         <DragAndDropCalendar
-          defaultDate={defaultDate}
-          defaultView={Views.MONTH}
-          events={myEvents}
-          localizer={localizer}
-          onEventDrop={moveEvent}
-          onEventResize={resizeEvent}
+          defaultDate={ defaultDate }
+          defaultView={ Views.MONTH }
+          events={ myEvents }
+          localizer={ localizer }
+          onEventDrop={ moveEvent }
+          onEventResize={ resizeEvent }
           popup
           resizable
         />

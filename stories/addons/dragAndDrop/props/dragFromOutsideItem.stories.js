@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function DragFromOutsideItem() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 DragFromOutsideItem.storyName = 'dragFromOutsideItem'

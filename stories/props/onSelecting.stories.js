@@ -68,12 +68,12 @@ export function OnSelecting() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        defaultView={Views.WEEK}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onSelecting={onSelecting}
-        onSelectSlot={onSelectSlot}
+        defaultDate={ defaultDate }
+        defaultView={ Views.WEEK }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onSelecting={ onSelecting }
+        onSelectSlot={ onSelectSlot }
         selectable
       />
     </div>

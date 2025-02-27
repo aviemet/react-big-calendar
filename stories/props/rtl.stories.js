@@ -29,7 +29,7 @@ export default {
 // TODO: localize example for Arabic
 const Template = (args) => (
   <div className="height600">
-    <Calendar {...args} />
+    <Calendar { ...args } />
   </div>
 )
 

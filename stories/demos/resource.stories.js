@@ -16,6 +16,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function Example11() {
-  return <Resource localizer={localizer} />
+  return <Resource localizer={ localizer } />
 }
 Example11.storyName = 'Resource Scheduling'

@@ -1,7 +1,9 @@
-import React from 'react'
+interface ScrollableWeekWrapperProps {
+  children: React.ReactNode
+}
 
-const ScrollableWeekWrapper = ({ children }) => {
-  return <div className="rbc-row-content-scroll-container">{children}</div>
+const ScrollableWeekWrapper = ({ children }: ScrollableWeekWrapperProps) => {
+  return <div className="rbc-row-content-scroll-container">{ children }</div>
 }
 
 export default ScrollableWeekWrapper

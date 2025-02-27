@@ -23,31 +23,31 @@ class EventWrapper extends React.Component {
   }
 
   handleResizeUp = (e) => {
-    if (e.button !== 0) return
+    if(e.button !== 0) return
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'UP')
   }
   handleResizeDown = (e) => {
-    if (e.button !== 0) return
+    if(e.button !== 0) return
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'DOWN')
   }
   handleResizeLeft = (e) => {
-    if (e.button !== 0) return
+    if(e.button !== 0) return
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'LEFT')
   }
   handleResizeRight = (e) => {
-    if (e.button !== 0) return
+    if(e.button !== 0) return
     this.context.draggable.onBeginAction(this.props.event, 'resize', 'RIGHT')
   }
   handleStartDragging = (e) => {
-    if (e.button !== 0) return
+    if(e.button !== 0) return
     // hack: because of the way the anchors are arranged in the DOM, resize
     // anchor events will bubble up to the move anchor listener. Don't start
     // move operations when we're on a resize anchor.
     const isResizeHandle = e.target
       .getAttribute('class')
       ?.includes('rbc-addons-dnd-resize')
-    if (!isResizeHandle) {
-      let extendedEvent = {...this.props.event}
+    if(!isResizeHandle) {
+      let extendedEvent = { ...this.props.event }
       extendedEvent.sourceResource = this.props.resource
       this.context.draggable.onBeginAction(this.props.event, 'move')
     }
@@ -57,10 +57,10 @@ class EventWrapper extends React.Component {
     const cls = direction === 'Up' || direction === 'Down' ? 'ns' : 'ew'
     return (
       <div
-        className={`rbc-addons-dnd-resize-${cls}-anchor`}
-        onMouseDown={this[`handleResize${direction}`]}
+        className={ `rbc-addons-dnd-resize-${cls}-anchor` }
+        onMouseDown={ this[`handleResize${direction}`] }
       >
-        <div className={`rbc-addons-dnd-resize-${cls}-icon`} />
+        <div className={ `rbc-addons-dnd-resize-${cls}-icon` } />
       </div>
     )
   }
@@ -71,7 +71,7 @@ class EventWrapper extends React.Component {
 
     let { children } = this.props
 
-    if (event.__isPreview)
+    if(event.__isPreview)
       return React.cloneElement(children, {
         className: clsx(
           children.props.className,
@@ -87,7 +87,7 @@ class EventWrapper extends React.Component {
       : true
 
     /* Event is not draggable, no need to wrap it */
-    if (!isDraggable) {
+    if(!isDraggable) {
       return children
     }
 
@@ -113,7 +113,7 @@ class EventWrapper extends React.Component {
     const isResizable =
       resizable && (resizableAccessor ? !!get(event, resizableAccessor) : true)
 
-    if (isResizable || isDraggable) {
+    if(isResizable || isDraggable) {
       /*
        * props.children is the singular <Event> component.
        * BigCalendar positions the Event abolutely and we
@@ -127,12 +127,12 @@ class EventWrapper extends React.Component {
         onTouchStart: this.handleStartDragging,
       }
 
-      if (isResizable) {
+      if(isResizable) {
         // replace original event child with anchor-embellished child
         let StartAnchor = null
         let EndAnchor = null
 
-        if (type === 'date') {
+        if(type === 'date') {
           StartAnchor = !continuesPrior && this.renderAnchor('Left')
           EndAnchor = !continuesAfter && this.renderAnchor('Right')
         } else {
@@ -142,14 +142,14 @@ class EventWrapper extends React.Component {
 
         newProps.children = (
           <div className="rbc-addons-dnd-resizable">
-            {StartAnchor}
-            {children.props.children}
-            {EndAnchor}
+            { StartAnchor }
+            { children.props.children }
+            { EndAnchor }
           </div>
         )
       }
 
-      if (
+      if(
         draggable.dragAndDropAction.interacting && // if an event is being dragged right now
         draggable.dragAndDropAction.event === event // and it's the current event
       ) {

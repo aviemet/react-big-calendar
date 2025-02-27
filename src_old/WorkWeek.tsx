@@ -29,14 +29,14 @@ class WorkWeek extends React.Component {
     let range = workWeekRange(date, this.props)
     return (
       <TimeGrid
-        {...props}
-        range={range}
-        eventOffset={15}
-        localizer={localizer}
-        min={min}
-        max={max}
-        scrollToTime={scrollToTime}
-        enableAutoScroll={enableAutoScroll}
+        { ...props }
+        range={ range }
+        eventOffset={ 15 }
+        localizer={ localizer }
+        min={ min }
+        max={ max }
+        scrollToTime={ scrollToTime }
+        enableAutoScroll={ enableAutoScroll }
       />
     )
   }

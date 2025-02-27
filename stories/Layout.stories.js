@@ -18,7 +18,7 @@ export default {
   ],
 }
 
-const Template = (args) => <Calendar {...args} />
+const Template = (args) => <Calendar { ...args } />
 
 const defaultDate = new Date()
 
@@ -165,8 +165,8 @@ DaySpan.args = {
 export const ZeroDurationOddities = () => {
   return (
     <DragAndDropCalendar
-      defaultDate={new Date(2015, 3, 1)}
-      events={[
+      defaultDate={ new Date(2015, 3, 1) }
+      events={ [
         {
           id: 4,
           title: '0 day duration',
@@ -179,7 +179,7 @@ export const ZeroDurationOddities = () => {
           start: new Date(2015, 3, 9, 0, 0, 0),
           end: new Date(2015, 3, 10, 0, 0, 0),
         },
-      ]}
+      ] }
     />
   )
 }
@@ -187,8 +187,8 @@ export const ZeroDurationOddities = () => {
 export const ZeroDurationOverlap = () => {
   return (
     <DragAndDropCalendar
-      defaultDate={defaultDate}
-      events={[
+      defaultDate={ defaultDate }
+      events={ [
         {
           title: 'event a',
           start: defaultDate,
@@ -199,10 +199,10 @@ export const ZeroDurationOverlap = () => {
           start: defaultDate,
           end: defaultDate,
         },
-      ]}
-      dayLayoutAlgorithm={'no-overlap'}
-      scrollToTime={defaultDate}
-      defaultView={Views.WEEK}
+      ] }
+      dayLayoutAlgorithm={ 'no-overlap' }
+      scrollToTime={ defaultDate }
+      defaultView={ Views.WEEK }
     />
   )
 }

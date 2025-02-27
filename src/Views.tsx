@@ -1,12 +1,12 @@
 import { NavigateAction, View, views } from './utils/constants'
-import Month from './components/Month'
-import Day from './Day'
-import Week from './Week'
-import WorkWeek from './WorkWeek'
-import Agenda from './Agenda'
+import Month from './Views/MonthView'
+import Week from './Views/WeekView'
+import WorkWeek from './Views/WorkWeekView'
+import Day from './Views/DayView'
+import Agenda from './Views/AgendaView'
 import { type Culture, type DateFormat } from './localizers'
 import { CalendarProps } from './components/Calendar'
-import { Components, SlotInfo } from './types'
+import { type Accessors, type Components, type Getters, type SlotInfo } from './types'
 
 export interface TitleOptions {
   formats: DateFormat[]
@@ -27,8 +27,9 @@ export type ViewsProps =
       agenda?: boolean | (React.ReactNode & ViewStatic) | undefined
       month?: boolean | (React.ReactNode & ViewStatic) | undefined
       week?: boolean | (React.ReactNode & ViewStatic) | undefined
-    };
+    }
 
+export type Selectable = boolean | "ignoreEvents"
 
 export interface BaseViewProps<TEvent extends object = Event, TResource extends object = object> {
   date?: string | Date | undefined
@@ -46,11 +47,11 @@ export interface BaseViewProps<TEvent extends object = Event, TResource extends 
   showMultiDayTimes?: boolean | undefined
   rtl?: boolean | undefined
   width?: number | undefined
-  accessors?: object | undefined
+  accessors?: Accessors<TEvent> | undefined
   components?: Components<TEvent, TResource> | undefined
-  getters?: object | undefined
+  getters?: Getters<TEvent> | undefined
   selected?: object | undefined
-  selectable?: boolean | "ignoreEvents" | undefined
+  selectable?: Selectable | undefined
   longPressThreshold?: number | undefined
   onNavigate?: ((action: NavigateAction) => void) | undefined
   onSelectSlot?: ((slotInfo: SlotInfo) => void) | undefined

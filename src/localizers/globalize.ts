@@ -62,8 +62,8 @@ export default function (globalize) {
       const weekData = cldr.get('supplemental').weekData
       const firstDay = weekData.firstDay[territory || '001']
       return days.indexOf(firstDay)
-    } catch (e) {
-      if (process.env.NODE_ENV !== 'production') {
+    } catch(e) {
+      if(process.env.NODE_ENV !== 'production') {
         console.error(
           'Failed to accurately determine first day of the week.' +
             ' Is supplemental data loaded into CLDR?'
@@ -81,7 +81,7 @@ export default function (globalize) {
     }
   }
 
-  if (!globalize.load) return oldGlobalize(globalize)
+  if(!globalize.load) return oldGlobalize(globalize)
 
   return new DateLocalizer({
     firstOfWeek,

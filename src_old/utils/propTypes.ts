@@ -32,7 +32,7 @@ export let views = PropTypes.oneOfType([
   PropTypes.objectOf((prop, key, ...args) => {
     let isBuiltinView =
       viewNames.indexOf(key) !== -1 && typeof prop[key] === 'boolean'
-    if (isBuiltinView) {
+    if(isBuiltinView) {
       return null
     } else {
       return PropTypes.elementType(prop, key, ...args)

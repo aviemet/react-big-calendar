@@ -44,7 +44,7 @@ export default function DnDOutsideResource({ localizer }) {
       // onDragOver can optionally be passed to conditionally
       // allow draggable items to be dropped on cal, based on
       // whether event.preventDefault is called
-      if (draggedEvent !== 'undroppable') {
+      if(draggedEvent !== 'undroppable') {
         console.log('preventDefault')
         dragEvent.preventDefault()
       }
@@ -60,7 +60,7 @@ export default function DnDOutsideResource({ localizer }) {
   const moveEvent = useCallback(
     ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
       const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
+      if(!allDay && droppedOnAllDaySlot) {
         event.allDay = true
       }
 
@@ -86,7 +86,7 @@ export default function DnDOutsideResource({ localizer }) {
 
   const onDropFromOutside = useCallback(
     ({ start, end, allDay: isAllDay }) => {
-      if (draggedEvent === 'undroppable') {
+      if(draggedEvent === 'undroppable') {
         setDraggedEvent(null)
         return
       }
@@ -134,20 +134,20 @@ export default function DnDOutsideResource({ localizer }) {
               Lighter colored events, in the Calendar, have an `isDraggable` key
               of `false`.
             </p>
-            {Object.entries(counters).map(([name, count]) => (
+            { Object.entries(counters).map(([name, count]) => (
               <div
                 draggable="true"
-                key={name}
-                onDragStart={() =>
+                key={ name }
+                onDragStart={ () =>
                   handleDragStart({ title: formatName(name, count), name })
                 }
               >
-                {formatName(name, count)}
+                { formatName(name, count) }
               </div>
-            ))}
+            )) }
             <div
               draggable="true"
-              onDragStart={() => handleDragStart('undroppable')}
+              onDragStart={ () => handleDragStart('undroppable') }
             >
               Draggable but not for calendar.
             </div>
@@ -157,8 +157,8 @@ export default function DnDOutsideResource({ localizer }) {
             <label>
               <input
                 type="checkbox"
-                checked={displayDragItemInCell}
-                onChange={handleDisplayDragItemInCell}
+                checked={ displayDragItemInCell }
+                onChange={ handleDisplayDragItemInCell }
               />
               Display dragged item in cell while dragging over
             </label>
@@ -167,20 +167,20 @@ export default function DnDOutsideResource({ localizer }) {
       </DemoLink>
       <div className="height600">
         <DragAndDropCalendar
-          defaultDate={defaultDate}
-          defaultView={Views.MONTH}
+          defaultDate={ defaultDate }
+          defaultView={ Views.MONTH }
           dragFromOutsideItem={
             displayDragItemInCell ? dragFromOutsideItem : null
           }
           draggableAccessor="isDraggable"
-          eventPropGetter={eventPropGetter}
-          events={myEvents}
-          localizer={localizer}
-          onDropFromOutside={onDropFromOutside}
-          onDragOverFromOutside={customOnDragOverFromOutside}
-          onEventDrop={moveEvent}
-          onEventResize={resizeEvent}
-          onSelectSlot={newEvent}
+          eventPropGetter={ eventPropGetter }
+          events={ myEvents }
+          localizer={ localizer }
+          onDropFromOutside={ onDropFromOutside }
+          onDragOverFromOutside={ customOnDragOverFromOutside }
+          onEventDrop={ moveEvent }
+          onEventResize={ resizeEvent }
+          onSelectSlot={ newEvent }
           resizable
           selectable
         />

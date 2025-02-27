@@ -17,6 +17,6 @@ export default {
 const localizer = momentLocalizer(moment)
 
 export function OnEventResize() {
-  return <Basic localizer={localizer} />
+  return <Basic localizer={ localizer } />
 }
 OnEventResize.storyName = 'onEventResize'

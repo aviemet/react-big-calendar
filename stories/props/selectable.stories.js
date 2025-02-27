@@ -54,10 +54,10 @@ export function Selectable() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        localizer={mLocalizer}
-        onSelectSlot={onSelectSlot}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        localizer={ mLocalizer }
+        onSelectSlot={ onSelectSlot }
         selectable
       />
     </div>

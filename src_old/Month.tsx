@@ -9,8 +9,6 @@ import { notify } from './utils/helpers'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
 
-/* import Popup from './Popup'
-import Overlay from 'react-overlays/Overlay' */
 import PopOverlay from './PopOverlay'
 import DateContentRow from './DateContentRow'
 import Header from './Header'
@@ -47,15 +45,15 @@ class MonthView extends React.Component {
   componentDidMount() {
     let running
 
-    if (this.state.needLimitMeasure) this.measureRowLimit(this.props)
+    if(this.state.needLimitMeasure) this.measureRowLimit(this.props)
 
     window.addEventListener(
       'resize',
       (this._resizeListener = () => {
-        if (!running) {
+        if(!running) {
           animationFrame.request(() => {
             running = false
-            this.setState({ needLimitMeasure: true }) //eslint-disable-line
+            this.setState({ needLimitMeasure: true })
           })
         }
       }),
@@ -64,7 +62,7 @@ class MonthView extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.needLimitMeasure) this.measureRowLimit(this.props)
+    if(this.state.needLimitMeasure) this.measureRowLimit(this.props)
   }
 
   componentWillUnmount() {
@@ -77,28 +75,28 @@ class MonthView extends React.Component {
 
   render() {
     let { date, localizer, className } = this.props,
-      month = localizer.visibleDays(date, localizer),
-      weeks = chunk(month, 7)
+        month = localizer.visibleDays(date, localizer),
+        weeks = chunk(month, 7)
 
     this._weekCount = weeks.length
 
     return (
       <div
-        className={clsx('rbc-month-view', className)}
+        className={ clsx('rbc-month-view', className) }
         role="table"
         aria-label="Month View"
-        ref={this.containerRef}
+        ref={ this.containerRef }
       >
         <div className="rbc-row rbc-month-header" role="row">
-          {this.renderHeaders(weeks[0])}
+          { this.renderHeaders(weeks[0]) }
         </div>
-        {weeks.map(this.renderWeek)}
-        {this.props.popup && this.renderOverlay()}
+        { weeks.map(this.renderWeek) }
+        { this.props.popup && this.renderOverlay() }
       </div>
     )
   }
 
-  renderWeek = (week, weekIdx) => {
+  renderWeek = (week, weekIndex) => {
     let {
       events,
       components,
@@ -128,32 +126,32 @@ class MonthView extends React.Component {
 
     return (
       <DateContentRow
-        key={weekIdx}
-        ref={weekIdx === 0 ? this.slotRowRef : undefined}
-        container={this.getContainer}
+        key={ weekIndex }
+        ref={ weekIndex === 0 ? this.slotRowRef : undefined }
+        container={ this.getContainer }
         className="rbc-month-row"
-        getNow={getNow}
-        date={date}
-        range={week}
-        events={sorted}
-        maxRows={showAllEvents ? Infinity : rowLimit}
-        selected={selected}
-        selectable={selectable}
-        components={components}
-        accessors={accessors}
-        getters={getters}
-        localizer={localizer}
-        renderHeader={this.readerDateHeading}
-        renderForMeasure={needLimitMeasure}
-        onShowMore={this.handleShowMore}
-        onSelect={this.handleSelectEvent}
-        onDoubleClick={this.handleDoubleClickEvent}
-        onKeyPress={this.handleKeyPressEvent}
-        onSelectSlot={this.handleSelectSlot}
-        longPressThreshold={longPressThreshold}
-        rtl={this.props.rtl}
-        resizable={this.props.resizable}
-        showAllEvents={showAllEvents}
+        getNow={ getNow }
+        date={ date }
+        range={ week }
+        events={ sorted }
+        maxRows={ showAllEvents ? Infinity : rowLimit }
+        selected={ selected }
+        selectable={ selectable }
+        components={ components }
+        accessors={ accessors }
+        getters={ getters }
+        localizer={ localizer }
+        renderHeader={ this.readerDateHeading }
+        renderForMeasure={ needLimitMeasure }
+        onShowMore={ this.handleShowMore }
+        onSelect={ this.handleSelectEvent }
+        onDoubleClick={ this.handleDoubleClickEvent }
+        onKeyPress={ this.handleKeyPressEvent }
+        onSelectSlot={ this.handleSelectSlot }
+        longPressThreshold={ longPressThreshold }
+        rtl={ this.props.rtl }
+        resizable={ this.props.resizable }
+        showAllEvents={ showAllEvents }
       />
     )
   }
@@ -168,20 +166,20 @@ class MonthView extends React.Component {
 
     return (
       <div
-        {...props}
-        className={clsx(
+        { ...props }
+        className={ clsx(
           className,
           isOffRange && 'rbc-off-range',
           isCurrent && 'rbc-current'
-        )}
+        ) }
         role="cell"
       >
         <DateHeaderComponent
-          label={label}
-          date={date}
-          drilldownView={drilldownView}
-          isOffRange={isOffRange}
-          onDrillDown={(e) => this.handleHeadingClick(date, drilldownView, e)}
+          label={ label }
+          date={ date }
+          drilldownView={ drilldownView }
+          isOffRange={ isOffRange }
+          onDrillDown={ (e) => this.handleHeadingClick(date, drilldownView, e) }
         />
       </div>
     )
@@ -193,12 +191,12 @@ class MonthView extends React.Component {
     let last = row[row.length - 1]
     let HeaderComponent = components.header || Header
 
-    return localizer.range(first, last, 'day').map((day, idx) => (
-      <div key={'header_' + idx} className="rbc-header">
+    return localizer.range(first, last, 'day').map((day, Index) => (
+      <div key={ 'header_' + Index } className="rbc-header">
         <HeaderComponent
-          date={day}
-          localizer={localizer}
-          label={localizer.format(day, 'weekdayFormat')}
+          date={ day }
+          localizer={ localizer }
+          label={ localizer.format(day, 'weekdayFormat') }
         />
       </div>
     ))
@@ -220,54 +218,23 @@ class MonthView extends React.Component {
 
     return (
       <PopOverlay
-        overlay={overlay}
-        accessors={accessors}
-        localizer={localizer}
-        components={components}
-        getters={getters}
-        selected={selected}
-        popupOffset={popupOffset}
-        ref={this.containerRef}
-        handleKeyPressEvent={this.handleKeyPressEvent}
-        handleSelectEvent={this.handleSelectEvent}
-        handleDoubleClickEvent={this.handleDoubleClickEvent}
-        handleDragStart={handleDragStart}
-        show={!!overlay.position}
-        overlayDisplay={this.overlayDisplay}
-        onHide={onHide}
+        overlay={ overlay }
+        accessors={ accessors }
+        localizer={ localizer }
+        components={ components }
+        getters={ getters }
+        selected={ selected }
+        popupOffset={ popupOffset }
+        ref={ this.containerRef }
+        handleKeyPressEvent={ this.handleKeyPressEvent }
+        handleSelectEvent={ this.handleSelectEvent }
+        handleDoubleClickEvent={ this.handleDoubleClickEvent }
+        handleDragStart={ handleDragStart }
+        show={ !!overlay.position }
+        overlayDisplay={ this.overlayDisplay }
+        onHide={ onHide }
       />
     )
-
-    /* return (
-      <Overlay
-        rootClose
-        placement="bottom"
-        show={!!overlay.position}
-        onHide={() => this.setState({ overlay: null })}
-        target={() => overlay.target}
-      >
-        {({ props }) => (
-          <Popup
-            {...props}
-            popupOffset={popupOffset}
-            accessors={accessors}
-            getters={getters}
-            selected={selected}
-            components={components}
-            localizer={localizer}
-            position={overlay.position}
-            show={this.overlayDisplay}
-            events={overlay.events}
-            slotStart={overlay.date}
-            slotEnd={overlay.end}
-            onSelect={this.handleSelectEvent}
-            onDoubleClick={this.handleDoubleClickEvent}
-            onKeyPress={this.handleKeyPressEvent}
-            handleDragStart={this.props.handleDragStart}
-          />
-        )}
-      </Overlay>
-    ) */
   }
 
   measureRowLimit() {
@@ -316,13 +283,13 @@ class MonthView extends React.Component {
     //cancel any pending selections so only the event click goes through.
     this.clearSelection()
 
-    if (popup) {
+    if(popup) {
       let position = getPosition(cell, this.containerRef.current)
 
       this.setState({
         overlay: { date, events, position, target },
       })
-    } else if (doShowMoreDrillDown) {
+    } else if(doShowMoreDrillDown) {
       notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
     }
 
@@ -417,7 +384,7 @@ MonthView.range = (date, { localizer }) => {
 }
 
 MonthView.navigate = (date, action, { localizer }) => {
-  switch (action) {
+  switch(action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'month')
 

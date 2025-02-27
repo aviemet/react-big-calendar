@@ -19,7 +19,7 @@ export default {
 export function GetDrilldownView() {
   const getDrilldownView = useCallback(
     (targetDate, currentViewName, configuredViewNames) => {
-      if (currentViewName === 'month' && configuredViewNames.includes('week'))
+      if(currentViewName === 'month' && configuredViewNames.includes('week'))
         return 'week'
 
       return null
@@ -32,10 +32,10 @@ export function GetDrilldownView() {
   return (
     <div className="height600">
       <Calendar
-        defaultDate={defaultDate}
-        events={demoEvents}
-        getDrilldownView={getDrilldownView}
-        localizer={mLocalizer}
+        defaultDate={ defaultDate }
+        events={ demoEvents }
+        getDrilldownView={ getDrilldownView }
+        localizer={ mLocalizer }
       />
     </div>
   )

@@ -50,10 +50,10 @@ export function lastVisibleDay(date, localizer) {
 
 export function visibleDays(date, localizer) {
   let current = firstVisibleDay(date, localizer),
-    last = lastVisibleDay(date, localizer),
-    days = []
+      last = lastVisibleDay(date, localizer),
+      days = []
 
-  while (dates.lte(current, last, 'day')) {
+  while(dates.lte(current, last, 'day')) {
     days.push(current)
     current = dates.add(current, 1, 'day')
   }
@@ -69,9 +69,9 @@ export function ceil(date, unit) {
 
 export function range(start, end, unit = 'day') {
   let current = start,
-    days = []
+      days = []
 
-  while (dates.lte(current, end, unit)) {
+  while(dates.lte(current, end, unit)) {
     days.push(current)
     current = dates.add(current, 1, unit)
   }
@@ -80,10 +80,10 @@ export function range(start, end, unit = 'day') {
 }
 
 export function merge(date, time) {
-  if (time == null && date == null) return null
+  if(time === null && date === null) return null
 
-  if (time == null) time = new Date()
-  if (date == null) date = new Date()
+  if(time === null) time = new Date()
+  if(date === null) date = new Date()
 
   date = dates.startOf(date, 'day')
   date = dates.hours(date, dates.hours(time))
@@ -110,7 +110,7 @@ export function isJustDate(date) {
 }
 
 export function duration(start, end, unit, firstOfWeek) {
-  if (unit === 'day') unit = 'date'
+  if(unit === 'day') unit = 'date'
   return Math.abs(
     // eslint-disable-next-line import/namespace
     dates[unit](start, undefined, firstOfWeek) -
@@ -120,7 +120,7 @@ export function duration(start, end, unit, firstOfWeek) {
 }
 
 export function diff(dateA, dateB, unit) {
-  if (!unit || unit === 'milliseconds') return Math.abs(+dateA - +dateB)
+  if(!unit || unit === 'milliseconds') return Math.abs(+dateA - +dateB)
 
   // the .round() handles an edge case
   // with DST where the total won't be exact
@@ -135,9 +135,9 @@ export function diff(dateA, dateB, unit) {
 
 export function total(date, unit) {
   let ms = date.getTime(),
-    div = 1
+      div = 1
 
-  switch (unit) {
+  switch(unit) {
     case 'week':
       div *= 7
     case 'day':

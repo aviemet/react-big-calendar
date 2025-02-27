@@ -90,11 +90,11 @@ export default function DnDResource({ localizer }) {
       isAllDay: droppedOnAllDaySlot = false,
     }) => {
       const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
+      if(!allDay && droppedOnAllDaySlot) {
         event.allDay = true
       }
-      if (Array.isArray(event.resourceId)) {
-        if (copyEvent) {
+      if(Array.isArray(event.resourceId)) {
+        if(copyEvent) {
           resourceId = [...new Set([...event.resourceId, resourceId])]
         } else {
           const filtered = event.resourceId.filter(
@@ -102,7 +102,7 @@ export default function DnDResource({ localizer }) {
           )
           resourceId = [...new Set([...filtered, resourceId])]
         }
-      } else if (copyEvent) {
+      } else if(copyEvent) {
         resourceId = [...new Set([event.resourceId, resourceId])]
       }
 
@@ -140,12 +140,12 @@ export default function DnDResource({ localizer }) {
         <strong>
           Drag and Drop an "event" from one resource slot to another.
         </strong>
-        <div style={{ margin: '10px 0 20px 0' }}>
+        <div style={ { margin: '10px 0 20px 0' } }>
           <label>
             <input
               type="checkbox"
-              checked={copyEvent}
-              onChange={toggleCopyEvent}
+              checked={ copyEvent }
+              onChange={ toggleCopyEvent }
             />
             Keep copy of dragged "source" event in its original resource slot.
           </label>
@@ -153,20 +153,20 @@ export default function DnDResource({ localizer }) {
       </DemoLink>
       <div className="height600">
         <DragAndDropCalendar
-          defaultDate={defaultDate}
-          defaultView={Views.DAY}
-          events={myEvents}
-          localizer={localizer}
-          onEventDrop={moveEvent}
-          onEventResize={resizeEvent}
+          defaultDate={ defaultDate }
+          defaultView={ Views.DAY }
+          events={ myEvents }
+          localizer={ localizer }
+          onEventDrop={ moveEvent }
+          onEventResize={ resizeEvent }
           resizable
           resourceIdAccessor="resourceId"
-          resources={resourceMap}
+          resources={ resourceMap }
           resourceTitleAccessor="resourceTitle"
-          scrollToTime={scrollToTime}
+          scrollToTime={ scrollToTime }
           selectable
-          showMultiDayTimes={true}
-          step={15}
+          showMultiDayTimes={ true }
+          step={ 15 }
         />
       </div>
     </Fragment>

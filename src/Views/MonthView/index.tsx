@@ -4,16 +4,15 @@ import { navigate, View, views } from '@/utils/constants'
 import { coerceDate, notify } from '@/utils/helpers'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
-import PopOverlay from '@/PopOverlay'
-import DateContentRow from '@/DateContentRow'
+import PopOverlay from '@/components/PopOverlay'
+import DateContentRow from '@/components/DateContentRow'
 import Header from '@/Header'
 import DateHeader from '@/DateHeader'
 import { inRange, sortWeekEvents } from '@/utils/eventLevels'
 import { BaseViewProps, ViewComponent } from '@/Views'
-import { DateLocalizer } from '@/localizers'
 import clsx from 'clsx'
 import Week from './Week'
-import { useCalendarContext } from '../Calendar'
+import { useCalendarContext } from '@/components/Calendar'
 import Headers from './Headers'
 
 export type EventOverlay = {
@@ -30,58 +29,44 @@ interface MonthViewProps extends BaseViewProps {
   doShowMoreDrillDown: boolean
   onShowMore: (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
   onDrillDown: (date: Date, view: View) => void
+  enableAutoScroll: boolean
+  resizable: boolean
+  showAllEvents: boolean
+  popup: boolean
+  popupOffset: number
+  handleDragStart: (event: React.MouseEvent<HTMLElement>) => void
 }
 
 const MonthView: ViewComponent<MonthViewProps> = ({ className, ...props }) => {
   const {
     events,
-    dateevents,
-
-    minevents,
-    maxevents,
-
-    stepevents,
-    getNowevents,
-
-    scrollToTimeevents,
-    enableAutoScrollevents,
-    rtlevents,
-    resizableevents,
-    widthevents,
-
-    accessorsevents,
-    componentsevents,
-    gettersevents,
-    localizerevents,
-
-    selectedevents,
-    selectableevents,
-    longPressThresholdevents,
-
-    onNavigateevents,
-    onSelectSlotevents,
-    onSelectEventevents,
-    onDoubleClickEventevents,
-    onKeyPressEventevents,
-    onShowMoreevents,
-    onDrillDownevents,
+    min,
+    max,
+    step,
+    scrollToTime,
+    enableAutoScroll,
+    rtl,
+    width,
+    accessors,
+    components,
+    getters,
+    selected,
+    selectable,
+    longPressThreshold,
+    onNavigate,
+    onSelectSlot,
+    onSelectEvent,
+    onDoubleClickEvent,
+    onKeyPressEvent,
     onDrillDown,
     onShowMore,
-
-    getDrilldownViewevents,
     getDrilldownView,
     getNow,
-
-    doShowMoreDrillDownevents,
     doShowMoreDrillDown,
-
-    showAllEventsevents,
-
-    popupevents,
-    handleDragStartevents,
-
+    showAllEvents,
     popup,
-    popupOffsetevents,
+    handleDragStart,
+    popupOffset,
   } = props
   const date = coerceDate(props.date || getNow())
 
@@ -141,15 +126,16 @@ const MonthView: ViewComponent<MonthViewProps> = ({ className, ...props }) => {
         showAllEvents={ showAllEvents }
         popup={ popup }
         onShowMore={ handleShowMore }
+        containerRef={ containerRef }
       /> ) }
 
       { popup && <PopOverlay
+        ref={ containerRef }
         overlay={ overlay }
         accessors={ accessors }
         getters={ getters }
         selected={ selected }
         popupOffset={ popupOffset }
-        ref={ containerRef }
         handleKeyPressEvent={ handleKeyPressEvent }
         handleSelectEvent={ handleSelectEvent }
         handleDoubleClickEvent={ handleDoubleClickEvent }
@@ -158,6 +144,7 @@ const MonthView: ViewComponent<MonthViewProps> = ({ className, ...props }) => {
         overlayDisplay={ overlayDisplay }
         onHide={ () => setOverlay(false) }
       /> }
+
     </div>
   )
 }

@@ -10,7 +10,7 @@ export default function Selectable({ localizer }) {
   const handleSelectSlot = useCallback(
     ({ start, end }) => {
       const title = window.prompt('New Event name')
-      if (title) {
+      if(title) {
         setEvents((prev) => [...prev, { start, end, title }])
       }
     },
@@ -40,14 +40,14 @@ export default function Selectable({ localizer }) {
       </DemoLink>
       <div className="height600">
         <Calendar
-          defaultDate={defaultDate}
-          defaultView={Views.WEEK}
-          events={myEvents}
-          localizer={localizer}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
+          defaultDate={ defaultDate }
+          defaultView={ Views.WEEK }
+          events={ myEvents }
+          localizer={ localizer }
+          onSelectEvent={ handleSelectEvent }
+          onSelectSlot={ handleSelectSlot }
           selectable
-          scrollToTime={scrollToTime}
+          scrollToTime={ scrollToTime }
         />
       </div>
     </Fragment>
