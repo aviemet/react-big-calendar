@@ -1,8 +1,8 @@
 @use 'sass:color';
 @use './variables';
 
-$active-background: color.adjust(variables.$btn-bg, 10%);
-$active-border: color.adjust(variables.$btn-border, 12%);
+$active-background: color.adjust($btn-bg, $lightness: -10%);
+$active-border: color.adjust($btn-border, $lightness: -12%);
 
 .rbc-toolbar {
   display: flex;

@@ -52,7 +52,7 @@ const lang = {
   },
 }
 
-export default function CulturesDemo({ localizer }) {
+export default function CulturesDemo({ localizer }: { localizer: DateLocalizer }) {
   const [culture, setCulture] = useState('fr')
   const [rightToLeft, setRightToLeft] = useState(false)
 
@@ -104,7 +104,4 @@ export default function CulturesDemo({ localizer }) {
       </div>
     </Fragment>
   )
-}
-CulturesDemo.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
 }

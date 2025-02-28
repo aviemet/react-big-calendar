@@ -13,9 +13,9 @@ function Event({ event }) {
     </span>
   )
 }
-Event.propTypes = {
-  event: PropTypes.object,
-}
+// Event.propTypes = {
+//   event: PropTypes.object,
+// }
 
 function EventAgenda({ event }) {
   return (
@@ -25,9 +25,9 @@ function EventAgenda({ event }) {
     </span>
   )
 }
-EventAgenda.propTypes = {
-  event: PropTypes.object,
-}
+// EventAgenda.propTypes = {
+//   event: PropTypes.object,
+// }
 
 const customDayPropGetter = (date) => {
   if(date.getDate() === 7 || date.getDate() === 15)
@@ -79,6 +79,6 @@ export default function Rendering({ localizer }) {
     </Fragment>
   )
 }
-Rendering.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Rendering.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

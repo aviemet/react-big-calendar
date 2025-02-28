@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { coerceDate, notify } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
-import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/Selection'
+import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
 
 interface BackgroundCellsProps {
@@ -73,7 +73,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
         if(pointInBox(rowBox, point)) {
           let currentCell = getSlotAtX(rowBox, point.x, rtl, range.length)
 
-          _selectSlot({
+          selectSlot({
             startIndex: currentCell,
             endIndex: currentCell,
             action: actionType,
@@ -104,11 +104,9 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
         setEndIndex(selectionIndices.endIndex)
       }
 
-      setState({
-        selecting: true,
-        startIndex,
-        endIndex,
-      })
+      setSelecting(true)
+      setStartIndex(selectionIndices.startIndex)
+      setEndIndex(selectionIndices.endIndex)
     })
 
     selector.on('beforeSelect', (box) => {
@@ -124,20 +122,19 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     )
 
     selector.on('select', (bounds) => {
-      _selectSlot({ ...state, action: 'select', bounds })
-      _initial = {}
-      setState({ selecting: false })
+      selectSlot({ ...state, action: 'select', bounds })
+      setSelecting(false)
       notify(props.onSelectEnd, [state])
     })
   }
 
-  const destroySelectable() {
-    if(!_selector) return
-    _selector.teardown()
-    _selector = null
+  const destroySelectable = () => {
+    if(!selector) return
+    selector.teardown()
+    setSelector(null)
   }
 
-  const _selectSlot({ endIndex, startIndex, action, bounds, box }) {
+  const selectSlot = ({ endIndex, startIndex, action, bounds, box }) => {
     if(endIndex !== -1 && startIndex !== -1)
       props.onSelectSlot &&
         props.onSelectSlot({
@@ -169,7 +166,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
                 {
                   'rbc-selected-cell': selected,
                   'rbc-today': localizer.isSameDate(date, current),
-                  'rbc-off-range-bg': current && localizer.neq(current, date, 'month')
+                  'rbc-off-range-bg': current && localizer.neq(current, date, 'month'),
                 },
                 className,
               ) }

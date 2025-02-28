@@ -22,6 +22,6 @@ export default function Timeslots({ localizer }) {
     </Fragment>
   )
 }
-Timeslots.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Timeslots.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

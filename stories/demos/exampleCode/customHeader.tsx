@@ -44,6 +44,6 @@ export default function CustomHeader({ localizer }) {
     </Fragment>
   )
 }
-CustomHeader.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// CustomHeader.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

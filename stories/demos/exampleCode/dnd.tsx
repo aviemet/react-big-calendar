@@ -68,6 +68,6 @@ export default function DragAndDrop({ localizer }) {
     </Fragment>
   )
 }
-DragAndDrop.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// DragAndDrop.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

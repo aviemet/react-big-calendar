@@ -25,6 +25,6 @@ export default function Popup({ localizer }) {
     </Fragment>
   )
 }
-Popup.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Popup.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

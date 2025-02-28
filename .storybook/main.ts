@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-webpack5'
 import path from 'path'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
 const config: StorybookConfig = {
   stories: [
@@ -29,32 +30,25 @@ const config: StorybookConfig = {
               },
             ],
           },
+          // Replaces existing CSS rules to support PostCSS
+          {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: { importLoaders: 1 },
+              },
+              {
+                // Gets options from `postcss.config.js` in your project root
+                loader: 'postcss-loader',
+                options: { implementation: require.resolve('postcss') },
+              },
+            ],
+          },
         ],
       },
     },
-    // {
-    //   name: '@storybook/addon-styling-webpack',
-    //   options: {
-    //     rules: [
-    //       // Replaces existing CSS rules to support PostCSS
-    //       {
-    //         test: /\.css$/,
-    //         use: [
-    //           'style-loader',
-    //           {
-    //             loader: 'css-loader',
-    //             options: { importLoaders: 1 },
-    //           },
-    //           {
-    //             // Gets options from `postcss.config.js` in your project root
-    //             loader: 'postcss-loader',
-    //             options: { implementation: require.resolve('postcss') },
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   },
-    // },
   ],
   framework: {
     name: "@storybook/react-webpack5",
@@ -74,6 +68,8 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         '@': path.resolve(__dirname, '../src'),
         'react-big-calendar': path.resolve(__dirname, '../src'),
+        'cldr$': 'cldrjs',
+        'cldr': 'cldrjs/dist/cldr',
       }
     }
 

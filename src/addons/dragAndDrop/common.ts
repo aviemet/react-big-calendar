@@ -1,14 +1,18 @@
-import { wrapAccessor } from '../../utils/accessors'
-import { createFactory } from 'react'
+import { wrapAccessor } from '@/utils/accessors'
+import { ComponentClass, createElement, FunctionComponent } from 'react'
+
+function createFactory(type: string | FunctionComponent<{}> | ComponentClass<{}, any>) {
+  return createElement(type).bind(null, type)
+}
 
 export const dragAccessors = {
   start: wrapAccessor((e) => e.start),
   end: wrapAccessor((e) => e.end),
 }
 
-function nest(...Components) {
+function nest(...Components: React.ReactNode[]) {
   const factories = Components.filter(Boolean).map(createFactory)
-  const Nest = ({ children, ...props }) =>
+  const Nest = ({ children, ...props }: { children: React.ReactNode, [key: string]: any }) =>
     factories.reduceRight((child, factory) => factory(props, child), children)
 
   return Nest

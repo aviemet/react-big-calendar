@@ -1,12 +1,10 @@
-
-import clsx from 'clsx'
-import scrollbarSize from 'dom-helpers/scrollbarSize'
 import React from 'react'
-
-import DateContentRow from '../../components/DateContentRow'
-import Header from '../../Header'
-import ResourceHeader from '../../ResourceHeader'
-import { notify } from '../../utils/helpers'
+import scrollbarSize from 'dom-helpers/scrollbarSize'
+import DateContentRow from '@/components/DateContentRow'
+import Header from '@/Header'
+import ResourceHeader from '@/ResourceHeader'
+import { notify } from '@/utils/helpers'
+import clsx from 'clsx'
 
 class TimeGridHeader extends React.Component {
   handleHeaderClick = (date, view, e) => {
@@ -204,36 +202,36 @@ class TimeGridHeader extends React.Component {
   }
 }
 
-TimeGridHeader.propTypes = {
-  range: PropTypes.array.isRequired,
-  events: PropTypes.array.isRequired,
-  resources: PropTypes.object,
-  getNow: PropTypes.func.isRequired,
-  isOverflowing: PropTypes.bool,
+// TimeGridHeader.propTypes = {
+//   range: PropTypes.array.isRequired,
+//   events: PropTypes.array.isRequired,
+//   resources: PropTypes.object,
+//   getNow: PropTypes.func.isRequired,
+//   isOverflowing: PropTypes.bool,
 
-  rtl: PropTypes.bool,
-  resizable: PropTypes.bool,
-  width: PropTypes.number,
+//   rtl: PropTypes.bool,
+//   resizable: PropTypes.bool,
+//   width: PropTypes.number,
 
-  localizer: PropTypes.object.isRequired,
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
+//   localizer: PropTypes.object.isRequired,
+//   accessors: PropTypes.object.isRequired,
+//   components: PropTypes.object.isRequired,
+//   getters: PropTypes.object.isRequired,
 
-  selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
+//   selected: PropTypes.object,
+//   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
+//   longPressThreshold: PropTypes.number,
 
-  allDayMaxRows: PropTypes.number,
+//   allDayMaxRows: PropTypes.number,
 
-  onSelectSlot: PropTypes.func,
-  onSelectEvent: PropTypes.func,
-  onDoubleClickEvent: PropTypes.func,
-  onKeyPressEvent: PropTypes.func,
-  onDrillDown: PropTypes.func,
-  onShowMore: PropTypes.func,
-  getDrilldownView: PropTypes.func.isRequired,
-  scrollRef: PropTypes.any,
-}
+//   onSelectSlot: PropTypes.func,
+//   onSelectEvent: PropTypes.func,
+//   onDoubleClickEvent: PropTypes.func,
+//   onKeyPressEvent: PropTypes.func,
+//   onDrillDown: PropTypes.func,
+//   onShowMore: PropTypes.func,
+//   getDrilldownView: PropTypes.func.isRequired,
+//   scrollRef: PropTypes.any,
+// }
 
 export default TimeGridHeader

@@ -188,6 +188,6 @@ export default function DnDOutsideResource({ localizer }) {
     </Fragment>
   )
 }
-DnDOutsideResource.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// DnDOutsideResource.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

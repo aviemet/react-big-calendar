@@ -38,9 +38,9 @@ export default function TimezoneSelect({
   )
 }
 
-TimezoneSelect.propTypes = {
-  title: PropTypes.string,
-  defaultTZ: PropTypes.string,
-  timezone: PropTypes.string,
-  setTimezone: PropTypes.func,
-}
+// TimezoneSelect.propTypes = {
+//   title: PropTypes.string,
+//   defaultTZ: PropTypes.string,
+//   timezone: PropTypes.string,
+//   setTimezone: PropTypes.func,
+// }

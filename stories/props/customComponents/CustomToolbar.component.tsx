@@ -15,12 +15,12 @@ function ViewNamesGroup({ views: viewNames, view, messages, onView }) {
     </button>
   ))
 }
-ViewNamesGroup.propTypes = {
-  messages: PropTypes.object,
-  onView: PropTypes.func,
-  view: PropTypes.string,
-  views: PropTypes.array,
-}
+// ViewNamesGroup.propTypes = {
+//   messages: PropTypes.object,
+//   onView: PropTypes.func,
+//   view: PropTypes.string,
+//   views: PropTypes.array,
+// }
 
 export default function CustomToolbar({
   // date, // available, but not used here
@@ -70,13 +70,13 @@ export default function CustomToolbar({
     </div>
   )
 }
-CustomToolbar.propTypes = {
-  date: PropTypes.instanceOf(Date),
-  label: PropTypes.string,
-  localizer: PropTypes.object,
-  messages: PropTypes.object,
-  onNavigate: PropTypes.func,
-  onView: PropTypes.func,
-  view: PropTypes.string,
-  views: PropTypes.array,
-}
+// CustomToolbar.propTypes = {
+//   date: PropTypes.instanceOf(Date),
+//   label: PropTypes.string,
+//   localizer: PropTypes.object,
+//   messages: PropTypes.object,
+//   onNavigate: PropTypes.func,
+//   onView: PropTypes.func,
+//   view: PropTypes.string,
+//   views: PropTypes.array,
+// }

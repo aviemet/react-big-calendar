@@ -90,6 +90,6 @@ export default function Resizable({ localizer }) {
     </Fragment>
   )
 }
-Resizable.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Resizable.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

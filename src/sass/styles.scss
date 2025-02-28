@@ -1,6 +1,12 @@
 @use './variables';
 @use './reset';
 
+@use './toolbar';
+@use './event';
+@use './month';
+@use './agenda';
+@use './time-grid';
+
 .rbc-calendar {
   box-sizing: border-box;
   height: 100%;
@@ -124,9 +130,3 @@
 .rbc-today {
   background-color: $today-highlight-bg;
 }
-
-@use './toolbar';
-@use './event';
-@use './month';
-@use './agenda';
-@use './time-grid';

@@ -3,7 +3,7 @@ import React, { Fragment, useMemo } from 'react'
 
 import * as dates from 'date-arithmetic'
 import { Calendar, Views, Navigate, DateLocalizer } from 'react-big-calendar'
-import TimeGrid from '../../../src/TimeGrid' // use 'react-big-calendar/lib/TimeGrid'. Can't 'alias' in Storybook
+import TimeGrid from '@/Views/TimeGridView' // use 'react-big-calendar/lib/TimeGrid'. Can't 'alias' in Storybook
 import events from '../../resources/events'
 import DemoLink from '../../DemoLink.component'
 
@@ -34,13 +34,13 @@ function MyWeek({
   )
 }
 
-MyWeek.propTypes = {
-  date: PropTypes.instanceOf(Date).isRequired,
-  localizer: PropTypes.object,
-  max: PropTypes.instanceOf(Date),
-  min: PropTypes.instanceOf(Date),
-  scrollToTime: PropTypes.instanceOf(Date),
-}
+// MyWeek.propTypes = {
+//   date: PropTypes.instanceOf(Date).isRequired,
+//   localizer: PropTypes.object,
+//   max: PropTypes.instanceOf(Date),
+//   min: PropTypes.instanceOf(Date),
+//   scrollToTime: PropTypes.instanceOf(Date),
+// }
 
 MyWeek.range = (date, { localizer }) => {
   const start = date
@@ -103,6 +103,6 @@ export default function CustomView({ localizer }) {
     </Fragment>
   )
 }
-CustomView.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// CustomView.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

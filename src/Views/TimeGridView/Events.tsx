@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import Selection, { getBoundsForNode, isEvent } from '@/utils/Selection'
+import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
 import * as TimeSlotUtils from '@/utils/TimeSlots'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { notify } from '@/utils/helpers'

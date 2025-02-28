@@ -54,6 +54,6 @@ export default function Selectable({ localizer }) {
   )
 }
 
-Selectable.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Selectable.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

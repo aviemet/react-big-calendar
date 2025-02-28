@@ -59,7 +59,7 @@ export default function Basic({
     </Fragment>
   )
 }
-Basic.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-  showDemoLink: PropTypes.bool,
-}
+// Basic.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+//   showDemoLink: PropTypes.bool,
+// }

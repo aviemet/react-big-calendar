@@ -139,6 +139,6 @@ export default function Resource({ localizer }) {
     </Fragment>
   )
 }
-Resource.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// Resource.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

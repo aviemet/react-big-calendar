@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo } from 'react'
 
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
+import { Calendar, Views, DateLocalizer } from '@'
 import DemoLink from '../../DemoLink.component'
 import events from '../../resources/events'
 import backgroundEvents from '../../resources/backgroundEvents'
@@ -8,7 +8,7 @@ import * as dates from '../../../src/utils/dates'
 
 let allViews = Object.keys(Views).map((k) => Views[k])
 
-export default function BackgroundEventsCalendar({ localizer }) {
+export default function BackgroundEventsCalendar({ localizer }: { localizer: DateLocalizer }) {
   const { defaultDate, max } = useMemo(
     () => ({
       defaultDate: new Date(2015, 3, 13),
@@ -36,7 +36,4 @@ export default function BackgroundEventsCalendar({ localizer }) {
       </div>
     </Fragment>
   )
-}
-BackgroundEventsCalendar.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
 }

@@ -16,8 +16,8 @@ import { type DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 import { type Accessors, type Components, type Getters } from '@/types'
 import { type DateLocalizer } from '@/localizers'
 import { BaseViewProps, type ViewComponent } from '@/Views'
-import clsx from 'clsx'
 import { CalendarProps, useCalendarContext } from '@/components/Calendar'
+import clsx from 'clsx'
 
 interface TimeGridViewProps extends BaseViewProps {
   resourceGroupingLayout?: boolean

@@ -7,19 +7,19 @@ import qsa from 'dom-helpers/cjs/querySelectorAll'
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
-} from '../../utils/Selection'
-import TimeGridEvent from '../../Views/TimeGridView/TimeGridEvents'
+} from '@/utils/selection'
+import TimeGridEvent from '@/Views/TimeGridView/TimeGridEvents'
 import { dragAccessors, eventTimes, pointInColumn } from './common'
 
 class EventContainerWrapper extends React.Component {
-  static propTypes = {
-    accessors: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
-    localizer: PropTypes.object.isRequired,
-    slotMetrics: PropTypes.object.isRequired,
-    resource: PropTypes.any,
-  }
+  // static propTypes = {
+  //   accessors: PropTypes.object.isRequired,
+  //   components: PropTypes.object.isRequired,
+  //   getters: PropTypes.object.isRequired,
+  //   localizer: PropTypes.object.isRequired,
+  //   slotMetrics: PropTypes.object.isRequired,
+  //   resource: PropTypes.any,
+  // }
 
   static contextType = DnDContext
 

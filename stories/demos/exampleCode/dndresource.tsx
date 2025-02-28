@@ -172,6 +172,6 @@ export default function DnDResource({ localizer }) {
     </Fragment>
   )
 }
-DnDResource.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-}
+// DnDResource.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+// }

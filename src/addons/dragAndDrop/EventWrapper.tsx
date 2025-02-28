@@ -1,26 +1,26 @@
 
 import React from 'react'
 import clsx from 'clsx'
-import { accessor as get } from '../../utils/accessors'
+import { accessor as get } from '@/utils/accessors'
 import { DnDContext } from './DnDContext'
 
 class EventWrapper extends React.Component {
   static contextType = DnDContext
 
-  static propTypes = {
-    type: PropTypes.oneOf(['date', 'time']),
-    event: PropTypes.object.isRequired,
+  // static propTypes = {
+  //   type: PropTypes.oneOf(['date', 'time']),
+  //   event: PropTypes.object.isRequired,
 
-    draggable: PropTypes.bool,
-    allDay: PropTypes.bool,
-    isRow: PropTypes.bool,
-    continuesPrior: PropTypes.bool,
-    continuesAfter: PropTypes.bool,
-    isDragging: PropTypes.bool,
-    isResizing: PropTypes.bool,
-    resource: PropTypes.number,
-    resizable: PropTypes.bool,
-  }
+  //   draggable: PropTypes.bool,
+  //   allDay: PropTypes.bool,
+  //   isRow: PropTypes.bool,
+  //   continuesPrior: PropTypes.bool,
+  //   continuesAfter: PropTypes.bool,
+  //   isDragging: PropTypes.bool,
+  //   isResizing: PropTypes.bool,
+  //   resource: PropTypes.number,
+  //   resizable: PropTypes.bool,
+  // }
 
   handleResizeUp = (e) => {
     if(e.button !== 0) return

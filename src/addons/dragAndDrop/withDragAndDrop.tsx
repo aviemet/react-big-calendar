@@ -2,7 +2,6 @@
 import React from 'react'
 import clsx from 'clsx'
 
-import { accessor } from '../../utils/propTypes'
 import EventWrapper from './EventWrapper'
 import EventContainerWrapper from './EventContainerWrapper'
 import WeekWrapper from './WeekWrapper'
@@ -11,30 +10,30 @@ import { DnDContext } from './DnDContext'
 
 export default function withDragAndDrop(Calendar) {
   class DragAndDropCalendar extends React.Component {
-    static propTypes = {
-      ...Calendar.propTypes,
+    // static propTypes = {
+    //   ...Calendar.propTypes,
 
-      onEventDrop: PropTypes.func,
-      onEventResize: PropTypes.func,
-      onDragStart: PropTypes.func,
-      onDragOver: PropTypes.func,
-      onDropFromOutside: PropTypes.func,
+    //   onEventDrop: PropTypes.func,
+    //   onEventResize: PropTypes.func,
+    //   onDragStart: PropTypes.func,
+    //   onDragOver: PropTypes.func,
+    //   onDropFromOutside: PropTypes.func,
 
-      dragFromOutsideItem: PropTypes.func,
+    //   dragFromOutsideItem: PropTypes.func,
 
-      draggableAccessor: accessor,
-      resizableAccessor: accessor,
+    //   draggableAccessor: accessor,
+    //   resizableAccessor: accessor,
 
-      selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-      resizable: PropTypes.bool,
-    }
+    //   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
+    //   resizable: PropTypes.bool,
+    // }
 
-    static defaultProps = {
-      ...Calendar.defaultProps,
-      draggableAccessor: null,
-      resizableAccessor: null,
-      resizable: true,
-    }
+    // static defaultProps = {
+    //   ...Calendar.defaultProps,
+    //   draggableAccessor: null,
+    //   resizableAccessor: null,
+    //   resizable: true,
+    // }
 
     constructor(...args) {
       super(...args)

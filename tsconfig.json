@@ -27,7 +27,13 @@
     "types": ["react"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "cldr": [
+        "node_modules/cldrjs/dist/cldr"
+      ],
+      "cldr/*": [
+        "node_modules/cldrjs/dist/cldr/*"
+      ]
     }
   },
   "include": ["src", "tests"]

@@ -60,7 +60,7 @@ export default function CreateEventWithNoOverlap({
   )
 }
 
-CreateEventWithNoOverlap.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
-  dayLayoutAlgorithm: PropTypes.string,
-}
+// CreateEventWithNoOverlap.propTypes = {
+//   localizer: PropTypes.instanceOf(DateLocalizer),
+//   dayLayoutAlgorithm: PropTypes.string,
+// }

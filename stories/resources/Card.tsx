@@ -1,6 +1,6 @@
 import React from 'react'
 
-const propTypes = {}
+// const propTypes = {}
 
 function Card({ children, className, style }) {
   return (
@@ -10,6 +10,6 @@ function Card({ children, className, style }) {
   )
 }
 
-Card.propTypes = propTypes
+// Card.propTypes = propTypes
 
 export default Card

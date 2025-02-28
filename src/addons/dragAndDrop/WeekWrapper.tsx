@@ -1,23 +1,23 @@
 
 import React from 'react'
-import EventRow from '../../components/EventRow'
-import Selection, { getBoundsForNode } from '../../utils/Selection'
-import { eventSegments } from '../../utils/eventLevels'
-import { getSlotAtX, pointInBox } from '../../utils/eventSelectionHelpers'
+import EventRow from '@/components/EventRow'
+import Selection, { getBoundsForNode } from '@/utils/selection'
+import { eventSegments } from '@/utils/eventLevels'
+import { getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import { dragAccessors, eventTimes } from './common'
 import { DnDContext } from './DnDContext'
 
 class WeekWrapper extends React.Component {
-  static propTypes = {
-    isAllDay: PropTypes.bool,
-    slotMetrics: PropTypes.object.isRequired,
-    accessors: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
-    resourceId: PropTypes.any,
-    rtl: PropTypes.bool,
-    localizer: PropTypes.any,
-  }
+  // static propTypes = {
+  //   isAllDay: PropTypes.bool,
+  //   slotMetrics: PropTypes.object.isRequired,
+  //   accessors: PropTypes.object.isRequired,
+  //   getters: PropTypes.object.isRequired,
+  //   components: PropTypes.object.isRequired,
+  //   resourceId: PropTypes.any,
+  //   rtl: PropTypes.bool,
+  //   localizer: PropTypes.any,
+  // }
 
   static contextType = DnDContext
 

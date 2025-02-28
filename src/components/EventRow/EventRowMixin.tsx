@@ -1,27 +1,27 @@
 import EventCell from './EventCell'
-import { isSelected } from '../../utils/eventSelectionHelpers'
+import { isSelected } from '@/utils/eventSelectionHelpers'
 
 export default {
-  propTypes: {
-    slotMetrics: PropTypes.object.isRequired,
+  // propTypes: {
+  //   slotMetrics: PropTypes.object.isRequired,
 
-    selected: PropTypes.object,
-    isAllDay: PropTypes.bool,
+  //   selected: PropTypes.object,
+  //   isAllDay: PropTypes.bool,
 
-    accessors: PropTypes.object.isRequired,
-    localizer: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
+  //   accessors: PropTypes.object.isRequired,
+  //   localizer: PropTypes.object.isRequired,
+  //   components: PropTypes.object.isRequired,
+  //   getters: PropTypes.object.isRequired,
 
-    onSelect: PropTypes.func,
-    onDoubleClick: PropTypes.func,
-    onKeyPress: PropTypes.func,
-  },
+  //   onSelect: PropTypes.func,
+  //   onDoubleClick: PropTypes.func,
+  //   onKeyPress: PropTypes.func,
+  // },
 
-  defaultProps: {
-    segments: [],
-    selected: {},
-  },
+  // defaultProps: {
+  //   segments: [],
+  //   selected: {},
+  // },
 
   renderEvent(props, event) {
     let {
