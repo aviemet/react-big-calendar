@@ -5,7 +5,6 @@ function stringifyPercent(v) {
   return typeof v === 'string' ? v : v + '%'
 }
 
-/* eslint-disable react/prop-types */
 function TimeGridEvent(props) {
   const {
     style,

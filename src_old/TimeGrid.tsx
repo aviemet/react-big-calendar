@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import memoize from 'memoize-one'
-import PropTypes from 'prop-types'
+
 import React, { Component, createRef } from 'react'
 
 import getPosition from 'dom-helpers/position'

@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+
 import React from 'react'
 import { DnDContext } from './DnDContext'
 import { scrollParent, scrollTop } from 'dom-helpers'

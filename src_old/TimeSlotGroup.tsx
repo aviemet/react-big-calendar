@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import PropTypes from 'prop-types'
+
 import React, { Component } from 'react'
 
 import BackgroundWrapper from './BackgroundWrapper'

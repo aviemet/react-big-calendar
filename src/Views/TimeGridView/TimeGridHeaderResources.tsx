@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import scrollbarSize from 'dom-helpers/scrollbarSize'
-import PropTypes from 'prop-types'
+
 import React from 'react'
 
 import DateContentRow from '../../components/DateContentRow'

@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+
 import React from 'react'
 import EventRow from '../../EventRow'
 import Selection, { getBoundsForNode } from '../../Selection'

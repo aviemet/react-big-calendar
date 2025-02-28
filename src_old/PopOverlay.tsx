@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
+
 import { Overlay } from 'react-overlays'
 import Popup from './Popup'
 

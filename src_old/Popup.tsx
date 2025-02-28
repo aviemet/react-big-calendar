@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import PropTypes from 'prop-types'
+
 import getOffset from 'dom-helpers/offset'
 
 import useClickOutside from './hooks/useClickOutside'

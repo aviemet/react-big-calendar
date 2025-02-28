@@ -1,20 +1,11 @@
-import React, { createRef, useRef } from 'react'
-import { chunk } from 'lodash-es'
-import { navigate, views } from '@/utils/constants'
-import { coerceDate, notify } from '@/utils/helpers'
-import getPosition from 'dom-helpers/position'
-import * as animationFrame from 'dom-helpers/animationFrame'
-import PopOverlay from '@/components/PopOverlay'
-import DateContentRow from '@/components/DateContentRow'
-import Header from '@/Header'
-import DateHeader from '@/DateHeader'
-import { inRange, sortWeekEvents } from '@/utils/eventLevels'
-import { BaseViewProps, Selectable, ViewComponent } from '@/Views'
-import { DateLocalizer } from '@/localizers'
-import { Components } from '@/types'
-import clsx from 'clsx'
-import { EventOverlay } from '.'
+import React, { useRef } from 'react'
 import { useCalendarContext } from '@/components/Calendar'
+import DateContentRow from '@/components/DateContentRow'
+import { inRange, sortWeekEvents } from '@/utils/eventLevels'
+import { Selectable } from '@/Views'
+import { DateLocalizer } from '@/localizers'
+import clsx from 'clsx'
+import { Accessors, Getters } from '@/types'
 
 interface WeekProps {
   week: Date[]
@@ -22,11 +13,11 @@ interface WeekProps {
   events: Event[]
   selectable?: Selectable | undefined
   getNow: () => Date
-  selected: object
+  selected: Event
   date: Date
   longPressThreshold: number
-  accessors: object
-  getters: object
+  accessors: Accessors
+  getters: Getters
   showAllEvents: boolean
   popup: boolean
   onShowMore: (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void

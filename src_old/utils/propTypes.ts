@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+
 import { views as Views } from './constants'
 
 let viewNames = Object.keys(Views).map((k) => Views[k])

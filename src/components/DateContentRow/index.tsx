@@ -21,7 +21,7 @@ interface DateContentRowProps {
 
   renderForMeasure?: boolean
   renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
-  
+
   container?: () => HTMLElement
   selected?: object
   selectable?: boolean | 'ignoreEvents'
@@ -78,7 +78,7 @@ const DateContentRow = (props: DateContentRowProps) => {
   } = props
   const { localizer, components } = useCalendarContext()
 
-  const containerRef = useRef<HTMLDivElement>(null) 
+  const containerRef = useRef<HTMLDivElement>(null)
   const headingRowRef = useRef<HTMLDivElement>(null)
   const eventRowRef = useRef<HTMLDivElement>(null)
 
@@ -89,8 +89,7 @@ const DateContentRow = (props: DateContentRowProps) => {
   }
 
   const handleShowMore = (slot, target) => {
-    const { range, onShowMore } = props
-    let metrics = slotMetrics(props)
+    let metrics = slotMetricsRef.current(props)
     let row = qsa(containerRef.current, '.rbc-row-bg')[0]
 
     let cell
@@ -104,9 +103,8 @@ const DateContentRow = (props: DateContentRowProps) => {
     const { container } = props
     return container ? container() : containerRef.current
   }
-
-  const getRowLimit() {
-    /* Guessing this only gets called on the dummyRow */
+  /* Guessing this only gets called on the dummyRow */
+  const getRowLimit = () => {
     const eventHeight = getHeight(eventRowRef.current)
     const headingHeight = headingRowRef?.current
       ? getHeight(headingRowRef.current)
@@ -127,18 +125,23 @@ const DateContentRow = (props: DateContentRowProps) => {
     })
   }
 
-  if(renderForMeasure) return <Dummy  
-    ref={ containerRef } 
-    renderHeader={ renderHeader }
-    showAllEvents={ showAllEvents }
-    headingRowRef={ headingRowRef }
-    eventRowRef={ eventRowRef }
-    renderHeadingCell={ renderHeadingCell }
-    { ...props } 
-  />
 
-  let metrics = slotMetricsRef.current(props)
-  let { levels, extra } = metrics
+  if(renderForMeasure) {
+    return (
+      <Dummy
+        ref={ containerRef }
+        renderHeader={ renderHeader }
+        showAllEvents={ showAllEvents }
+        headingRowRef={ headingRowRef }
+        eventRowRef={ eventRowRef }
+        renderHeadingCell={ renderHeadingCell }
+        { ...props }
+      />
+    )
+  }
+
+  const metrics = slotMetricsRef.current(props)
+  const { levels, extra } = metrics
 
   let ScrollableWeekComponent = showAllEvents
     ? ScrollableWeekWrapper

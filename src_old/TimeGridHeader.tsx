@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+
 import clsx from 'clsx'
 import scrollbarSize from 'dom-helpers/scrollbarSize'
 import React from 'react'

@@ -2,7 +2,7 @@ import React, { createRef } from 'react'
 import clsx from 'clsx'
 import getHeight from 'dom-helpers/height'
 import qsa from 'dom-helpers/querySelectorAll'
-import PropTypes from 'prop-types'
+
 
 import BackgroundCells from './BackgroundCells'
 import EventRow from './EventRow'

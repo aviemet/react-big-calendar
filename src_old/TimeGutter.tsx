@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import clsx from 'clsx'
-import PropTypes from 'prop-types'
+
 
 import { getSlotMetrics } from './utils/TimeSlots'
 import TimeSlotGroup from './TimeSlotGroup'

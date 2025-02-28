@@ -1,5 +1,5 @@
 import React, { createRef } from 'react'
-import PropTypes from 'prop-types'
+
 import clsx from 'clsx'
 
 import chunk from 'lodash/chunk'

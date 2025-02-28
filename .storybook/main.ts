@@ -1,61 +1,35 @@
-const path = require('path')
-module.exports = {
+import type { StorybookConfig } from '@storybook/react-webpack5'
+import path from 'path'
+
+const config: StorybookConfig = {
   stories: [
-    '../stories/**/*.stories.mdx',
-    '../stories/**/*.stories.@(js|jsx|ts|tsx)',
+    "../stories/**/*.mdx",
+    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    //'@storybook/addon-jest', // TODO: try this out
-    {
-      name: `@storybook/preset-scss`,
-      options: {
-        rule: {
-          test: /(?<!\.module).s[ca]ss$/,
-        },
-      },
-    },
-    // module
-    {
-      name: `@storybook/preset-scss`,
-      options: {
-        rule: {
-          test: /\.module\.s[ca]ss$/,
-        },
-        cssLoaderOptions: {
-          modules: {
-            localIdentName: '[name]__[local]--[hash:base64:5]',
-          },
-        },
-      },
-    },
-    {
-      name: '@storybook/addon-postcss',
-      options: {
-        postcssLoaderOptions: {
-          implementation: require('postcss'),
-        },
-      },
-    },
+    "@storybook/addon-webpack5-compiler-swc",
+    "@storybook/addon-essentials",
+    "@storybook/addon-onboarding",
+    "@storybook/addon-interactions",
+    "@storybook/blocks",
   ],
-  framework: '@storybook/react',
-  core: {
-    builder: 'webpack5',
+  framework: {
+    name: "@storybook/react-webpack5",
+    options: {},
+  },
+  docs: {
+    autodocs: true,
+    defaultName: 'Documentation',
   },
   webpackFinal: async (config) => {
-    config.devtool = 'inline-source-map'
-
-    config.entry.unshift(
-      path.resolve(__dirname, '../stories/resources/main.scss')
-    )
-
-    // Aliases the src to the package name, so that 'example' scripting reads right
-    config.resolve.alias['react-big-calendar'] = path.resolve(
-      __dirname,
-      '../src'
-    )
-
+    if(config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, '../src'),
+      }
+    }
     return config
   },
 }
+
+export default config
