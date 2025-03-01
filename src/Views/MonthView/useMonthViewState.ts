@@ -1,12 +1,13 @@
 import { useReducer } from "react"
+import { CalendarEvent } from "@/types"
 
-interface MonthViewState {
+interface MonthViewState<TEvent extends CalendarEvent = CalendarEvent> {
   rowLimit: number
   needLimitMeasure: boolean
   date?: Date
   overlay: {
     date: Date
-    events: Event[]
+    events: TEvent[]
     position: { x: number, y: number }
     end: Date
     target: HTMLElement

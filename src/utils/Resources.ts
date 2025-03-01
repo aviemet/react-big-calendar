@@ -1,27 +1,32 @@
+import { CalendarEvent } from "@/types"
+import { Accessors } from "./accessors"
+
 export type Resource = object
 
-export const NONE = {}
+type MapCallback = (resource: [string | number, Resource], index: number) => Resource[]
 
-export default function Resources(resources, accessors) {
+export default function Resources(resources: Resource[], accessors: Accessors) {
   return {
-    map(fn) {
-      if(!resources) return [fn([NONE, null], 0)]
+    map: (fn: MapCallback) => {
+      if(!resources) return [fn([{}, null], 0)]
+
       return resources.map((resource, Index) =>
-        fn([accessors.resourceId(resource), resource], Index)
+        fn([accessors.resourceId(resource), resource], index)
       )
     },
 
-    groupEvents(events) {
+    groupEvents: (events: CalendarEvent[]) => {
       const eventsByResource = new Map()
 
       if(!resources) {
         // Return all events if resources are not provided
-        eventsByResource.set(NONE, events)
+        eventsByResource.set({}, events)
         return eventsByResource
       }
 
       events.forEach((event) => {
-        const id = accessors.resource(event) || NONE
+        const id = accessors.resource(event) || {}
+
         if(Array.isArray(id)) {
           id.forEach((item) => {
             let resourceEvents = eventsByResource.get(item) || []
@@ -34,6 +39,7 @@ export default function Resources(resources, accessors) {
           eventsByResource.set(id, resourceEvents)
         }
       })
+
       return eventsByResource
     },
   }

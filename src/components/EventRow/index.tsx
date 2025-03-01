@@ -1,8 +1,9 @@
+import { CalendarEvent } from '@/types'
 import EventRowMixin from './EventRowMixin'
 import clsx from 'clsx'
 
 interface EventRowProps {
-  segments: Event[]
+  segments: CalendarEvent[]
   slotMetrics: { slots: number }
   className: string
 }

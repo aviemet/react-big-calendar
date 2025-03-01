@@ -4,7 +4,7 @@ import getOffset from 'dom-helpers/offset'
 import useClickOutside from '@/hooks/useClickOutside'
 import EventCell from '@/components/EventRow/EventCell'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { Accessors } from '@/types'
+import { Accessors, CalendarEvent } from '@/types'
 import { Getters } from '@/types'
 import { Components } from '@/types'
 import { DateLocalizer } from '@/localizers'
@@ -49,13 +49,13 @@ interface PopupProps {
   localizer: DateLocalizer
   position: { x: number, y: number, width: number }
   show: () => void
-  events: Event[]
+  events: CalendarEvent[]
   slotStart: Date
   slotEnd: Date
-  onSelect: (event: Event) => void
-  onDoubleClick: (event: Event) => void
-  onKeyPress: (event: Event) => void
-  handleDragStart: (event: Event) => void
+  onSelect: (event: CalendarEvent) => void
+  onDoubleClick: (event: CalendarEvent) => void
+  onKeyPress: (event: CalendarEvent) => void
+  handleDragStart: (event: CalendarEvent) => void
   popperRef: React.RefObject<HTMLDivElement>
   target: HTMLElement
   offset: { x: number, y: number }

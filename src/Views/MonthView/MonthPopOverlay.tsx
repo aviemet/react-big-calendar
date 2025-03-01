@@ -1,12 +1,12 @@
 import { useCallback } from "react"
 import { BaseViewProps } from ".."
-import { Getters } from "@/types"
+import { CalendarEvent, Getters } from "@/types"
 import PopOverlay from "@/components/PopOverlay"
 
-interface OverlayWrapperProps {
+interface OverlayWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
   overlay: {
     date: Date
-    events: Event[]
+    events: TEvent[]
     position: { x: number, y: number }
     end: Date
     target: HTMLElement
@@ -16,14 +16,14 @@ interface OverlayWrapperProps {
   selected: object
   popupOffset?: number | { x: number, y: number }
   containerRef: React.RefObject<HTMLDivElement>
-  handleSelectEvent: (event: Event) => void
-  handleDoubleClickEvent: (event: Event) => void
-  handleKeyPressEvent: (event: Event) => void
+  handleSelectEvent: (event: TEvent) => void
+  handleDoubleClickEvent: (event: TEvent) => void
+  handleKeyPressEvent: (event: TEvent) => void
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
   onHide: () => void
 }
 
-const OverlayWrapper: React.FC<OverlayWrapperProps> = ({
+const OverlayWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   overlay,
   accessors,
   getters,
@@ -35,7 +35,7 @@ const OverlayWrapper: React.FC<OverlayWrapperProps> = ({
   handleKeyPressEvent,
   handleDragStart,
   onHide,
-}) => {
+}: OverlayWrapperProps<TEvent>) => {
   const overlayDisplay = useCallback(() => {
     onHide()
   }, [onHide])

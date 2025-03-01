@@ -1,6 +1,7 @@
 import { DateLocalizer } from '@/localizers'
-import { Accessors } from '@/types'
 import { findIndex } from 'lodash-es'
+import { Accessors } from './accessors'
+import { CalendarEvent } from '@/types'
 
 export function endOfRange(
   { dateRange, unit = 'day', localizer }: { dateRange: Date[], unit?: 'day', localizer: DateLocalizer }
@@ -13,7 +14,7 @@ export function endOfRange(
 
 // properly calculating segments requires working with dates in
 // the timezone we're working with, so we use the localizer
-export function eventSegments(event: Event, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
+export function eventSegments(event: CalendarEvent, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
   let { first, last } = endOfRange({ dateRange: range, localizer })
 
   let slots = localizer.diff(first, last, 'day')

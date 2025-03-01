@@ -8,8 +8,6 @@ import {
 import {
   navigate,
   NavigateAction,
-  View,
-  views as viewStrings,
 } from '@/utils/constants'
 import { coerceDate, notify } from '@/utils/helpers'
 import moveDate from '@/utils/move'
@@ -20,10 +18,17 @@ import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
 import { Accessors, wrapAccessor } from '@/utils/accessors'
 import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
-import VIEWS, { ViewComponent, ViewsProps, BaseViewProps } from '@/Views'
+import VIEWS, {
+  ViewComponent,
+  BaseViewProps,
+  View,
+  views as viewStrings,
+  type ViewsProps,
+} from '@/Views'
 import createContext from '@/hooks/createContext'
 
 import {
+  CalendarEvent,
   type Components,
   type DayPropGetter,
   type EventPropGetter,
@@ -44,7 +49,7 @@ type CalendarContext = {
 const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
 export { useCalendarContext }
 
-export interface CalendarProps<TEvent extends object = Event, TResource extends object = object> {
+export interface CalendarProps<TEvent extends object = CalendarEvent, TResource extends object = object> {
   children?: React.ReactNode
   className?: string | undefined
   style?: React.CSSProperties | undefined
@@ -772,7 +777,7 @@ import useMemo from 'react';
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
 }
 
-const Calendar = <TResource extends object, TEvent extends object = Event>(props: CalendarProps<TResource, TEvent>) => {
+const Calendar = <TResource extends object, TEvent extends object = CalendarEvent>(props: CalendarProps<TResource, TEvent>) => {
   const {
     date,
     events = [],

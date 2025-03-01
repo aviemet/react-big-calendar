@@ -7,9 +7,10 @@ import DayView from './DayView'
 import AgendaView from './AgendaView'
 import { type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../components/Calendar'
-import { type Components, type Getters, type SlotInfo } from '../types'
+import { CalendarEvent, type Components, type Getters, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 import { Accessors } from '@/utils/accessors'
+import { Resource } from '@/utils/Resources'
 
 export interface TitleOptions {
   formats: DateFormat[]
@@ -34,9 +35,9 @@ export type ViewsProps =
 
 export type Selectable = boolean | "ignoreEvents"
 
-export interface BaseViewProps<TEvent extends object = Event, TResource extends object = object> {
+export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   date?: Date | undefined
-  eventOffset: number
+  eventOffset?: number
   events?: TEvent[] | undefined
   backgroundEvents?: TEvent[] | undefined
   resources?: TResource[] | undefined
@@ -72,10 +73,28 @@ export interface BaseViewProps<TEvent extends object = Event, TResource extends 
   className?: string | undefined
 }
 
-export type ViewComponent<TProps extends BaseViewProps> = React.ComponentType<TProps> & {
+export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {
   range: (date: Date, props?: Partial<CalendarProps>) => { start: Date, end: Date } | Date[]
   navigate: (date: Date, action: NavigateAction, props?: Partial<CalendarProps>) => Date
   title: (date: Date, props?: Partial<CalendarProps>) => string
+}
+
+export function createViewComponent<
+  TEvent extends CalendarEvent = CalendarEvent,
+  TProps extends BaseViewProps<TEvent> = BaseViewProps<TEvent>
+>(
+  component: React.ComponentType<TProps>,
+  staticProps: {
+    range: ViewComponent<TProps>['range']
+    navigate: ViewComponent<TProps>['navigate']
+    title: ViewComponent<TProps>['title']
+  }
+): ViewComponent<TProps> {
+  const viewComponent = component as ViewComponent<TProps>
+  viewComponent.range = staticProps.range
+  viewComponent.navigate = staticProps.navigate
+  viewComponent.title = staticProps.title
+  return viewComponent
 }
 
 export const views = {
@@ -87,7 +106,7 @@ export const views = {
 } as const
 
 export type ViewKey = keyof typeof views
-export type View = typeof views[ViewKey ]
+export type View = typeof views[ViewKey]
 
 const VIEW_COMPONENTS = {
   [views.MONTH]: MonthView,
@@ -95,6 +114,9 @@ const VIEW_COMPONENTS = {
   [views.WORK_WEEK]: WorkWeekView,
   [views.DAY]: DayView,
   [views.AGENDA]: AgendaView,
-} as unknown as Record<View, ViewComponent<BaseViewProps>>
+} as unknown as Record<View, ViewComponent>
 
 export default VIEW_COMPONENTS
+
+
+

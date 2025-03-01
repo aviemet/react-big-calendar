@@ -1,7 +1,8 @@
 import overlap from './layout-algorithms/overlap'
 import noOverlap from './layout-algorithms/no-overlap'
-import { Accessors } from '@/types'
+import { CalendarEvent } from '@/types'
 import { SlotMetrics } from './TimeSlots'
+import { Accessors } from './accessors'
 
 const DefaultAlgorithms = {
   overlap: overlap,
@@ -20,7 +21,7 @@ export function getStyledEvents({
   dayLayoutAlgorithm, // one of DefaultAlgorithms keys
   // or custom function
 }: {
-  events: Event[]
+  events: CalendarEvent[]
   minimumStartDifference: number
   slotMetrics: SlotMetrics
   accessors: Accessors

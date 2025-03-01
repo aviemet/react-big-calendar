@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { coerceDate, notify } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
-import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/Selection'
+import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
+import { CalendarEvent } from '@/types'
 
 interface BackgroundCellsProps {
   date?: Date
@@ -14,8 +15,8 @@ interface BackgroundCellsProps {
   selectable?: boolean | 'ignoreEvents'
   longPressThreshold?: number
   onSelectSlot: (range: Date[], slot: { start: number, end: number }) => void
-  onSelectEnd?: (event: Event) => void
-  onSelectStart?: (event: Event) => void
+  onSelectEnd?: (event: CalendarEvent) => void
+  onSelectStart?: (event: CalendarEvent) => void
   range: Date[]
   rtl?: boolean
   type?: string

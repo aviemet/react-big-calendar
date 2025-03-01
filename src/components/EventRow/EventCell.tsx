@@ -1,11 +1,12 @@
 import React from 'react'
 import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
 import { useCalendarContext } from '../Calendar'
-import { Accessors, Getters } from '@/types'
+import { CalendarEvent, Getters } from '@/types'
 import clsx from 'clsx'
+import { Accessors } from '@/utils/accessors'
 
 interface EventCellProps {
-  event: Event
+  event: CalendarEvent
   slotStart: Date
   slotEnd: Date
 
@@ -16,12 +17,12 @@ interface EventCellProps {
   continuesAfter: boolean
 
   accessors: Accessors
-  components: { event: Event, eventWrapper: EventWrapper }
+  components: { event: CalendarEvent, eventWrapper: EventWrapper }
   getters: Getters
 
-  onSelect: (event: Event, e: React.MouseEvent<HTMLElement>) => void
-  onDoubleClick: (event: Event, e: React.MouseEvent<HTMLElement>) => void
-  onKeyPress: (event: Event, e: React.KeyboardEvent<HTMLElement>) => void
+  onSelect: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
+  onDoubleClick: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
+  onKeyPress: (event: CalendarEvent, e: React.KeyboardEvent<HTMLElement>) => void
 
   children?: Function
   style?: React.CSSProperties

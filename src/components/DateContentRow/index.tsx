@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { forwardRef, useRef } from 'react'
 import getHeight from 'dom-helpers/height'
 import qsa from 'dom-helpers/querySelectorAll'
 import BackgroundCells from './BackgroundCells'
@@ -10,10 +10,11 @@ import * as DateSlotMetrics from '@/utils/DateSlotMetrics'
 import { useCalendarContext } from '../Calendar'
 import Dummy from './Dummy'
 import clsx from 'clsx'
+import { CalendarEvent } from '@/types'
 
 interface DateContentRowProps {
   date?: Date
-  events: Event[]
+  events: CalendarEvent[]
   range: Date[]
   rtl?: boolean
   resizable?: boolean
@@ -26,14 +27,14 @@ interface DateContentRowProps {
   selected?: object
   selectable?: boolean | 'ignoreEvents'
   longPressThreshold?: number
-  onShowMore?: (events: Event[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
+  onShowMore?: (events: CalendarEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   showAllEvents?: boolean
   onSelectSlot?: (range: Date[], slot: { start: number, end: number }) => void
-  onSelect?: (event: Event) => void
-  onSelectEnd?: (event: Event) => void
-  onSelectStart?: (event: Event) => void
-  onDoubleClick?: (event: Event) => void
-  onKeyPress?: (event: Event) => void
+  onSelect?: (event: CalendarEvent) => void
+  onSelectEnd?: (event: CalendarEvent) => void
+  onSelectStart?: (event: CalendarEvent) => void
+  onDoubleClick?: (event: CalendarEvent) => void
+  onKeyPress?: (event: CalendarEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
   getNow: () => Date
   isAllDay?: boolean
@@ -45,7 +46,7 @@ interface DateContentRowProps {
   className?: string
 }
 
-const DateContentRow = (props: DateContentRowProps) => {
+const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObject<HTMLDivElement>) => {
   const {
     date,
     events,
@@ -182,6 +183,7 @@ const DateContentRow = (props: DateContentRowProps) => {
       />
 
       <div
+        ref={ ref }
         className={ clsx(
           'rbc-row-content',
           showAllEvents && 'rbc-row-content-scrollable'
@@ -210,7 +212,7 @@ const DateContentRow = (props: DateContentRowProps) => {
       </div>
     </div>
   )
-}
+})
 
 
 export default DateContentRow

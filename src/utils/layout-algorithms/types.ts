@@ -1,4 +1,6 @@
-export type DayLayoutFunction<TEvent extends object = Event> = (_: {
+import { CalendarEvent } from "@/types"
+
+export type DayLayoutFunction<TEvent extends object = CalendarEvent> = (_: {
   events: TEvent[]
   minimumStartDifference: number
   slotMetrics: any

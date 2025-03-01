@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import chunk from 'lodash/chunk'
-import { navigate, NavigateAction, View, views } from '@/utils/constants'
+import { navigate } from '@/utils/constants'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import DateContentRow from '@/components/DateContentRow'
@@ -9,12 +9,12 @@ import DateHeader from '@/DateHeader'
 import MonthWeek from './MonthWeek'
 import MonthHeader from './MonthHeader'
 import MonthPopOverlay from './MonthPopOverlay'
-import { BaseViewProps, ViewComponent } from '@/Views'
+import { BaseViewProps, createViewComponent, View } from '@/Views'
 import { DateLocalizer } from '@/localizers'
-import { SlotInfo, Components, Getters } from '@/types'
+import { SlotInfo, Components, Getters, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
 
-interface MonthViewProps extends BaseViewProps {
+interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   popup?: boolean
   enableAutoScroll?: boolean
   resizable?: boolean
@@ -22,14 +22,14 @@ interface MonthViewProps extends BaseViewProps {
   doShowMoreDrillDown?: boolean
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
   popupOffset?: number | { x: number, y: number }
-  onShowMore?: (events: Event[], date: Date, slot: HTMLElement) => void
-  onSelectEvent?: (event: Event) => void
-  onDoubleClickEvent?: (event: Event) => void
-  onKeyPressEvent?: (event: Event) => void
+  onShowMore?: (events: TEvent[], date: Date, slot: HTMLElement) => void
+  onSelectEvent?: (event: TEvent) => void
+  onDoubleClickEvent?: (event: TEvent) => void
+  onKeyPressEvent?: (event: TEvent) => void
   localizer: DateLocalizer
   date: Date
-  components: Components<Event, object>
-  getters: Getters
+  components: Components<TEvent, object>
+  getters: Getters<TEvent>
 }
 
 interface DateHeadingProps {
@@ -41,7 +41,7 @@ interface DateHeadingProps {
   onDrillDown?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-const MonthView: ViewComponent<MonthViewProps> = (props) => {
+const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthViewProps<TEvent>) => {
   const {
     date,
     events = [],
@@ -151,7 +151,7 @@ const MonthView: ViewComponent<MonthViewProps> = (props) => {
   )
 
   const handleSelectEvent = useCallback(
-    (event: Event) => {
+    (event: TEvent) => {
       clearTimeout(resizeListener)
       pendingSelection.current = []
       if(onSelectEvent) onSelectEvent(event)
@@ -160,7 +160,7 @@ const MonthView: ViewComponent<MonthViewProps> = (props) => {
   )
 
   const handleDoubleClickEvent = useCallback(
-    (event: Event) => {
+    (event: TEvent) => {
       clearTimeout(resizeListener)
       pendingSelection.current = []
       if(onDoubleClickEvent) onDoubleClickEvent(event)
@@ -169,7 +169,7 @@ const MonthView: ViewComponent<MonthViewProps> = (props) => {
   )
 
   const handleKeyPressEvent = useCallback(
-    (event: Event) => {
+    (event: TEvent) => {
       clearTimeout(resizeListener)
       pendingSelection.current = []
       if(onKeyPressEvent) onKeyPressEvent(event)
@@ -178,7 +178,7 @@ const MonthView: ViewComponent<MonthViewProps> = (props) => {
   )
 
   const handleShowMore = useCallback(
-    (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => {
+    (events: TEvent[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => {
       clearTimeout(resizeListener)
       pendingSelection.current = []
 
@@ -303,24 +303,22 @@ const MonthView: ViewComponent<MonthViewProps> = (props) => {
   )
 }
 
-MonthView.range = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
-  let start = localizer.firstVisibleDay(date, localizer)
-  let end = localizer.lastVisibleDay(date, localizer)
-  return { start, end }
-}
+export default createViewComponent(MonthView, {
+  range: (date, { localizer }) => {
+    let start = localizer.firstVisibleDay(date, localizer)
+    let end = localizer.lastVisibleDay(date, localizer)
+    return { start, end }
+  },
+  navigate: (date, action, { localizer }) => {
+    switch(action) {
+      case navigate.PREVIOUS:
+        return localizer.add(date, -1, 'month')
+      case navigate.NEXT:
+        return localizer.add(date, 1, 'month')
+      default:
+        return date
+    }
+  },
+  title: (date, { localizer }) => localizer.format(date, 'monthHeaderFormat'),
+})
 
-MonthView.navigate = (date: Date, action: NavigateAction, { localizer }: { localizer: DateLocalizer }) => {
-  switch(action) {
-    case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'month')
-    case navigate.NEXT:
-      return localizer.add(date, 1, 'month')
-    default:
-      return date
-  }
-}
-
-MonthView.title = (date: Date, { localizer }: { localizer: DateLocalizer }) =>
-  localizer.format(date, 'monthHeaderFormat')
-
-export default MonthView

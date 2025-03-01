@@ -1,11 +1,11 @@
 import sortBy from 'lodash/sortBy'
-import CalendarEvent from './CalendarEvent'
+import LayoutAlgorithmEvent from './LayoutAlgorithmEvent'
 import { DayLayoutFunction } from './types'
 
 /**
  * Return true if event a and b is considered to be on the same row.
  */
-function onSameRow(a: CalendarEvent, b: CalendarEvent, minimumStartDifference: number) {
+function onSameRow(a: LayoutAlgorithmEvent, b: LayoutAlgorithmEvent, minimumStartDifference: number) {
   return (
     // Occupies the same start slot.
     Math.abs(b.start - a.start) < minimumStartDifference ||
@@ -14,7 +14,7 @@ function onSameRow(a: CalendarEvent, b: CalendarEvent, minimumStartDifference: n
   )
 }
 
-function sortByRender(events: CalendarEvent[]) {
+function sortByRender(events: LayoutAlgorithmEvent[]) {
   const sortedByTime = sortBy(events, ['startMs', e => -e.endMs])
 
   const sorted = []
@@ -53,14 +53,14 @@ const getStyledEvents: DayLayoutFunction = ({
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
   const proxies = events.map(
-    (event) => new CalendarEvent(event, { slotMetrics, accessors })
+    (event) => new LayoutAlgorithmEvent(event, { slotMetrics, accessors })
   )
   const eventsInRenderOrder = sortByRender(proxies)
 
   // Group overlapping events, while keeping order.
   // Every event is always one of: container, row or leaf.
   // Containers can contain rows, and rows can contain leaves.
-  const containerEvents: CalendarEvent[] = []
+  const containerEvents: LayoutAlgorithmEvent[] = []
   for(let i = 0; i < eventsInRenderOrder.length; i++) {
     const event = eventsInRenderOrder[i]
 

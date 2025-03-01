@@ -1,47 +1,47 @@
 import React from 'react'
 import { BaseViewProps } from '@/Views'
 import { DateLocalizer } from '@/localizers'
-import { Components } from '@/types'
+import { Components, CalendarEvent } from '@/types'
 import DateContentRow from '@/components/DateContentRow'
 import { inRange, sortWeekEvents } from '@/utils/eventLevels'
 
-interface MonthWeekProps {
+const eventsForWeek = <TEvent extends CalendarEvent>(
+  events: TEvent[],
+  start: Date,
+  end: Date,
+  accessors: BaseViewProps<TEvent>['accessors'],
+  localizer: DateLocalizer
+) => events.filter((e) => inRange(e, start, end, accessors, localizer))
+
+interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
   week: Date[]
   weekIdx: number
-  events: Event[]
+  events: TEvent[]
   date: Date
   getNow: () => Date
   showAllEvents?: boolean
   rowLimit: number
   selected?: object
   selectable?: boolean | 'ignoreEvents'
-  components: Components<Event, object>
-  accessors: BaseViewProps['accessors']
-  getters: BaseViewProps['getters']
+  components: Components<TEvent, object>
+  accessors: BaseViewProps<TEvent>['accessors']
+  getters: BaseViewProps<TEvent>['getters']
   localizer: DateLocalizer
   renderHeader: (props: any) => React.ReactNode
   renderForMeasure?: boolean
-  onShowMore: (events: Event[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
-  onSelect: (event: Event) => void
-  onDoubleClick: (event: Event) => void
-  onKeyPress: (event: Event) => void
+  onShowMore: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
+  onSelect: (event: TEvent) => void
+  onDoubleClick: (event: TEvent) => void
+  onKeyPress: (event: TEvent) => void
   onSelectSlot: (range: Date[], slotInfo: any) => void
   longPressThreshold?: number
   rtl?: boolean
   resizable?: boolean
-  slotRowRef?: React.RefObject<typeof DateContentRow>
+  slotRowRef?: React.RefObject<HTMLDivElement>
   getContainer: () => HTMLElement | null
 }
 
-const eventsForWeek = (
-  events: Event[],
-  start: Date,
-  end: Date,
-  accessors: BaseViewProps['accessors'],
-  localizer: DateLocalizer
-) => events.filter((e) => inRange(e, start, end, accessors, localizer))
-
-const MonthWeek: React.FC<MonthWeekProps> = ({
+const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
   week,
   weekIdx,
   events,
@@ -67,7 +67,7 @@ const MonthWeek: React.FC<MonthWeekProps> = ({
   resizable,
   slotRowRef,
   getContainer,
-}) => {
+}: MonthWeekProps<TEvent>) => {
   const weeksEvents = eventsForWeek(
     [...(events || [])],
     week[0],

@@ -1,4 +1,6 @@
-export interface Messages<TEvent extends object = Event> {
+import { CalendarEvent } from "@/types"
+
+export interface Messages<TEvent extends object = CalendarEvent> {
   date?: React.ReactNode | undefined
   time?: React.ReactNode | undefined
   event?: React.ReactNode | undefined

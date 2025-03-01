@@ -1,4 +1,4 @@
-import CalendarEvent from './CalendarEvent'
+import LayoutAlgorithmEvent from './LayoutAlgorithmEvent'
 import overlap from './overlap'
 import { DayLayoutFunction } from './types'
 

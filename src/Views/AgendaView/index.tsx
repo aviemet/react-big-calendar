@@ -6,21 +6,21 @@ import scrollbarSize from 'dom-helpers/scrollbarSize'
 import { navigate } from '@/utils/constants'
 import { inRange } from '@/utils/eventLevels'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { BaseViewProps, ViewComponent } from '..'
+import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { useCalendarContext } from '@/components/Calendar'
-import { Components } from '@/types'
-import { Accessors } from '@/types'
+import { CalendarEvent, Components } from '@/types'
 import { DateLocalizer } from '@/localizers'
 import { Getters } from '@/types'
+import { Accessors } from '@/utils/accessors'
 
 const DEFAULT_LENGTH = 30
 
-interface AgendaViewProps extends BaseViewProps {
+interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   length?: number
 }
 
 
-const AgendaView: ViewComponent<AgendaViewProps> = ({
+const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   accessors,
   components,
   date,
@@ -30,7 +30,7 @@ const AgendaView: ViewComponent<AgendaViewProps> = ({
   onDoubleClickEvent,
   onSelectEvent,
   selected,
-}) => {
+}: AgendaViewProps<TEvent>) => {
   const { localizer } = useCalendarContext()
   const headerRef = useRef<HTMLTableElement>(null)
   const dateColRef = useRef<HTMLTableCellElement>(null)
@@ -158,36 +158,34 @@ const AgendaView: ViewComponent<AgendaViewProps> = ({
   )
 }
 
-AgendaView.range = (start, { length = DEFAULT_LENGTH, localizer }) => {
-  let end = localizer.add(start, length, 'day')
-  return { start, end }
-}
+export default createViewComponent(AgendaView, {
+  range: (start, { length = DEFAULT_LENGTH, localizer }) => {
+    let end = localizer.add(start, length, 'day')
+    return { start, end }
+  },
 
-AgendaView.navigate = (
-  date,
-  action,
-  { length = DEFAULT_LENGTH, localizer }
-) => {
-  switch(action) {
-    case navigate.PREVIOUS:
-      return localizer.add(date, -length, 'day')
+  navigate: (
+    date,
+    action,
+    { length = DEFAULT_LENGTH, localizer }
+  ) => {
+    switch(action) {
+      case navigate.PREVIOUS:
+        return localizer.add(date, -length, 'day')
 
-    case navigate.NEXT:
-      return localizer.add(date, length, 'day')
+      case navigate.NEXT:
+        return localizer.add(date, length, 'day')
 
-    default:
-      return date
-  }
-}
+      default:
+        return date
+    }
+  },
 
-AgendaView.title = (start, { length = DEFAULT_LENGTH, localizer }) => {
-  let end = localizer.add(start, length, 'day')
-  return localizer.format({ start, end }, 'agendaHeaderFormat')
-}
-
-export default AgendaView
-
-
+  title: (start, { length = DEFAULT_LENGTH, localizer }) => {
+    let end = localizer.add(start, length, 'day')
+    return localizer.format({ start, end }, 'agendaHeaderFormat')
+  },
+})
 
 
 
@@ -197,20 +195,22 @@ export default AgendaView
 
 
 
-const renderDay = (
+
+
+const renderDay = <TEvent extends CalendarEvent>(
   day: Date,
-  events: Event[],
+  events: TEvent[],
   dayKey: string,
   localizer: DateLocalizer,
-  accessors: Accessors<Event>,
-  getters: Getters<Event>,
-  selected: Event[],
-  components: Components<Event, object>,
-  timeRangeLabel: (day: Date, event: Event) => React.ReactNode,
-  onSelectEvent: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void,
-  onDoubleClickEvent: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void,
+  accessors: Accessors<TEvent>,
+  getters: Getters<TEvent>,
+  selected: TEvent[],
+  components: Components<TEvent, object>,
+  timeRangeLabel: (day: Date, event: TEvent) => React.ReactNode,
+  onSelectEvent: (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void,
+  onDoubleClickEvent: (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void,
 ) => {
-  const { event: Event, date: AgendaDate } = components
+  const { event: EventComponent, date: AgendaDate } = components
 
   events = events.filter((e) =>
     inRange(
@@ -267,7 +267,7 @@ const renderDay = (
             onDoubleClickEvent && onDoubleClickEvent(event, e)
           }
         >
-          { Event ? <Event event={ event } title={ title } /> : title }
+          { EventComponent ? <EventComponent event={ event } title={ title } /> : title }
         </td>
       </tr>
     )

@@ -1,10 +1,11 @@
 import { navigate } from '@/utils/constants'
 import TimeGrid from '../TimeGridView'
-import { BaseViewProps, ViewComponent } from '..'
+import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { useCalendarContext } from '@/components/Calendar'
 import { coerceDate } from '@/utils/helpers'
+import { CalendarEvent } from '@/types'
 
-interface DayViewProps extends BaseViewProps {
+interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   enableAutoScroll?: boolean
   resizable?: boolean
   allDayMaxRows?: number
@@ -20,7 +21,7 @@ const dayViewRange: ViewComponent<DayViewProps>['range'] = (date: Date, { locali
   return [localizer.startOf(date, 'day')]
 }
 
-const DayView: ViewComponent<DayViewProps> = (props) => {
+const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewProps<TEvent>) => {
   const { localizer } = useCalendarContext()
   /**
      * This allows us to default min, max, and scrollToTime
@@ -49,21 +50,19 @@ const DayView: ViewComponent<DayViewProps> = (props) => {
   )
 }
 
-DayView.range = dayViewRange
+export default createViewComponent(DayView, {
+  range: dayViewRange,
+  navigate: (date, action, { localizer }) => {
+    switch(action) {
+      case navigate.PREVIOUS:
+        return localizer.add(date, -1, 'day')
 
-DayView.navigate = (date, action, { localizer }) => {
-  switch(action) {
-    case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'day')
+      case navigate.NEXT:
+        return localizer.add(date, 1, 'day')
 
-    case navigate.NEXT:
-      return localizer.add(date, 1, 'day')
-
-    default:
-      return date
-  }
-}
-
-DayView.title = (date, { localizer }) => localizer.format(date, 'dayHeaderFormat')
-
-export default DayView
+      default:
+        return date
+    }
+  },
+  title: (date, { localizer }) => localizer.format(date, 'dayHeaderFormat'),
+})

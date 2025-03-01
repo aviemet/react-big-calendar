@@ -1,6 +1,7 @@
 import isEqual from 'lodash/isEqual'
+import { CalendarEvent } from '@/types'
 
-export function isSelected(event: Event, selected: Event | null) {
+export function isSelected(event: CalendarEvent, selected: CalendarEvent | null) {
   if(!event || selected === null) return false
   return isEqual(event, selected)
 }

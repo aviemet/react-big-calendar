@@ -1,16 +1,16 @@
 import { useCalendarContext } from '@/components/Calendar'
-import { BaseViewProps, ViewComponent } from '@/Views'
+import { BaseViewProps, createViewComponent, ViewComponent } from '@/Views'
 import TimeGrid from '../TimeGridView'
-import { DateLocalizer } from '@/localizers'
 import WeekView from '../WeekView'
+import { CalendarEvent } from '@/types'
 
-const workWeekRange = (date: Date, options: { localizer: DateLocalizer }) => {
+const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, options) => {
   return WeekView.range(date, options).filter(
     (d) => [6, 0].indexOf(d.getDay()) === -1
   )
 }
 
-interface WorkWeekProps extends BaseViewProps {
+interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   date: Date
   min?: Date
   max?: Date
@@ -18,7 +18,7 @@ interface WorkWeekProps extends BaseViewProps {
   enableAutoScroll?: boolean
 }
 
-const WorkWeek: ViewComponent<WorkWeekProps> = (props) => {
+const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
   const { localizer } = useCalendarContext()
 
   const {
@@ -50,14 +50,11 @@ const WorkWeek: ViewComponent<WorkWeekProps> = (props) => {
 
 }
 
-WorkWeek.range = workWeekRange
-
-WorkWeek.navigate = WeekView.navigate
-
-WorkWeek.title = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
-  let [start, ...rest] = workWeekRange(date, { localizer })
-
-  return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
-}
-
-export default WorkWeek
+export default createViewComponent(WorkWeek, {
+  range: workWeekRange,
+  navigate: WeekView.navigate,
+  title: (date, { localizer }) => {
+    let [start, ...rest] = workWeekRange(date, { localizer })
+    return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+  },
+})

@@ -3,6 +3,7 @@ import { eventLevels } from '@/utils/eventLevels'
 import { range } from 'lodash-es'
 import clsx from 'clsx'
 import { useCalendarContext } from '../Calendar'
+import { CalendarEvent } from '@/types'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
 let eventsInSlot = (segments, slot) =>
@@ -20,7 +21,7 @@ let eventsInSlot = (segments, slot) =>
 // }
 
 interface EventEndingRowProps {
-  segments: Event[]
+  segments: CalendarEvent[]
   slotMetrics: { slots: number }
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
 }

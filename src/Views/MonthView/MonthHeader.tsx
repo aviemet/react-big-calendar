@@ -1,19 +1,19 @@
 import React from 'react'
 import { DateLocalizer } from '@/localizers'
-import { Components } from '@/types'
+import { Components, CalendarEvent } from '@/types'
 import Header from '@/Header'
 
-interface MonthHeaderProps {
+interface MonthHeaderProps<TEvent extends CalendarEvent = CalendarEvent> {
   dates: Date[]
-  components: Components<Event, object>
+  components: Components<TEvent, object>
   localizer: DateLocalizer
 }
 
-const MonthHeader: React.FC<MonthHeaderProps> = ({
+function MonthHeader<TEvent extends CalendarEvent = CalendarEvent>({
   dates,
   components,
   localizer,
-}) => {
+}: MonthHeaderProps<TEvent>) {
   const first = dates[0]
   const last = dates[dates.length - 1]
   const HeaderComponent = components.header || Header

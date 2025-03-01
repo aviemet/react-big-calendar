@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import Selection, { getBoundsForNode, isEvent } from '@/utils/Selection'
+import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
 import * as TimeSlotUtils from '@/utils/TimeSlots'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { notify } from '@/utils/helpers'
 import * as DayEventLayout from '@/utils/DayEventLayout'
 import TimeGridEvent from './TimeGridEvents'
 import { useCalendarContext } from '@/components/Calendar'
-import { Accessors, Getters } from '@/types'
+import { CalendarEvent, Getters } from '@/types'
+import { Accessors } from '@/utils/accessors'
 
-interface TimeGridEventsProps {
-  events: Event[]
-  backgroundEvents: Event[]
+interface TimeGridEventsProps<TEvent extends CalendarEvent = CalendarEvent> {
+  events: TEvent[]
+  backgroundEvents: TEvent[]
   step: number
   date: Date
   min: Date
@@ -41,7 +42,7 @@ interface TimeGridEventsProps {
 }
 
 
-const TimeGridEvents = (props: TimeGridEventsProps) => {
+const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: TimeGridEventsProps<TEvent>) => {
   let {
     events,
     backgroundEvents,

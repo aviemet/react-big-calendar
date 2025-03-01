@@ -1,27 +1,8 @@
+import { CalendarEvent } from "@/types"
+import { Accessors } from "../accessors"
 import { SlotMetrics } from "../TimeSlots"
-import { Accessors } from "@/types"
 
-interface CalendarEventData {
-  start: number
-  end: number
-  startMs: number
-  endMs: number
-  top: number
-  height: number
-  data: any
-  rows?: Array<{ leaves: CalendarEvent[] }>
-  leaves?: CalendarEvent[]
-  row?: {
-    leaves: CalendarEvent[]
-    xOffset: number
-    _width: number
-  }
-  container?: {
-    _width: number
-  }
-}
-
-class CalendarEvent implements CalendarEventData {
+class LayoutAlgorithmEvent {
   start: number
   end: number
   startMs: number
@@ -40,7 +21,7 @@ class CalendarEvent implements CalendarEventData {
     _width: number
   }
 
-  constructor(data: Event, { accessors, slotMetrics }: { accessors: Accessors, slotMetrics: SlotMetrics }) {
+  constructor(data: CalendarEvent, { accessors, slotMetrics }: { accessors: Accessors, slotMetrics: SlotMetrics }) {
     const { start, startDate, end, endDate, top, height } =
       slotMetrics.getRange(accessors.start(data), accessors.end(data))
 
@@ -118,4 +99,4 @@ class CalendarEvent implements CalendarEventData {
   }
 }
 
-export default CalendarEvent
+export default LayoutAlgorithmEvent

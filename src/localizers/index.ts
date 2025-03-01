@@ -34,6 +34,7 @@ import {
 import { Culture, DateRange, FormatInput, Formats } from './types'
 import { StartOfWeek, Unit } from 'date-arithmetic'
 import { buildMessages, type Messages } from '@/utils/messages'
+import { CalendarEvent } from '@/types'
 
 export type RangeFunction = (range: DateRange, culture: Culture, local: DateLocalizer) => string
 
@@ -186,8 +187,8 @@ export interface DateLocalizerSpec {
   getMinutesFromMidnight?: (date: Date) => number
   continuesPrior?: (dateA: Date, dateB: Date) => boolean
   continuesAfter?: (dateA: Date, dateB: Date, dateC: Date) => boolean
-  sortEvents?: (eventA: Event, eventB: Event) => boolean
-  inEventRange?: (event: Event, range: DateRange) => boolean
+  sortEvents?: (eventA: CalendarEvent, eventB: CalendarEvent) => boolean
+  inEventRange?: (event: CalendarEvent, range: DateRange) => boolean
   isSameDate?: (dateA: Date, dateB: Date) => boolean
   startAndEndAreDateOnly?: (dateA: Date, dateB: Date) => boolean
   segmentOffset?: number
@@ -200,7 +201,7 @@ export class DateLocalizer {
   constructor(spec: DateLocalizerSpec)
 
   format(value: FormatInput, format: string, culture?: Culture): string
-  messages: Messages<Event>
+  messages: Messages<CalendarEvent>
 
   merge: (date: Date, time: Date) => Date | null
   inRange: typeof inRange
@@ -230,8 +231,8 @@ export class DateLocalizer {
   getMinutesFromMidnight: (date: Date) => number
   continuesPrior: (dateA: Date, dateB: Date) => boolean
   continuesAfter: (dateA: Date, dateB: Date, dateC: Date) => boolean
-  sortEvents: (eventA: Event, eventB: Event) => boolean
-  inEventRange: (event: Event, range: DateRange) => boolean
+  sortEvents: (eventA: CalendarEvent, eventB: CalendarEvent) => boolean
+  inEventRange: (event: CalendarEvent, range: DateRange) => boolean
   isSameDate: (dateA: Date, dateB: Date) => boolean
   startAndEndAreDateOnly: (dateA: Date, dateB: Date) => boolean
   segmentOffset: number
@@ -294,7 +295,7 @@ export function mergeWithDefaults(
   localizer: DateLocalizer,
   culture: Culture | undefined,
   formatOverrides: Formats | undefined,
-  messages: Messages<Event> | undefined
+  messages: Messages<CalendarEvent> | undefined
 ) {
   const formats = {
     ...localizer.formats,

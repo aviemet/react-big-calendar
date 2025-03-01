@@ -1,55 +1,17 @@
-import { navigate, NavigateAction, View } from '@/utils/constants'
+import { navigate } from '@/utils/constants'
 import TimeGrid from '../TimeGridView'
-import { BaseViewProps, ViewComponent } from '..'
+import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { DateLocalizer } from '@/localizers'
-import { Accessors, Components, Getters, SlotInfo } from '@/types'
-import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/components/Calendar'
 
-interface WeekViewProps extends BaseViewProps {
-  date: Date
-  events: Event[]
-  backgroundEvents: Event[]
-  resources: Resource[]
-  step?: number
-  timeslots?: number
-  range?: Date[]
-  min?: Date
-  max?: Date
-  getNow: () => Date
-  scrollToTime?: Date
-  enableAutoScroll?: boolean
-  showMultiDayTimes?: boolean
-  rtl?: boolean
-  resizable?: boolean
-  width?: number
-  accessors: Accessors
-  components: Components
-  getters: Getters
-  allDayMaxRows?: number
-  selected?: object
-  selectable?: boolean | 'ignoreEvents'
-  longPressThreshold?: number
-  onNavigate?: (action: NavigateAction) => void
-  onSelectSlot?: (slotInfo: SlotInfo) => void
-  onSelectEnd?: (...args: any[]) => any
-  onSelectStart?: (...args: any[]) => any
-  onSelectEvent?: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void
-  onDoubleClickEvent?: (event: Event, e: React.SyntheticEvent<HTMLElement>) => void
-  onKeyPressEvent?: (...args: any[]) => any
-  onShowMore?: (...args: any[]) => any
-  onDrillDown?: (date: Date, view: View) => void
-  getDrilldownView?: (targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void
-  dayLayoutAlgorithm?: DayLayoutAlgorithm
-  showAllEvents?: boolean
-  doShowMoreDrillDown?: boolean
-  popup?: boolean
-  handleDragStart?: (e: React.DragEvent<HTMLElement>) => void
-  popupOffset?: number | { x: number, y: number }
-  className?: string
+interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+  eventOffset: 0
+  Selectable: "ignoreEvents"
+  getDrilldownView: null
 }
 
-const weekViewRange = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
+const weekViewRange: ViewComponent<WeekViewProps>['range'] = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
   let firstOfWeek = localizer.startOfWeek()
   let start = localizer.startOf(date, 'week', firstOfWeek)
   let end = localizer.endOf(date, 'week', firstOfWeek)
@@ -57,7 +19,7 @@ const weekViewRange = (date: Date, { localizer }: { localizer: DateLocalizer }) 
   return localizer.range(start, end)
 }
 
-const WeekView: ViewComponent<WeekViewProps> = (props) => {
+const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewProps<TEvent>) => {
   const { localizer } = useCalendarContext()
 
   /**
@@ -88,24 +50,22 @@ const WeekView: ViewComponent<WeekViewProps> = (props) => {
 
 }
 
-WeekView.navigate = (date, action, { localizer }) => {
-  switch(action) {
-    case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'week')
+export default createViewComponent(WeekView, {
+  range: weekViewRange,
 
-    case navigate.NEXT:
-      return localizer.add(date, 1, 'week')
+  navigate: (date, action, { localizer }) => {
+    switch(action) {
+      case navigate.PREVIOUS:
+        return localizer.add(date, -1, 'week')
+      case navigate.NEXT:
+        return localizer.add(date, 1, 'week')
+      default:
+        return date
+    }
+  },
 
-    default:
-      return date
-  }
-}
-
-WeekView.range = weekViewRange
-
-WeekView.title = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
-  let [start, ...rest] = WeekView.range(date, { localizer })
-  return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
-}
-
-export default WeekView
+  title: (date, { localizer }) => {
+    let [start, ...rest] = weekViewRange(date, { localizer })
+    return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+  },
+})

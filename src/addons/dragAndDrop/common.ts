@@ -1,4 +1,5 @@
 import { DateLocalizer } from '@/localizers'
+import { CalendarEvent } from '@/types'
 import { Accessors, wrapAccessor } from '@/utils/accessors'
 import { ComponentClass, createElement, FunctionComponent } from 'react'
 
@@ -37,7 +38,7 @@ export function pointInColumn(bounds, point) {
   return x < right + 10 && x > left && y > top
 }
 
-export function eventTimes(event: Event, accessors: Accessors, localizer: DateLocalizer) {
+export function eventTimes(event: CalendarEvent, accessors: Accessors, localizer: DateLocalizer) {
   let start = accessors.start(event)
   let end = accessors.end(event)
 
