@@ -1,5 +1,5 @@
 @use 'sass:color';
-@use './variables';
+@use './variables' as *;
 
 .rbc-event {
   border: none;
@@ -29,7 +29,7 @@
 }
 
 .rbc-event-label {
-  @extend .rbc-ellipsis;
+  @extend .rbc-ellipsis !optional;
   font-size: 80%;
 }
 

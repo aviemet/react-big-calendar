@@ -1,14 +1,15 @@
 import React from 'react'
-import { NavigateAction, View, views } from '../utils/constants'
-import Month from './MonthView'
-import Week from './WeekView'
-import WorkWeek from './WorkWeekView'
-import Day from './DayView'
-import Agenda from './AgendaView'
+import { NavigateAction } from '../utils/constants'
+import MonthView from './MonthView'
+import WeekView from './WeekView'
+import WorkWeekView from './WorkWeekView'
+import DayView from './DayView'
+import AgendaView from './AgendaView'
 import { type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../components/Calendar'
-import { type Accessors, type Components, type Getters, type SlotInfo } from '../types'
+import { type Components, type Getters, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { Accessors } from '@/utils/accessors'
 
 export interface TitleOptions {
   formats: DateFormat[]
@@ -34,7 +35,7 @@ export type ViewsProps =
 export type Selectable = boolean | "ignoreEvents"
 
 export interface BaseViewProps<TEvent extends object = Event, TResource extends object = object> {
-  date?: string | Date | undefined
+  date?: Date | undefined
   eventOffset: number
   events?: TEvent[] | undefined
   backgroundEvents?: TEvent[] | undefined
@@ -77,12 +78,23 @@ export type ViewComponent<TProps extends BaseViewProps> = React.ComponentType<TP
   title: (date: Date, props?: Partial<CalendarProps>) => string
 }
 
-const VIEW_COMPONENTS = {
-  [views.MONTH]: Month,
-  [views.WEEK]: Week,
-  [views.WORK_WEEK]: WorkWeek,
-  [views.DAY]: Day,
-  [views.AGENDA]: Agenda,
+export const views = {
+  MONTH: 'month',
+  WEEK: 'week',
+  WORK_WEEK: 'work_week',
+  DAY: 'day',
+  AGENDA: 'agenda',
 } as const
+
+export type ViewKey = keyof typeof views
+export type View = typeof views[ViewKey ]
+
+const VIEW_COMPONENTS = {
+  [views.MONTH]: MonthView,
+  [views.WEEK]: WeekView,
+  [views.WORK_WEEK]: WorkWeekView,
+  [views.DAY]: DayView,
+  [views.AGENDA]: AgendaView,
+} as unknown as Record<View, ViewComponent<BaseViewProps>>
 
 export default VIEW_COMPONENTS

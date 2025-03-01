@@ -5,11 +5,6 @@ import DemoLink from '../../DemoLink.component'
 import events from '../../resources/events'
 import Layout from 'react-tackle-box/Layout'
 
-require('globalize/lib/cultures/globalize.culture.en-GB')
-require('globalize/lib/cultures/globalize.culture.es')
-require('globalize/lib/cultures/globalize.culture.fr')
-require('globalize/lib/cultures/globalize.culture.ar-AE')
-
 const cultures = ['en', 'en-GB', 'es', 'fr', 'ar-AE']
 const lang = {
   en: null,

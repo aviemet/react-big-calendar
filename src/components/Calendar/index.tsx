@@ -14,10 +14,10 @@ import {
 import { coerceDate, notify } from '@/utils/helpers'
 import moveDate from '@/utils/move'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
-import message, { Messages } from '@/utils/messages'
+import { Messages } from '@/utils/messages'
 import {  } from '@/localizers/types'
 import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
-import { wrapAccessor } from '@/utils/accessors'
+import { Accessors, wrapAccessor } from '@/utils/accessors'
 import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, { ViewComponent, ViewsProps, BaseViewProps } from '@/Views'
@@ -50,46 +50,46 @@ export interface CalendarProps<TEvent extends object = Event, TResource extends 
   style?: React.CSSProperties | undefined
 
   /**
-     * The localizer used for formatting dates and times according to the `format` and `culture`
-     *
-     * globalize
-     * ```js
-     * import {globalizeLocalizer} from 'react-big-calendar'
-     * import globalize from 'globalize'
-     *
-     * const localizer = globalizeLocalizer(globalize)
-     * ```
-     * moment
-     * ``js
-     * import {momentLocalizer} from 'react-big-calendar'
-     * import moment from 'moment'
-     * // and, for optional time zone support
-     * import 'moment-timezone'
-     *
-     * moment.tz.setDefault('America/Los_Angeles')
-     * // end optional time zone support
-     *
-     * const localizer = momentLocalizer(moment)
-     * ```
-     *
-     * Luxon
-     * ```js
-     * import {luxonLocalizer} from 'react-big-calendar'
-     * import {DateTime, Settings} from 'luxon'
+   * The localizer used for formatting dates and times according to the `format` and `culture`
+   *
+   * globalize
+   * ```js
+   * import {globalizeLocalizer} from 'react-big-calendar'
+   * import globalize from 'globalize'
+   *
+   * const localizer = globalizeLocalizer(globalize)
+   * ```
+   * moment
+   * ``js
+   * import {momentLocalizer} from 'react-big-calendar'
+   * import moment from 'moment'
+   * // and, for optional time zone support
+   * import 'moment-timezone'
+   *
+   * moment.tz.setDefault('America/Los_Angeles')
+   * // end optional time zone support
+   *
+   * const localizer = momentLocalizer(moment)
+   * ```
+   *
+   * Luxon
+   * ```js
+   * import {luxonLocalizer} from 'react-big-calendar'
+   * import {DateTime, Settings} from 'luxon'
 import useMemo from 'react';
-     * // only use `Settings` if you require optional time zone support
-     * Settings.defaultZone = 'America/Los_Angeles'
-     * // end optional time zone support
-     *
-     * // Luxon uses the Intl API, which currently does not contain `weekInfo`
-     * // to determine which weekday is the start of the week by `culture`.
-     * // The `luxonLocalizer` defaults this to Sunday, which differs from
-     * // the Luxon default of Monday. The localizer requires this option
-     * // to change the display, and the date math for determining the
-     * // start of a week. Luxon uses non-zero based values for `weekday`.
-     * const localizer = luxonLocalizer(DateTime, {firstDayOfWeek: 7})
-     * ```
-     */
+    * // only use `Settings` if you require optional time zone support
+    * Settings.defaultZone = 'America/Los_Angeles'
+    * // end optional time zone support
+    *
+    * // Luxon uses the Intl API, which currently does not contain `weekInfo`
+    * // to determine which weekday is the start of the week by `culture`.
+    * // The `luxonLocalizer` defaults this to Sunday, which differs from
+    * // the Luxon default of Monday. The localizer requires this option
+    * // to change the display, and the date math for determining the
+    * // start of a week. Luxon uses non-zero based values for `weekday`.
+    * const localizer = luxonLocalizer(DateTime, {firstDayOfWeek: 7})
+    * ```
+    */
   localizer: DateLocalizer
 
   /**
@@ -239,8 +239,7 @@ import useMemo from 'react';
    *
    * @type {(func|string)}
    */
-  // TODO: Figure out how to type this
-  eventIdAccessor: accessor
+  eventIdAccessor?: keyof TEvent | ((event: TEvent) => any) | undefined
 
   /**
    * Returns the id of the `resource` that the event is a member of. This
@@ -458,7 +457,7 @@ import useMemo from 'react';
    * @View
    ['month', 'week', 'day', 'agenda']
    */
-  views?: ViewsProps<TEvent, TResource> | undefined
+  views?: View[] | undefined
 
   /**
    * Determines whether the drill down should occur when clicking on the "+_x_ more" link.
@@ -773,7 +772,7 @@ import useMemo from 'react';
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
 }
 
-const Calendar = <TEvent extends object, TResource extends object>(props: CalendarProps<TEvent, TResource>) => {
+const Calendar = <TResource extends object, TEvent extends object = Event>(props: CalendarProps<TResource, TEvent>) => {
   const {
     date,
     events = [],
@@ -817,7 +816,6 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
     onShowMore,
     onView,
     onDrillDown,
-    localizer = mergeWithDefaults(props.localizer, props.culture, props.formats, message(props.messages)),
     showMultiDayTimes,
     messages,
     formats,
@@ -834,6 +832,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
     selectable,
     resourceGroupingLayout,
   } = props
+  const localizer = mergeWithDefaults(props?.localizer, culture, formats, messages)
 
   const viewNames = useMemo(() => {
     if(Array.isArray(views)) return views
@@ -852,7 +851,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
     [viewNames]
   )
 
-  const accessors = useMemo(() => {
+  const accessors: Accessors<TEvent, TResource> = useMemo(() => {
     return {
       start: wrapAccessor(startAccessor),
       end: wrapAccessor(endAccessor),
@@ -881,7 +880,6 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
       }
     )
   }, [props.components, view, viewNames])
-
 
   const viewComponents = useMemo(() => {
     if(Array.isArray(views)) {
@@ -957,14 +955,14 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
     handleRangeChange(movedDate, ViewComponent)
   }
 
-  const handleViewChange = (view: View) => {
-    if(view !== view && isValidView(view, props)) {
-      onView(view)
+  const handleViewChange = (localView: View) => {
+    if(view !== localView && isValidView(localView, props)) {
+      onView(localView)
     }
 
     handleRangeChange(
       coerceDate(date || getNow()),
-      views[view],
+      views[localView],
       viewComponents
     )
   }
@@ -1003,7 +1001,7 @@ const Calendar = <TEvent extends object, TResource extends object>(props: Calend
 
   const current = coerceDate(date || getNow())
 
-  const ViewComponent: React.ComponentType<BaseViewProps<TEvent, TResource>> = views[viewComponents]
+  const ViewComponent: React.ComponentType<BaseViewProps<TEvent, TResource>> = viewComponents[view]
 
   const ToolbarComponent = components.toolbar || Toolbar
 

@@ -44,7 +44,7 @@ export let formats: Formats = {
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
-const dateFnsLocalizer = function ({
+function dateFnsLocalizer({
   startOfWeek,
   getDay,
   format: _format,
@@ -54,7 +54,7 @@ const dateFnsLocalizer = function ({
   getDay: (date: Date) => number
   format: (value: FormatInput, formatString: string, options: { locale: any }) => string
   locales: Record<string, any>
-}) {
+}): DateLocalizer {
   return new DateLocalizer({
     formats,
     firstOfWeek(culture) {

@@ -1,31 +1,31 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 import {
   Calendar,
   Views,
-  DateLocalizer,
-  momentLocalizer,
-} from 'react-big-calendar'
+  dayjsLocalizer,
+} from '../../../src'
 import DemoLink from '../../DemoLink.component'
 import events from '../../resources/events'
 import * as dates from '../../../src/utils/dates'
 
-const mLocalizer = momentLocalizer(moment)
+const dLocalizer = dayjsLocalizer(dayjs)
 
-const ColoredDateCellWrapper = ({ children }) =>
+const ColoredDateCellWrapper = ({ children }) =>(
   React.cloneElement(React.Children.only(children), {
     style: {
       backgroundColor: 'lightblue',
     },
   })
+)
 
 /**
  * We are defaulting the localizer here because we are using this same
  * example on the main 'About' page in Storybook
  */
 export default function Basic({
-  localizer = mLocalizer,
+  localizer = dLocalizer,
   showDemoLink = true,
   ...props
 }) {
@@ -42,12 +42,12 @@ export default function Basic({
   )
 
   return (
-    <Fragment>
+    <>
       { showDemoLink ? <DemoLink fileName="basic" /> : null }
       <div className="height600" { ...props }>
         <Calendar
           components={ components }
-          defaultDate={ defaultDate }
+          date={ defaultDate }
           events={ events }
           localizer={ localizer }
           max={ max }
@@ -56,10 +56,6 @@ export default function Basic({
           views={ views }
         />
       </div>
-    </Fragment>
+    </>
   )
 }
-// Basic.propTypes = {
-//   localizer: PropTypes.instanceOf(DateLocalizer),
-//   showDemoLink: PropTypes.bool,
-// }

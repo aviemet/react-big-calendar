@@ -7,7 +7,7 @@ import qsa from 'dom-helpers/cjs/querySelectorAll'
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
-} from '@/utils/selection'
+} from '@/utils/Selection'
 import TimeGridEvent from '@/Views/TimeGridView/TimeGridEvents'
 import { dragAccessors, eventTimes, pointInColumn } from './common'
 

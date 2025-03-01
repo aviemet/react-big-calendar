@@ -1,3 +1,5 @@
+export type Resource = object
+
 export const NONE = {}
 
 export default function Resources(resources, accessors) {

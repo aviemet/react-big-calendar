@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo } from 'react'
 
-import { Calendar, Views, DateLocalizer } from '@'
+import { Calendar, Views, DateLocalizer } from '@/index'
 import DemoLink from '../../DemoLink.component'
 import events from '../../resources/events'
 import backgroundEvents from '../../resources/backgroundEvents'

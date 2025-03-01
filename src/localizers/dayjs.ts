@@ -67,7 +67,7 @@ function fixUnit(unit: Unit) {
 
 type DayjsLib = typeof dayjs
 
-export default function (dayjsLib: DayjsLib) {
+function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   // load dayjs plugins
   dayjsLib.extend(isBetween)
   dayjsLib.extend(isSameOrAfter)
@@ -425,3 +425,5 @@ export default function (dayjsLib: DayjsLib) {
     browserTZOffset,
   })
 }
+
+export default dayjsLocalizer

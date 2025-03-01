@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { coerceDate, notify } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
-import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
+import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/Selection'
 import clsx from 'clsx'
 
 interface BackgroundCellsProps {

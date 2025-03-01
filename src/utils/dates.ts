@@ -1,4 +1,3 @@
-/* eslint no-fallthrough: off */
 import { DateLocalizer } from '@/localizers'
 import * as dateArithmetic from 'date-arithmetic'
 import { Unit } from 'date-arithmetic'

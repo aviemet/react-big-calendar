@@ -1,3 +1,4 @@
+import React from 'react'
 import { navigate, NavigateAction, View } from './utils/constants'
 import { ViewsProps } from './Views'
 import { useCalendarContext } from './components/Calendar'

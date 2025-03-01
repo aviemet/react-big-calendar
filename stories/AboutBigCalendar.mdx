@@ -1,13 +1,15 @@
-import { Meta, Story } from '@storybook/blocks'
-import Basic from './demos/exampleCode/basic.js'
+import { Canvas, Meta, Story } from '@storybook/blocks'
+import LinkTo from '@storybook/addon-links/react'
+import * as BasicStories from './demos/basic.stories'
 
 <Meta title="About Big Calendar" />
 
-# Big Calendar
+# About Big Calendar
 
 {/* We won't load this in a 'Story' block, as we want it inline without creating subnavigation */}
 
-<Basic showDemoLink={false} style={{ marginBottom: 15 }} />
+{/* <Basic showDemoLink={false} style={{ marginBottom: 15 }} /> */}
+<Story of={BasicStories.BasicExample} />
 
 ## Introduction
 

@@ -1,11 +1,9 @@
 import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
 import Basic from './exampleCode/basic'
 
-export default {
-  title: 'Examples',
-  component: Calendar,
+const meta = {
+  title: 'Examples/Basic',
+  component: Basic,
   parameters: {
     docs: {
       page: null,
@@ -13,9 +11,9 @@ export default {
   },
 }
 
-const localizer = momentLocalizer(moment)
+export default meta
 
-export function Example1() {
-  return <Basic localizer={ localizer } />
+
+export const BasicExample = {
+  render: () => <Basic />,
 }
-Example1.storyName = 'Basic Demo'

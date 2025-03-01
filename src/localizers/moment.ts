@@ -50,7 +50,7 @@ function fixUnit(unit) {
   return datePart
 }
 
-export default function (moment) {
+function momentLocalizer(moment): DateLocalizer {
   const locale = (m, c) => (c ? m.locale(c) : m)
 
   function getTimezoneOffset(date) {
@@ -392,3 +392,5 @@ export default function (moment) {
     browserTZOffset,
   })
 }
+
+export default momentLocalizer

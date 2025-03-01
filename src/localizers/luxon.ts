@@ -54,10 +54,22 @@ function fixUnit(unit) {
   return datePart
 }
 
+type LuxonLocalizer = (
+  luxonDateTime: object,
+  options?: {
+    /**
+     * Luxon uses 1 based values for month and weekday
+     * So we default to Sunday (7)
+     * @default 7
+     */
+    firstDayOfWeek: number
+  },
+) => DateLocalizer
+
 // Luxon does not currently have weekInfo by culture
 // Luxon uses 1 based values for month and weekday
 // So we default to Sunday (7)
-export default function (DateTime, { firstDayOfWeek = 7 } = {}) {
+const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) => {
   function formatDate(value, format) {
     return DateTime.fromJSDate(value).toFormat(format)
   }

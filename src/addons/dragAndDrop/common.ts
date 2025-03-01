@@ -1,4 +1,5 @@
-import { wrapAccessor } from '@/utils/accessors'
+import { DateLocalizer } from '@/localizers'
+import { Accessors, wrapAccessor } from '@/utils/accessors'
 import { ComponentClass, createElement, FunctionComponent } from 'react'
 
 function createFactory(type: string | FunctionComponent<{}> | ComponentClass<{}, any>) {
@@ -36,7 +37,7 @@ export function pointInColumn(bounds, point) {
   return x < right + 10 && x > left && y > top
 }
 
-export function eventTimes(event, accessors, localizer) {
+export function eventTimes(event: Event, accessors: Accessors, localizer: DateLocalizer) {
   let start = accessors.start(event)
   let end = accessors.end(event)
 

@@ -33,7 +33,7 @@ import {
 } from '../utils/dates'
 import { Culture, DateRange, FormatInput, Formats } from './types'
 import { StartOfWeek, Unit } from 'date-arithmetic'
-import { Messages } from '@/utils/messages'
+import { buildMessages, type Messages } from '@/utils/messages'
 
 export type RangeFunction = (range: DateRange, culture: Culture, local: DateLocalizer) => string
 
@@ -292,9 +292,9 @@ export class DateLocalizer {
 
 export function mergeWithDefaults(
   localizer: DateLocalizer,
-  culture: Culture,
-  formatOverrides: Formats,
-  messages: Messages<Event>
+  culture: Culture | undefined,
+  formatOverrides: Formats | undefined,
+  messages: Messages<Event> | undefined
 ) {
   const formats = {
     ...localizer.formats,
@@ -303,7 +303,7 @@ export function mergeWithDefaults(
 
   return {
     ...localizer,
-    messages,
+    messages: buildMessages(messages),
     startOfWeek: () => localizer.startOfWeek(culture),
     format: (value: FormatInput, format: string) =>
       localizer.format(value, formats[format] || format, culture),

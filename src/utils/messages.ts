@@ -38,7 +38,7 @@ let defaultMessages: Messages = {
   showMore: (total) => `+${total} more`,
 }
 
-export default function messages(msgs: Messages) {
+export function buildMessages(msgs: Messages) {
   return {
     ...defaultMessages,
     ...msgs,
