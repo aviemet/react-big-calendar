@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, forwardRef } from 'react'
-import { getSlotMetrics } from './utils/TimeSlots'
+import { useCalendarContext } from '@/Calendar'
+import { getSlotMetrics } from '@/utils/TimeSlots'
 import TimeSlotGroup from './TimeSlotGroup'
-import { useCalendarContext } from './components/Calendar'
 import clsx from 'clsx'
 
 interface TimeGutterProps {

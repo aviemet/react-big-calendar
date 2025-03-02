@@ -1,9 +1,9 @@
 import { navigate } from '@/utils/constants'
-import TimeGrid from '../TimeGridView'
+import TimeGrid from '@/components/TimeGrid'
 import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { DateLocalizer } from '@/localizers'
 import { CalendarEvent } from '@/types'
-import { useCalendarContext } from '@/components/Calendar'
+import { useCalendarContext } from '@/Calendar'
 
 interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   eventOffset: 0
@@ -16,7 +16,7 @@ const weekViewRange: ViewComponent<WeekViewProps>['range'] = (date: Date, { loca
   let start = localizer.startOf(date, 'week', firstOfWeek)
   let end = localizer.endOf(date, 'week', firstOfWeek)
 
-  return localizer.range(start, end)
+  return { start, end }
 }
 
 const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewProps<TEvent>) => {

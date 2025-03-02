@@ -2,7 +2,7 @@ import EventRowMixin from './EventRowMixin'
 import { eventLevels } from '@/utils/eventLevels'
 import { range } from 'lodash-es'
 import clsx from 'clsx'
-import { useCalendarContext } from '../Calendar'
+import { useCalendarContext } from '../../Calendar'
 import { CalendarEvent } from '@/types'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot

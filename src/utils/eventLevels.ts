@@ -14,7 +14,7 @@ export function endOfRange(
 
 // properly calculating segments requires working with dates in
 // the timezone we're working with, so we use the localizer
-export function eventSegments(event: CalendarEvent, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
+export function eventSegments<TEvent extends CalendarEvent>(event: TEvent, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
   let { first, last } = endOfRange({ dateRange: range, localizer })
 
   let slots = localizer.diff(first, last, 'day')
@@ -66,12 +66,13 @@ export function eventLevels(rowSegments, limit = Infinity) {
   return { levels, extra }
 }
 
-export function inRange(e, start, end, accessors, localizer) {
+export function inRange<TEvent extends CalendarEvent>(e: TEvent, start: Date, end: Date, accessors: Accessors, localizer: DateLocalizer) {
   const event = {
     start: accessors.start(e),
     end: accessors.end(e),
   }
   const range = { start, end }
+
   return localizer.inEventRange({ event, range })
 }
 
@@ -81,10 +82,10 @@ export function segsOverlap(seg, otherSegs) {
   )
 }
 
-export function sortWeekEvents(events, accessors, localizer) {
+export function sortWeekEvents<TEvent extends CalendarEvent>(events: TEvent[], accessors: Accessors, localizer: DateLocalizer) {
   const base = [...events]
-  const multiDayEvents = []
-  const standardEvents = []
+  const multiDayEvents: TEvent[] = []
+  const standardEvents: TEvent[] = []
   base.forEach((event) => {
     const startCheck = accessors.start(event)
     const endCheck = accessors.end(event)
@@ -103,7 +104,7 @@ export function sortWeekEvents(events, accessors, localizer) {
   return [...multiSorted, ...standardSorted]
 }
 
-export function sortEvents(eventA, eventB, accessors, localizer) {
+export function sortEvents<TEvent extends CalendarEvent>(eventA: TEvent, eventB: TEvent, accessors: Accessors, localizer: DateLocalizer): -1 | 0 | 1 {
   const evtA = {
     start: accessors.start(eventA),
     end: accessors.end(eventA),
@@ -114,5 +115,6 @@ export function sortEvents(eventA, eventB, accessors, localizer) {
     end: accessors.end(eventB),
     allDay: accessors.allDay(eventB),
   }
+
   return localizer.sortEvents({ evtA, evtB })
 }

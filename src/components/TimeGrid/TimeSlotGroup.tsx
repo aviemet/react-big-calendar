@@ -1,5 +1,5 @@
-import { useCalendarContext } from './Calendar'
-import NoopWrapper from './NoopWrapper'
+import { useCalendarContext } from '@/Calendar'
+import NoopWrapper from '@/NoopWrapper'
 import clsx from 'clsx'
 
 interface TimeSlotGroupProps {

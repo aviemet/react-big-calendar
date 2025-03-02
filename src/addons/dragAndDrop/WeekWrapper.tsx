@@ -1,7 +1,7 @@
 
 import React from 'react'
 import EventRow from '@/components/EventRow'
-import Selection, { getBoundsForNode } from '@/utils/Selection'
+import Selection, { getBoundsForNode } from '@/utils/selection'
 import { eventSegments } from '@/utils/eventLevels'
 import { getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import { dragAccessors, eventTimes } from './common'

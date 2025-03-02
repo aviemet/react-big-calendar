@@ -1,7 +1,7 @@
 import { navigate } from '@/utils/constants'
-import TimeGrid from '../TimeGridView'
+import TimeGrid from '../../components/TimeGrid'
 import { BaseViewProps, createViewComponent, ViewComponent } from '..'
-import { useCalendarContext } from '@/components/Calendar'
+import { useCalendarContext } from '@/Calendar'
 import { coerceDate } from '@/utils/helpers'
 import { CalendarEvent } from '@/types'
 

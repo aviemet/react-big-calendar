@@ -7,8 +7,8 @@ import qsa from 'dom-helpers/cjs/querySelectorAll'
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
-} from '@/utils/Selection'
-import TimeGridEvent from '@/Views/TimeGridView/TimeGridEvents'
+} from '@/utils/selection'
+import TimeGridEvent from '@/components/TimeGrid/TimeGridEvent'
 import { dragAccessors, eventTimes, pointInColumn } from './common'
 
 class EventContainerWrapper extends React.Component {

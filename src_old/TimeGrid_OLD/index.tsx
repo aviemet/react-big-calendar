@@ -3,20 +3,19 @@ import * as animationFrame from 'dom-helpers/animationFrame'
 import memoize from 'memoize-one'
 import getPosition from 'dom-helpers/position'
 import getWidth from 'dom-helpers/width'
-import DayColumn from '@/Views/TimeGridView/DayColumn'
+import DayColumn from '@/components/TimeGrid/DayColumn'
 import PopOverlay from '@/components/PopOverlay'
-import TimeGridHeader from '@/Views/TimeGridView/TimeGridHeader'
-import TimeGridHeaderResources from '@/Views/TimeGridView/TimeGridHeaderResources'
+import TimeGridHeader from '@/components/TimeGrid/TimeGridHeader'
+import TimeGridHeaderResources from '@/components/TimeGrid/TimeGridHeaderResources'
 import TimeGutter from '@/TimeGutter'
-import { NavigateAction } from '@/utils/constants'
 import { inRange, sortEvents } from '@/utils/eventLevels'
 import { notify } from '@/utils/helpers'
 import Resources from '@/utils/Resources'
 import { type DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 import { CalendarEvent, type Components, type Getters } from '@/types'
 import { type DateLocalizer } from '@/localizers'
-import { BaseViewProps, createViewComponent, ViewsProps, type ViewComponent } from '@/Views'
-import { CalendarProps, useCalendarContext } from '@/components/Calendar'
+import { BaseViewProps } from '@/Views'
+import { useCalendarContext } from '@/Calendar'
 import clsx from 'clsx'
 
 interface TimeGridViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
@@ -352,25 +351,7 @@ const TimeGridView = <TEvent extends CalendarEvent = CalendarEvent>({
   )
 }
 
-export default createViewComponent(TimeGridView, {
-  range: (date, { localizer }) => {
-    const start = localizer.startOf(date, 'day')
-    const end = localizer.endOf(date, 'day')
-    return { start, end }
-  },
-  navigate: (date, action) => {
-    switch(action) {
-      case 'PREV':
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)
-      case 'NEXT':
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
-      default:
-        return date
-    }
-  },
-  title: (date, { localizer }) => localizer.format(date, 'dayHeaderFormat'),
-})
-
+export default TimeGridView
 
 
 

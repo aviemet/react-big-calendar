@@ -1,16 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-
+import { useMemo, useRef, useState } from 'react'
+import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
-import * as TimeSlotUtils from '@/utils/TimeSlots'
-import { isSelected } from '@/utils/eventSelectionHelpers'
+import { getSlotMetrics } from '@/utils/TimeSlots'
 import { notify } from '@/utils/helpers'
 import * as DayEventLayout from '@/utils/DayEventLayout'
-import TimeGridEvent from './TimeGridEvents'
-import { useCalendarContext } from '@/components/Calendar'
-import { CalendarEvent, Getters } from '@/types'
+import TimeSlotGroup from './TimeSlotGroup'
+import TimeGridEvent from './TimeGridEvent'
+import { CalendarEvent, Components, Getters } from '@/types'
 import { Accessors } from '@/utils/accessors'
+import { useCalendarContext } from '@/Calendar'
+import { isSelected } from '@/utils/eventSelectionHelpers'
+import { SlotMetrics } from '@/utils/TimeSlots'
+import { DateLocalizer } from '@/localizers'
+import DayColumnWrapper from '@/DayColumnWrapper'
 
-interface TimeGridEventsProps<TEvent extends CalendarEvent = CalendarEvent> {
+interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
   backgroundEvents: TEvent[]
   step: number
@@ -42,7 +46,7 @@ interface TimeGridEventsProps<TEvent extends CalendarEvent = CalendarEvent> {
 }
 
 
-const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: TimeGridEventsProps<TEvent>) => {
+const DayColumn = (props: DayColumnProps) => {
   let {
     events,
     backgroundEvents,
@@ -81,7 +85,7 @@ const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: Tim
   }>({})
 
   const slotMetrics = useMemo(
-    () => TimeSlotUtils.getSlotMetrics({ min, max, step, timeslots, localizer }),
+    () => getSlotMetrics({ min, max, step, timeslots, localizer }),
     [min, max, step, timeslots, localizer]
   )
 
@@ -255,7 +259,141 @@ const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: Tim
     })
   }
 
-  const styledEvents = DayEventLayout.getStyledEvents({
+  const DayColumnWrapperComponent = components.dayColumnWrapper || DayColumnWrapper
+  const EventContainer = components.eventContainerWrapper
+
+  return (
+    <DayColumnWrapperComponent
+      ref={ containerRef }
+      date={ date }
+      style={ getters.dayProp(max, resource).style }
+      className={ clsx(
+        getters.dayProp(max, resource).className,
+        'rbc-day-slot',
+        'rbc-time-column',
+        {
+          'rbc-now': isNow ,
+          'rbc-today': isNow ,
+          'rbc-slot-selecting': selecting,
+        }
+      ) }
+      slotMetrics={ slotMetrics }
+      resource={ resource }
+    >
+      { slotMetrics.groups.map((group, index) => (
+        <TimeSlotGroup
+          key={ index }
+          group={ group }
+          resource={ resource }
+          getters={ getters }
+          components={ components }
+        />
+      )) }
+      <EventContainer
+        localizer={ localizer }
+        resource={ resource }
+        accessors={ accessors }
+        getters={ getters }
+        components={ components }
+        slotMetrics={ slotMetrics }
+      >
+        <div className={ clsx('rbc-events-container', { rtl }) }>
+          <EventsWrapper
+            events={ backgroundEvents }
+            isBackgroundEvent={ true }
+            rtl={ rtl }
+            selected={ selected }
+            accessors={ accessors }
+            localizer={ localizer }
+            getters={ getters }
+            components={ components }
+            step={ step }
+            timeslots={ timeslots }
+            dayLayoutAlgorithm={ dayLayoutAlgorithm }
+            resizable={ resizable }
+            slotMetrics={ slotMetrics }
+          />
+          <EventsWrapper
+            events={ events }
+            rtl={ rtl }
+            selected={ selected }
+            accessors={ accessors }
+            localizer={ localizer }
+            getters={ getters }
+            components={ components }
+            step={ step }
+            timeslots={ timeslots }
+            dayLayoutAlgorithm={ dayLayoutAlgorithm }
+            resizable={ resizable }
+            slotMetrics={ slotMetrics }
+          />
+        </div>
+      </EventContainer>
+
+      { selecting && (
+        <div
+          className="rbc-slot-selection"
+          style={ { top: selectState.top, height: selectState.height } }
+        >
+          <span>{ localizer.format(selectState, 'selectRangeFormat') }</span>
+        </div>
+      ) }
+      { isNow && intervalTriggeredRef.current && (
+        <div
+          className="rbc-current-time-indicator"
+          style={ { top: `${timeIndicatorPosition}%` } }
+        />
+      ) }
+    </DayColumnWrapperComponent>
+  )
+
+}
+
+export default DayColumn
+
+
+
+
+
+
+
+interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
+  events: TEvent[]
+  resource: any
+  isBackgroundEvent: boolean
+  rtl: boolean
+  selected: any
+  accessors: Accessors
+  localizer: DateLocalizer
+  getters: Getters
+  components: Components
+  step: number
+  timeslots: number
+  dayLayoutAlgorithm: any
+  resizable: boolean
+  slotMetrics: SlotMetrics
+}
+
+
+const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
+  events,
+  resource,
+  isBackgroundEvent = false,
+  rtl,
+  selected,
+  accessors,
+  localizer,
+  getters,
+  components,
+  step,
+  timeslots,
+  dayLayoutAlgorithm,
+  resizable,
+  slotMetrics,
+}: EventsWrapperProps<TEvent>) => {
+  const { messages } = localizer
+
+  let styledEvents = DayEventLayout.getStyledEvents({
     events,
     accessors,
     slotMetrics,
@@ -263,10 +401,10 @@ const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: Tim
     dayLayoutAlgorithm,
   })
 
-  return styledEvents.map(({ event, style }, idx) => {
-    const end = accessors.end(event)
-    const start = accessors.start(event)
-    const key = accessors.eventId(event) ?? `evt_${idx}`
+  return styledEvents.map(({ event, style }, index) => {
+    let end = accessors.end(event)
+    let start = accessors.start(event)
+    let key = accessors.eventId(event) ?? 'evt_' + index
     let format = 'eventTimeRangeFormat'
     let label
 
@@ -276,11 +414,11 @@ const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: Tim
     if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
     else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
 
-    if(startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
+    if(startsBeforeDay && startsAfterDay) label = messages.allDay
     else label = localizer.format({ start, end }, format)
 
-    const continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
-    const continuesAfter = startsAfterDay || slotMetrics.startsAfter(end)
+    let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
+    let continuesAfter = startsAfterDay || slotMetrics.startsAfter(end)
 
     return (
       <TimeGridEvent
@@ -296,15 +434,23 @@ const TimeGridEvents = <TEvent extends CalendarEvent = CalendarEvent>(props: Tim
         accessors={ accessors }
         resource={ resource }
         selected={ isSelected(event, selected) }
-        onClick={ (e) => notify(onSelectEvent, event, e) }
-        onDoubleClick={ (e) => notify(onDoubleClickEvent, event, e) }
-        onKeyPress={ (e) => notify(onKeyPressEvent, event, e) }
+        onClick={ (e) =>
+          this._select(
+            {
+              ...event,
+              ...(resource && {
+                sourceResource: resource,
+              }),
+              ...(isBackgroundEvent && { isBackgroundEvent: true }),
+            },
+            e
+          )
+        }
+        onDoubleClick={ (e) => this._doubleClick(event, e) }
         isBackgroundEvent={ isBackgroundEvent }
+        onKeyPress={ (e) => this._keyPress(event, e) }
         resizable={ resizable }
       />
     )
   })
 }
-
-
-export default TimeGridEvents

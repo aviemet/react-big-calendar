@@ -2,7 +2,8 @@ import { stringifyPercent } from '@/utils/helpers'
 import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
 import * as DayEventLayout from '@/utils/DayEventLayout'
 import { SlotMetrics } from '@/utils/TimeSlots'
-import { Accessors, Getters } from '@/types'
+import { Getters } from '@/types'
+import { Accessors } from '@/utils/accessors'
 import clsx from 'clsx'
 
 interface TimeGridEventsProps {

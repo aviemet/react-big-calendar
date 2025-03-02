@@ -1,7 +1,7 @@
 import React from 'react'
 import { navigate, NavigateAction, View } from './utils/constants'
 import { ViewsProps } from './Views'
-import { useCalendarContext } from './components/Calendar'
+import { useCalendarContext } from './Calendar'
 import clsx from 'clsx'
 
 export interface ToolbarProps {

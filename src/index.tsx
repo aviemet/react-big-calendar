@@ -6,7 +6,7 @@ export const components = {
   dateCellWrapper: NoopWrapper,
 }
 
-export { default as Calendar } from './components/Calendar'
+export { default as Calendar } from './Calendar'
 
 export {
   DateLocalizer,
@@ -20,6 +20,7 @@ export {
 export { default as move } from './utils/move'
 
 export {
-  views as Views,
   navigate as Navigate,
 } from './utils/constants'
+
+export { views as Views } from './Views'

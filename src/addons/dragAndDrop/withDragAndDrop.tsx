@@ -1,76 +1,59 @@
 
-import React from 'react'
+import { useState } from 'react'
 import clsx from 'clsx'
-
 import EventWrapper from './EventWrapper'
 import EventContainerWrapper from './EventContainerWrapper'
 import WeekWrapper from './WeekWrapper'
 import { mergeComponents } from './common'
 import { DnDContext } from './DnDContext'
+import CalendarComponent, { CalendarProps } from '@/Calendar'
 
-export default function withDragAndDrop(Calendar) {
-  class DragAndDropCalendar extends React.Component {
-    // static propTypes = {
-    //   ...Calendar.propTypes,
+interface DragAndDropCalendarProps extends CalendarProps {
+  onEventDrop: (event: any) => void
+  onEventResize: (event: any) => void
+  onDragStart: (event: any) => void
+  onDragOver: (event: any) => void
+  onDropFromOutside: (event: any) => void
+  dragFromOutsideItem: (event: any) => void
+  draggableAccessor: (event: any) => void
+  resizableAccessor: (event: any) => void
+  selectable: boolean | 'ignoreEvents'
+  resizable: boolean
+}
 
-    //   onEventDrop: PropTypes.func,
-    //   onEventResize: PropTypes.func,
-    //   onDragStart: PropTypes.func,
-    //   onDragOver: PropTypes.func,
-    //   onDropFromOutside: PropTypes.func,
+export default function withDragAndDrop(Calendar: typeof CalendarComponent) {
+  const DragAndDropCalendar = ({
+    components,
+    elementProps,
+    onEventDrop,
+    onEventResize,
+    onDragStart,
+    onDragOver,
+    onDropFromOutside,
+    dragFromOutsideItem,
+    draggableAccessor = null,
+    resizableAccessor = null,
+    selectable = false,
+    resizable = true,
+    ...props
+  }: DragAndDropCalendarProps) => {
+    const [interacting, setInteracting] = useState(false)
 
-    //   dragFromOutsideItem: PropTypes.func,
-
-    //   draggableAccessor: accessor,
-    //   resizableAccessor: accessor,
-
-    //   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-    //   resizable: PropTypes.bool,
-    // }
-
-    // static defaultProps = {
-    //   ...Calendar.defaultProps,
-    //   draggableAccessor: null,
-    //   resizableAccessor: null,
-    //   resizable: true,
-    // }
-
-    constructor(...args) {
-      super(...args)
-
-      this.state = { interacting: false }
-    }
-
-    getDnDContextValue() {
-      return {
-        draggable: {
-          onStart: this.handleInteractionStart,
-          onEnd: this.handleInteractionEnd,
-          onBeginAction: this.handleBeginAction,
-          onDropFromOutside: this.props.onDropFromOutside,
-          dragFromOutsideItem: this.props.dragFromOutsideItem,
-          draggableAccessor: this.props.draggableAccessor,
-          resizableAccessor: this.props.resizableAccessor,
-          dragAndDropAction: this.state,
-        },
-      }
-    }
-
-    defaultOnDragOver = (event) => {
+    const defaultOnDragOver = (event) => {
       event.preventDefault()
     }
 
-    handleBeginAction = (event, action, direction) => {
+    const handleBeginAction = (event, action, direction) => {
       this.setState({ event, action, direction })
       const { onDragStart } = this.props
       if(onDragStart) onDragStart({ event, action, direction })
     }
 
-    handleInteractionStart = () => {
+    const handleInteractionStart = () => {
       if(this.state.interacting === false) this.setState({ interacting: true })
     }
 
-    handleInteractionEnd = (interactionInfo) => {
+    const handleInteractionEnd = (interactionInfo) => {
       const { action, event } = this.state
       if(!action) return
 
@@ -89,45 +72,47 @@ export default function withDragAndDrop(Calendar) {
       if(action === 'resize' && onEventResize) onEventResize(interactionInfo)
     }
 
-    render() {
-      const { selectable, elementProps, components, ...props } = this.props
-      const { interacting } = this.state
+    const dndComponents = mergeComponents(components, {
+      eventWrapper: EventWrapper,
+      eventContainerWrapper: EventContainerWrapper,
+      weekWrapper: WeekWrapper,
+    })
 
-      delete props.onEventDrop
-      delete props.onEventResize
-      props.selectable = selectable ? 'ignoreEvents' : false
+    const elementPropsWithDropFromOutside = onDropFromOutside
+      ? {
+        ...elementProps,
+        onDragOver: onDragOver || defaultOnDragOver,
+      }
+      : elementProps
 
-      this.components = mergeComponents(components, {
-        eventWrapper: EventWrapper,
-        eventContainerWrapper: EventContainerWrapper,
-        weekWrapper: WeekWrapper,
-      })
+    props.className = clsx(
+      props.className,
+      'rbc-addons-dnd',
+      !!interacting && 'rbc-addons-dnd-is-dragging'
+    )
 
-      const elementPropsWithDropFromOutside = this.props.onDropFromOutside
-        ? {
-          ...elementProps,
-          onDragOver: this.props.onDragOver || this.defaultOnDragOver,
-        }
-        : elementProps
-
-      props.className = clsx(
-        props.className,
-        'rbc-addons-dnd',
-        !!interacting && 'rbc-addons-dnd-is-dragging'
-      )
-
-      const context = this.getDnDContextValue()
-      return (
-        <DnDContext.Provider value={ context }>
-          <Calendar
-            { ...props }
-            elementProps={ elementPropsWithDropFromOutside }
-            components={ this.components }
-          />
-        </DnDContext.Provider>
-      )
-    }
+    return (
+      <DnDContext.Provider value={ {
+        draggable: {
+          onStart: handleInteractionStart,
+          onEnd: handleInteractionEnd,
+          onBeginAction: handleBeginAction,
+          onDropFromOutside: onDropFromOutside,
+          dragFromOutsideItem: dragFromOutsideItem,
+          draggableAccessor: draggableAccessor,
+          resizableAccessor: resizableAccessor,
+          dragAndDropAction: setInteracting,
+        },
+      } }>
+        <Calendar
+          { ...props }
+          elementProps={ elementPropsWithDropFromOutside }
+          components={ dndComponents }
+        />
+      </DnDContext.Provider>
+    )
   }
+
 
   return DragAndDropCalendar
 }

@@ -2,7 +2,7 @@ import React, { forwardRef, useRef } from 'react'
 import { Overlay } from 'react-overlays'
 import Popup from './Popup'
 import { CalendarEvent, Getters } from '@/types'
-import { useCalendarContext } from '@/components/Calendar'
+import { useCalendarContext } from '@/Calendar'
 import { Accessors } from '@/utils/accessors'
 
 interface PopOverlayProps {

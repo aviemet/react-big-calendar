@@ -23,7 +23,7 @@ type AccessorFunction<T extends AccessorInput = AccessorInput> = (data: T) => un
  *    accessor(data, func)    // => retrieves func(data)
  *    ... otherwise null
  */
-function accessor<T extends AccessorInput>(
+export function accessor<T extends AccessorInput>(
   data: T,
   field: keyof T | AccessorFunction<T>
 ): unknown {

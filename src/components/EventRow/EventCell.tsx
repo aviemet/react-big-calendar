@@ -1,6 +1,6 @@
 import React from 'react'
 import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
-import { useCalendarContext } from '../Calendar'
+import { useCalendarContext } from '../../Calendar'
 import { CalendarEvent, Getters } from '@/types'
 import clsx from 'clsx'
 import { Accessors } from '@/utils/accessors'
