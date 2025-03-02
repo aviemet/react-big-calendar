@@ -1,4 +1,3 @@
-import React from 'react'
 import { DateLocalizer } from '@/localizers'
 import { Components, CalendarEvent } from '@/types'
 import Header from '@/Header'

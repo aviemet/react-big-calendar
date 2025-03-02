@@ -2,13 +2,13 @@ import { CalendarEvent } from '@/types'
 import EventRowMixin from './EventRowMixin'
 import clsx from 'clsx'
 
-interface EventRowProps {
-  segments: CalendarEvent[]
+interface EventRowProps<TEvent extends CalendarEvent> {
+  segments: TEvent[]
   slotMetrics: { slots: number }
   className: string
 }
 
-const EventRow = (props: EventRowProps) => {
+const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) => {
   const {
     segments,
     slotMetrics,
@@ -36,14 +36,5 @@ const EventRow = (props: EventRowProps) => {
     </div>
   )
 }
-
-// EventRow.propTypes = {
-//   segments: PropTypes.array,
-//   ...EventRowMixin.propTypes,
-// }
-
-// EventRow.defaultProps = {
-//   ...EventRowMixin.defaultProps,
-// }
 
 export default EventRow

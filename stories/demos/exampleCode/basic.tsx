@@ -12,6 +12,8 @@ import * as dates from '../../../src/utils/dates'
 
 const dLocalizer = dayjsLocalizer(dayjs)
 
+// console.log({ span: dLocalizer.daySpan(new Date(2025, 2, 1), new Date(2025, 2, 2)) })
+
 const ColoredDateCellWrapper = ({ children }) =>(
   React.cloneElement(React.Children.only(children), {
     style: {

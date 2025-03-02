@@ -38,7 +38,7 @@ import { CalendarEvent } from '@/types'
 
 export type RangeFunction = (range: DateRange, culture: Culture, local: DateLocalizer) => string
 
-function _format(localizer: DateLocalizer, formatter, value: FormatInput, format: string, culture: Culture) {
+function _format(localizer: DateLocalizer, formatter: (value: FormatInput, format: string, culture?: Culture) => string, value: FormatInput, format: string, culture: Culture) {
   let result =
     typeof format === 'function'
       ? format(value, culture, localizer)
@@ -46,7 +46,7 @@ function _format(localizer: DateLocalizer, formatter, value: FormatInput, format
 
   invariant(
     result === null || typeof result === 'string',
-    '`localizer format(..)` must return a string, null, or undefined'
+    '`localizer format(..)` must be a function'
   )
 
   return result
@@ -103,36 +103,38 @@ function daySpan(start: Date, end: Date) {
   return duration(start, end, 'day')
 }
 
-// These two are used by eventLevels
-function sortEvents({
-  evtA: { start: aStart, end: aEnd, allDay: aAllDay },
-  evtB: { start: bStart, end: bEnd, allDay: bAllDay },
-}: {
+interface EventComparison {
   evtA: { start: Date, end: Date, allDay: boolean }
   evtB: { start: Date, end: Date, allDay: boolean }
-}) {
+}
+
+interface EventRangeComparison {
+  event: { start: Date, end: Date }
+  range: { start: Date, end: Date }
+}
+
+function sortEvents(comparison: EventComparison): number {
+  const { evtA: { start: aStart, end: aEnd, allDay: aAllDay },
+    evtB: { start: bStart, end: bEnd, allDay: bAllDay } } = comparison
+
   let startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
 
   let durA = daySpan(aStart, aEnd)
-
   let durB = daySpan(bStart, bEnd)
 
   return (
     startSort || // sort by start Day first
     durB - durA || // events spanning multiple days go first
-    !!bAllDay - !!aAllDay || // then allDay single day events
+    +!!bAllDay - +!!aAllDay || // then allDay single day events
     +aStart - +bStart || // then sort by start time
     +aEnd - +bEnd // then sort by end time
   )
 }
 
-function inEventRange({
-  event: { start, end },
-  range: { start: rangeStart, end: rangeEnd },
-}: {
-  event: { start: Date, end: Date }
-  range: { start: Date, end: Date }
-}) {
+function inEventRange(comparison: EventRangeComparison): boolean {
+  const { event: { start, end },
+    range: { start: rangeStart, end: rangeEnd } } = comparison
+
   let eStart = startOf(start, 'day')
 
   let startsBeforeEnd = lte(eStart, rangeEnd, 'day')
@@ -179,7 +181,7 @@ export interface DateLocalizerSpec {
   firstVisibleDay?: (date: Date, localizer: any) => Date
   lastVisibleDay?: (date: Date, localizer: any) => Date
   visibleDays?: (date: Date, localizer: any) => Date[]
-
+  daySpan?: (dateA: Date, dateB: Date) => number
   getSlotDate?: (date: Date, minutesFromMidnight: number, offset: number) => Date
   getTimezoneOffset?: (date: Date) => number
   getDstOffset?: (date: Date, dateB: Date) => number
@@ -187,22 +189,50 @@ export interface DateLocalizerSpec {
   getMinutesFromMidnight?: (date: Date) => number
   continuesPrior?: (dateA: Date, dateB: Date) => boolean
   continuesAfter?: (dateA: Date, dateB: Date, dateC: Date) => boolean
-  sortEvents?: (eventA: CalendarEvent, eventB: CalendarEvent) => boolean
+  sortEvents?: (eventA: CalendarEvent, eventB: CalendarEvent) => number
   inEventRange?: (event: CalendarEvent, range: DateRange) => boolean
   isSameDate?: (dateA: Date, dateB: Date) => boolean
   startAndEndAreDateOnly?: (dateA: Date, dateB: Date) => boolean
-  segmentOffset?: number
+  browserTZOffset?: () => number
+}
+
+function adaptToEventComparison(eventA: CalendarEvent, eventB: CalendarEvent): EventComparison {
+  return {
+    evtA: {
+      start: eventA.start,
+      end: eventA.end,
+      allDay: eventA.allDay || false,
+    },
+    evtB: {
+      start: eventB.start,
+      end: eventB.end,
+      allDay: eventB.allDay || false,
+    },
+  }
+}
+
+function adaptToEventRangeComparison(event: CalendarEvent, range: DateRange): EventRangeComparison {
+  return {
+    event: {
+      start: event.start,
+      end: event.end,
+    },
+    range,
+  }
+}
+
+function sortEventsAdapter(eventA: CalendarEvent, eventB: CalendarEvent): number {
+  return sortEvents(adaptToEventComparison(eventA, eventB))
+}
+
+function inEventRangeAdapter(event: CalendarEvent, range: DateRange): boolean {
+  return inEventRange(adaptToEventRangeComparison(event, range))
 }
 
 export class DateLocalizer {
   formats: Formats
   startOfWeek: (culture?: Culture) => StartOfWeek
-
-  constructor(spec: DateLocalizerSpec)
-
-  format(value: FormatInput, format: string, culture?: Culture): string
   messages: Messages<CalendarEvent>
-
   merge: (date: Date, time: Date) => Date | null
   inRange: typeof inRange
   lt: typeof lt
@@ -220,10 +250,10 @@ export class DateLocalizer {
   min: typeof min
   max: typeof max
   minutes: typeof minutes
+  daySpan: (dateA: Date, dateB: Date) => number
   firstVisibleDay: (date: Date, localizer: any) => Date
   lastVisibleDay: (date: Date, localizer: any) => Date
   visibleDays: (date: Date, localizer: any) => Date[]
-
   getSlotDate: (date: Date, minutesFromMidnight: number, offset: number) => Date
   getTimezoneOffset: (date: Date) => number
   getDstOffset: (date: Date, dateB: Date) => number
@@ -231,11 +261,12 @@ export class DateLocalizer {
   getMinutesFromMidnight: (date: Date) => number
   continuesPrior: (dateA: Date, dateB: Date) => boolean
   continuesAfter: (dateA: Date, dateB: Date, dateC: Date) => boolean
-  sortEvents: (eventA: CalendarEvent, eventB: CalendarEvent) => boolean
+  sortEvents: (eventA: CalendarEvent, eventB: CalendarEvent) => number
   inEventRange: (event: CalendarEvent, range: DateRange) => boolean
   isSameDate: (dateA: Date, dateB: Date) => boolean
   startAndEndAreDateOnly: (dateA: Date, dateB: Date) => boolean
   segmentOffset: number
+  format: (value: FormatInput, format: string | keyof Formats, culture?: Culture) => string
 
   constructor(spec: DateLocalizerSpec) {
     invariant(
@@ -249,8 +280,7 @@ export class DateLocalizer {
 
     this.formats = spec.formats
     this.format = (...args) => _format(this, spec.format, ...args)
-    // These date arithmetic methods can be overridden by the localizer
-    this.startOfWeek = spec.firstOfWeek
+    this.startOfWeek = spec.firstOfWeek as (culture?: Culture) => StartOfWeek
     this.merge = spec.merge || merge
     this.inRange = spec.inRange || inRange
     this.lt = spec.lt || lt
@@ -272,7 +302,6 @@ export class DateLocalizer {
     this.firstVisibleDay = spec.firstVisibleDay || firstVisibleDay
     this.lastVisibleDay = spec.lastVisibleDay || lastVisibleDay
     this.visibleDays = spec.visibleDays || visibleDays
-
     this.getSlotDate = spec.getSlotDate || getSlotDate
     this.getTimezoneOffset =
       spec.getTimezoneOffset || ((value) => value.getTimezoneOffset())
@@ -282,8 +311,8 @@ export class DateLocalizer {
       spec.getMinutesFromMidnight || getMinutesFromMidnight
     this.continuesPrior = spec.continuesPrior || continuesPrior
     this.continuesAfter = spec.continuesAfter || continuesAfter
-    this.sortEvents = spec.sortEvents || sortEvents
-    this.inEventRange = spec.inEventRange || inEventRange
+    this.sortEvents = spec.sortEvents || sortEventsAdapter
+    this.inEventRange = spec.inEventRange || inEventRangeAdapter
     this.isSameDate = spec.isSameDate || isSameDate
     this.startAndEndAreDateOnly =
       spec.startAndEndAreDateOnly || startAndEndAreDateOnly
@@ -306,7 +335,10 @@ export function mergeWithDefaults(
     ...localizer,
     messages: buildMessages(messages),
     startOfWeek: () => localizer.startOfWeek(culture),
-    format: (value: FormatInput, format: string) =>
-      localizer.format(value, formats[format] || format, culture),
+    format: (value: FormatInput, format: string | keyof Formats) =>
+      localizer.format(value, typeof formats[format as keyof Formats] === 'string'
+        ? formats[format as keyof Formats] as string
+        : format as string,
+      culture),
   }
 }

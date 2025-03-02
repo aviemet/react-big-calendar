@@ -391,6 +391,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     visibleDays,
 
     format(value, format, culture) {
+      console.log({ value: dayjs(value) })
       return locale(dayjs(value), culture).format(format)
     },
 

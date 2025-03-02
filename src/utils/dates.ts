@@ -116,26 +116,42 @@ export function isJustDate(date: Date) {
   )
 }
 
-type DurationUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'day' | 'week' | 'month' | 'year'
-export function duration(start: Date, end: Date, unit: 'week', firstOfWeek: StartOfWeek): number
-export function duration(start: Date, end: Date, unit: Exclude<DurationUnit, 'week'>): number
-export function duration(start: Date, end: Date, unit: DurationUnit, firstOfWeek?: StartOfWeek) {
-  if(unit === 'week') {
-    return dateArithmetic.diff(
-      dateArithmetic.weekday(start, undefined, firstOfWeek),
-      dateArithmetic.weekday(end, undefined, firstOfWeek),
-      'seconds',
+type DateArithmeticUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'date' | 'weekday' | 'month' | 'year' | 'decade' | 'century'
+
+export function duration(start: Date, end: Date, unit: DateArithmeticUnit | 'week' | 'day', firstOfWeek?: StartOfWeek) {
+  if(unit === 'week' || unit === 'weekday') {
+    return Math.abs(
+      dateArithmetic.weekday(start, undefined, firstOfWeek) -
+      dateArithmetic.weekday(end, undefined, firstOfWeek)
     )
   }
 
-  const timeMethod = dateArithmetic[unit === 'day' ? 'date' : unit]
+  const actualUnit = unit === 'day' ? 'date' as const : unit as DateArithmeticUnit
 
-  return dateArithmetic.diff(
-    timeMethod(start, undefined),
-    timeMethod(end, undefined),
-    'seconds',
+  return Math.abs(
+    dateArithmetic[actualUnit](start, undefined) -
+    dateArithmetic[actualUnit](end, undefined)
   )
 }
+
+// type DurationUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'day' | 'week' | 'month' | 'year'
+// export function duration(start: Date, end: Date, unit: 'week', firstOfWeek: StartOfWeek): number
+// export function duration(start: Date, end: Date, unit: Exclude<DurationUnit, 'week'>): number
+// export function duration(start: Date, end: Date, unit: DurationUnit, firstOfWeek?: StartOfWeek) {
+// if(unit === 'week') {
+//   return dateArithmetic.diff(
+//     dateArithmetic.weekday(start, undefined, firstOfWeek),
+//     dateArithmetic.weekday(end, undefined, firstOfWeek),
+//     'seconds',
+//   )
+// }
+
+//   const timeMethod = dateArithmetic[unit === 'day' ? 'date' : unit]
+
+//   return Math.abs(
+//     timeMethod(start, undefined).getTime() - timeMethod(end, undefined).getTime()
+//   )
+// }
 
 export function diff(dateA: Date, dateB: Date, unit: Unit) {
   if(!unit || unit === 'milliseconds') return Math.abs(+dateA - +dateB)

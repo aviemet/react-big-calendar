@@ -48,8 +48,16 @@ type AccessorKey<T extends AccessorInput> = keyof T | AccessorFunction<T>
 export const wrapAccessor = <T extends AccessorInput>(acc: AccessorKey<T>) =>
   (data: T) => accessor(data, acc)
 
-export const wrapAccessors = <TEvent extends object = CalendarEvent, TResource extends object = object>(
-  accessors: Partial<Record<keyof Accessors<TEvent, TResource>, AccessorKey<TEvent>>>
+export const wrapEventAccessor = <TEvent extends CalendarEvent = CalendarEvent, K extends keyof TEvent | string = string>(
+  acc: K | ((event: TEvent) => any)
+) => (data: TEvent) => accessor(data, acc as keyof TEvent | ((event: TEvent) => any))
+
+export const wrapResourceAccessor = <TResource extends Resource = Resource, K extends keyof TResource | string = string>(
+  acc: K | ((resource: TResource) => any)
+) => (data: TResource) => accessor(data, acc as keyof TResource | ((resource: TResource) => any))
+
+export const wrapAccessors = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>(
+  accessors: Partial<Record<keyof Accessors<TEvent, TResource>, AccessorKey<TEvent | TResource>>>
 ): Partial<Record<keyof Accessors<TEvent, TResource>, AccessorFunction<TEvent>>> => {
   return Object.keys(accessors).reduce((acc, key) => {
     acc[key as keyof Accessors<TEvent, TResource>] = wrapAccessor(accessors[key as keyof Accessors<TEvent, TResource>])

@@ -15,7 +15,7 @@ import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms
 import { Messages } from '@/utils/messages'
 import {  } from '@/localizers/types'
 import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
-import { Accessors, wrapAccessor } from '@/utils/accessors'
+import { wrapEventAccessor, wrapResourceAccessor } from '@/utils/accessors'
 import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, {
@@ -23,7 +23,6 @@ import VIEWS, {
   BaseViewProps,
   View,
   views as viewStrings,
-  type ViewsProps,
 } from '@/Views'
 import createContext from '@/hooks/createContext'
 
@@ -32,13 +31,13 @@ import {
   type Components,
   type DayPropGetter,
   type EventPropGetter,
-  type EventProps,
   type Getters,
   type SlotGroupPropGetter,
   type SlotInfo,
   type SlotPropGetter,
 } from '@/types'
 import clsx from 'clsx'
+import { Resource } from './utils/Resources'
 
 type CalendarContext = {
   date: Date
@@ -49,7 +48,7 @@ type CalendarContext = {
 const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
 export { useCalendarContext }
 
-export interface CalendarProps<TEvent extends object = CalendarEvent, TResource extends object = object> {
+export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   children?: React.ReactNode
   className?: string | undefined
   style?: React.CSSProperties | undefined
@@ -777,7 +776,7 @@ import useMemo from 'react';
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
 }
 
-const Calendar = <TResource extends object, TEvent extends object = CalendarEvent>(props: CalendarProps<TResource, TEvent>) => {
+const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>(props: CalendarProps<TEvent, TResource>) => {
   const {
     date,
     events = [],
@@ -799,12 +798,9 @@ const Calendar = <TResource extends object, TEvent extends object = CalendarEven
     startAccessor = 'start',
     endAccessor = 'end',
     resourceAccessor = 'resourceId',
-
     resourceIdAccessor = 'id',
     resourceTitleAccessor = 'title',
-
     eventIdAccessor = 'id',
-
     longPressThreshold = 250,
     getNow = () => new Date(),
     dayLayoutAlgorithm = 'overlap',
@@ -856,17 +852,17 @@ const Calendar = <TResource extends object, TEvent extends object = CalendarEven
     [viewNames]
   )
 
-  const accessors: Accessors<TEvent, TResource> = useMemo(() => {
+  const accessors = useMemo(() => {
     return {
-      start: wrapAccessor(startAccessor),
-      end: wrapAccessor(endAccessor),
-      allDay: wrapAccessor(allDayAccessor),
-      tooltip: wrapAccessor(tooltipAccessor),
-      title: wrapAccessor(titleAccessor),
-      resource: wrapAccessor(resourceAccessor),
-      resourceId: wrapAccessor(resourceIdAccessor),
-      resourceTitle: wrapAccessor(resourceTitleAccessor),
-      eventId: wrapAccessor(eventIdAccessor),
+      start: wrapEventAccessor(startAccessor),
+      end: wrapEventAccessor(endAccessor),
+      allDay: wrapEventAccessor(allDayAccessor),
+      tooltip: wrapEventAccessor(tooltipAccessor),
+      title: wrapEventAccessor(titleAccessor),
+      resource: wrapResourceAccessor(resourceAccessor),
+      resourceId: wrapResourceAccessor(resourceIdAccessor),
+      resourceTitle: wrapResourceAccessor(resourceTitleAccessor),
+      eventId: wrapEventAccessor(eventIdAccessor),
     }
   }, [allDayAccessor, endAccessor, eventIdAccessor, resourceAccessor, resourceIdAccessor, resourceTitleAccessor, startAccessor, titleAccessor, tooltipAccessor])
 
@@ -897,7 +893,7 @@ const Calendar = <TResource extends object, TEvent extends object = CalendarEven
 
     if(typeof views === 'object') {
       return mapValues(views, (value, key) => {
-        if(value === true) {
+        if(value) {
           return VIEWS[key]
         }
 

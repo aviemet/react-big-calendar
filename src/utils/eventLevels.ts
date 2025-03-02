@@ -86,21 +86,26 @@ export function sortWeekEvents<TEvent extends CalendarEvent>(events: TEvent[], a
   const base = [...events]
   const multiDayEvents: TEvent[] = []
   const standardEvents: TEvent[] = []
+
   base.forEach((event) => {
     const startCheck = accessors.start(event)
     const endCheck = accessors.end(event)
+
     if(localizer.daySpan(startCheck, endCheck) > 1) {
       multiDayEvents.push(event)
     } else {
       standardEvents.push(event)
     }
   })
+
   const multiSorted = multiDayEvents.sort((a, b) =>
     sortEvents(a, b, accessors, localizer)
   )
+
   const standardSorted = standardEvents.sort((a, b) =>
     sortEvents(a, b, accessors, localizer)
   )
+
   return [...multiSorted, ...standardSorted]
 }
 

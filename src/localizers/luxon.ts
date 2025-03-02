@@ -435,3 +435,5 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     browserTZOffset,
   })
 }
+
+export default luxonLocalizer
