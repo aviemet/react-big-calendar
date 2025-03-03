@@ -1,4 +1,4 @@
-import { DateLocalizer, RangeFunction } from '.'
+import { DateLocalizer, EventComparison, EventRangeComparison, RangeFunction } from '.'
 
 // import dayjs plugins
 // Note that the timezone plugin is not imported here
@@ -55,14 +55,15 @@ export const formats: Formats = {
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
-function fixUnit(unit: Unit) {
+function fixUnit(unit?: Unit) {
   let datePart = unit ? unit.toLowerCase() : unit
+
   if(datePart === 'FullYear') {
     datePart = 'year'
   } else if(!datePart) {
     datePart = undefined
   }
-  return datePart
+  return datePart as Unit | undefined
 }
 
 type DayjsLib = typeof dayjs
@@ -114,14 +115,14 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   }
 
   /*** BEGIN localized date arithmetic methods with dayjs ***/
-  function defineComparators(a: Date, b: Date, unit: Unit) {
+  function defineComparators(a: Date, b: Date, unit?: Unit) {
     const datePart = fixUnit(unit)
     const dtA = datePart ? dayjs(a).startOf(datePart) : dayjs(a)
     const dtB = datePart ? dayjs(b).startOf(datePart) : dayjs(b)
     return [dtA, dtB, datePart]
   }
 
-  function startOf(date: Date | null = null, unit: Unit) {
+  function startOf(date: Date | null = null, unit?: Unit) {
     const datePart = fixUnit(unit)
     if(datePart) {
       return dayjs(date).startOf(datePart).toDate()
@@ -129,7 +130,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     return dayjs(date).toDate()
   }
 
-  function endOf(date: Date | null = null, unit: Unit) {
+  function endOf(date: Date | null = null, unit?: Unit) {
     const datePart = fixUnit(unit)
     if(datePart) {
       return dayjs(date).endOf(datePart).toDate()
@@ -139,31 +140,31 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
 
   // dayjs comparison operations *always* convert both sides to dayjs objects
   // prior to running the comparisons
-  function eq(a: Date, b: Date, unit: Unit) {
+  function eq(a: Date, b: Date, unit?: Unit) {
     const [dtA, dtB, datePart] = defineComparators(a, b, unit)
     return dtA.isSame(dtB, datePart)
   }
 
-  function neq(a: Date, b: Date, unit: Unit) {
+  function neq(a: Date, b: Date, unit?: Unit) {
     return !eq(a, b, unit)
   }
 
-  function gt(a: Date, b: Date, unit: Unit) {
+  function gt(a: Date, b: Date, unit?: Unit) {
     const [dtA, dtB, datePart] = defineComparators(a, b, unit)
     return dtA.isAfter(dtB, datePart)
   }
 
-  function lt(a: Date, b: Date, unit: Unit) {
+  function lt(a: Date, b: Date, unit?: Unit) {
     const [dtA, dtB, datePart] = defineComparators(a, b, unit)
     return dtA.isBefore(dtB, datePart)
   }
 
-  function gte(a: Date, b: Date, unit: Unit) {
+  function gte(a: Date, b: Date, unit?: Unit) {
     const [dtA, dtB, datePart] = defineComparators(a, b, unit)
     return dtA.isSameOrBefore(dtB, datePart)
   }
 
-  function lte(a: Date, b: Date, unit: Unit) {
+  function lte(a: Date, b: Date, unit?: Unit) {
     const [dtA, dtB, datePart] = defineComparators(a, b, unit)
     return dtA.isSameOrBefore(dtB, datePart)
   }
@@ -199,7 +200,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     return dayjsLib(`${dt} ${tm}`, 'MM/DD/YYYY HH:mm:ss').toDate()
   }
 
-  function add(date: Date, adder: number, unit: Unit) {
+  function add(date: Date, adder: number, unit?: Unit) {
     const datePart = fixUnit(unit)
     return dayjs(date).add(adder, datePart).toDate()
   }
@@ -314,10 +315,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   function sortEvents({
     evtA: { start: aStart, end: aEnd, allDay: aAllDay },
     evtB: { start: bStart, end: bEnd, allDay: bAllDay },
-  }: {
-    evtA: { start: Date, end: Date, allDay: boolean }
-    evtB: { start: Date, end: Date, allDay: boolean }
-  }) {
+  }: EventComparison) {
     const startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
 
     const durA = daySpan(aStart, aEnd)
@@ -327,7 +325,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     return (
       startSort || // sort by start Day first
       durB - durA || // events spanning multiple days go first
-      !!bAllDay - !!aAllDay || // then allDay single day events
+      +!!bAllDay - +!!aAllDay || // then allDay single day events
       +aStart - +bStart || // then sort by start time *don't need dayjs conversion here
       +aEnd - +bEnd // then sort by end time *don't need dayjs conversion here either
     )
@@ -336,10 +334,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   function inEventRange({
     event: { start, end },
     range: { start: rangeStart, end: rangeEnd },
-  }: {
-    event: { start: Date, end: Date }
-    range: { start: Date, end: Date }
-  }) {
+  }: EventRangeComparison) {
     const startOfDay = dayjs(start).startOf('day')
     const eEnd = dayjs(end)
     const rStart = dayjs(rangeStart)
@@ -391,7 +386,6 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     visibleDays,
 
     format(value, format, culture) {
-      console.log({ value: dayjs(value) })
       return locale(dayjs(value), culture).format(format)
     },
 

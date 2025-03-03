@@ -3,13 +3,14 @@ import { coerceDate, notify } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent, Components, Getters } from '@/types'
+import { DateLocalizer } from '@/localizers'
 
 interface BackgroundCellsProps {
   date?: Date
   getNow: () => Date
-  getters: object
-  components: object
+  getters: Getters
+  components: Components
   container?: () => HTMLElement
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
   selectable?: boolean | 'ignoreEvents'
@@ -20,8 +21,8 @@ interface BackgroundCellsProps {
   range: Date[]
   rtl?: boolean
   type?: string
-  resourceId?: any
-  localizer?: any
+  resourceId?: string | number
+  localizer?: DateLocalizer
 }
 
 const BackgroundCells = (props: BackgroundCellsProps) => {

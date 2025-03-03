@@ -2,9 +2,9 @@ import EventRowMixin from './EventRowMixin'
 import { eventLevels } from '@/utils/eventLevels'
 import { range } from 'lodash-es'
 import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent, Components } from '@/types'
 import { SlotMetrics } from '@/utils/TimeSlots'
+import { DateLocalizer } from '@/localizers'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
 let eventsInSlot = (segments, slot) => {
@@ -15,15 +15,18 @@ interface EventEndingRowProps {
   segments: CalendarEvent[]
   slotMetrics: SlotMetrics
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
+  localizer: DateLocalizer
+  components: Components
 }
 
 const EventEndingRow = ({
   segments,
   slotMetrics,
+  localizer,
+  components,
   ...props
 }: EventEndingRowProps) => {
   const { slots } = slotMetrics
-  const { localizer, components } = useCalendarContext()
 
   const canRenderSlotEvent = (slot: number, span: number) => {
     return range(slot, slot + span).every((s) => {

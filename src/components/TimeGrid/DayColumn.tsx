@@ -8,7 +8,6 @@ import TimeSlotGroup from './TimeSlotGroup'
 import TimeGridEvent from './TimeGridEvent'
 import { CalendarEvent, Components, Getters } from '@/types'
 import { Accessors } from '@/utils/accessors'
-import { useCalendarContext } from '@/Calendar'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { SlotMetrics } from '@/utils/TimeSlots'
 import { DateLocalizer } from '@/localizers'
@@ -43,6 +42,8 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   dragThroughEvents: boolean
   resource: any
   dayLayoutAlgorithm: any
+  localizer: DateLocalizer
+  components: Components
 }
 
 
@@ -71,10 +72,9 @@ const DayColumn = (props: DayColumnProps) => {
     onDoubleClickEvent,
     onKeyPressEvent,
     dayLayoutAlgorithm,
+    localizer,
+    components,
   } = props
-
-  const { localizer, components } = useCalendarContext()
-
   const [selecting, setSelecting] = useState(false)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState<number>(null)
   const [selectState, setSelectState] = useState<{

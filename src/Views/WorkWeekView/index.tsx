@@ -1,4 +1,3 @@
-import { useCalendarContext } from '@/Calendar'
 import { BaseViewProps, createViewComponent, ViewComponent } from '@/Views'
 import TimeGrid from '../../components/TimeGrid'
 import WeekView from '../WeekView'
@@ -18,8 +17,10 @@ interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
   enableAutoScroll?: boolean
 }
 
-const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>({
+  localizer,
+  ...props
+}: WorkWeekProps<TEvent>) => {
 
   const {
     date,

@@ -5,7 +5,7 @@ import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'
 import DayView from './DayView'
 import AgendaView from './AgendaView'
-import { type Culture, type DateFormat } from '../localizers'
+import { DateLocalizer, type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../Calendar'
 import { CalendarEvent, type Components, type Getters, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
@@ -52,6 +52,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   rtl?: boolean | undefined
   width?: number | undefined
   accessors?: Accessors<TEvent> | undefined
+  localizer: DateLocalizer
   components?: Components<TEvent, TResource> | undefined
   getters?: Getters<TEvent> | undefined
   selected?: object | undefined

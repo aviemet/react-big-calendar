@@ -10,12 +10,12 @@ import TimeGridHeaderResources from './TimeGridHeaderResources'
 import TimeGutter from './TimeGutter'
 import { inRange, sortEvents } from '@/utils/eventLevels'
 import { notify } from '@/utils/helpers'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent, Components } from '@/types'
 import { BaseViewProps } from '@/Views'
-import { useCalendarContext } from '@/Calendar'
 import Resources, { Resource } from '@/utils/Resources'
 import { Accessors } from '@/utils/accessors'
 import { Overlay } from 'react-overlays'
+import { DateLocalizer } from '@/localizers'
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   resourceGroupingLayout?: boolean
@@ -31,6 +31,8 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
     x: number
     y: number
   }
+  localizer: DateLocalizer
+  components: Components
 }
 
 const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
@@ -73,8 +75,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   popup,
   handleDragStart,
   popupOffset,
+  localizer,
 }: TimeGridProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
   const [isOverflowing, setIsOverflowing] = useState(false)

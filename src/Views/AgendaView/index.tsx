@@ -6,8 +6,7 @@ import scrollbarSize from 'dom-helpers/scrollbarSize'
 import { navigate } from '@/utils/constants'
 import { inRange } from '@/utils/eventLevels'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { BaseViewProps, createViewComponent, ViewComponent } from '..'
-import { useCalendarContext } from '@/Calendar'
+import { BaseViewProps, createViewComponent } from '..'
 import { CalendarEvent, Components } from '@/types'
 import { DateLocalizer } from '@/localizers'
 import { Getters } from '@/types'
@@ -19,10 +18,8 @@ interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> extends 
   length?: number
 }
 
-
 const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   accessors,
-  components,
   date,
   events,
   getters,
@@ -30,8 +27,9 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   onDoubleClickEvent,
   onSelectEvent,
   selected,
+  localizer,
+  components,
 }: AgendaViewProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
   const headerRef = useRef<HTMLTableElement>(null)
   const dateColRef = useRef<HTMLTableCellElement>(null)
   const timeColRef = useRef<HTMLTableCellElement>(null)

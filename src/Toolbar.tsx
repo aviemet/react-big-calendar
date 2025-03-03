@@ -1,8 +1,8 @@
 import React from 'react'
-import { navigate, NavigateAction, View } from './utils/constants'
-import { ViewsProps } from './Views'
-import { useCalendarContext } from './Calendar'
+import { navigate, NavigateAction } from './utils/constants'
+import { View, ViewsProps } from './Views'
 import clsx from 'clsx'
+import { DateLocalizer } from '@/localizers'
 
 export interface ToolbarProps {
   date: Date
@@ -12,6 +12,7 @@ export interface ToolbarProps {
   onNavigate: (navigate: NavigateAction, date?: Date) => void
   onView: (view: View) => void
   children?: React.ReactNode | undefined
+  localizer: DateLocalizer
 }
 
 export const Toolbar = ({
@@ -20,9 +21,8 @@ export const Toolbar = ({
   onView,
   view,
   views,
+  localizer,
 }: ToolbarProps) => {
-  const { localizer } = useCalendarContext()
-
   return (
     <div className={ clsx("rbc-toolbar") }>
       <span className={ clsx("rbc-btn-group") }>

@@ -1,13 +1,13 @@
 import React, { forwardRef, useLayoutEffect } from 'react'
 import getOffset from 'dom-helpers/offset'
-
 import useClickOutside from '@/hooks/useClickOutside'
 import EventCell from '@/components/EventRow/EventCell'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { Accessors, CalendarEvent } from '@/types'
+import { CalendarEvent } from '@/types'
 import { Getters } from '@/types'
 import { Components } from '@/types'
 import { DateLocalizer } from '@/localizers'
+import { Accessors } from '@/utils/accessors'
 
 /**
  * Changes to react-overlays cause issue with auto positioning,

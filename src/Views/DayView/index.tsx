@@ -1,7 +1,6 @@
 import { navigate } from '@/utils/constants'
 import TimeGrid from '../../components/TimeGrid'
 import { BaseViewProps, createViewComponent, ViewComponent } from '..'
-import { useCalendarContext } from '@/Calendar'
 import { coerceDate } from '@/utils/helpers'
 import { CalendarEvent } from '@/types'
 
@@ -21,8 +20,10 @@ const dayViewRange: ViewComponent<DayViewProps>['range'] = (date: Date, { locali
   return [localizer.startOf(date, 'day')]
 }
 
-const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+const DayView = <TEvent extends CalendarEvent = CalendarEvent>({
+  localizer,
+  ...props
+}: DayViewProps<TEvent>) => {
   /**
      * This allows us to default min, max, and scrollToTime
      * using our localizer. This is necessary until such time
@@ -40,6 +41,7 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
   return (
     <TimeGrid
       { ...props }
+      localizer={ localizer }
       range={ range }
       eventOffset={ 10 }
       min={ min }

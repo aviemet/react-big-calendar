@@ -7,10 +7,10 @@ import EventEndingRow from '@/components/EventRow/EventEndingRow'
 import NoopWrapper from '@/NoopWrapper'
 import ScrollableWeekWrapper from '@/ScrollableWeekWrapper'
 import * as DateSlotMetrics from '@/utils/DateSlotMetrics'
-import { useCalendarContext } from '../../Calendar'
 import Dummy from './Dummy'
 import clsx from 'clsx'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent, Components } from '@/types'
+import { DateLocalizer } from '@/localizers'
 
 interface DateContentRowProps {
   date?: Date
@@ -19,7 +19,8 @@ interface DateContentRowProps {
   rtl?: boolean
   resizable?: boolean
   resourceId?: any
-
+  localizer: DateLocalizer
+  components: Components
   renderForMeasure?: boolean
   renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
 
@@ -56,6 +57,8 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     resourceId,
     renderForMeasure,
     renderHeader,
+    localizer,
+    components,
     container,
     selected,
     selectable,
@@ -77,7 +80,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     maxRows = Infinity,
     className,
   } = props
-  const { localizer, components } = useCalendarContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const headingRowRef = useRef<HTMLDivElement>(null)

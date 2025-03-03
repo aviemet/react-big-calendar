@@ -24,7 +24,7 @@ import VIEWS, {
   View,
   views as viewStrings,
 } from '@/Views'
-import createContext from '@/hooks/createContext'
+// import createContext from '@/hooks/createContext'
 
 import {
   CalendarEvent,
@@ -39,14 +39,13 @@ import {
 import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 
-type CalendarContext = {
-  date: Date
-  localizer: DateLocalizer
-  components: Components
-}
+// type CalendarContext = {
+//   localizer: DateLocalizer
+//   components: Components
+// }
 
-const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
-export { useCalendarContext }
+// const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
+// export { useCalendarContext }
 
 export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   children?: React.ReactNode
@@ -1007,45 +1006,46 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   const ToolbarComponent = components.toolbar || Toolbar
 
   return (
-    <CalendarProvider value={ { localizer, components, date: current } }>
-      <div
-        { ...elementProps }
-        className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
-        style={ style }
-      >
-        { toolbar && (
-          <ToolbarComponent
-            date={ current }
-            view={ view }
-            views={ viewNames }
-            label={ ViewComponent.title(current, { localizer, length }) }
-            onView={ handleViewChange }
-            onNavigate={ handleNavigate }
-          />
-        ) }
-        <ViewComponent
-          { ...props }
-          events={ events }
-          backgroundEvents={ backgroundEvents }
+    // <CalendarProvider value={ { localizer, components } }>
+    <div
+      { ...elementProps }
+      className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
+      style={ style }
+    >
+      { toolbar && (
+        <ToolbarComponent
           date={ current }
-          getNow={ getNow }
-          length={ length }
-          getters={ getters }
-          accessors={ accessors }
-          showMultiDayTimes={ showMultiDayTimes }
-          getDrilldownView={ handleGetDrilldownView }
+          view={ view }
+          views={ viewNames }
+          label={ ViewComponent.title(current, { localizer, length }) }
+          onView={ handleViewChange }
           onNavigate={ handleNavigate }
-          onDrillDown={ handleDrillDown }
-          onSelectEvent={ handleSelectEvent }
-          onDoubleClickEvent={ handleDoubleClickEvent }
-          onKeyPressEvent={ handleKeyPressEvent }
-          onSelectSlot={ handleSelectSlot }
-          onShowMore={ onShowMore }
-          doShowMoreDrillDown={ doShowMoreDrillDown }
-          resourceGroupingLayout={ resourceGroupingLayout }
+          localizer={ localizer }
         />
-      </div>
-    </CalendarProvider>
+      ) }
+      <ViewComponent
+        { ...props }
+        events={ events }
+        backgroundEvents={ backgroundEvents }
+        date={ current }
+        getNow={ getNow }
+        length={ length }
+        getters={ getters }
+        accessors={ accessors }
+        showMultiDayTimes={ showMultiDayTimes }
+        getDrilldownView={ handleGetDrilldownView }
+        onNavigate={ handleNavigate }
+        onDrillDown={ handleDrillDown }
+        onSelectEvent={ handleSelectEvent }
+        onDoubleClickEvent={ handleDoubleClickEvent }
+        onKeyPressEvent={ handleKeyPressEvent }
+        onSelectSlot={ handleSelectSlot }
+        onShowMore={ onShowMore }
+        doShowMoreDrillDown={ doShowMoreDrillDown }
+        resourceGroupingLayout={ resourceGroupingLayout }
+      />
+    </div>
+    // </CalendarProvider>
   )
 }
 

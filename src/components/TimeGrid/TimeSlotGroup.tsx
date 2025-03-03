@@ -1,5 +1,5 @@
-import { useCalendarContext } from '@/Calendar'
 import NoopWrapper from '@/NoopWrapper'
+import { Components } from '@/types'
 import clsx from 'clsx'
 
 interface TimeSlotGroupProps {
@@ -7,6 +7,7 @@ interface TimeSlotGroupProps {
   resource: any
   group: any[]
   getters: any
+  components: Components
 }
 
 const TimeSlotGroup = ({
@@ -14,8 +15,8 @@ const TimeSlotGroup = ({
   resource,
   group,
   getters,
+  components: { timeslotWrapper: Wrapper = NoopWrapper },
 }: TimeSlotGroupProps) => {
-  const { components: { timeslotWrapper: Wrapper = NoopWrapper } } = useCalendarContext()
 
   const groupProps = getters ? getters.slotGroupProp(group) : {}
 

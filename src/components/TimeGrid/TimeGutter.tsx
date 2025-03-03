@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useMemo, forwardRef } from 'react'
-import { useCalendarContext } from '@/Calendar'
 import { getSlotMetrics } from '@/utils/TimeSlots'
 import TimeSlotGroup from './TimeSlotGroup'
 import clsx from 'clsx'
+import { Components } from '@/types'
+import { DateLocalizer } from '@/localizers'
 
 interface TimeGutterProps {
   min: Date
@@ -12,6 +13,8 @@ interface TimeGutterProps {
   getNow: () => Date
   resource: any
   getters: any
+  components: Components
+  localizer: DateLocalizer
 }
 
 const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
@@ -23,10 +26,11 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
     getNow,
     resource,
     getters,
+    components: { timeGutterWrapper: TimeGutterWrapper },
+    localizer,
   },
   ref
 ) => {
-  const { localizer, components: { timeGutterWrapper: TimeGutterWrapper } } = useCalendarContext()
 
   /**
    * Since the TimeGutter only displays the 'times' of slots in a day, and is separate
