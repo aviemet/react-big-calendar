@@ -1,4 +1,7 @@
+import { useCalendarContext } from "@/Calendar"
 import { DateLocalizer } from "@/localizers"
+import { CalendarEvent } from "@/types"
+import { useMemo } from "react"
 
 export type SlotMetrics = {
   groups: Date[][]
@@ -14,6 +17,9 @@ export type SlotMetrics = {
   startsAfter: (date: Date) => boolean
   getRange: (rangeStart: Date, rangeEnd: Date, options?: { ignoreMin?: boolean, ignoreMax?: boolean }) => { top: number, height: number, start: number, startDate: Date, end: number, endDate: Date }
   getCurrentTimePosition: (rangeStart: Date) => number
+  getEventsForSlot: (slot: number) => CalendarEvent[]
+  getDateForSlot: (slot: number) => Date
+  slots: number
 }
 
 const getKey = ({ min, max, step, timeslots, localizer }: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) =>
@@ -21,7 +27,20 @@ const getKey = ({ min, max, step, timeslots, localizer }: { min: Date, max: Date
   `${+localizer.startOf(max, 'minutes')}` +
   `${step}-${timeslots}`
 
-export function getSlotMetrics({
+interface UseTimeSlotMetricsProps {
+  min: Date
+  max: Date
+  step: number
+  timeslots: number
+}
+
+export function useTimeSlotMetrics(props: UseTimeSlotMetricsProps): SlotMetrics {
+  const { localizer } = useCalendarContext()
+
+  return useMemo(() => getSlotMetrics({ ...props, localizer }), [localizer, props])
+}
+
+function getSlotMetrics({
   min,
   max,
   step,

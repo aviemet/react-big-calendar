@@ -24,7 +24,7 @@ export interface ViewStatic {
 }
 
 export type ViewsProps =
-    | View[]
+    | ViewName[]
     | {
       work_week?: boolean | (React.ReactNode & ViewStatic) | undefined
       day?: boolean | (React.ReactNode & ViewStatic) | undefined
@@ -52,7 +52,6 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   rtl?: boolean | undefined
   width?: number | undefined
   accessors?: Accessors<TEvent> | undefined
-  localizer: DateLocalizer
   components?: Components<TEvent, TResource> | undefined
   getters?: Getters<TEvent> | undefined
   selected?: object | undefined
@@ -65,9 +64,9 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   onSelectEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
   onDoubleClickEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
   onKeyPressEvent?: ((...args: any[]) => any) | undefined
-  onDrillDown?: ((date: Date, view: View) => void) | undefined
+  onDrillDown?: ((date: Date, view: ViewName) => void) | undefined
   getDrilldownView?:
-      | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
+      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => void)
       | null
       | undefined
   dayLayoutAlgorithm?: DayLayoutAlgorithm
@@ -107,15 +106,15 @@ export const views = {
 } as const
 
 export type ViewKey = keyof typeof views
-export type View = typeof views[ViewKey]
+export type ViewName = typeof views[ViewKey]
 
-const VIEW_COMPONENTS = {
+const VIEW_COMPONENTS: Record<ViewName, ViewComponent> = {
   [views.MONTH]: MonthView,
   [views.WEEK]: WeekView,
   [views.WORK_WEEK]: WorkWeekView,
   [views.DAY]: DayView,
   [views.AGENDA]: AgendaView,
-} as unknown as Record<View, ViewComponent>
+}
 
 export default VIEW_COMPONENTS
 

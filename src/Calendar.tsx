@@ -15,17 +15,14 @@ import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms
 import { Messages } from '@/utils/messages'
 import {  } from '@/localizers/types'
 import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
-import { wrapEventAccessor, wrapResourceAccessor } from '@/utils/accessors'
+import { Accessors, wrapEventAccessor, wrapResourceAccessor } from '@/utils/accessors'
 import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, {
   ViewComponent,
-  BaseViewProps,
-  View,
+  ViewName,
   views as viewStrings,
 } from '@/Views'
-// import createContext from '@/hooks/createContext'
-
 import {
   CalendarEvent,
   type Components,
@@ -38,14 +35,17 @@ import {
 } from '@/types'
 import clsx from 'clsx'
 import { Resource } from './utils/Resources'
+import createContext from './hooks/createContext'
 
-// type CalendarContext = {
-//   localizer: DateLocalizer
-//   components: Components
-// }
+type CalendarContext = {
+  localizer: DateLocalizer
+  components: Components
+  viewComponents: Record<ViewName | string, ViewComponent>
+  accessors: Accessors
+}
 
-// const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
-// export { useCalendarContext }
+const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
+export { useCalendarContext }
 
 export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   children?: React.ReactNode
@@ -79,20 +79,20 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * ```js
    * import {luxonLocalizer} from 'react-big-calendar'
    * import {DateTime, Settings} from 'luxon'
-import useMemo from 'react';
-    * // only use `Settings` if you require optional time zone support
-    * Settings.defaultZone = 'America/Los_Angeles'
-    * // end optional time zone support
-    *
-    * // Luxon uses the Intl API, which currently does not contain `weekInfo`
-    * // to determine which weekday is the start of the week by `culture`.
-    * // The `luxonLocalizer` defaults this to Sunday, which differs from
-    * // the Luxon default of Monday. The localizer requires this option
-    * // to change the display, and the date math for determining the
-    * // start of a week. Luxon uses non-zero based values for `weekday`.
-    * const localizer = luxonLocalizer(DateTime, {firstDayOfWeek: 7})
-    * ```
-    */
+   * import useMemo from 'react';
+   * // only use `Settings` if you require optional time zone support
+   * Settings.defaultZone = 'America/Los_Angeles'
+   * // end optional time zone support
+   *
+   * // Luxon uses the Intl API, which currently does not contain `weekInfo`
+   * // to determine which weekday is the start of the week by `culture`.
+   * // The `luxonLocalizer` defaults this to Sunday, which differs from
+   * // the Luxon default of Monday. The localizer requires this option
+   * // to change the display, and the date math for determining the
+   * // start of a week. Luxon uses non-zero based values for `weekday`.
+   * const localizer = luxonLocalizer(DateTime, {firstDayOfWeek: 7})
+   * ```
+   */
   localizer: DateLocalizer
 
   /**
@@ -116,14 +116,14 @@ import useMemo from 'react';
    * @default 'month'
    * @controllable onView
    */
-  view?: View | undefined
+  view?: ViewName | undefined
 
   /**
    * The initial view set for the Calendar.
    * @type Calendar.Views ('month'|'week'|'work_week'|'day'|'agenda')
    * @default 'month'
    */
-  defaultView?: View | undefined
+  defaultView?: ViewName | undefined
 
   /**
    * An array of event objects to display on the calendar. Events objects
@@ -306,20 +306,20 @@ import useMemo from 'react';
    *
    * @controllable date
    */
-  onNavigate?: ((newDate: Date, view: View, action: NavigateAction) => void) | undefined
+  onNavigate?: ((newDate: Date, view: ViewName, action: NavigateAction) => void) | undefined
 
   /**
    * Callback fired when the `view` value changes.
    *
    * @controllable view
    */
-  onView?: ((view: View) => void) | undefined
+  onView?: ((view: ViewName) => void) | undefined
 
   /**
    * Callback fired when date header, or the truncated events links are clicked
    *
    */
-  onDrillDown?: ((date: Date, view: View, drilldownView?: View) => void) | undefined
+  onDrillDown?: ((date: Date, view: ViewName, drilldownView?: ViewName) => void) | undefined
 
   /**
    *
@@ -333,7 +333,7 @@ import useMemo from 'react';
    *
    * Custom views may return something different.
    */
-  onRangeChange?: (range: Date[] | { start: Date, end: Date }, view?: View) => void | undefined
+  onRangeChange?: (range: Date[] | { start: Date, end: Date }, view?: ViewName) => void | undefined
 
   /**
    * A callback fired when a date selection is made. Only fires when `selectable` is `true`.
@@ -442,7 +442,7 @@ import useMemo from 'react';
    * views={{
    *   month: true,
    *   week: false,
-   *   myweek: WorkWeekViewComponent,
+   *   myWeek: WorkWeekViewComponent,
    * }}
    * ```
    *
@@ -457,10 +457,9 @@ import useMemo from 'react';
    * ```
    *
    * @type Views ('month'|'week'|'work_week'|'day'|'agenda')
-   * @View
-   ['month', 'week', 'day', 'agenda']
+   * @View ['month', 'week', 'day', 'agenda']
    */
-  views?: View[] | undefined
+  views?: ViewName[] | Record<ViewName, ViewComponent | boolean> & Record<string, ViewComponent> | undefined
 
   /**
    * Determines whether the drill down should occur when clicking on the "+_x_ more" link.
@@ -482,7 +481,7 @@ import useMemo from 'react';
    * />
    * ```
    */
-  drilldownView?: View | null | undefined
+  drilldownView?: ViewName | null | undefined
 
   /**
    * Functionally equivalent to `drilldownView`, but accepts a function
@@ -503,7 +502,7 @@ import useMemo from 'react';
    * ```
    */
   getDrilldownView?:
-    | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
+    | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => void)
     | null
     | undefined
 
@@ -847,11 +846,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   }, [views])
 
   const isValidView = useCallback(
-    (view: View) => viewNames.indexOf(view) !== -1,
+    (view: ViewName) => viewNames.indexOf(view) !== -1,
     [viewNames]
   )
 
-  const accessors = useMemo(() => {
+  const accessors: Accessors = useMemo(() => {
     return {
       start: wrapEventAccessor(startAccessor),
       end: wrapEventAccessor(endAccessor),
@@ -886,7 +885,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       return transform(
         views,
         (obj, name) => obj[name] = VIEWS[name],
-        {} as Record<string, ViewComponent>
+        {} as Record<ViewName, ViewComponent>
       )
     }
 
@@ -928,7 +927,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
    * when you need to have both: range and view type at once, i.e. for manage rbc
    * state via url
    */
-  const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: View) => {
+  const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: ViewName) => {
     if(onRangeChange) {
       if(viewComponent.range) {
         onRangeChange(viewComponent.range(date, { localizer }), view)
@@ -955,7 +954,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     handleRangeChange(movedDate, ViewComponent)
   }
 
-  const handleViewChange = (localView: View) => {
+  const handleViewChange = (localView: ViewName) => {
     if(view !== localView && isValidView(localView, props)) {
       onView(localView)
     }
@@ -983,7 +982,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     notify(onSelectSlot, slotInfo)
   }
 
-  const handleDrillDown = (date: Date, view: View) => {
+  const handleDrillDown = (date: Date, view: ViewName) => {
     if(onDrillDown) {
       onDrillDown(date, view, drilldownView)
       return
@@ -1001,51 +1000,51 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
   const current = coerceDate(date || getNow())
 
-  const ViewComponent: React.ComponentType<BaseViewProps<TEvent, TResource>> = viewComponents[view]
+  const ViewComponent: ViewComponent = viewComponents[view]
 
   const ToolbarComponent = components.toolbar || Toolbar
 
   return (
-    // <CalendarProvider value={ { localizer, components } }>
-    <div
-      { ...elementProps }
-      className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
-      style={ style }
-    >
-      { toolbar && (
-        <ToolbarComponent
+    <CalendarProvider value={ { localizer, components, viewComponents, accessors } }>
+      <div
+        { ...elementProps }
+        className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
+        style={ style }
+      >
+        { toolbar && (
+          <ToolbarComponent
+            date={ current }
+            view={ view }
+            views={ viewNames }
+            label={ ViewComponent.title(current, { localizer, length }) }
+            onView={ handleViewChange }
+            onNavigate={ handleNavigate }
+            localizer={ localizer }
+          />
+        ) }
+        <ViewComponent
+          { ...props }
+          events={ events }
+          backgroundEvents={ backgroundEvents }
           date={ current }
-          view={ view }
-          views={ viewNames }
-          label={ ViewComponent.title(current, { localizer, length }) }
-          onView={ handleViewChange }
+          getNow={ getNow }
+          length={ length }
+          getters={ getters }
+          accessors={ accessors }
+          showMultiDayTimes={ showMultiDayTimes }
+          getDrilldownView={ handleGetDrilldownView }
           onNavigate={ handleNavigate }
-          localizer={ localizer }
+          onDrillDown={ handleDrillDown }
+          onSelectEvent={ handleSelectEvent }
+          onDoubleClickEvent={ handleDoubleClickEvent }
+          onKeyPressEvent={ handleKeyPressEvent }
+          onSelectSlot={ handleSelectSlot }
+          onShowMore={ onShowMore }
+          doShowMoreDrillDown={ doShowMoreDrillDown }
+          resourceGroupingLayout={ resourceGroupingLayout }
         />
-      ) }
-      <ViewComponent
-        { ...props }
-        events={ events }
-        backgroundEvents={ backgroundEvents }
-        date={ current }
-        getNow={ getNow }
-        length={ length }
-        getters={ getters }
-        accessors={ accessors }
-        showMultiDayTimes={ showMultiDayTimes }
-        getDrilldownView={ handleGetDrilldownView }
-        onNavigate={ handleNavigate }
-        onDrillDown={ handleDrillDown }
-        onSelectEvent={ handleSelectEvent }
-        onDoubleClickEvent={ handleDoubleClickEvent }
-        onKeyPressEvent={ handleKeyPressEvent }
-        onSelectSlot={ handleSelectSlot }
-        onShowMore={ onShowMore }
-        doShowMoreDrillDown={ doShowMoreDrillDown }
-        resourceGroupingLayout={ resourceGroupingLayout }
-      />
-    </div>
-    // </CalendarProvider>
+      </div>
+    </CalendarProvider>
   )
 }
 

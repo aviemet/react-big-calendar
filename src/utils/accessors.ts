@@ -1,7 +1,7 @@
 import { CalendarEvent } from "@/types"
 import { Resource } from "./Resources"
 
-export type Accessors<TEvent extends object = CalendarEvent, TResource extends object = object> = {
+export type Accessors<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
   title?: ((event: TEvent) => string) | undefined
   tooltip?: ((event: TEvent) => string) | undefined
   end?: ((event: TEvent) => Date) | undefined
@@ -55,12 +55,3 @@ export const wrapEventAccessor = <TEvent extends CalendarEvent = CalendarEvent, 
 export const wrapResourceAccessor = <TResource extends Resource = Resource, K extends keyof TResource | string = string>(
   acc: K | ((resource: TResource) => any)
 ) => (data: TResource) => accessor(data, acc as keyof TResource | ((resource: TResource) => any))
-
-export const wrapAccessors = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>(
-  accessors: Partial<Record<keyof Accessors<TEvent, TResource>, AccessorKey<TEvent | TResource>>>
-): Partial<Record<keyof Accessors<TEvent, TResource>, AccessorFunction<TEvent>>> => {
-  return Object.keys(accessors).reduce((acc, key) => {
-    acc[key as keyof Accessors<TEvent, TResource>] = wrapAccessor(accessors[key as keyof Accessors<TEvent, TResource>])
-    return acc
-  }, {} as Partial<Record<keyof Accessors<TEvent, TResource>, AccessorFunction<TEvent>>>)
-}

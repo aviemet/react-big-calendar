@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useMemo, forwardRef } from 'react'
-import { getSlotMetrics } from '@/utils/TimeSlots'
+import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import TimeSlotGroup from './TimeSlotGroup'
 import clsx from 'clsx'
 import { Components } from '@/types'
-import { DateLocalizer } from '@/localizers'
+import { useCalendarContext } from '@/Calendar'
 
 interface TimeGutterProps {
   min: Date
@@ -14,7 +14,6 @@ interface TimeGutterProps {
   resource: any
   getters: any
   components: Components
-  localizer: DateLocalizer
 }
 
 const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
@@ -26,11 +25,13 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
     getNow,
     resource,
     getters,
-    components: { timeGutterWrapper: TimeGutterWrapper },
-    localizer,
+    components,
   },
   ref
 ) => {
+  const { timeGutterWrapper: TimeGutterWrapper } = components
+  const { localizer } = useCalendarContext()
+  const slotMetrics = useTimeSlotMetrics({ min, max, timeslots, step })
 
   /**
    * Since the TimeGutter only displays the 'times' of slots in a day, and is separate
@@ -46,29 +47,18 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
       }
     }
     return { start: min, end: max }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [min?.toISOString(), max?.toISOString(), localizer])
-
-  const [slotMetrics, setSlotMetrics] = useState(
-    getSlotMetrics({
-      min: start,
-      max: end,
-      timeslots,
-      step,
-      localizer,
-    })
-  )
 
   useEffect(() => {
     if(slotMetrics) {
-      setSlotMetrics(
-        slotMetrics.update({
-          min: start,
-          max: end,
-          timeslots,
-          step,
-          localizer,
-        })
-      )
+      slotMetrics.update({
+        min: start,
+        max: end,
+        timeslots,
+        step,
+        localizer,
+      })
     }
     /**
      * We don't want this to fire when slotMetrics is updated as it would recursively bomb

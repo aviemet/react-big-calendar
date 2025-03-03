@@ -3,13 +3,12 @@ import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
 import { CalendarEvent, Getters } from '@/types'
 import clsx from 'clsx'
 import { Accessors } from '@/utils/accessors'
-import { DateLocalizer } from '@/localizers'
+import { useCalendarContext } from '@/Calendar'
 
 interface EventCellProps {
   event: CalendarEvent
   slotStart: Date
   slotEnd: Date
-  localizer: DateLocalizer
   resizable: boolean
   selected: boolean
   isAllDay: boolean
@@ -47,9 +46,9 @@ const EventCell = ({
   components: { event: Event, eventWrapper: EventWrapper },
   slotStart,
   slotEnd,
-  localizer,
   ...props
 }: EventCellProps) => {
+  const { localizer } = useCalendarContext()
 
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)
@@ -74,7 +73,6 @@ const EventCell = ({
             continuesAfter={ continuesAfter }
             title={ title }
             isAllDay={ allDay }
-            localizer={ localizer }
             slotStart={ slotStart }
             slotEnd={ slotEnd }
           />

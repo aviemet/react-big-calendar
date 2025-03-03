@@ -2,27 +2,6 @@ import EventCell from './EventCell'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 
 export default {
-  // propTypes: {
-  //   slotMetrics: PropTypes.object.isRequired,
-
-  //   selected: PropTypes.object,
-  //   isAllDay: PropTypes.bool,
-
-  //   accessors: PropTypes.object.isRequired,
-  //   localizer: PropTypes.object.isRequired,
-  //   components: PropTypes.object.isRequired,
-  //   getters: PropTypes.object.isRequired,
-
-  //   onSelect: PropTypes.func,
-  //   onDoubleClick: PropTypes.func,
-  //   onKeyPress: PropTypes.func,
-  // },
-
-  // defaultProps: {
-  //   segments: [],
-  //   selected: {},
-  // },
-
   renderEvent(props, event) {
     let {
       selected,
@@ -32,7 +11,6 @@ export default {
       onSelect,
       onDoubleClick,
       onKeyPress,
-      localizer,
       slotMetrics,
       components,
       resizable,
@@ -45,7 +23,6 @@ export default {
       <EventCell
         event={ event }
         getters={ getters }
-        localizer={ localizer }
         accessors={ accessors }
         components={ components }
         onSelect={ onSelect }
@@ -61,7 +38,7 @@ export default {
     )
   },
 
-  renderSpan(slots, len, key, content = ' ') {
+  renderSpan(slots, len, key, content = <></>) {
     let per = (Math.abs(len) / slots) * 100 + '%'
 
     return (

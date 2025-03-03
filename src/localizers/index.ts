@@ -307,7 +307,7 @@ export function mergeWithDefaults(
     messages: buildMessages(messages),
     startOfWeek: () => localizer.startOfWeek(culture),
     format: (value: FormatInput, format: string | keyof Formats) => {
-      console.log({ value, format })
+      // console.log({ value, format })
       return localizer.format(value, typeof formats[format as keyof Formats] === 'string'
         ? formats[format as keyof Formats] as string
         : format as string,

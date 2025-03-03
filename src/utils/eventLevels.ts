@@ -3,9 +3,8 @@ import { findIndex } from 'lodash-es'
 import { Accessors } from './accessors'
 import { CalendarEvent } from '@/types'
 
-export function endOfRange(
-  { dateRange, unit = 'day', localizer }: { dateRange: Date[], unit?: 'day', localizer: DateLocalizer }
-) {
+type EndOfRangeArgs = { dateRange: Date[], unit?: 'day', localizer: DateLocalizer }
+export function endOfRange({ dateRange, unit = 'day', localizer }: EndOfRangeArgs) {
   return {
     first: dateRange[0],
     last: localizer.add(dateRange[dateRange.length - 1], 1, unit),

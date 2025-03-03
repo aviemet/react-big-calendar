@@ -9,10 +9,10 @@ import DateHeader from '@/DateHeader'
 import MonthWeek from './MonthWeek'
 import MonthHeader from './MonthHeader'
 import MonthPopOverlay from './MonthPopOverlay'
-import { BaseViewProps, createViewComponent, View } from '@/Views'
-import { DateLocalizer } from '@/localizers'
+import { BaseViewProps, createViewComponent, ViewName } from '@/Views'
 import { SlotInfo, Components, Getters, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
+import { useCalendarContext } from '@/Calendar'
 
 interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   popup?: boolean
@@ -26,7 +26,6 @@ interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends B
   onSelectEvent?: (event: TEvent) => void
   onDoubleClickEvent?: (event: TEvent) => void
   onKeyPressEvent?: (event: TEvent) => void
-  localizer: DateLocalizer
   date: Date
   components: Components<TEvent, object>
   getters: Getters<TEvent>
@@ -35,7 +34,7 @@ interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends B
 interface DateHeadingProps {
   date: Date
   className?: string
-  drilldownView?: View | null
+  drilldownView?: ViewName | null
   isOffRange?: boolean
   label?: string
   onDrillDown?: (e: React.MouseEvent<HTMLElement>) => void
@@ -45,7 +44,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
   const {
     date,
     events = [],
-    localizer,
     selected,
     getters,
     components,
@@ -69,6 +67,8 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     onShowMore,
     className,
   } = props
+
+  const { localizer } = useCalendarContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const slotRowRef = useRef<typeof DateContentRow>(null)
@@ -141,7 +141,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
   )
 
   const handleHeadingClick = useCallback(
-    (date: Date, view: View | null | undefined, e: React.MouseEvent<HTMLElement>) => {
+    (date: Date, view: ViewName | null | undefined, e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault()
       clearTimeout(resizeListener)
       pendingSelection.current = []
@@ -197,7 +197,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
         })
       } else if(doShowMoreDrillDown && onDrillDown && getDrilldownView) {
         const drilldownResult = getDrilldownView(date, views.MONTH, Object.values(views))
-        const view = typeof drilldownResult === 'string' ? drilldownResult as View : null
+        const view = typeof drilldownResult === 'string' ? drilldownResult as ViewName : null
         if(view) onDrillDown(date, view)
       }
 
@@ -252,7 +252,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       <MonthHeader
         dates={ weeks[0] }
         components={ components }
-        localizer={ localizer }
       />
       { weeks.map((week, weekIdx) => (
         <MonthWeek
@@ -269,7 +268,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
           components={ components }
           accessors={ accessors }
           getters={ getters }
-          localizer={ localizer }
           renderHeader={ renderDateHeading }
           renderForMeasure={ state.needLimitMeasure }
           onShowMore={ handleShowMore }

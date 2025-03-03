@@ -1,7 +1,7 @@
 import overlap from './layout-algorithms/overlap'
 import noOverlap from './layout-algorithms/no-overlap'
 import { CalendarEvent } from '@/types'
-import { SlotMetrics } from './TimeSlots'
+import { SlotMetrics } from '../hooks/useTimeSlotMetrics'
 import { Accessors } from './accessors'
 
 const DefaultAlgorithms = {

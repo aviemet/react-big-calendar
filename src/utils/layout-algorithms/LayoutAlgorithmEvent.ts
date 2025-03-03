@@ -1,6 +1,6 @@
 import { CalendarEvent } from "@/types"
 import { Accessors } from "../accessors"
-import { SlotMetrics } from "../TimeSlots"
+import { SlotMetrics } from "../../hooks/useTimeSlotMetrics"
 
 class LayoutAlgorithmEvent {
   start: number

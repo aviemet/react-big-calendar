@@ -70,6 +70,7 @@ export interface Components<TEvent extends object = CalendarEvent, TResource ext
   eventContainerWrapper?: React.ComponentType | undefined
   dateCellWrapper?: React.ComponentType<DateCellWrapperProps> | undefined
   dayColumnWrapper?: React.ComponentType | undefined
+  weekWrapper?: React.ComponentType | undefined
   timeslotWrapper?: React.ComponentType | undefined
   timeGutterHeader?: React.ComponentType | undefined
   timeGutterWrapper?: React.ComponentType | undefined

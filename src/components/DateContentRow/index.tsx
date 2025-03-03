@@ -6,11 +6,11 @@ import EventRow from '@/components/EventRow'
 import EventEndingRow from '@/components/EventRow/EventEndingRow'
 import NoopWrapper from '@/NoopWrapper'
 import ScrollableWeekWrapper from '@/ScrollableWeekWrapper'
-import * as DateSlotMetrics from '@/utils/DateSlotMetrics'
 import Dummy from './Dummy'
 import clsx from 'clsx'
 import { CalendarEvent, Components } from '@/types'
-import { DateLocalizer } from '@/localizers'
+import { useCalendarContext } from '@/Calendar'
+import { useDateSlotMetrics } from '@/hooks/useDateSlotMetrics'
 
 interface DateContentRowProps {
   date?: Date
@@ -19,7 +19,6 @@ interface DateContentRowProps {
   rtl?: boolean
   resizable?: boolean
   resourceId?: any
-  localizer: DateLocalizer
   components: Components
   renderForMeasure?: boolean
   renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
@@ -57,7 +56,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     resourceId,
     renderForMeasure,
     renderHeader,
-    localizer,
     components,
     container,
     selected,
@@ -81,24 +79,30 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     className,
   } = props
 
+  const { localizer } = useCalendarContext()
+  const slotMetrics = useDateSlotMetrics({
+    range,
+    events,
+    maxRows,
+    minRows,
+    accessors,
+  })
+
   const containerRef = useRef<HTMLDivElement>(null)
   const headingRowRef = useRef<HTMLDivElement>(null)
   const eventRowRef = useRef<HTMLDivElement>(null)
-
-  const slotMetricsRef = useRef(DateSlotMetrics.getSlotMetrics())
 
   const handleSelectSlot = (slot) => {
     onSelectSlot(range.slice(slot.start, slot.end + 1), slot)
   }
 
   const handleShowMore = (slot, target) => {
-    let metrics = slotMetricsRef.current(props)
     let row = qsa(containerRef.current, '.rbc-row-bg')[0]
 
     let cell
     if(row) cell = row.children[slot - 1]
 
-    let events = metrics.getEventsForSlot(slot)
+    let events = slotMetrics.getEventsForSlot(slot)
     onShowMore(events, range[slot - 1], cell, slot, target)
   }
 
@@ -117,7 +121,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     return Math.max(Math.floor(eventSpace / eventHeight), 1)
   }
 
-  const renderHeadingCell = (date, index) => {
+  const renderHeadingCell = (date: Date, index: number) => {
     return renderHeader({
       date,
       key: `header_${index}`,
@@ -143,9 +147,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     )
   }
 
-  const metrics = slotMetricsRef.current(props)
-  const { levels, extra } = metrics
-
   let ScrollableWeekComponent = showAllEvents
     ? ScrollableWeekWrapper
     : NoopWrapper
@@ -155,20 +156,18 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     selected,
     accessors,
     getters,
-    localizer,
     components,
     onSelect,
     onDoubleClick,
     onKeyPress,
     resourceId,
-    slotMetrics: metrics,
+    slotMetrics: slotMetrics,
     resizable,
   }
 
   return (
     <div className={ clsx(className) } role="rowgroup" ref={ containerRef }>
       <BackgroundCells
-        localizer={ localizer }
         date={ date }
         getNow={ getNow }
         rtl={ rtl }
@@ -186,11 +185,10 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
 
       <div
         ref={ ref }
-        className={ clsx(
-          'rbc-row-content',
-          showAllEvents && 'rbc-row-content-scrollable'
-        ) }
         role="row"
+        className={ clsx('rbc-row-content', {
+          'rbc-row-content-scrollable': showAllEvents,
+        }) }
       >
         { renderHeader && (
           <div className="rbc-row " ref={ headingRowRef }>
@@ -199,12 +197,12 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
         ) }
         <ScrollableWeekComponent>
           <WeekWrapper isAllDay={ isAllDay } { ...eventRowProps } rtl={ props.rtl }>
-            { levels.map((segs, Index) => (
+            { slotMetrics.levels.map((segs, Index) => (
               <EventRow key={ Index } segments={ segs } { ...eventRowProps } />
             )) }
-            { !!extra.length && (
+            { !!slotMetrics.extra.length && (
               <EventEndingRow
-                segments={ extra }
+                segments={ slotMetrics.extra }
                 onShowMore={ handleShowMore }
                 { ...eventRowProps }
               />

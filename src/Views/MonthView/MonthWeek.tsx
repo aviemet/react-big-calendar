@@ -4,6 +4,7 @@ import { DateLocalizer } from '@/localizers'
 import { Components, CalendarEvent } from '@/types'
 import DateContentRow from '@/components/DateContentRow'
 import { inRange, sortWeekEvents } from '@/utils/eventLevels'
+import { useCalendarContext } from '@/Calendar'
 
 const eventsForWeek = <TEvent extends CalendarEvent>(
   events: TEvent[],
@@ -26,7 +27,6 @@ interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
   components: Components<TEvent, object>
   accessors: BaseViewProps<TEvent>['accessors']
   getters: BaseViewProps<TEvent>['getters']
-  localizer: DateLocalizer
   renderHeader: (props: any) => React.ReactNode
   renderForMeasure?: boolean
   onShowMore: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
@@ -54,7 +54,6 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
   components,
   accessors,
   getters,
-  localizer,
   renderHeader,
   renderForMeasure,
   onShowMore,
@@ -68,6 +67,8 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
   slotRowRef,
   getContainer,
 }: MonthWeekProps<TEvent>) => {
+  const { localizer } = useCalendarContext()
+
   const weeksEvents = eventsForWeek(
     [...(events || [])],
     week[0],
@@ -94,7 +95,6 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
       components={ components }
       accessors={ accessors }
       getters={ getters }
-      localizer={ localizer }
       renderHeader={ renderHeader }
       renderForMeasure={ renderForMeasure }
       onShowMore={ onShowMore }

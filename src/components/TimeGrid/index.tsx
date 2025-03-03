@@ -15,7 +15,7 @@ import { BaseViewProps } from '@/Views'
 import Resources, { Resource } from '@/utils/Resources'
 import { Accessors } from '@/utils/accessors'
 import { Overlay } from 'react-overlays'
-import { DateLocalizer } from '@/localizers'
+import { useCalendarContext } from '@/Calendar'
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   resourceGroupingLayout?: boolean
@@ -31,7 +31,6 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
     x: number
     y: number
   }
-  localizer: DateLocalizer
   components: Components
 }
 
@@ -75,8 +74,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   popup,
   handleDragStart,
   popupOffset,
-  localizer,
 }: TimeGridProps<TEvent>) => {
+  const { localizer } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
   const [isOverflowing, setIsOverflowing] = useState(false)
@@ -287,7 +286,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     width: width || gutterWidth,
     rtl,
     getNow,
-    localizer,
     selected,
     allDayMaxRows: showAllEvents
       ? Infinity
@@ -326,7 +324,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
       { popup && <OverlayWrapper
         overlay={ overlay }
         accessors={ accessors }
-        localizer={ localizer }
         components={ components }
         getters={ getters }
         selected={ selected }

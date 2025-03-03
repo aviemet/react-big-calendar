@@ -1,17 +1,14 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
-import { getSlotMetrics } from '@/utils/TimeSlots'
 import { notify } from '@/utils/helpers'
-import * as DayEventLayout from '@/utils/DayEventLayout'
 import TimeSlotGroup from './TimeSlotGroup'
-import TimeGridEvent from './TimeGridEvent'
 import { CalendarEvent, Components, Getters } from '@/types'
 import { Accessors } from '@/utils/accessors'
-import { isSelected } from '@/utils/eventSelectionHelpers'
-import { SlotMetrics } from '@/utils/TimeSlots'
-import { DateLocalizer } from '@/localizers'
+import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import DayColumnWrapper from '@/DayColumnWrapper'
+import { useCalendarContext } from '@/Calendar'
+import EventsWrapper from './EventsWrapper'
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -42,7 +39,6 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   dragThroughEvents: boolean
   resource: any
   dayLayoutAlgorithm: any
-  localizer: DateLocalizer
   components: Components
 }
 
@@ -72,9 +68,10 @@ const DayColumn = (props: DayColumnProps) => {
     onDoubleClickEvent,
     onKeyPressEvent,
     dayLayoutAlgorithm,
-    localizer,
     components,
   } = props
+  const { localizer } = useCalendarContext()
+
   const [selecting, setSelecting] = useState(false)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState<number>(null)
   const [selectState, setSelectState] = useState<{
@@ -84,10 +81,7 @@ const DayColumn = (props: DayColumnProps) => {
     endDate?: Date
   }>({})
 
-  const slotMetrics = useMemo(
-    () => getSlotMetrics({ min, max, step, timeslots, localizer }),
-    [min, max, step, timeslots, localizer]
-  )
+  const slotMetrics = useTimeSlotMetrics({ min, max, step, timeslots })
 
   const containerRef = useRef<HTMLDivElement>(null)
   const intervalTriggeredRef = useRef(false)
@@ -124,7 +118,7 @@ const DayColumn = (props: DayColumnProps) => {
     })
 
     const selectionState = (point: any) => {
-      const currentSlot = slotMetrics.closestSlotFromPoint(
+      let currentSlot = slotMetrics.closestSlotFromPoint(
         point,
         getBoundsForNode(containerRef.current)
       )
@@ -239,7 +233,9 @@ const DayColumn = (props: DayColumnProps) => {
     }, 60000)
   }
 
-  const selectSlot = ({ startDate, endDate, action, bounds, box }) => {
+  const selectSlot = ({ startDate, endDate, action, bounds, box }:
+  { startDate: Date, endDate: Date, action: string, bounds: any, box: any }
+  ) => {
     let current = startDate
     const slots = []
 
@@ -290,7 +286,6 @@ const DayColumn = (props: DayColumnProps) => {
         />
       )) }
       <EventContainer
-        localizer={ localizer }
         resource={ resource }
         accessors={ accessors }
         getters={ getters }
@@ -304,28 +299,34 @@ const DayColumn = (props: DayColumnProps) => {
             rtl={ rtl }
             selected={ selected }
             accessors={ accessors }
-            localizer={ localizer }
             getters={ getters }
             components={ components }
+            resource={ resource }
             step={ step }
             timeslots={ timeslots }
             dayLayoutAlgorithm={ dayLayoutAlgorithm }
             resizable={ resizable }
             slotMetrics={ slotMetrics }
+            onSelectEvent={ onSelectEvent }
+            onDoubleClickEvent={ onDoubleClickEvent }
+            onKeyPressEvent={ onKeyPressEvent }
           />
           <EventsWrapper
             events={ events }
             rtl={ rtl }
             selected={ selected }
             accessors={ accessors }
-            localizer={ localizer }
             getters={ getters }
             components={ components }
+            resource={ resource }
             step={ step }
             timeslots={ timeslots }
             dayLayoutAlgorithm={ dayLayoutAlgorithm }
             resizable={ resizable }
             slotMetrics={ slotMetrics }
+            onSelectEvent={ onSelectEvent }
+            onDoubleClickEvent={ onDoubleClickEvent }
+            onKeyPressEvent={ onKeyPressEvent }
           />
         </div>
       </EventContainer>
@@ -350,107 +351,3 @@ const DayColumn = (props: DayColumnProps) => {
 }
 
 export default DayColumn
-
-
-
-
-
-
-
-interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
-  events: TEvent[]
-  resource: any
-  isBackgroundEvent: boolean
-  rtl: boolean
-  selected: any
-  accessors: Accessors
-  localizer: DateLocalizer
-  getters: Getters
-  components: Components
-  step: number
-  timeslots: number
-  dayLayoutAlgorithm: any
-  resizable: boolean
-  slotMetrics: SlotMetrics
-}
-
-
-const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
-  events,
-  resource,
-  isBackgroundEvent = false,
-  rtl,
-  selected,
-  accessors,
-  localizer,
-  getters,
-  components,
-  step,
-  timeslots,
-  dayLayoutAlgorithm,
-  resizable,
-  slotMetrics,
-}: EventsWrapperProps<TEvent>) => {
-  const { messages } = localizer
-
-  let styledEvents = DayEventLayout.getStyledEvents({
-    events,
-    accessors,
-    slotMetrics,
-    minimumStartDifference: Math.ceil((step * timeslots) / 2),
-    dayLayoutAlgorithm,
-  })
-
-  return styledEvents.map(({ event, style }, index) => {
-    let end = accessors.end(event)
-    let start = accessors.start(event)
-    let key = accessors.eventId(event) ?? 'evt_' + index
-    let format = 'eventTimeRangeFormat'
-    let label
-
-    const startsBeforeDay = slotMetrics.startsBeforeDay(start)
-    const startsAfterDay = slotMetrics.startsAfterDay(end)
-
-    if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
-    else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
-
-    if(startsBeforeDay && startsAfterDay) label = messages.allDay
-    else label = localizer.format({ start, end }, format)
-
-    let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
-    let continuesAfter = startsAfterDay || slotMetrics.startsAfter(end)
-
-    return (
-      <TimeGridEvent
-        style={ style }
-        event={ event }
-        label={ label }
-        key={ key }
-        getters={ getters }
-        rtl={ rtl }
-        components={ components }
-        continuesPrior={ continuesPrior }
-        continuesAfter={ continuesAfter }
-        accessors={ accessors }
-        resource={ resource }
-        selected={ isSelected(event, selected) }
-        onClick={ (e) =>
-          this._select(
-            {
-              ...event,
-              ...(resource && {
-                sourceResource: resource,
-              }),
-              ...(isBackgroundEvent && { isBackgroundEvent: true }),
-            },
-            e
-          )
-        }
-        onDoubleClick={ (e) => this._doubleClick(event, e) }
-        isBackgroundEvent={ isBackgroundEvent }
-        onKeyPress={ (e) => this._keyPress(event, e) }
-        resizable={ resizable }
-      />
-    )
-  })
-}

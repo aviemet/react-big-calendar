@@ -1,18 +1,18 @@
-import { DateLocalizer } from '@/localizers'
 import { Components, CalendarEvent } from '@/types'
 import Header from '@/Header'
+import { useCalendarContext } from '@/Calendar'
 
 interface MonthHeaderProps<TEvent extends CalendarEvent = CalendarEvent> {
   dates: Date[]
   components: Components<TEvent, object>
-  localizer: DateLocalizer
 }
 
 function MonthHeader<TEvent extends CalendarEvent = CalendarEvent>({
   dates,
   components,
-  localizer,
 }: MonthHeaderProps<TEvent>) {
+  const { localizer } = useCalendarContext()
+
   const first = dates[0]
   const last = dates[dates.length - 1]
   const HeaderComponent = components.header || Header

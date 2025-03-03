@@ -2,6 +2,7 @@ import { BaseViewProps, createViewComponent, ViewComponent } from '@/Views'
 import TimeGrid from '../../components/TimeGrid'
 import WeekView from '../WeekView'
 import { CalendarEvent } from '@/types'
+import { useCalendarContext } from '@/Calendar'
 
 const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, options) => {
   return WeekView.range(date, options).filter(
@@ -17,10 +18,8 @@ interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
   enableAutoScroll?: boolean
 }
 
-const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>({
-  localizer,
-  ...props
-}: WorkWeekProps<TEvent>) => {
+const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
+  const { localizer } = useCalendarContext()
 
   const {
     date,
@@ -41,7 +40,6 @@ const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>({
       { ...props }
       range={ range }
       eventOffset={ 15 }
-      localizer={ localizer }
       min={ min }
       max={ max }
       scrollToTime={ scrollToTime }

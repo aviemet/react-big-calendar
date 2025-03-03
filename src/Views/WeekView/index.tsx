@@ -3,6 +3,7 @@ import TimeGrid from '@/components/TimeGrid'
 import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { DateLocalizer } from '@/localizers'
 import { CalendarEvent } from '@/types'
+import { useCalendarContext } from '@/Calendar'
 
 interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   eventOffset: 0
@@ -18,10 +19,8 @@ const weekViewRange: ViewComponent<WeekViewProps>['range'] = (date: Date, { loca
   return { start, end }
 }
 
-const WeekView = <TEvent extends CalendarEvent = CalendarEvent>({
-  localizer,
-  ...props
-}: WeekViewProps<TEvent>) => {
+const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewProps<TEvent>) => {
+  const { localizer } = useCalendarContext()
 
   /**
    * This allows us to default min, max, and scrollToTime
@@ -41,7 +40,6 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>({
       { ...props }
       range={ weekViewRange(date, { localizer }) }
       eventOffset={ 15 }
-      localizer={ localizer }
       min={ min }
       max={ max }
       scrollToTime={ scrollToTime }

@@ -6,8 +6,8 @@ import { isSelected } from '@/utils/eventSelectionHelpers'
 import { CalendarEvent } from '@/types'
 import { Getters } from '@/types'
 import { Components } from '@/types'
-import { DateLocalizer } from '@/localizers'
 import { Accessors } from '@/utils/accessors'
+import { useCalendarContext } from '@/Calendar'
 
 /**
  * Changes to react-overlays cause issue with auto positioning,
@@ -46,7 +46,6 @@ interface PopupProps {
   getters: Getters
   selected: object
   components: Components
-  localizer: DateLocalizer
   position: { x: number, y: number, width: number }
   show: () => void
   events: CalendarEvent[]
@@ -68,7 +67,6 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
     getters,
     selected,
     components,
-    localizer,
     position,
     show,
     events,
@@ -83,6 +81,8 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   },
   ref
 ) => {
+  const { localizer } = useCalendarContext()
+
   useClickOutside({ ref: ref, callback: show })
 
   useLayoutEffect(() => {
@@ -111,7 +111,6 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
         <EventCell
           key={ Index }
           type="popup"
-          localizer={ localizer }
           event={ event }
           getters={ getters }
           onSelect={ onSelect }

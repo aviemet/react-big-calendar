@@ -4,7 +4,7 @@ import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectio
 import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
 import { CalendarEvent, Components, Getters } from '@/types'
-import { DateLocalizer } from '@/localizers'
+import { useCalendarContext } from '@/Calendar'
 
 interface BackgroundCellsProps {
   date?: Date
@@ -22,7 +22,6 @@ interface BackgroundCellsProps {
   rtl?: boolean
   type?: string
   resourceId?: string | number
-  localizer?: DateLocalizer
 }
 
 const BackgroundCells = (props: BackgroundCellsProps) => {
@@ -42,8 +41,8 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     rtl,
     type,
     resourceId,
-    localizer,
   } = props
+  const { localizer } = useCalendarContext()
 
   const [selecting, setSelecting] = useState(false)
   const [selector, setSelector] = useState<Selection | null>(null)
