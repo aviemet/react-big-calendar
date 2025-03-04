@@ -2,18 +2,21 @@ import invariant from 'invariant'
 import { navigate, NavigateAction } from './constants'
 import VIEWS, { ViewStatic } from '../Views'
 import { DateLocalizer } from '@/localizers'
+import { CalendarProps } from '@/Calendar'
 
 export type MoveDateOptions = {
   action: NavigateAction
   date: Date
   today: Date
-  props: {
+  props: Partial<CalendarProps> & {
     localizer: DateLocalizer
   }
 }
 
 export default function moveDate(
-  View: ViewStatic, { action, date, today, ...props }: MoveDateOptions) {
+  View: ViewStatic,
+  { action, date, today, ...props }: MoveDateOptions
+) {
   View = typeof View === 'string' ? VIEWS[View] : View
 
   switch(action) {
