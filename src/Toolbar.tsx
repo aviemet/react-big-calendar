@@ -5,7 +5,6 @@ import { ViewName, ViewsProps } from './Views'
 import clsx from 'clsx'
 
 export interface ToolbarProps {
-  date: Date
   view: ViewName
   views: ViewsProps
   label: string

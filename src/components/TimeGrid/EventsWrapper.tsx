@@ -1,24 +1,21 @@
 import { notify } from '@/utils/helpers'
 import * as DayEventLayout from '@/utils/DayEventLayout'
 import TimeGridEvent from './TimeGridEvent'
-import { CalendarEvent, Components, Getters } from '@/types'
-import { Accessors } from '@/utils/accessors'
+import { CalendarEvent } from '@/types'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import { useCalendarContext } from '@/Calendar'
+import { Resource } from '@/utils/Resources'
+import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 
-interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
+interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
-  resource: any
+  resource: TResource
   isBackgroundEvent?: boolean
-  rtl: boolean
   selected: any
-  accessors: Accessors
-  getters: Getters
-  components: Components
   step: number
   timeslots: number
-  dayLayoutAlgorithm: any
+  dayLayoutAlgorithm: DayLayoutAlgorithm
   resizable: boolean
   slotMetrics: SlotMetrics
   onSelectEvent: (args: any) => void
@@ -30,11 +27,7 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   events,
   resource,
   isBackgroundEvent = false,
-  rtl,
   selected,
-  accessors,
-  getters,
-  components,
   step,
   timeslots,
   dayLayoutAlgorithm,
@@ -44,7 +37,7 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   onDoubleClickEvent,
   onKeyPressEvent,
 }: EventsWrapperProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, components, accessors } = useCalendarContext()
 
   let styledEvents = DayEventLayout.getStyledEvents({
     events,
@@ -73,20 +66,23 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   }
 
   return styledEvents.map(({ event, style }, index) => {
-    let end = accessors.end(event)
-    let start = accessors.start(event)
-    let key = accessors.eventId(event) ?? 'evt_' + index
-    let format = 'eventTimeRangeFormat'
-    let label
+    const end = accessors.end(event)
+    const start = accessors.start(event)
 
     const startsBeforeDay = slotMetrics.startsBeforeDay(start)
     const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-    if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
-    else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
+    let format
+    if(startsBeforeDay) {
+      format = 'eventTimeRangeEndFormat'
+    } else if(startsAfterDay) {
+      format = 'eventTimeRangeStartFormat'
+    } else {
+      format = 'eventTimeRangeFormat'
+    }
 
-    if(startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
-    else label = localizer.format({ start, end }, format)
+    const key = accessors.eventId(event) ?? 'evt_' + index
+    const label = (startsBeforeDay && startsAfterDay) ? localizer.messages.allDay : localizer.format({ start, end }, format)
 
     let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
     let continuesAfter = startsAfterDay || slotMetrics.startsAfter(end)
@@ -97,12 +93,8 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
         event={ event }
         label={ label }
         key={ key }
-        getters={ getters }
-        rtl={ rtl }
-        components={ components }
         continuesPrior={ continuesPrior }
         continuesAfter={ continuesAfter }
-        accessors={ accessors }
         resource={ resource }
         selected={ isSelected(event, selected) }
         onClick={ handleClick }

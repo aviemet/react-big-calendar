@@ -19,10 +19,9 @@ interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
 }
 
 const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, date } = useCalendarContext()
 
   const {
-    date,
     min = localizer.startOf(new Date(), 'day'),
     max = localizer.endOf(new Date(), 'day'),
     scrollToTime = localizer.startOf(new Date(), 'day'),

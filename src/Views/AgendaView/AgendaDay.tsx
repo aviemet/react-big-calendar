@@ -11,10 +11,7 @@ interface DayProps<TEvent extends CalendarEvent = CalendarEvent> {
   day: Date
   events: TEvent[]
   dayKey: string
-  accessors: Accessors<TEvent>
-  getters: Getters<TEvent>
   selected: TEvent[]
-  components: Components<TEvent, Resource>
   timeRangeLabel: (day: Date, event: TEvent) => React.ReactNode
   onSelectEvent: (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void
   onDoubleClickEvent: (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void
@@ -24,17 +21,12 @@ const Day = ({
   day,
   events,
   dayKey,
-  accessors,
-  getters,
   selected,
-  components,
   timeRangeLabel,
   onSelectEvent,
   onDoubleClickEvent,
 }: DayProps) => {
-  const { localizer } = useCalendarContext()
-
-  const { event: EventComponent, date: AgendaDate } = components
+  const { localizer, components, accessors, getters } = useCalendarContext()
 
   events = events.filter((e) =>
     inRange(
@@ -45,8 +37,9 @@ const Day = ({
       localizer
     )
   )
+  const { event: EventComponent, date: AgendaDate } = components
 
-  return events.map((event, Index) => {
+  return events.map((event, index) => {
     let title = accessors.title(event)
     let end = accessors.end(event)
     let start = accessors.start(event)
@@ -58,27 +51,23 @@ const Day = ({
       isSelected(event, selected)
     )
 
-    let dateLabel = Index === 0 && localizer.format(day, 'agendaDateFormat')
+    let dateLabel = index === 0 && localizer.format(day, 'agendaDateFormat')
     let first =
-      Index === 0
-        ? (
-          <td rowSpan={ events.length } className="rbc-agenda-date-cell">
-            { AgendaDate
-              ? (
-                <AgendaDate day={ day } label={ dateLabel } />
-              )
-              : (
-                dateLabel
-              ) }
-          </td>
-        )
-        : (
-          false
-        )
+      index === 0
+        ? <td rowSpan={ events.length } className="rbc-agenda-date-cell">
+          { AgendaDate
+            ? (
+              <AgendaDate day={ day } label={ dateLabel } />
+            )
+            : (
+              dateLabel
+            ) }
+        </td>
+        : false
 
     return (
       <tr
-        key={ dayKey + '_' + Index }
+        key={ dayKey }
         className={ userProps.className }
         style={ userProps.style }
       >

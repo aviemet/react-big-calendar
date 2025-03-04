@@ -1,23 +1,20 @@
+import { useCalendarContext } from '@/Calendar'
 import NoopWrapper from '@/NoopWrapper'
-import { Components } from '@/types'
+import { Resource } from '@/utils/Resources'
 import clsx from 'clsx'
 
-interface TimeSlotGroupProps {
+interface TimeSlotGroupProps<TResource extends Resource = Resource> {
   renderSlot: (value: any, index: number) => React.ReactNode
-  resource: any
+  resource: TResource
   group: any[]
-  getters: any
-  components: Components
 }
 
 const TimeSlotGroup = ({
   renderSlot,
   resource,
   group,
-  getters,
-  components: { timeslotWrapper: Wrapper = NoopWrapper },
 }: TimeSlotGroupProps) => {
-
+  const { components: { timeslotWrapper: Wrapper = NoopWrapper }, getters } = useCalendarContext()
   const groupProps = getters ? getters.slotGroupProp(group) : {}
 
   return (

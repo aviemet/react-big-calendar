@@ -37,11 +37,17 @@ import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 import createContext from './hooks/createContext'
 
-type CalendarContext = {
+type CalendarContext<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
   localizer: DateLocalizer
   components: Components
-  viewComponents: Record<ViewName | string, ViewComponent>
   accessors: Accessors
+  getters: Getters
+  rtl: boolean
+  date: Date
+  events: TEvent[]
+  backgroundEvents: TEvent[]
+  resources: TResource[]
+  getNow: () => Date
 }
 
 const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
@@ -299,7 +305,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * @type {func}
    * @default () => new Date()
    */
-  getNow?: () => string | Date | undefined
+  getNow?: (() => Date) | undefined
 
   /**
    * Callback fired when the `date` value changes.
@@ -774,11 +780,17 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
 }
 
-const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>(props: CalendarProps<TEvent, TResource>) => {
+const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>({
+  components,
+  localizer,
+  messages,
+  ...props
+}: CalendarProps<TEvent, TResource>) => {
   const {
     date,
     events = [],
     backgroundEvents = [],
+    resources = [],
     elementProps = {},
     popup = false,
     toolbar = true,
@@ -800,7 +812,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     resourceTitleAccessor = 'title',
     eventIdAccessor = 'id',
     longPressThreshold = 250,
-    getNow = () => new Date(),
     dayLayoutAlgorithm = 'overlap',
     className,
     rtl,
@@ -816,7 +827,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     onView,
     onDrillDown,
     showMultiDayTimes,
-    messages,
     formats,
     culture,
     min,
@@ -831,7 +841,8 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     selectable,
     resourceGroupingLayout,
   } = props
-  const localizer = mergeWithDefaults(props?.localizer, culture, formats, messages)
+  const getNow = props.getNow ?? (() => new Date())
+  const localLocalizer = mergeWithDefaults(localizer, culture, formats, messages)
 
   const viewNames = useMemo(() => {
     if(Array.isArray(views)) return views
@@ -864,10 +875,10 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     }
   }, [allDayAccessor, endAccessor, eventIdAccessor, resourceAccessor, resourceIdAccessor, resourceTitleAccessor, startAccessor, titleAccessor, tooltipAccessor])
 
-  const components = useMemo(() => {
+  const localComponents = useMemo(() => {
     return defaults(
-      props.components[view] || {},
-      omit(props.components, viewNames),
+      components[view] || {},
+      omit(components, viewNames),
       {
         eventWrapper: NoopWrapper,
         backgroundEventWrapper: NoopWrapper,
@@ -878,7 +889,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
         timeGutterWrapper: NoopWrapper,
       }
     )
-  }, [props.components, view, viewNames])
+  }, [components, view, viewNames])
 
   const viewComponents = useMemo(() => {
     if(Array.isArray(views)) {
@@ -930,7 +941,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: ViewName) => {
     if(onRangeChange) {
       if(viewComponent.range) {
-        onRangeChange(viewComponent.range(date, { localizer }), view)
+        onRangeChange(viewComponent.range(date, { localizer: localLocalizer }), view)
       } else {
         // TODO: Why only in production?
         // if(process.env.NODE_ENV !== 'production') {
@@ -1005,7 +1016,18 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   const ToolbarComponent = components.toolbar || Toolbar
 
   return (
-    <CalendarProvider value={ { localizer, components, viewComponents, accessors } }>
+    <CalendarProvider value={ {
+      localizer: localLocalizer,
+      components: localComponents,
+      accessors,
+      getters,
+      rtl,
+      date: current,
+      events,
+      backgroundEvents,
+      resources,
+      getNow,
+    } }>
       <div
         { ...elementProps }
         className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
@@ -1013,24 +1035,18 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       >
         { toolbar && (
           <ToolbarComponent
-            date={ current }
             view={ view }
             views={ viewNames }
-            label={ ViewComponent.title(current, { localizer, length }) }
+            label={ ViewComponent.title(current, { localizer: localLocalizer, length }) }
             onView={ handleViewChange }
             onNavigate={ handleNavigate }
-            localizer={ localizer }
           />
         ) }
         <ViewComponent
           { ...props }
           events={ events }
           backgroundEvents={ backgroundEvents }
-          date={ current }
-          getNow={ getNow }
           length={ length }
-          getters={ getters }
-          accessors={ accessors }
           showMultiDayTimes={ showMultiDayTimes }
           getDrilldownView={ handleGetDrilldownView }
           onNavigate={ handleNavigate }

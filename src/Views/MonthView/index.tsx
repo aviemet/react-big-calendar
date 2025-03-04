@@ -9,7 +9,7 @@ import DateHeader from '@/DateHeader'
 import MonthWeek from './MonthWeek'
 import MonthHeader from './MonthHeader'
 import MonthPopOverlay from './MonthPopOverlay'
-import { BaseViewProps, createViewComponent, ViewName } from '@/Views'
+import { BaseViewProps, createViewComponent, ViewName, views } from '@/Views'
 import { SlotInfo, Components, Getters, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
 import { useCalendarContext } from '@/Calendar'
@@ -26,9 +26,6 @@ interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends B
   onSelectEvent?: (event: TEvent) => void
   onDoubleClickEvent?: (event: TEvent) => void
   onKeyPressEvent?: (event: TEvent) => void
-  date: Date
-  components: Components<TEvent, object>
-  getters: Getters<TEvent>
 }
 
 interface DateHeadingProps {
@@ -42,20 +39,14 @@ interface DateHeadingProps {
 
 const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthViewProps<TEvent>) => {
   const {
-    date,
     events = [],
     selected,
-    getters,
-    components,
-    accessors,
-    getNow,
     onSelectEvent,
     onDoubleClickEvent,
     onKeyPressEvent,
     onSelectSlot,
     longPressThreshold,
     selectable,
-    rtl,
     resizable,
     showAllEvents,
     popup,
@@ -67,8 +58,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     onShowMore,
     className,
   } = props
-
-  const { localizer } = useCalendarContext()
+  const { localizer, components, date: calendarDate } = useCalendarContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const slotRowRef = useRef<typeof DateContentRow>(null)
@@ -76,15 +66,15 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
   const [resizeListener, setResizeListener] = useState<number | null>(null)
 
-  const [state, dispatch] = useMonthViewState(props.date)
+  const [state, dispatch] = useMonthViewState(calendarDate)
 
   useEffect(() => {
     dispatch({
       type: 'SET_MEASURE_LIMIT',
-      needLimitMeasure: localizer.neq(date, state.date || new Date(), 'month'),
+      needLimitMeasure: localizer.neq(calendarDate, state.date || new Date(), 'month'),
     })
-    dispatch({ type: 'SET_DATE', date })
-  }, [date, dispatch, localizer, state.date])
+    dispatch({ type: 'SET_DATE', date: calendarDate })
+  }, [calendarDate, dispatch, localizer, state.date])
 
   useEffect(() => {
     let running = false
@@ -212,7 +202,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
   const renderDateHeading = useCallback(
     ({ date, className, drilldownView, isOffRange, label, onDrillDown }: DateHeadingProps) => {
-      let isCurrent = localizer.isSameDate(date, props.date)
+      let isCurrent = localizer.isSameDate(date, calendarDate)
       let DateHeaderComponent = components.month?.dateHeader || DateHeader
 
       return (
@@ -236,10 +226,10 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
         </div>
       )
     },
-    [localizer, props.date, components.month?.dateHeader, handleHeadingClick]
+    [localizer, calendarDate, components.month?.dateHeader, handleHeadingClick]
   )
 
-  const month = localizer.visibleDays(date, localizer)
+  const month = localizer.visibleDays(calendarDate, localizer)
   const weeks = chunk(month, 7)
 
   return (
@@ -249,25 +239,17 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       aria-label="Month View"
       ref={ containerRef }
     >
-      <MonthHeader
-        dates={ weeks[0] }
-        components={ components }
-      />
-      { weeks.map((week, weekIdx) => (
+      <MonthHeader dates={ weeks[0] } />
+      { weeks.map((week, weekIndex) => (
         <MonthWeek
-          key={ weekIdx }
+          key={ weekIndex }
           week={ week }
-          weekIdx={ weekIdx }
+          weekIndex={ weekIndex }
           events={ events }
-          date={ date }
-          getNow={ getNow }
           showAllEvents={ showAllEvents }
           rowLimit={ state.rowLimit }
           selected={ selected }
           selectable={ selectable }
-          components={ components }
-          accessors={ accessors }
-          getters={ getters }
           renderHeader={ renderDateHeading }
           renderForMeasure={ state.needLimitMeasure }
           onShowMore={ handleShowMore }
@@ -276,17 +258,14 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
           onKeyPress={ handleKeyPressEvent }
           onSelectSlot={ handleSelectSlot }
           longPressThreshold={ longPressThreshold }
-          rtl={ rtl }
           resizable={ resizable }
-          slotRowRef={ weekIdx === 0 ? slotRowRef : undefined }
+          slotRowRef={ weekIndex === 0 ? slotRowRef : undefined }
           getContainer={ getContainer }
         />
       )) }
       { popup && (
         <MonthPopOverlay
           overlay={ state.overlay }
-          accessors={ accessors }
-          getters={ getters }
           selected={ selected }
           popupOffset={ popupOffset }
           containerRef={ containerRef }

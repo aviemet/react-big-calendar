@@ -31,7 +31,6 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
     x: number
     y: number
   }
-  components: Components
 }
 
 const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
@@ -39,11 +38,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   backgroundEvents,
   min,
   max,
-  getNow,
   scrollToTime,
-  accessors,
-  components,
-  getters,
   getDrilldownView,
   resources,
   resourceGroupingLayout,
@@ -52,7 +47,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   range,
   enableAutoScroll,
   showMultiDayTimes,
-  rtl,
   resizable,
   width,
   allDayMaxRows,
@@ -75,7 +69,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   handleDragStart,
   popupOffset,
 }: TimeGridProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, getNow, accessors } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
   const [isOverflowing, setIsOverflowing] = useState(false)
@@ -284,17 +278,12 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     range,
     events: allDayEvents,
     width: width || gutterWidth,
-    rtl,
-    getNow,
     selected,
     allDayMaxRows: showAllEvents
       ? Infinity
       : allDayMaxRows ?? Infinity,
     resources: memoizedResources(resources, accessors),
     selectable: selectable,
-    accessors,
-    getters,
-    components,
     scrollRef: scrollRef,
     isOverflowing: isOverflowing,
     longPressThreshold,
@@ -323,9 +312,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
       }
       { popup && <OverlayWrapper
         overlay={ overlay }
-        accessors={ accessors }
-        components={ components }
-        getters={ getters }
         selected={ selected }
         popupOffset={ popupOffset }
         handleDragStart={ handleDragStart }
@@ -343,10 +329,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
           min={ localizer.merge(range[0], min) }
           max={ localizer.merge(range[0], max) }
           step={ step }
-          getNow={ getNow }
           timeslots={ timeslots }
-          components={ components }
-          getters={ getters }
         />
         <EventsWrapper
           range={ range }
@@ -455,9 +438,10 @@ const ResourcesFirst = ({
 const RangeFirst = ({
   range,
   resources,
-  accessors,
   ...props
 }) => {
+  const { accessors } = useCalendarContext()
+
   return range.map((date) => (
     <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date }>
       { resources.map(([id, resource]) => (
@@ -478,7 +462,6 @@ const RangeFirst = ({
 interface EventsWrapperProps {
   events: CalendarEvent[]
   resources: Resource[]
-  accessors: Accessors
   backgroundEvents: CalendarEvent[]
   resourceGroupingLayout: boolean
 }
@@ -486,10 +469,10 @@ interface EventsWrapperProps {
 const EventsWrapper = ({
   events,
   resources,
-  accessors,
   backgroundEvents,
   ...props
 }: EventsWrapperProps) => {
+  const { accessors } = useCalendarContext()
 
   const localResources = memoizedResources(resources, accessors)
   const groupedEvents = localResources.groupEvents(events)
@@ -508,20 +491,13 @@ const EventsWrapper = ({
       resources={ localResources }
       groupedEvents={ groupedEvents }
       groupedBackgroundEvents={ groupedBackgroundEvents }
-      accessors={ accessors }
       { ...props }
     />
   }
 }
 
-
-
 interface OverlayWrapperProps {
   overlay: Overlay
-  accessors: Accessors
-  localizer: Localizer
-  components: Components
-  getters: Getters
   selected: Selected
   popupOffset: PopupOffset
   handleDragStart: HandleDragStart
@@ -534,10 +510,6 @@ interface OverlayWrapperProps {
 
 const OverlayWrapper = ({
   overlay = {},
-  accessors,
-  localizer,
-  components,
-  getters,
   selected,
   popupOffset,
   handleDragStart,
@@ -559,14 +531,10 @@ const OverlayWrapper = ({
 
   return (
     <PopOverlay
+      ref={ containerRef }
       overlay={ overlay }
-      accessors={ accessors }
-      localizer={ localizer }
-      components={ components }
-      getters={ getters }
       selected={ selected }
       popupOffset={ popupOffset }
-      ref={ containerRef }
       handleKeyPressEvent={ handleKeyPressEvent }
       handleSelectEvent={ handleSelectEvent }
       handleDoubleClickEvent={ handleDoubleClickEvent }

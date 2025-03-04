@@ -15,15 +15,15 @@ interface EventEndingRowProps {
   segments: CalendarEvent[]
   slotMetrics: SlotMetrics
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
-  components: Components
 }
 
 const EventEndingRow = ({
   segments,
   slotMetrics,
-  components,
   onShowMore,
 }: EventEndingRowProps) => {
+  const { components } = useCalendarContext()
+
   const { slots } = slotMetrics
 
   const canRenderSlotEvent = (slot: number, span: number) => {
@@ -89,12 +89,11 @@ interface ShowMoreProps {
   segments: CalendarEvent[]
   slotMetrics: SlotMetrics
   slot: number
-  components: Components
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
 }
 
-const ShowMore = ({ segments, slotMetrics, slot, components, onShowMore }: ShowMoreProps) => {
-  const { localizer } = useCalendarContext()
+const ShowMore = ({ segments, slotMetrics, slot, onShowMore }: ShowMoreProps) => {
+  const { localizer, components } = useCalendarContext()
 
   const events = slotMetrics.getEventsForSlot(slot)
   const remainingEvents = eventsInSlot(segments, slot)

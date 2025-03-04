@@ -8,21 +8,16 @@ import NoopWrapper from '@/NoopWrapper'
 import ScrollableWeekWrapper from '@/ScrollableWeekWrapper'
 import Dummy from './Dummy'
 import clsx from 'clsx'
-import { CalendarEvent, Components } from '@/types'
+import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 import { useDateSlotMetrics } from '@/hooks/useDateSlotMetrics'
 
 interface DateContentRowProps {
-  date?: Date
-  events: CalendarEvent[]
   range: Date[]
-  rtl?: boolean
   resizable?: boolean
   resourceId?: any
-  components: Components
   renderForMeasure?: boolean
   renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
-
   container?: () => HTMLElement
   selected?: object
   selectable?: boolean | 'ignoreEvents'
@@ -36,10 +31,7 @@ interface DateContentRowProps {
   onDoubleClick?: (event: CalendarEvent) => void
   onKeyPress?: (event: CalendarEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
-  getNow: () => Date
   isAllDay?: boolean
-  accessors: object
-  getters: object
   minRows?: number
   maxRows?: number
 
@@ -48,15 +40,11 @@ interface DateContentRowProps {
 
 const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObject<HTMLDivElement>) => {
   const {
-    date,
-    events,
     range,
-    rtl,
     resizable,
     resourceId,
     renderForMeasure,
     renderHeader,
-    components,
     container,
     selected,
     selectable,
@@ -70,16 +58,13 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     onDoubleClick,
     onKeyPress,
     dayPropGetter,
-    getNow,
     isAllDay,
-    accessors,
-    getters,
     minRows = 0,
     maxRows = Infinity,
     className,
   } = props
+  const { localizer, components, events, getters, accessors, getNow } = useCalendarContext()
 
-  const { localizer } = useCalendarContext()
   const slotMetrics = useDateSlotMetrics({
     range,
     events,
@@ -168,17 +153,12 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
   return (
     <div className={ clsx(className) } role="rowgroup" ref={ containerRef }>
       <BackgroundCells
-        date={ date }
-        getNow={ getNow }
-        rtl={ rtl }
         range={ range }
         selectable={ selectable }
         container={ getContainer }
-        getters={ getters }
         onSelectStart={ onSelectStart }
         onSelectEnd={ onSelectEnd }
         onSelectSlot={ handleSelectSlot }
-        components={ components }
         longPressThreshold={ longPressThreshold }
         resourceId={ resourceId }
       />

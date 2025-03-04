@@ -1,9 +1,8 @@
 import React from "react"
 
 export interface DateHeaderProps {
-  date: Date
   drilldownView: string
-  isOffRange: boolean
+  // isOffRange: boolean
   label: string
   onDrillDown: (e: React.MouseEvent<HTMLButtonElement>) => void
 }

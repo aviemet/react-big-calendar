@@ -1,6 +1,5 @@
 import { useCallback } from "react"
-import { BaseViewProps } from ".."
-import { CalendarEvent, Getters } from "@/types"
+import { CalendarEvent } from "@/types"
 import PopOverlay from "@/components/PopOverlay"
 
 interface OverlayWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
@@ -11,8 +10,6 @@ interface OverlayWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
     end: Date
     target: HTMLElement
   } | null
-  accessors: BaseViewProps['accessors']
-  getters: Getters
   selected: object
   popupOffset?: number | { x: number, y: number }
   containerRef: React.RefObject<HTMLDivElement>
@@ -25,8 +22,6 @@ interface OverlayWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
 
 const OverlayWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   overlay,
-  accessors,
-  getters,
   selected,
   popupOffset,
   containerRef,
@@ -45,8 +40,6 @@ const OverlayWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   return (
     <PopOverlay
       overlay={ overlay }
-      accessors={ accessors }
-      getters={ getters }
       selected={ selected }
       popupOffset={ popupOffset }
       ref={ containerRef }

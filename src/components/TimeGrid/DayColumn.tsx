@@ -3,26 +3,23 @@ import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
 import { notify } from '@/utils/helpers'
 import TimeSlotGroup from './TimeSlotGroup'
-import { CalendarEvent, Components, Getters } from '@/types'
-import { Accessors } from '@/utils/accessors'
+import { CalendarEvent } from '@/types'
 import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import DayColumnWrapper from '@/DayColumnWrapper'
 import { useCalendarContext } from '@/Calendar'
 import EventsWrapper from './EventsWrapper'
+import { Resource } from '@/utils/Resources'
+import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 
-interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
+interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
   backgroundEvents: TEvent[]
   step: number
   date: Date
   min: Date
   max: Date
-  getNow: () => Date
   isNow: boolean
-  rtl: boolean
   resizable: boolean
-  accessors: Accessors
-  getters: Getters
   showMultiDayTimes: boolean
   culture: string
   timeslots: number
@@ -37,11 +34,9 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   onKeyPressEvent: (args: any) => void
   className: string
   dragThroughEvents: boolean
-  resource: any
-  dayLayoutAlgorithm: any
-  components: Components
+  resource: TResource
+  dayLayoutAlgorithm: DayLayoutAlgorithm
 }
-
 
 const DayColumn = (props: DayColumnProps) => {
   let {
@@ -51,12 +46,8 @@ const DayColumn = (props: DayColumnProps) => {
     date,
     min,
     max,
-    getNow,
     isNow = false,
-    rtl = false,
     resizable = false,
-    accessors,
-    getters,
     timeslots = 2,
     selected,
     selectable,
@@ -68,9 +59,8 @@ const DayColumn = (props: DayColumnProps) => {
     onDoubleClickEvent,
     onKeyPressEvent,
     dayLayoutAlgorithm,
-    components,
   } = props
-  const { localizer } = useCalendarContext()
+  const { localizer, components, getNow, getters, rtl } = useCalendarContext()
 
   const [selecting, setSelecting] = useState(false)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState<number>(null)
@@ -281,26 +271,17 @@ const DayColumn = (props: DayColumnProps) => {
           key={ index }
           group={ group }
           resource={ resource }
-          getters={ getters }
-          components={ components }
         />
       )) }
       <EventContainer
         resource={ resource }
-        accessors={ accessors }
-        getters={ getters }
-        components={ components }
         slotMetrics={ slotMetrics }
       >
         <div className={ clsx('rbc-events-container', { rtl }) }>
           <EventsWrapper
             events={ backgroundEvents }
             isBackgroundEvent={ true }
-            rtl={ rtl }
             selected={ selected }
-            accessors={ accessors }
-            getters={ getters }
-            components={ components }
             resource={ resource }
             step={ step }
             timeslots={ timeslots }
@@ -315,9 +296,6 @@ const DayColumn = (props: DayColumnProps) => {
             events={ events }
             rtl={ rtl }
             selected={ selected }
-            accessors={ accessors }
-            getters={ getters }
-            components={ components }
             resource={ resource }
             step={ step }
             timeslots={ timeslots }

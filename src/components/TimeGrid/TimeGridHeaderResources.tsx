@@ -5,57 +5,19 @@ import DateContentRow from '@/components/DateContentRow'
 import Header from '@/Header'
 import ResourceHeader from '@/ResourceHeader'
 import { notify } from '@/utils/helpers'
-import { CalendarEvent, Components, Getters } from '@/types'
+import { CalendarEvent, Getters } from '@/types'
 import { Resource } from '@/utils/Resources'
 import { DateLocalizer } from '@/localizers'
 import { Accessors } from '@/utils/accessors'
 import { useCalendarContext } from '@/Calendar'
 
-// TimeGridHeaderResources.propTypes = {
-//   range: PropTypes.array.isRequired,
-//   events: PropTypes.array.isRequired,
-//   resources: PropTypes.object,
-//   getNow: PropTypes.func.isRequired,
-//   isOverflowing: PropTypes.bool,
-
-//   rtl: PropTypes.bool,
-//   resizable: PropTypes.bool,
-//   width: PropTypes.number,
-
-//   localizer: PropTypes.object.isRequired,
-//   accessors: PropTypes.object.isRequired,
-//   components: PropTypes.object.isRequired,
-//   getters: PropTypes.object.isRequired,
-
-//   selected: PropTypes.object,
-//   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-//   longPressThreshold: PropTypes.number,
-
-//   allDayMaxRows: PropTypes.number,
-
-//   onSelectSlot: PropTypes.func,
-//   onSelectEvent: PropTypes.func,
-//   onDoubleClickEvent: PropTypes.func,
-//   onKeyPressEvent: PropTypes.func,
-//   onDrillDown: PropTypes.func,
-//   onShowMore: PropTypes.func,
-//   getDrilldownView: PropTypes.func.isRequired,
-//   scrollRef: PropTypes.any,
-// }
-
 interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
   resources: TResource[]
-  getNow: () => Date
   isOverflowing: boolean
-  rtl: boolean
   resizable: boolean
   width: number
-  localizer: DateLocalizer
-  accessors: Accessors
-  components: Components
-  getters: Getters
   selected: TEvent
   selectable: boolean | 'ignoreEvents'
   longPressThreshold: number
@@ -72,12 +34,9 @@ interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEv
 
 const TimeGridHeaderResources = ({
   width,
-  rtl,
   range,
   scrollRef,
   isOverflowing,
-  components,
-  getters,
   selected,
   selectable,
   longPressThreshold,
@@ -89,13 +48,11 @@ const TimeGridHeaderResources = ({
   onShowMore,
   onDrillDown,
   getDrilldownView,
-  getNow,
   resources,
-  accessors,
   events,
   resizable,
 }: TimeGridHeaderResourcesProps) => {
-  const { timeGutterHeader: TimeGutterHeader } = components
+  const { components: { timeGutterHeader: TimeGutterHeader }, getters, accessors, rtl, getNow } = useCalendarContext()
 
   let style = {}
   if(isOverflowing) {
@@ -109,7 +66,7 @@ const TimeGridHeaderResources = ({
       className={ clsx('rbc-time-header', isOverflowing && 'rbc-overflowing') }
     >
       <div
-        className="rbc-label rbc-time-header-gutter"
+        className={ clsx('rbc-label', 'rbc-time-header-gutter') }
         style={ { width, minWidth: width, maxWidth: width } }
       >
         { TimeGutterHeader && <TimeGutterHeader /> }
@@ -118,13 +75,8 @@ const TimeGridHeaderResources = ({
       <HeaderCells
         range={ range }
         getDrilldownView={ getDrilldownView }
-        getNow={ getNow }
-        getters={ getters }
-        components={ components }
         resources={ resources }
-        accessors={ accessors }
         events={ events }
-        rtl={ rtl }
         selectable={ selectable }
         resizable={ resizable }
         allDayMaxRows={ allDayMaxRows }
@@ -147,13 +99,8 @@ export default TimeGridHeaderResources
 interface HeaderCellsProps {
   range: Date[]
   getDrilldownView: (date: Date) => string
-  getNow: () => Date
-  getters: Getters
-  components: Components
   resources: Resource[]
-  accessors: Accessors
   events: CalendarEvent[]
-  rtl: boolean
   selectable: boolean
   resizable: boolean
   onSelectSlot: (slot: Date[]) => void
@@ -169,15 +116,9 @@ interface HeaderCellsProps {
 const HeaderCells = ({
   range,
   getDrilldownView,
-  getNow,
-  getters: { dayProp },
-  components,
   resources,
-  accessors,
   events,
-  rtl,
   selectable,
-  getters,
   resizable,
   allDayMaxRows,
   onSelectSlot,
@@ -188,12 +129,17 @@ const HeaderCells = ({
   longPressThreshold,
   onDrillDown,
 }: HeaderCellsProps) => {
-  const { localizer } = useCalendarContext()
-
   const {
-    header: HeaderComponent = Header,
-    resourceHeader: ResourceHeaderComponent = ResourceHeader,
-  } = components
+    localizer,
+    components: {
+      header: HeaderComponent = Header,
+      resourceHeader: ResourceHeaderComponent = ResourceHeader,
+    },
+    getters,
+    accessors,
+    rtl,
+    getNow,
+  } = useCalendarContext()
 
   const handleHeaderClick = (date, view, e) => {
     e.preventDefault()
@@ -204,88 +150,71 @@ const HeaderCells = ({
 
   const groupedEvents = resources.groupEvents(events)
 
-  return range.map((date, Index) => {
+  return range.map((date) => {
     let drilldownView = getDrilldownView(date)
     let label = localizer.format(date, 'dayFormat')
 
-    const { className, style } = dayProp(date)
+    const { className, style } = getters.dayProp(date)
 
     let header = (
-      <HeaderComponent date={ date } label={ label } localizer={ localizer } />
+      <HeaderComponent date={ date } label={ label } />
     )
 
     return (
-      <div
-        key={ Index }
-        className="rbc-time-header-content rbc-resource-grouping"
+      <div key={ date.toISOString() }
+        className={ clsx('rbc-time-header-content', 'rbc-resource-grouping') }
       >
         <div
-          className={ `rbc-row rbc-time-header-cell${
-            range.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
-          }` }
+          className={ clsx('rbc-row', 'rbc-time-header-cell', {
+            'rbc-time-header-cell-single-day': range.length <= 1,
+          }) }
         >
           <div
             style={ style }
-            className={ clsx(
-              'rbc-header',
-              className,
-              localizer.isSameDate(date, today) && 'rbc-today'
-            ) }
+            className={ clsx('rbc-header', className, {
+              'rbc-today': localizer.isSameDate(date, today),
+            }) }
           >
             { drilldownView
-              ? (
-                <button
-                  type="button"
-                  className="rbc-button-link"
-                  onClick={ (e) =>
-                    handleHeaderClick(date, drilldownView, e)
-                  }
-                >
-                  { header }
-                </button>
-              )
-              : (
-                <span>{ header }</span>
-              ) }
+              ? <button
+                type="button"
+                className="rbc-button-link"
+                onClick={ (e) => handleHeaderClick(date, drilldownView, e) }
+              >
+                { header }
+              </button>
+              : <span>{ header }</span> }
           </div>
         </div>
 
         <div className="rbc-row">
-          { resources.map(([id, resource], Index) => {
-            return (
-              <div
-                key={ `resource_${id}_${Index}` }
-                className={ clsx(
-                  'rbc-header',
-                  className,
-                  localizer.isSameDate(date, today) && 'rbc-today'
-                ) }
-              >
-                <ResourceHeaderComponent
-                  index={ Index }
-                  label={ accessors.resourceTitle(resource) }
-                  resource={ resource }
-                />
-              </div>
-            )
-          }) }
+          { resources.map(([id, resource], index) => (
+            <div
+              key={ `resource_${id}` }
+              className={ clsx('rbc-header', className, {
+                'rbc-today': localizer.isSameDate(date, today),
+              }) }
+            >
+              <ResourceHeaderComponent
+                index={ index }
+                label={ accessors.resourceTitle(resource) }
+                resource={ resource }
+              />
+            </div>
+          )) }
         </div>
 
-        <div className="rbc-row rbc-m-b-negative-3 rbc-h-full">
-          { resources.map(([id, resource], Index) => {
+        <div className={ clsx('rbc-row', 'rbc-m-b-negative-3 rbc-h-full') }>
+          { resources.map(([id, resource]) => {
             // Filter the grouped events by the current date.
-            const filteredEvents = (groupedEvents.get(id) || []).filter(
-              (event) =>
-                localizer.isSameDate(event.start, date) ||
-                localizer.isSameDate(event.end, date)
-            )
+            const filteredEvents = (groupedEvents.get(id) || []).filter(event =>(
+              localizer.isSameDate(event.start, date) || localizer.isSameDate(event.end, date)
+            ))
 
             return (
               <DateContentRow
-                key={ `resource_${id}_${Index}` }
+                key={ `resource_${id}` }
                 isAllDay
-                rtl={ rtl }
-                getNow={ getNow }
                 minRows={ 2 }
                 maxRows={ allDayMaxRows + 1 }
                 range={ [date] } // This ensures that only the single day is rendered
@@ -294,9 +223,6 @@ const HeaderCells = ({
                 className="rbc-allday-cell"
                 selectable={ selectable }
                 selected={ selected }
-                components={ components }
-                accessors={ accessors }
-                getters={ getters }
                 onSelect={ onSelectEvent }
                 onShowMore={ onShowMore }
                 onDoubleClick={ onDoubleClickEvent }

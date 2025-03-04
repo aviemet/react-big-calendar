@@ -1,27 +1,42 @@
+import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent, Getters } from '@/types'
+import { Accessors } from '@/utils/accessors'
 import clsx from 'clsx'
 
-function stringifyPercent(v) {
+function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%'
 }
 
-function TimeGridEvent(props) {
+interface TimeGridEventProps<TEvent extends CalendarEvent = CalendarEvent> {
+  style: { top: number, height: number, width: number, xOffset: number }
+  className: string
+  event: TEvent
+  selected: any
+  label: React.ReactNode
+  continuesPrior: boolean
+  continuesAfter: boolean
+  onClick: () => void
+  onDoubleClick: () => void
+  isBackgroundEvent: boolean
+  onKeyPress: () => void
+}
+
+function TimeGridEvent(props: TimeGridEventProps) {
   const {
     style,
     className,
     event,
-    accessors,
-    rtl,
     selected,
     label,
     continuesPrior,
     continuesAfter,
-    getters,
     onClick,
     onDoubleClick,
     isBackgroundEvent,
     onKeyPress,
-    components: { event: Event, eventWrapper: EventWrapper },
   } = props
+  const { components: { event: Event, eventWrapper: EventWrapper }, accessors, getters, rtl } = useCalendarContext()
+
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)
   let end = accessors.end(event)

@@ -1,5 +1,4 @@
 export interface HeaderProps {
-  date: Date
   label: string
 }
 

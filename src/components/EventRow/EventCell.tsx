@@ -14,15 +14,9 @@ interface EventCellProps {
   isAllDay: boolean
   continuesPrior: boolean
   continuesAfter: boolean
-
-  accessors: Accessors
-  components: { event: CalendarEvent, eventWrapper: EventWrapper }
-  getters: Getters
-
   onSelect: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
   onDoubleClick: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
   onKeyPress: (event: CalendarEvent, e: React.KeyboardEvent<HTMLElement>) => void
-
   children?: Function
   style?: React.CSSProperties
   className?: string
@@ -40,15 +34,12 @@ const EventCell = ({
   onKeyPress,
   continuesPrior,
   continuesAfter,
-  accessors,
-  getters,
   children,
-  components: { event: Event, eventWrapper: EventWrapper },
   slotStart,
   slotEnd,
   ...props
 }: EventCellProps) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, components: { event: Event, eventWrapper: EventWrapper }, accessors, getters } = useCalendarContext()
 
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)
@@ -83,6 +74,7 @@ const EventCell = ({
     </div>
   )
 
+  // Todo: EventWrapper is possiby redeclared
   return (
     <EventWrapper { ...props } type="date">
       <div

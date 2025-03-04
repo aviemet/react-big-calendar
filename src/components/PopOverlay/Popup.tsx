@@ -4,9 +4,6 @@ import useClickOutside from '@/hooks/useClickOutside'
 import EventCell from '@/components/EventRow/EventCell'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { CalendarEvent } from '@/types'
-import { Getters } from '@/types'
-import { Components } from '@/types'
-import { Accessors } from '@/utils/accessors'
 import { useCalendarContext } from '@/Calendar'
 
 /**
@@ -42,10 +39,7 @@ function getPosition(
 
 interface PopupProps {
   containerRef: React.RefObject<HTMLDivElement>
-  accessors: Accessors
-  getters: Getters
   selected: object
-  components: Components
   position: { x: number, y: number, width: number }
   show: () => void
   events: CalendarEvent[]
@@ -63,10 +57,7 @@ interface PopupProps {
 const Popup = forwardRef<HTMLDivElement, PopupProps>((
   {
     containerRef,
-    accessors,
-    getters,
     selected,
-    components,
     position,
     show,
     events,
@@ -81,7 +72,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   },
   ref
 ) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, accessors, getters } = useCalendarContext()
 
   useClickOutside({ ref: ref, callback: show })
 
@@ -112,10 +103,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
           key={ Index }
           type="popup"
           event={ event }
-          getters={ getters }
           onSelect={ onSelect }
-          accessors={ accessors }
-          components={ components }
           onDoubleClick={ onDoubleClick }
           onKeyPress={ onKeyPress }
           continuesPrior={ localizer.lt(accessors.end(event), slotStart, 'day') }

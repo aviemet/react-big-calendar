@@ -5,14 +5,11 @@ export default {
   renderEvent(props, event) {
     let {
       selected,
-      isAllDay: _,
-      accessors,
-      getters,
+      isAllDay,
       onSelect,
       onDoubleClick,
       onKeyPress,
       slotMetrics,
-      components,
       resizable,
     } = props
 
@@ -22,9 +19,6 @@ export default {
     return (
       <EventCell
         event={ event }
-        getters={ getters }
-        accessors={ accessors }
-        components={ components }
         onSelect={ onSelect }
         onDoubleClick={ onDoubleClick }
         onKeyPress={ onKeyPress }

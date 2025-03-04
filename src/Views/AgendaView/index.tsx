@@ -16,17 +16,13 @@ interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> extends 
 }
 
 const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
-  accessors,
-  date,
   events,
-  getters,
   length = DEFAULT_LENGTH,
   onDoubleClickEvent,
   onSelectEvent,
   selected,
-  components,
 }: AgendaViewProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, components, accessors, date } = useCalendarContext()
 
   const headerRef = useRef<HTMLTableElement>(null)
   const dateColRef = useRef<HTMLTableCellElement>(null)
@@ -39,9 +35,8 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   })
 
   const timeRangeLabel = (day, event) => {
-    let labelClass = '',
-        TimeComponent = components.time,
-        label = localizer.messages.allDay
+    const labelClass = ''
+    let label = localizer.messages.allDay
 
     let end = accessors.end(event)
     let start = accessors.start(event)
@@ -60,6 +55,8 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
 
     if(localizer.gt(day, start, 'day')) labelClass = 'rbc-continues-prior'
     if(localizer.lt(day, end, 'day')) labelClass += ' rbc-continues-after'
+
+    const TimeComponent = components.time
 
     return (
       <span className={ labelClass.trim() }>
@@ -141,19 +138,17 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
             <div className="rbc-agenda-content" ref={ contentRef }>
               <table className="rbc-agenda-table">
                 <tbody ref={ tbodyRef }>
-                  { range.map((day, Index) => <Day
-                    day={ day }
-                    events={ events }
-                    dayKey={ day.toISOString() }
-                    localizer={ localizer }
-                    accessors={ accessors }
-                    getters={ getters }
-                    selected={ selected }
-                    components={ components }
-                    timeRangeLabel={ timeRangeLabel }
-                    onSelectEvent={ onSelectEvent }
-                    onDoubleClickEvent={ onDoubleClickEvent }
-                  />) }
+                  { range.map((day, Index) => (
+                    <Day
+                      day={ day }
+                      events={ events }
+                      dayKey={ day.toISOString() }
+                      selected={ selected }
+                      timeRangeLabel={ timeRangeLabel }
+                      onSelectEvent={ onSelectEvent }
+                      onDoubleClickEvent={ onDoubleClickEvent }
+                    />
+                  )) }
                 </tbody>
               </table>
             </div>

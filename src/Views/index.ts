@@ -5,11 +5,10 @@ import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'
 import DayView from './DayView'
 import AgendaView from './AgendaView'
-import { DateLocalizer, type Culture, type DateFormat } from '../localizers'
+import { type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../Calendar'
-import { CalendarEvent, type Components, type Getters, type SlotInfo } from '../types'
+import { CalendarEvent, type Getters, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
-import { Accessors } from '@/utils/accessors'
 import { Resource } from '@/utils/Resources'
 
 export interface TitleOptions {
@@ -36,7 +35,6 @@ export type ViewsProps =
 export type Selectable = boolean | "ignoreEvents"
 
 export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  date?: Date | undefined
   eventOffset?: number
   events?: TEvent[] | undefined
   backgroundEvents?: TEvent[] | undefined
@@ -46,14 +44,9 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   range?: Date[] | undefined
   min?: Date | undefined
   max?: Date | undefined
-  getNow?: (() => Date) | undefined
   scrollToTime?: Date | undefined
   showMultiDayTimes?: boolean | undefined
-  rtl?: boolean | undefined
   width?: number | undefined
-  accessors?: Accessors<TEvent> | undefined
-  components?: Components<TEvent, TResource> | undefined
-  getters?: Getters<TEvent> | undefined
   selected?: object | undefined
   selectable?: Selectable | undefined
   longPressThreshold?: number | undefined

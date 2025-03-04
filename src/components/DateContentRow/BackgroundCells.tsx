@@ -3,14 +3,10 @@ import { coerceDate, notify } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
-import { CalendarEvent, Components, Getters } from '@/types'
+import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 
 interface BackgroundCellsProps {
-  date?: Date
-  getNow: () => Date
-  getters: Getters
-  components: Components
   container?: () => HTMLElement
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
   selectable?: boolean | 'ignoreEvents'
@@ -19,17 +15,12 @@ interface BackgroundCellsProps {
   onSelectEnd?: (event: CalendarEvent) => void
   onSelectStart?: (event: CalendarEvent) => void
   range: Date[]
-  rtl?: boolean
   type?: string
   resourceId?: string | number
 }
 
 const BackgroundCells = (props: BackgroundCellsProps) => {
   const {
-    date,
-    getNow,
-    getters,
-    components,
     container,
     dayPropGetter,
     selectable,
@@ -38,11 +29,10 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     onSelectEnd,
     onSelectStart,
     range,
-    rtl,
     type,
     resourceId,
   } = props
-  const { localizer } = useCalendarContext()
+  const { localizer, components, rtl, getters, date, getNow } = useCalendarContext()
 
   const [selecting, setSelecting] = useState(false)
   const [selector, setSelector] = useState<Selection | null>(null)
@@ -58,7 +48,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
   }, [selectable])
 
   useEffect(() => {
-    return () => destroySelectable()
+    return destroySelectable
   }, [])
 
   const initSelectable = () => {
@@ -68,8 +58,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
     let selectorClicksHandler = (point, actionType) => {
       if(!isEvent(containerRef.current, point) && !isShowMore(containerRef.current, point)) {
-        let rowBox = getBoundsForNode(containerRef.current)
-        let { range, rtl } = props
+        const rowBox = getBoundsForNode(containerRef.current)
 
         if(pointInBox(rowBox, point)) {
           let currentCell = getSlotAtX(rowBox, point.x, rtl, range.length)
@@ -89,7 +78,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
     selector.on('selecting', (box) => {
       if(!selecting) {
-        notify(props.onSelectStart, [box])
+        notify(onSelectStart, [box])
         setDateCellStart({ x: box.x, y: box.y })
       }
       if(selector.isSelected(containerRef.current)) {
@@ -111,7 +100,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     })
 
     selector.on('beforeSelect', (box) => {
-      if(props.selectable !== 'ignoreEvents') return
+      if(selectable !== 'ignoreEvents') return
 
       return !isEvent(containerRef.current, box)
     })
@@ -125,7 +114,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     selector.on('select', (bounds) => {
       selectSlot({ ...state, action: 'select', bounds })
       setSelecting(false)
-      notify(props.onSelectEnd, [state])
+      notify(onSelectEnd, [state])
     })
   }
 
@@ -137,14 +126,14 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
   const selectSlot = ({ endIndex, startIndex, action, bounds, box }) => {
     if(endIndex !== -1 && startIndex !== -1)
-      props.onSelectSlot &&
-        props.onSelectSlot({
+      onSelectSlot &&
+        onSelectSlot({
           start: startIndex,
           end: endIndex,
           action,
           bounds,
           box,
-          resourceId: props.resourceId,
+          resourceId: resourceId,
         })
   }
 
@@ -164,12 +153,12 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
               style={ style }
               className={ clsx(
                 'rbc-day-bg',
+                className,
                 {
                   'rbc-selected-cell': selected,
                   'rbc-today': localizer.isSameDate(date, current),
                   'rbc-off-range-bg': current && localizer.neq(current, date, 'month'),
                 },
-                className,
               ) }
             />
           </Wrapper>

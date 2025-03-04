@@ -6,7 +6,7 @@ export const components = {
   dateCellWrapper: NoopWrapper,
 }
 
-export { default as Calendar } from './Calendar'
+export { default as Calendar, useCalendarContext } from './Calendar'
 
 export {
   DateLocalizer,

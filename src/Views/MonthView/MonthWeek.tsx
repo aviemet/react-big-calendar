@@ -1,32 +1,28 @@
 import React from 'react'
 import { BaseViewProps } from '@/Views'
 import { DateLocalizer } from '@/localizers'
-import { Components, CalendarEvent } from '@/types'
+import { CalendarEvent } from '@/types'
 import DateContentRow from '@/components/DateContentRow'
 import { inRange, sortWeekEvents } from '@/utils/eventLevels'
 import { useCalendarContext } from '@/Calendar'
+import { Accessors } from '@/utils/accessors'
 
 const eventsForWeek = <TEvent extends CalendarEvent>(
   events: TEvent[],
   start: Date,
   end: Date,
-  accessors: BaseViewProps<TEvent>['accessors'],
+  accessors: Accessors<TEvent>,
   localizer: DateLocalizer
 ) => events.filter((e) => inRange(e, start, end, accessors, localizer))
 
 interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
   week: Date[]
-  weekIdx: number
+  weekIndex: number
   events: TEvent[]
-  date: Date
-  getNow: () => Date
   showAllEvents?: boolean
   rowLimit: number
   selected?: object
   selectable?: boolean | 'ignoreEvents'
-  components: Components<TEvent, object>
-  accessors: BaseViewProps<TEvent>['accessors']
-  getters: BaseViewProps<TEvent>['getters']
   renderHeader: (props: any) => React.ReactNode
   renderForMeasure?: boolean
   onShowMore: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
@@ -35,7 +31,6 @@ interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
   onKeyPress: (event: TEvent) => void
   onSelectSlot: (range: Date[], slotInfo: any) => void
   longPressThreshold?: number
-  rtl?: boolean
   resizable?: boolean
   slotRowRef?: React.RefObject<HTMLDivElement>
   getContainer: () => HTMLElement | null
@@ -43,17 +38,12 @@ interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
 
 const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
   week,
-  weekIdx,
+  weekIndex,
   events,
-  date,
-  getNow,
   showAllEvents,
   rowLimit,
   selected,
   selectable,
-  components,
-  accessors,
-  getters,
   renderHeader,
   renderForMeasure,
   onShowMore,
@@ -62,12 +52,11 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
   onKeyPress,
   onSelectSlot,
   longPressThreshold,
-  rtl,
   resizable,
   slotRowRef,
   getContainer,
 }: MonthWeekProps<TEvent>) => {
-  const { localizer } = useCalendarContext()
+  const { localizer, accessors } = useCalendarContext()
 
   const weeksEvents = eventsForWeek(
     [...(events || [])],
@@ -81,20 +70,15 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
 
   return (
     <DateContentRow
-      key={ weekIdx }
+      key={ weekIndex }
       ref={ slotRowRef }
-      container={ getContainer }
       className="rbc-month-row"
-      getNow={ getNow }
-      date={ date }
+      container={ getContainer }
       range={ week }
       events={ sorted }
       maxRows={ showAllEvents ? Infinity : rowLimit }
       selected={ selected }
       selectable={ selectable }
-      components={ components }
-      accessors={ accessors }
-      getters={ getters }
       renderHeader={ renderHeader }
       renderForMeasure={ renderForMeasure }
       onShowMore={ onShowMore }
@@ -103,7 +87,6 @@ const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({
       onKeyPress={ onKeyPress }
       onSelectSlot={ onSelectSlot }
       longPressThreshold={ longPressThreshold }
-      rtl={ rtl }
       resizable={ resizable }
       showAllEvents={ showAllEvents }
     />

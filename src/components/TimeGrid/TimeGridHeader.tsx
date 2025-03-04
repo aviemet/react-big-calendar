@@ -1,32 +1,21 @@
 
+import React from 'react'
 import clsx from 'clsx'
 import scrollbarSize from 'dom-helpers/scrollbarSize'
-import React from 'react'
-
 import DateContentRow from '@/components/DateContentRow'
-import Header from '@/Header'
 import ResourceHeader from '@/ResourceHeader'
-import { notify } from '@/utils/helpers'
-import { CalendarEvent, Components, Getters } from '@/types'
-import { Accessors } from '@/utils/accessors'
-import { DateLocalizer } from '@/localizers'
+import { CalendarEvent } from '@/types'
 import { Resource } from '@/utils/Resources'
 import { useCalendarContext } from '@/Calendar'
+import TimeGridHeaderCells from './TimeGridHeaderCells'
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
   resources: TResource[]
-  getNow: () => Date
   isOverflowing: boolean
-
-  rtl: boolean
   resizable: boolean
   width: number
-  localizer: DateLocalizer
-  accessors: Accessors
-  components: Components
-  getters: Getters
   selected: TEvent
   selectable: boolean | 'ignoreEvents'
   longPressThreshold: number
@@ -43,15 +32,10 @@ interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TRes
 
 const TimeGridHeader = ({
   width,
-  rtl,
   resources,
   range,
   events,
-  getNow,
-  accessors,
   selectable,
-  components,
-  getters,
   scrollRef,
   isOverflowing,
   resizable,
@@ -67,9 +51,14 @@ const TimeGridHeader = ({
   selected,
 }: TimeGridHeaderProps) => {
   const {
-    timeGutterHeader: TimeGutterHeader,
-    resourceHeader: ResourceHeaderComponent = ResourceHeader,
-  } = components
+    components: {
+      timeGutterHeader: TimeGutterHeader,
+      resourceHeader: ResourceHeaderComponent = ResourceHeader,
+    },
+    accessors,
+    rtl,
+    getNow,
+  } = useCalendarContext()
 
   let style = {}
   if(isOverflowing) {
@@ -109,19 +98,15 @@ const TimeGridHeader = ({
               range.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
             }` }
           >
-            { <HeaderCells
+            { <TimeGridHeaderCells
               range={ range }
               getDrilldownView={ getDrilldownView }
               getNow={ getNow }
-              getters={ getters }
-              components={ components }
               onDrillDown={ onDrillDown }
             /> }
           </div>
           <DateContentRow
             isAllDay
-            rtl={ rtl }
-            getNow={ getNow }
             minRows={ 2 }
             // Add +1 to include showMore button row in the row limit
             maxRows={ allDayMaxRows + 1 }
@@ -131,9 +116,6 @@ const TimeGridHeader = ({
             className="rbc-allday-cell"
             selectable={ selectable }
             selected={ selected }
-            components={ components }
-            accessors={ accessors }
-            getters={ getters }
             onSelect={ onSelectEvent }
             onShowMore={ onShowMore }
             onDoubleClick={ onDoubleClickEvent }
@@ -149,75 +131,7 @@ const TimeGridHeader = ({
 
 }
 
-
 export default TimeGridHeader
-
-
-interface HeaderCellsProps {
-  range: Date[]
-  getDrilldownView: (date: Date) => string
-  getNow: () => Date
-  getters: { dayProp: (date: Date) => { className: string, style: React.CSSProperties } }
-  components: Components
-  onDrillDown: (date: Date, view: string) => void
-}
-
-const HeaderCells = ({
-  range,
-  getDrilldownView,
-  getNow,
-  getters: { dayProp },
-  components,
-  onDrillDown,
-}: HeaderCellsProps) => {
-  const { localizer } = useCalendarContext()
-  const { header: HeaderComponent = Header } = components
-
-  const today = getNow()
-
-  const handleHeaderClick = (date: Date, view: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    notify(onDrillDown, [date, view])
-  }
-
-  return (
-    <>{ range.map((date, i) => {
-      let drilldownView = getDrilldownView(date)
-      let label = localizer.format(date, 'dayFormat')
-
-      const { className, style } = dayProp(date)
-
-      let header = (
-        <HeaderComponent date={ date } label={ label } />
-      )
-
-      return (
-        <div
-          key={ i }
-          style={ style }
-          className={ clsx('rbc-header', className, {
-            'rbc-today': localizer.isSameDate(date, today),
-          }) }
-        >
-          { drilldownView
-            ? (
-              <button
-                type="button"
-                className="rbc-button-link"
-                onClick={ (e) => handleHeaderClick(date, drilldownView, e) }
-              >
-                { header }
-              </button>
-            )
-            : (
-              <span>{ header }</span>
-            ) }
-        </div>
-      )
-    }) }</>
-  )
-}
-
 
 
 // This was never used?
