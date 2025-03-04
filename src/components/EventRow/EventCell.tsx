@@ -39,8 +39,8 @@ const EventCell = ({
   slotEnd,
   ...props
 }: EventCellProps) => {
-  const { localizer, components: { event: Event, eventWrapper: EventWrapper }, accessors, getters } = useCalendarContext()
-
+  const { localizer, components, accessors, getters } = useCalendarContext()
+  console.log({ components })
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)
   let end = accessors.end(event)
@@ -54,23 +54,22 @@ const EventCell = ({
 
   let userProps = getters.eventProp(event, start, end, selected)
 
+  const { event: Event, eventWrapper: EventWrapper } = components
+  console.log({ Event, EventWrapper })
   const content = (
     <div className="rbc-event-content" title={ tooltip || undefined }>
       { Event
-        ? (
-          <Event
-            event={ event }
-            continuesPrior={ continuesPrior }
-            continuesAfter={ continuesAfter }
-            title={ title }
-            isAllDay={ allDay }
-            slotStart={ slotStart }
-            slotEnd={ slotEnd }
-          />
-        )
-        : (
-          title
-        ) }
+        ? <Event
+          event={ event }
+          continuesPrior={ continuesPrior }
+          continuesAfter={ continuesAfter }
+          title={ title }
+          isAllDay={ allDay }
+          slotStart={ slotStart }
+          slotEnd={ slotEnd }
+        />
+        : title
+      }
     </div>
   )
 

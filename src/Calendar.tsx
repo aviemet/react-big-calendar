@@ -37,16 +37,13 @@ import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 import createContext from './hooks/createContext'
 
-type CalendarContext<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
+type CalendarContext = {
   localizer: DateLocalizer
   components: Components
   accessors: Accessors
   getters: Getters
   rtl: boolean
   date: Date
-  events: TEvent[]
-  backgroundEvents: TEvent[]
-  resources: TResource[]
   getNow: () => Date
 }
 
@@ -1024,9 +1021,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       getters,
       rtl,
       date: current,
-      events,
-      backgroundEvents,
-      resources,
       getNow,
     } }>
       <div

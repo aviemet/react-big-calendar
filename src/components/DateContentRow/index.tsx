@@ -12,7 +12,8 @@ import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 import { useDateSlotMetrics } from '@/hooks/useDateSlotMetrics'
 
-interface DateContentRowProps {
+interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
+  events: TEvent[]
   range: Date[]
   resizable?: boolean
   resourceId?: any
@@ -40,6 +41,7 @@ interface DateContentRowProps {
 
 const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObject<HTMLDivElement>) => {
   const {
+    events,
     range,
     resizable,
     resourceId,
@@ -63,7 +65,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     maxRows = Infinity,
     className,
   } = props
-  const { localizer, components, events, getters, accessors, getNow } = useCalendarContext()
+  const { localizer, components, getters, accessors, getNow } = useCalendarContext()
 
   const slotMetrics = useDateSlotMetrics({
     range,

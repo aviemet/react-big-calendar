@@ -1,5 +1,4 @@
 import React from 'react'
-import { BaseViewProps } from '@/Views'
 import { DateLocalizer } from '@/localizers'
 import { CalendarEvent } from '@/types'
 import DateContentRow from '@/components/DateContentRow'
