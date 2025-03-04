@@ -10,7 +10,7 @@ import MonthWeek from './MonthWeek'
 import MonthHeader from './MonthHeader'
 import MonthPopOverlay from './MonthPopOverlay'
 import { BaseViewProps, createViewComponent, ViewName, views } from '@/Views'
-import { SlotInfo, Components, Getters, CalendarEvent } from '@/types'
+import { SlotInfo, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
 import { useCalendarContext } from '@/Calendar'
 
@@ -207,14 +207,11 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
       return (
         <div
-          className={ clsx(
-            className,
-            {
-              'rbc-off-range': isOffRange,
-              'rbc-current': isCurrent,
-            }
-          ) }
           role="cell"
+          className={ clsx(className, {
+            'rbc-off-range': isOffRange,
+            'rbc-current': isCurrent,
+          }) }
         >
           <DateHeaderComponent
             label={ label || localizer.format(date, 'dateFormat') }
@@ -298,4 +295,3 @@ export default createViewComponent(MonthView, {
   },
   title: (date, { localizer }) => localizer.format(date, 'monthHeaderFormat'),
 })
-

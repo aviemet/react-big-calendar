@@ -929,6 +929,10 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     }
   }, [dayPropGetter, eventPropGetter, slotGroupPropGetter, slotPropGetter])
 
+  const ViewComponent: ViewComponent = viewComponents[view]
+
+  const ToolbarComponent = components.toolbar || Toolbar
+
   /**
    *
    * @param date
@@ -961,7 +965,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       today,
     })
 
-    onNavigate(movedDate, view, action)
+    onNavigate?.(movedDate, view, action)
     handleRangeChange(movedDate, ViewComponent)
   }
 
@@ -1011,9 +1015,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
   const current = coerceDate(date || getNow())
 
-  const ViewComponent: ViewComponent = viewComponents[view]
-
-  const ToolbarComponent = components.toolbar || Toolbar
 
   return (
     <CalendarProvider value={ {

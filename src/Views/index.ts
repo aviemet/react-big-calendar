@@ -7,7 +7,7 @@ import DayView from './DayView'
 import AgendaView from './AgendaView'
 import { type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../Calendar'
-import { CalendarEvent, type Getters, type SlotInfo } from '../types'
+import { CalendarEvent, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 import { Resource } from '@/utils/Resources'
 
@@ -18,7 +18,7 @@ export interface TitleOptions {
 }
 
 export interface ViewStatic {
-  navigate(date: Date, action: NavigateAction, props: any): Date
+  navigate(date: Date, action: NavigateAction): Date
   title(date: Date, options: TitleOptions): string
 }
 
