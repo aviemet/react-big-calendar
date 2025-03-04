@@ -5,7 +5,7 @@ import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'
 import DayView from './DayView'
 import AgendaView from './AgendaView'
-import { type Culture, type DateFormat } from '../localizers'
+import { DateLocalizer, type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../Calendar'
 import { CalendarEvent, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
@@ -17,8 +17,10 @@ export interface TitleOptions {
   [propName: string]: any
 }
 
+export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
+
 export interface ViewStatic {
-  navigate(date: Date, action: NavigateAction): Date
+  navigate(date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer): Date
   title(date: Date, options: TitleOptions): string
 }
 
@@ -67,9 +69,9 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
 }
 
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {
-  range: (date: Date, props?: Partial<CalendarProps>) => { start: Date, end: Date } | Date[]
-  navigate: (date: Date, action: NavigateAction, props?: Partial<CalendarProps>) => Date
-  title: (date: Date, props?: Partial<CalendarProps>) => string
+  range: (date: Date, props?: CalendarPropsWithLocalizer) => { start: Date, end: Date }
+  navigate: (date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer) => Date
+  title: (date: Date, props?: CalendarPropsWithLocalizer) => string
 }
 
 export function createViewComponent<

@@ -87,7 +87,6 @@ const customComponents = {
         id="my-custom-show-more"
         style={ { border: '4px solid red', cursor: 'pointer' } }
         onClick={ () => {
-          console.log('showMoreProps', showMoreProps)
           window.alert(`
             Clicked ${showMoreProps.slotDate
         .toISOString()

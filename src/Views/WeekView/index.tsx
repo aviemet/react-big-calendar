@@ -63,7 +63,7 @@ export default createViewComponent(WeekView, {
   },
 
   title: (date, { localizer }) => {
-    let [start, ...rest] = weekViewRange(date, { localizer })
-    return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+    let { start, end } = weekViewRange(date, { localizer })
+    return localizer.format({ start, end }, 'dayRangeHeaderFormat')
   },
 })

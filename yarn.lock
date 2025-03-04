@@ -11213,6 +11213,11 @@ uncontrollable@^7.2.1:
     invariant "^2.2.4"
     react-lifecycles-compat "^3.0.4"
 
+uncontrollable@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uncontrollable/-/uncontrollable-9.0.0.tgz#a20495552b1c23640edd530733ed8c57bf66c103"
+  integrity sha512-wPScOFmvRkHdvebf7qNPn9Wog9B1TL8Dqcx0Vecz6HYTKFKMfGKP6MJHTjiKL8kwd8KTW3YfIUke7pmRDtkcRQ==
+
 undici-types@~6.20.0:
   version "6.20.0"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"

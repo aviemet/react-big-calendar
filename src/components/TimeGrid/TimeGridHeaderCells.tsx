@@ -5,7 +5,7 @@ import { notify } from '@/utils/helpers'
 import { useCalendarContext } from '@/Calendar'
 
 interface TimeGridHeaderCellsProps {
-  range: Date[]
+  range: { start: Date, end: Date }
   getDrilldownView: (date: Date) => string
   onDrillDown: (date: Date, view: string) => void
 }
@@ -24,10 +24,12 @@ const TimeGridHeaderCells = ({
     notify(onDrillDown, [date, view])
   }
 
+  const rangeArray = localizer.range(range.start, range.end)
+
   const HeaderComponent = components.header || Header
 
   return (
-    <>{ range.map((date, i) => {
+    <>{ rangeArray.map((date, i) => {
       let drilldownView = getDrilldownView(date)
       let label = localizer.format(date, 'dayFormat')
 

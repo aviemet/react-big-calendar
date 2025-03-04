@@ -45,7 +45,6 @@ export default function DnDOutsideResource({ localizer }) {
       // allow draggable items to be dropped on cal, based on
       // whether event.preventDefault is called
       if(draggedEvent !== 'undroppable') {
-        console.log('preventDefault')
         dragEvent.preventDefault()
       }
     },

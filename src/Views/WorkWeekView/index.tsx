@@ -4,10 +4,11 @@ import WeekView from '../WeekView'
 import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 
-const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, options) => {
-  return WeekView.range(date, options).filter(
-    (d) => [6, 0].indexOf(d.getDay()) === -1
-  )
+const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, { localizer }) => {
+  let start = localizer.startOf(date, 'week', 1)
+  let end = localizer.add(start, 4, 'day')
+
+  return { start, end }
 }
 
 interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
@@ -45,14 +46,13 @@ const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekP
       enableAutoScroll={ enableAutoScroll }
     />
   )
-
 }
 
 export default createViewComponent(WorkWeek, {
   range: workWeekRange,
   navigate: WeekView.navigate,
   title: (date, { localizer }) => {
-    let [start, ...rest] = workWeekRange(date, { localizer })
-    return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+    let { start, end } = workWeekRange(date, { localizer })
+    return localizer.format({ start, end }, 'dayRangeHeaderFormat')
   },
 })

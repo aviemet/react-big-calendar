@@ -53,6 +53,7 @@ function getSlotMetrics({
   timeslots: number
   localizer: DateLocalizer
 }): SlotMetrics {
+  console.log({ min, max, step, timeslots })
   const key = getKey({ min, max, step, timeslots, localizer })
 
   // DST differences are handled inside the localizer

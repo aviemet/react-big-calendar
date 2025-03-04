@@ -36,6 +36,7 @@ import {
 import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 import createContext from './hooks/createContext'
+import { useUncontrolled } from 'uncontrollable'
 
 type CalendarContext = {
   localizer: DateLocalizer
@@ -783,6 +784,12 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   messages,
   ...props
 }: CalendarProps<TEvent, TResource>) => {
+  const controlledProps = useUncontrolled(props, {
+    view: 'onView',
+    date: 'onNavigate',
+    selected: 'onSelectEvent',
+  })
+
   const {
     date,
     events = [],
@@ -837,9 +844,14 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     showAllEvents,
     selectable,
     resourceGroupingLayout,
-  } = props
+  } = controlledProps
+
+  console.log({ controlledProps })
+
   const getNow = props.getNow ?? (() => new Date())
   const localLocalizer = mergeWithDefaults(localizer, culture, formats, messages)
+
+
 
   const viewNames = useMemo(() => {
     if(Array.isArray(views)) return views
@@ -957,6 +969,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
     const movedDate = moveDate(ViewComponent, {
       ...props,
+      localizer,
       action,
       date: newDate || date || today,
       today,
@@ -966,14 +979,14 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     handleRangeChange(movedDate, ViewComponent)
   }
 
-  const handleViewChange = (localView: ViewName) => {
-    if(view !== localView && isValidView(localView, props)) {
-      onView(localView)
+  const handleViewChange = (newView: ViewName) => {
+    if(view !== newView && isValidView(newView)) {
+      onView?.(newView)
     }
 
     handleRangeChange(
       coerceDate(date || getNow()),
-      views[localView],
+      views[newView],
       viewComponents
     )
   }
@@ -1011,7 +1024,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   }
 
   const current = coerceDate(date || getNow())
-
 
   return (
     <CalendarProvider value={ {
@@ -1060,4 +1072,3 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 }
 
 export default Calendar
-

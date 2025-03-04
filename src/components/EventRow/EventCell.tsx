@@ -40,7 +40,7 @@ const EventCell = ({
   ...props
 }: EventCellProps) => {
   const { localizer, components, accessors, getters } = useCalendarContext()
-  console.log({ components })
+
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)
   let end = accessors.end(event)
@@ -55,7 +55,7 @@ const EventCell = ({
   let userProps = getters.eventProp(event, start, end, selected)
 
   const { event: Event, eventWrapper: EventWrapper } = components
-  console.log({ Event, EventWrapper })
+
   const content = (
     <div className="rbc-event-content" title={ tooltip || undefined }>
       { Event
