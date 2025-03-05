@@ -65,7 +65,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     maxRows = Infinity,
     className,
   } = props
-  const { localizer, components, getters, accessors, getNow } = useCalendarContext()
+  const { localizer, components, getters, accessors, getNow, rtl } = useCalendarContext()
 
   const slotMetrics = useDateSlotMetrics({
     range,
@@ -178,7 +178,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
           </div>
         ) }
         <ScrollableWeekComponent>
-          <WeekWrapper isAllDay={ isAllDay } { ...eventRowProps } rtl={ props.rtl }>
+          <WeekWrapper isAllDay={ isAllDay } { ...eventRowProps } rtl={ rtl }>
             { slotMetrics.levels.map((segs, Index) => (
               <EventRow key={ Index } segments={ segs } { ...eventRowProps } />
             )) }

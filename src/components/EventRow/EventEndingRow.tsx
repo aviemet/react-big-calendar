@@ -1,8 +1,8 @@
-import EventRowMixin from './EventRowMixin'
+import { Event, EventRowSpan } from './EventRowMixin'
 import { eventLevels } from '@/utils/eventLevels'
 import { range } from 'lodash-es'
 import clsx from 'clsx'
-import { CalendarEvent, Components } from '@/types'
+import { CalendarEvent } from '@/types'
 import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import { useCalendarContext } from '@/Calendar'
 
@@ -22,8 +22,6 @@ const EventEndingRow = ({
   slotMetrics,
   onShowMore,
 }: EventEndingRowProps) => {
-  const { components } = useCalendarContext()
-
   const { slots } = slotMetrics
 
   const canRenderSlotEvent = (slot: number, span: number) => {
@@ -43,7 +41,7 @@ const EventEndingRow = ({
   while(current <= slots) {
     let key = '_lvl_' + current
 
-    let { event, left, right, span } =
+    const { event, left, right, span } =
         rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0] || {}
 
     if(!event) {
@@ -51,30 +49,40 @@ const EventEndingRow = ({
       continue
     }
 
-    let gap = Math.max(0, left - lastEnd)
+    const gap = Math.max(0, left - lastEnd)
 
     if(canRenderSlotEvent(left, span)) {
-      let content = EventRowMixin.renderEvent(props, event)
+      // const content = EventRowMixin.renderEvent(props, event)
+      const content = <Event event={ event } { ...props } />
 
-      if(gap) {
-        row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+      if(Boolean(gap)) {
+        // row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+        row.push(<EventRowSpan slots={ slots } len={ gap } key={ `${key}_gap` } />)
       }
 
-      row.push(EventRowMixin.renderSpan(slots, span, key, content))
+      // row.push(EventRowMixin.renderSpan(slots, span, key, content))
+      row.push(<EventRowSpan slots={ slots } len={ span } key={ key }>
+        { content }
+      </EventRowSpan>)
 
       lastEnd = current = right + 1
     } else {
-      if(gap) {
-        row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+      if(Boolean(gap)) {
+        // row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+        row.push(<EventRowSpan slots={ slots } len={ gap } key={ `${key}_gap` } />)
       }
 
       row.push(
-        EventRowMixin.renderSpan(
-          slots,
-          1,
-          key,
-          <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } components={ components } onShowMore={ onShowMore } />
-        )
+        // EventRowMixin.renderSpan(
+        //   slots,
+        //   1,
+        //   key,
+        //   <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } components={ components } onShowMore={ onShowMore } />
+        // )
+
+        row.push(<EventRowSpan slots={ slots } len={ 1 } key={ key }>
+          <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } onShowMore={ onShowMore } />
+        </EventRowSpan>)
       )
       lastEnd = current = current + 1
     }

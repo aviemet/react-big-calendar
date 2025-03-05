@@ -1,7 +1,6 @@
 import { navigate } from '@/utils/move'
-import TimeGrid from '../../components/TimeGrid'
-import { BaseViewProps, createViewComponent, ViewComponent } from '..'
-import { coerceDate } from '@/utils/helpers'
+import TimeGrid from '@/components/TimeGrid'
+import { BaseViewProps, createViewComponent } from '@/Views'
 import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 
@@ -15,11 +14,6 @@ export interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> exte
   handleDragStart?: (event: React.DragEvent) => void
   popupOffset?: number | { x: number, y: number }
   eventOffset?: number
-}
-
-
-const dayViewRange: ViewComponent<DayViewProps>['range'] = (date: Date, { localizer }) => {
-  return [localizer.startOf(date, 'day')]
 }
 
 const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewProps<TEvent>) => {
@@ -36,12 +30,11 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
     scrollToTime = localizer.startOf(new Date(), 'day'),
     enableAutoScroll = true,
   } = props
-  let range = dayViewRange(coerceDate(date), { localizer: localizer })
 
   return (
     <TimeGrid
       { ...props }
-      range={ range }
+      range={ [localizer.startOf(date, 'day')] }
       eventOffset={ 10 }
       min={ min }
       max={ max }
@@ -52,7 +45,9 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
 }
 
 export default createViewComponent(DayView, {
-  range: dayViewRange,
+  range: (date: Date, { localizer }) => {
+    return { start: localizer.startOf(date, 'day'), end: localizer.endOf(date, 'day') }
+  },
   navigate: (date, action, { localizer }) => {
     switch(action) {
       case navigate.PREVIOUS:
