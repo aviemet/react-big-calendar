@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import {
   DateLocalizer,
+  DateRange,
   mergeWithDefaults,
   type Culture,
   type Formats,
@@ -407,7 +408,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * (range: { start: Date, end: Date, resourceId: (number|string) }) => ?boolean
    * ```
    */
-  onSelecting?: (range: { start: Date, end: Date }) => boolean | undefined
+  onSelecting?: (range: DateRange) => boolean | undefined
 
   /**
    * Callback fired when a +{count} more is clicked

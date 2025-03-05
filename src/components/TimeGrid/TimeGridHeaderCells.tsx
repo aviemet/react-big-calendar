@@ -2,9 +2,10 @@ import React from 'react'
 import clsx from 'clsx'
 import Header from '@/Header'
 import { useCalendarContext } from '@/Calendar'
+import { DateRange } from '@/localizers'
 
 interface TimeGridHeaderCellsProps {
-  range: { start: Date, end: Date }
+  range: DateRange
   getDrilldownView: (date: Date) => string
   onDrillDown: (date: Date, view: string) => void
 }

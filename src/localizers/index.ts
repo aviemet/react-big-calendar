@@ -33,13 +33,9 @@ import { StartOfWeek, Unit } from 'date-arithmetic'
 import { buildMessages, type Messages } from '@/utils/messages'
 import { CalendarEvent } from '@/types'
 
-export interface DateRange {
-  start: Date
-  end: Date
-}
+export type DateRange = { start: Date, end: Date }
 
 export type Culture = string
-export type FormatInput = number | string | Date | DateRange
 export type DateFormatFunction = (date: Date, culture?: Culture, localizer?: DateLocalizer) => string
 export type DateRangeFormatFunction = (range: DateRange, culture?: Culture, localizer?: DateLocalizer) => string
 export type DateFormat = string | DateFormatFunction
@@ -113,6 +109,7 @@ export interface Formats {
   eventTimeRangeEndFormat?: DateRangeFormatFunction | undefined
 }
 
+export type FormatInput = number | string | Date | DateRange
 
 export type RangeFunction = (range: DateRange, culture: Culture, local: DateLocalizer) => string
 
@@ -121,13 +118,13 @@ type Formatter = (value: FormatInput, format: string, culture?: Culture) => stri
 export type FormatFunction = (value: FormatInput, culture: Culture, localizer: DateLocalizer) => string
 
 export interface EventComparison {
-  evtA: { start: Date, end: Date, allDay: boolean }
-  evtB: { start: Date, end: Date, allDay: boolean }
+  evtA: DateRange & { allDay: boolean }
+  evtB: DateRange & { allDay: boolean }
 }
 
 export interface EventRangeComparison {
-  event: { start: Date, end: Date }
-  range: { start: Date, end: Date }
+  event: DateRange
+  range: DateRange
 }
 
 export const localizerDefaultMethods = {

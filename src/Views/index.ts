@@ -5,7 +5,7 @@ import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'
 import DayView from './DayView'
 import AgendaView from './AgendaView'
-import { DateLocalizer } from '../localizers'
+import { DateLocalizer, DateRange } from '../localizers'
 import { CalendarProps } from '../Calendar'
 import { CalendarEvent, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
@@ -58,7 +58,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
 }
 
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {
-  range: (date: Date, props?: CalendarPropsWithLocalizer) => { start: Date, end: Date }
+  range: (date: Date, props?: CalendarPropsWithLocalizer) => DateRange
   navigate: (date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer) => Date
   title: (date: Date, props?: CalendarPropsWithLocalizer) => string
 }

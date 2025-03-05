@@ -1,7 +1,7 @@
 import * as dates from '../utils/dates'
 import { DateLocalizer, RangeFunction } from '.'
 
-import { FormatInput, Formats } from './types'
+import { FormatInput, Formats } from '.'
 
 let dateRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
   `${local.format(start, 'P', culture)} – ${local.format(end, 'P', culture)}`

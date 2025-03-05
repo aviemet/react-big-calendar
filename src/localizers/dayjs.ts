@@ -11,7 +11,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 import minMax from 'dayjs/plugin/minMax'
 import utc from 'dayjs/plugin/utc'
 
-import { Culture, Formats } from './types'
+import { Culture, Formats } from '.'
 import { Unit } from 'date-arithmetic'
 import dayjs, { Dayjs } from 'dayjs'
 

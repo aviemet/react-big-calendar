@@ -8,9 +8,10 @@ import { CalendarEvent } from '@/types'
 import { Resource } from '@/utils/Resources'
 import { useCalendarContext } from '@/Calendar'
 import TimeGridHeaderCells from './TimeGridHeaderCells'
+import { DateRange } from '@/localizers'
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  range: { start: Date, end: Date } //Date[]
+  range: DateRange //Date[]
   events: TEvent[]
   resources: TResource[]
   isOverflowing: boolean

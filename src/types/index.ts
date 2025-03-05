@@ -13,11 +13,6 @@ export interface CalendarEvent {
   resource?: any
 }
 
-export interface DateRange {
-  start: Date
-  end: Date
-}
-
 export interface SlotInfo {
   start: Date
   end: Date
@@ -62,6 +57,48 @@ export type Getters<TEvent extends object = CalendarEvent> = {
   slotProp?: SlotPropGetter | undefined
   dayProp?: DayPropGetter | undefined
   slotGroupProp?: SlotGroupPropGetter | undefined
+}
+
+export interface EventProps<TEvent extends object = CalendarEvent> {
+  event: TEvent
+  title: string
+  continuesPrior: boolean
+  continuesAfter: boolean
+  isAllDay?: boolean
+  localizer: DateLocalizer
+  slotStart: Date
+  slotEnd: Date
+}
+
+export interface DateCellWrapperProps {
+  range: Date[]
+  value: Date
+  children: React.JSX.Element
+}
+
+export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
+  localizer: DateLocalizer
+  slot: number
+  slotDate: Date
+  count: number
+  events: TEvent[]
+  remainingEvents: TEvent[]
+}
+
+export interface EventWrapperProps<TEvent extends object = CalendarEvent> {
+  // https://github.com/intljusticemission/react-big-calendar/blob/27a2656b40ac8729634d24376dff8ea781a66d50/src/TimeGridEvent.js#L28
+  style?: (React.CSSProperties & { xOffset: number }) | undefined
+  className: string
+  event: TEvent
+  isRtl: boolean
+  getters: Getters<TEvent>
+  onClick: (e: React.MouseEvent<HTMLElement>) => void
+  onDoubleClick: (e: React.MouseEvent<HTMLElement>) => void
+  accessors: Accessors<TEvent>
+  selected: boolean
+  label: string
+  continuesEarlier: boolean
+  continuesLater: boolean
 }
 
 export interface Components<TEvent extends object = CalendarEvent, TResource extends object = object> {
@@ -113,46 +150,4 @@ export interface Components<TEvent extends object = CalendarEvent, TResource ext
   header?: React.ComponentType<HeaderProps> | undefined
   resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>> | undefined
   showMore?: React.ComponentType<ShowMoreProps<TEvent>>
-}
-
-export interface EventProps<TEvent extends object = CalendarEvent> {
-  event: TEvent
-  title: string
-  continuesPrior: boolean
-  continuesAfter: boolean
-  isAllDay?: boolean
-  localizer: DateLocalizer
-  slotStart: Date
-  slotEnd: Date
-}
-
-export interface EventWrapperProps<TEvent extends object = CalendarEvent> {
-  // https://github.com/intljusticemission/react-big-calendar/blob/27a2656b40ac8729634d24376dff8ea781a66d50/src/TimeGridEvent.js#L28
-  style?: (React.CSSProperties & { xOffset: number }) | undefined
-  className: string
-  event: TEvent
-  isRtl: boolean
-  getters: Getters<TEvent>
-  onClick: (e: React.MouseEvent<HTMLElement>) => void
-  onDoubleClick: (e: React.MouseEvent<HTMLElement>) => void
-  accessors: Accessors<TEvent>
-  selected: boolean
-  label: string
-  continuesEarlier: boolean
-  continuesLater: boolean
-}
-
-export interface DateCellWrapperProps {
-  range: Date[]
-  value: Date
-  children: React.JSX.Element
-}
-
-export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
-  localizer: DateLocalizer
-  slot: number
-  slotDate: Date
-  count: number
-  events: TEvent[]
-  remainingEvents: TEvent[]
 }
