@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavigateAction } from '../utils/constants'
+import { NavigateAction } from '../utils/move'
 import MonthView from './MonthView'
 import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'

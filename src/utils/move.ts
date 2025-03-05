@@ -1,7 +1,16 @@
 import invariant from 'invariant'
-import { navigate, NavigateAction } from './constants'
 import VIEWS, { ViewComponent } from '../Views'
 import { DateLocalizer } from '@/localizers'
+
+export let navigate = {
+  PREVIOUS: 'PREV',
+  NEXT: 'NEXT',
+  TODAY: 'TODAY',
+  DATE: 'DATE',
+} as const
+
+export type NavigateKey = keyof typeof navigate
+export type NavigateAction = typeof navigate[NavigateKey]
 
 export type MoveDateOptions = {
   action: NavigateAction

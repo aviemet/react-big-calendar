@@ -1,4 +1,4 @@
-import { navigate } from '@/utils/constants'
+import { navigate } from '@/utils/move'
 import TimeGrid from '@/components/TimeGrid'
 import { BaseViewProps, createViewComponent, ViewComponent } from '..'
 import { DateLocalizer } from '@/localizers'

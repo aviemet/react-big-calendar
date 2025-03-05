@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import chunk from 'lodash/chunk'
-import { navigate } from '@/utils/constants'
+import { navigate } from '@/utils/move'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import DateHeader, { DateHeaderProps } from '@/DateHeader'

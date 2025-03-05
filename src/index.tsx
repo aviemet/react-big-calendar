@@ -21,6 +21,6 @@ export { default as move } from './utils/move'
 
 export {
   navigate as Navigate,
-} from './utils/constants'
+} from './utils/move'
 
 export { views as Views } from './Views'

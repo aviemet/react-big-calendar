@@ -9,7 +9,7 @@ import {
 import {
   navigate,
   NavigateAction,
-} from '@/utils/constants'
+} from '@/utils/move'
 import { coerceDate } from '@/utils/helpers'
 import moveDate from '@/utils/move'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
@@ -898,6 +898,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     return VIEWS
   }, [views])
 
+  // TODO: Revert to using accessor methods
   const accessors: Accessors<TEvent> = useMemo(() => {
     return {
       start: typeof startAccessor === 'function'
@@ -977,11 +978,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
    */
   const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: ViewName) => {
     if(!viewComponent.range) {
-      return
-      // TODO: Why only in production?
       // if(process.env.NODE_ENV !== 'production') {
-      //   console.error('onRangeChange prop not supported for this view')
+      // eslint-disable-next-line no-console
+      console.error('onRangeChange prop not supported for this view')
       // }
+      return
     }
 
     onRangeChange?.(viewComponent.range(date, { localizer: localLocalizer }), view)
