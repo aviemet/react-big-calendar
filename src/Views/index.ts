@@ -5,24 +5,13 @@ import WeekView from './WeekView'
 import WorkWeekView from './WorkWeekView'
 import DayView from './DayView'
 import AgendaView from './AgendaView'
-import { DateLocalizer, type Culture, type DateFormat } from '../localizers'
+import { DateLocalizer } from '../localizers'
 import { CalendarProps } from '../Calendar'
 import { CalendarEvent, type SlotInfo } from '../types'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
 import { Resource } from '@/utils/Resources'
 
-export interface TitleOptions {
-  formats: DateFormat[]
-  culture?: Culture | undefined
-  [propName: string]: any
-}
-
 export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
-
-// export interface ViewStatic {
-//   navigate(date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer): Date
-//   title(date: Date, options: TitleOptions): string
-// }
 
 export type ViewsProps =
     | ViewName[]

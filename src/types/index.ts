@@ -1,7 +1,7 @@
 import React from "react"
 import { DateHeaderProps } from "../DateHeader"
 import { HeaderProps } from "../Header"
-import { Culture, DateFormat, DateLocalizer } from "../localizers"
+import { DateLocalizer } from "../localizers"
 import { ResourceHeaderProps } from "../ResourceHeader"
 import { Accessors } from "@/utils/accessors"
 
@@ -156,41 +156,3 @@ export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
   events: TEvent[]
   remainingEvents: TEvent[]
 }
-
-export type NavigateAction = "PREV" | "NEXT" | "TODAY" | "DATE"
-
-export interface DateRange {
-  start: Date
-  end: Date
-}
-
-export interface DateCellWrapperProps {
-  range: Date[]
-  value: Date
-  children: React.JSX.Element
-}
-
-export interface TitleOptions {
-  formats: DateFormat[]
-  culture?: Culture | undefined
-  [propName: string]: any
-}
-
-export interface ViewStatic {
-  navigate(date: Date, action: NavigateAction, props: any): Date
-  title(date: Date, options: TitleOptions): string
-}
-
-export interface MoveOptions {
-  action: NavigateAction
-  date: Date
-  today: Date
-}
-
-export interface components {
-  timeSlotWrapper: React.ComponentType
-  dateCellWrapper: React.ComponentType
-  eventWrapper: React.ComponentType<CalendarEvent>
-}
-
-// export function move(View: ViewStatic | ViewKey, options: MoveOptions): Date

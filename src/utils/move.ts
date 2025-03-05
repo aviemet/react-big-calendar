@@ -11,7 +11,7 @@ export type MoveDateOptions = {
 } // & CalendarProps
 
 // TODO: Removed extra props passthrough because it was making the types difficult
-// need to asses if passing props to the ViewComponent static methods is required
+// need to assess if passing props to the ViewComponent static methods is required
 
 export default function moveDate(
   View: ViewComponent,
@@ -30,7 +30,7 @@ export default function moveDate(
         View && typeof View.navigate === 'function',
         'Calendar View components must implement a static `.navigate(date, action)` method.s'
       )
-      date = View.navigate(date, action)
+      date = View.navigate(date, action /* , ...props */)
   }
   return date
 }
