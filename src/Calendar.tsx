@@ -506,7 +506,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * ```
    */
   getDrilldownView?:
-    | ((targetDate: Date, currentViewName: ViewName | string, configuredViewNames: ViewName[] | string[]) => void)
+    | ((targetDate: Date, currentViewName: ViewName | string, configuredViewNames: ViewName[] | string[]) => string)
     | null
     | undefined
 
@@ -976,16 +976,15 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
    * state via url
    */
   const handleRangeChange = (date: Date, viewComponent: ViewComponent, view?: ViewName) => {
-    if(onRangeChange) {
-      if(viewComponent.range) {
-        onRangeChange(viewComponent.range(date, { localizer: localLocalizer }), view)
-      } else {
-        // TODO: Why only in production?
-        // if(process.env.NODE_ENV !== 'production') {
-        //   console.error('onRangeChange prop not supported for this view')
-        // }
-      }
+    if(!viewComponent.range) {
+      return
+      // TODO: Why only in production?
+      // if(process.env.NODE_ENV !== 'production') {
+      //   console.error('onRangeChange prop not supported for this view')
+      // }
     }
+
+    onRangeChange?.(viewComponent.range(date, { localizer: localLocalizer }), view)
   }
 
   const handleNavigate = (action: NavigateAction, newDate: Date) => {
@@ -1016,19 +1015,19 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   }
 
   const handleSelectEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
-    onSelectEvent(event, e)
+    onSelectEvent?.(event, e)
   }
 
   const handleDoubleClickEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
-    onDoubleClickEvent(event, e)
+    onDoubleClickEvent?.(event, e)
   }
 
   const handleKeyPressEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
-    onKeyPressEvent(event, e)
+    onKeyPressEvent?.(event, e)
   }
 
   const handleSelectSlot = (slotInfo: SlotInfo) => {
-    onSelectSlot(slotInfo)
+    onSelectSlot?.(slotInfo)
   }
 
   const handleDrillDown = (date: Date, view: ViewName) => {
@@ -1036,6 +1035,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       onDrillDown(date, view, drilldownView)
       return
     }
+
     if(view) handleViewChange(view)
 
     handleNavigate(navigate.DATE, date)

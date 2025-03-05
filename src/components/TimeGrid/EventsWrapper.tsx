@@ -1,10 +1,9 @@
-import { notify } from '@/utils/helpers'
 import * as DayEventLayout from '@/utils/DayEventLayout'
 import TimeGridEvent from './TimeGridEvent'
 import { CalendarEvent } from '@/types'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import { useCalendarContext } from '@/Calendar'
+import { CalendarProps, useCalendarContext } from '@/Calendar'
 import { Resource } from '@/utils/Resources'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
 
@@ -18,9 +17,9 @@ interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TReso
   dayLayoutAlgorithm: DayLayoutAlgorithm
   resizable: boolean
   slotMetrics: SlotMetrics
-  onSelectEvent: (args: any) => void
-  onDoubleClickEvent: (args: any) => void
-  onKeyPressEvent: (args: any) => void
+  onSelectEvent: CalendarProps['onSelectEvent']
+  onDoubleClickEvent: CalendarProps['onDoubleClickEvent']
+  onKeyPressEvent: CalendarProps['onKeyPressEvent']
 }
 
 const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
@@ -47,9 +46,8 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
     dayLayoutAlgorithm,
   })
 
-  const handleClick = (e) => {
-    notify(onSelectEvent, {
-      ...event,
+  const handleClick = (event) => {
+    onSelectEvent?.(event, {
       ...(resource && {
         sourceResource: resource,
       }),
@@ -57,12 +55,12 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
     })
   }
 
-  const handleDoubleClick = (e) => {
-    notify(onDoubleClickEvent, event)
+  const handleDoubleClick = (event) => {
+    onDoubleClickEvent(event)
   }
 
-  const handleKeyPress = (e) => {
-    notify(onKeyPressEvent, event)
+  const handleKeyPress = (event) => {
+    onKeyPressEvent(event)
   }
 
   return styledEvents.map(({ event, style }, index) => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { coerceDate, notify } from '@/utils/helpers'
+import { coerceDate } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
@@ -78,7 +78,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
     selector.on('selecting', (box) => {
       if(!selecting) {
-        notify(onSelectStart, [box])
+        onSelectStart?.(box)
         setDateCellStart({ x: box.x, y: box.y })
       }
       if(selector.isSelected(containerRef.current)) {
@@ -114,7 +114,8 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     selector.on('select', (bounds) => {
       selectSlot({ ...state, action: 'select', bounds })
       setSelecting(false)
-      notify(onSelectEnd, [state])
+      onSelectEnd(...state)
+      // notify(onSelectEnd, [state])
     })
   }
 

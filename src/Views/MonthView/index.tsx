@@ -4,8 +4,7 @@ import chunk from 'lodash/chunk'
 import { navigate } from '@/utils/constants'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
-import DateContentRow from '@/components/DateContentRow'
-import DateHeader from '@/DateHeader'
+import DateHeader, { DateHeaderProps } from '@/DateHeader'
 import MonthWeek from './MonthWeek'
 import MonthHeader from './MonthHeader'
 import MonthPopOverlay from './MonthPopOverlay'
@@ -15,26 +14,17 @@ import { useMonthViewState } from './useMonthViewState'
 import { useCalendarContext } from '@/Calendar'
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+  showAllEvents?: boolean
   popup?: boolean
+  popupOffset?: number | { x: number, y: number }
   enableAutoScroll?: boolean
   resizable?: boolean
-  showAllEvents?: boolean
   doShowMoreDrillDown?: boolean
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
-  popupOffset?: number | { x: number, y: number }
   onShowMore?: (events: TEvent[], date: Date, slot: HTMLElement) => void
   onSelectEvent?: (event: TEvent) => void
   onDoubleClickEvent?: (event: TEvent) => void
   onKeyPressEvent?: (event: TEvent) => void
-}
-
-interface DateHeadingProps {
-  date: Date
-  className?: string
-  drilldownView?: ViewName | null
-  isOffRange?: boolean
-  label?: string
-  onDrillDown?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthViewProps<TEvent>) => {
@@ -61,7 +51,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
   const { localizer, components, date: calendarDate } = useCalendarContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
-  const slotRowRef = useRef<typeof DateContentRow>(null)
+  const slotRowRef = useRef<HTMLDivElement>(null)
   const pendingSelection = useRef<Date[]>([])
 
   const [resizeListener, setResizeListener] = useState<number | null>(null)
@@ -140,91 +130,95 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     [onDrillDown, resizeListener]
   )
 
-  const handleSelectEvent = useCallback(
-    (event: TEvent) => {
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
-      if(onSelectEvent) onSelectEvent(event)
-    },
-    [onSelectEvent, resizeListener]
-  )
+  const handleSelectEvent = useCallback((event: TEvent) => {
+    clearTimeout(resizeListener)
+    pendingSelection.current = []
 
-  const handleDoubleClickEvent = useCallback(
-    (event: TEvent) => {
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
-      if(onDoubleClickEvent) onDoubleClickEvent(event)
-    },
-    [onDoubleClickEvent, resizeListener]
-  )
+    onSelectEvent?.(event)
+  }, [onSelectEvent, resizeListener])
 
-  const handleKeyPressEvent = useCallback(
-    (event: TEvent) => {
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
-      if(onKeyPressEvent) onKeyPressEvent(event)
-    },
-    [onKeyPressEvent, resizeListener]
-  )
+  const handleDoubleClickEvent = useCallback((event: TEvent) => {
+    clearTimeout(resizeListener)
+    pendingSelection.current = []
 
-  const handleShowMore = useCallback(
-    (events: TEvent[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => {
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
+    onDoubleClickEvent?.(event)
+  }, [onDoubleClickEvent, resizeListener])
 
-      if(popup) {
-        let position = getPosition(cell, containerRef.current)
+  const handleKeyPressEvent = useCallback((event: TEvent) => {
+    clearTimeout(resizeListener)
+    pendingSelection.current = []
 
-        dispatch({
-          type: 'SET_OVERLAY',
-          overlay: {
-            date,
-            events,
-            position: { x: position.left, y: position.top },
-            end: new Date(date.getTime() + 24 * 60 * 60 * 1000),
-            target,
-          },
-        })
-      } else if(doShowMoreDrillDown && onDrillDown && getDrilldownView) {
-        const drilldownResult = getDrilldownView(date, views.MONTH, Object.values(views))
-        const view = typeof drilldownResult === 'string' ? drilldownResult as ViewName : null
-        if(view) onDrillDown(date, view)
-      }
+    onKeyPressEvent?.(event)
+  }, [onKeyPressEvent, resizeListener])
 
-      if(onShowMore) onShowMore(events, date, slot)
-    },
-    [resizeListener, popup, doShowMoreDrillDown, onDrillDown, getDrilldownView, onShowMore, dispatch]
-  )
+  const handleShowMore = useCallback((
+    events: TEvent[],
+    date: Date,
+    cell: HTMLElement,
+    slot: number,
+    target: HTMLElement
+  ) => {
+    clearTimeout(resizeListener)
+    pendingSelection.current = []
+
+    if(popup) {
+      let position = getPosition(cell, containerRef.current)
+
+      dispatch({
+        type: 'SET_OVERLAY',
+        overlay: {
+          date,
+          events,
+          position: { x: position.left, y: position.top },
+          end: new Date(date.getTime() + 24 * 60 * 60 * 1000),
+          target,
+        },
+      })
+    } else if(doShowMoreDrillDown && onDrillDown && getDrilldownView) {
+      const drilldownResult = getDrilldownView(date, views.MONTH, Object.values(views))
+      const view = typeof drilldownResult === 'string' ? drilldownResult as ViewName : null
+
+      if(view) onDrillDown(date, view)
+    }
+
+    onShowMore?.(events, date, slot)
+  }, [resizeListener, popup, doShowMoreDrillDown, onDrillDown, getDrilldownView, onShowMore, dispatch])
 
   const hideOverlay = useCallback(() => {
     dispatch({ type: 'HIDE_OVERLAY' })
   }, [dispatch])
 
-  const renderDateHeading = useCallback(
-    ({ date, className, drilldownView, isOffRange, label, onDrillDown }: DateHeadingProps) => {
-      let isCurrent = localizer.isSameDate(date, calendarDate)
-      let DateHeaderComponent = components.month?.dateHeader || DateHeader
+  const renderDateHeading = useCallback((
+    {
+      date,
+      className,
+      drilldownView,
+      isOffRange,
+      label,
+      onDrillDown,
+    }: DateHeaderProps
+  ) => {
+    let isCurrent = localizer.isSameDate(date, calendarDate)
+    let DateHeaderComponent = components.month?.dateHeader || DateHeader
 
-      return (
-        <div
-          role="cell"
-          className={ clsx(className, {
-            'rbc-off-range': isOffRange,
-            'rbc-current': isCurrent,
-          }) }
-        >
-          <DateHeaderComponent
-            label={ label || localizer.format(date, 'dateFormat') }
-            date={ date }
-            drilldownView={ drilldownView }
-            isOffRange={ isOffRange }
-            onDrillDown={ (e: React.MouseEvent<HTMLElement>) => handleHeadingClick(date, drilldownView, e) }
-          />
-        </div>
-      )
-    },
-    [localizer, calendarDate, components.month?.dateHeader, handleHeadingClick]
-  )
+    return (
+      <div
+        role="cell"
+        className={ clsx(className, {
+          'rbc-off-range': isOffRange,
+          'rbc-current': isCurrent,
+        }) }
+      >
+        <DateHeaderComponent
+          label={ label || localizer.format(date, 'dateFormat') }
+          date={ date }
+          drilldownView={ drilldownView }
+          isOffRange={ isOffRange }
+          onDrillDown={ (e: React.MouseEvent<HTMLElement>) => handleHeadingClick(date, drilldownView, e) }
+        />
+      </div>
+    )
+  }, [localizer, calendarDate, components.month?.dateHeader, handleHeadingClick])
 
   const month = localizer.visibleDays(calendarDate, localizer)
   const weeks = chunk(month, 7)

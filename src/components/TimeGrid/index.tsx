@@ -9,8 +9,7 @@ import TimeGridHeader from './TimeGridHeader'
 import TimeGridHeaderResources from './TimeGridHeaderResources'
 import TimeGutter from './TimeGutter'
 import { inRange, sortEvents } from '@/utils/eventLevels'
-import { notify } from '@/utils/helpers'
-import { CalendarEvent, Components } from '@/types'
+import { CalendarEvent  } from '@/types'
 import { BaseViewProps } from '@/Views'
 import Resources, { Resource } from '@/utils/Resources'
 import { Accessors } from '@/utils/accessors'
@@ -178,7 +177,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   const handleSelectEvent = (...args) => {
     //cancel any pending selections so only the event click goes through.
     // clearSelection()
-    notify(onSelectEvent, args)
+    onSelectEvent?.(args)
   }
 
 
@@ -195,10 +194,11 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
         target,
       })
     } else if(doShowMoreDrillDown) {
-      notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
+      onDrillDown([date, getDrilldownView?.(date) || views.DAY])
+      // notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
     }
-
-    notify(onShowMore, [events, date, slot])
+    onShowMore?.(events, date, slot)
+    // notify(onShowMore, [events, date, slot])
   }
 
   const handleSelectAllDaySlot = (slots, slotInfo) => {
@@ -206,13 +206,20 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     const end = new Date(slots[slots.length - 1])
     end.setDate(slots[slots.length - 1].getDate() + 1)
 
-    notify(onSelectSlot, {
+    onSelectSlot?.({
       slots,
       start,
       end,
       action: slotInfo.action,
       resourceId: slotInfo.resourceId,
     })
+    // notify(onSelectSlot, {
+    //   slots,
+    //   start,
+    //   end,
+    //   action: slotInfo.action,
+    //   resourceId: slotInfo.resourceId,
+    // })
   }
 
   const overlayDisplay = () => {
@@ -521,12 +528,14 @@ const OverlayWrapper = ({
 }: OverlayWrapperProps) => {
   const handleKeyPressEvent = (...args) => {
     // clearSelection()
-    notify(onKeyPressEvent, args)
+    onKeyPressEvent?.(args)
+    // notify(onKeyPressEvent, args)
   }
 
   const handleDoubleClickEvent = (...args) => {
     // clearSelection()
-    notify(onDoubleClickEvent, args)
+    onDoubleClickEvent(args)
+    // notify(onDoubleClickEvent, args)
   }
 
   return (

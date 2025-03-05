@@ -1,10 +1,13 @@
 import React from "react"
+import { ViewName } from "./Views"
 
 export interface DateHeaderProps {
-  drilldownView: string
-  // isOffRange: boolean
-  label: string
-  onDrillDown: (e: React.MouseEvent<HTMLButtonElement>) => void
+  date: Date
+  className?: string
+  drilldownView?: ViewName | string | null
+  isOffRange?: boolean
+  label?: string
+  onDrillDown?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 const DateHeader = ({ label, drilldownView, onDrillDown }: DateHeaderProps) => {

@@ -1,7 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
 import Header from '@/Header'
-import { notify } from '@/utils/helpers'
 import { useCalendarContext } from '@/Calendar'
 
 interface TimeGridHeaderCellsProps {
@@ -21,7 +20,7 @@ const TimeGridHeaderCells = ({
 
   const handleHeaderClick = (date: Date, view: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    notify(onDrillDown, [date, view])
+    onDrillDown?.(date, view)
   }
 
   const rangeArray = localizer.range(range.start, range.end)

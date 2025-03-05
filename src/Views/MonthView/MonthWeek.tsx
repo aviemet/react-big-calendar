@@ -5,6 +5,7 @@ import DateContentRow from '@/components/DateContentRow'
 import { inRange, sortWeekEvents } from '@/utils/eventLevels'
 import { useCalendarContext } from '@/Calendar'
 import { Accessors } from '@/utils/accessors'
+import { DateHeaderProps } from '@/DateHeader'
 
 const eventsForWeek = <TEvent extends CalendarEvent>(
   events: TEvent[],
@@ -20,19 +21,19 @@ interface MonthWeekProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
   showAllEvents?: boolean
   rowLimit: number
+  slotRowRef?: React.RefObject<HTMLDivElement>
   selected?: object
   selectable?: boolean | 'ignoreEvents'
-  renderHeader: (props: any) => React.ReactNode
   renderForMeasure?: boolean
+  longPressThreshold?: number
+  resizable?: boolean
+  getContainer: () => HTMLElement | null
   onShowMore: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   onSelect: (event: TEvent) => void
   onDoubleClick: (event: TEvent) => void
   onKeyPress: (event: TEvent) => void
   onSelectSlot: (range: Date[], slotInfo: any) => void
-  longPressThreshold?: number
-  resizable?: boolean
-  slotRowRef?: React.RefObject<HTMLDivElement>
-  getContainer: () => HTMLElement | null
+  renderHeader: (props: DateHeaderProps) => React.ReactNode
 }
 
 const MonthWeek = <TEvent extends CalendarEvent = CalendarEvent>({

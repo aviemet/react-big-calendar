@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
-import { notify } from '@/utils/helpers'
 import TimeSlotGroup from './TimeSlotGroup'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent, SlotInfo } from '@/types'
 import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import DayColumnWrapper from '@/DayColumnWrapper'
-import { useCalendarContext } from '@/Calendar'
+import { CalendarProps, useCalendarContext } from '@/Calendar'
 import EventsWrapper from './EventsWrapper'
 import { Resource } from '@/utils/Resources'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
@@ -27,11 +26,11 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource
   selectable: boolean | 'ignoreEvents'
   eventOffset: number
   longPressThreshold: number
-  onSelecting: (args: any) => void
-  onSelectSlot: (args: any) => void
-  onSelectEvent: (args: any) => void
-  onDoubleClickEvent: (args: any) => void
-  onKeyPressEvent: (args: any) => void
+  onSelecting: CalendarProps['onSelecting']
+  onSelectSlot: CalendarProps['onSelectSlot']
+  onSelectEvent: CalendarProps['onSelectEvent']
+  onDoubleClickEvent: CalendarProps['onDoubleClickEvent']
+  onKeyPressEvent: CalendarProps['onKeyPressEvent']
   className: string
   dragThroughEvents: boolean
   resource: TResource
@@ -234,7 +233,7 @@ const DayColumn = (props: DayColumnProps) => {
       current = new Date(+current + step * 60 * 1000)
     }
 
-    notify(onSelectSlot, {
+    onSelectSlot({
       slots,
       start: startDate,
       end: endDate,

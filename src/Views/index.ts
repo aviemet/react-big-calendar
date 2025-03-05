@@ -60,7 +60,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   onKeyPressEvent?: ((...args: any[]) => any) | undefined
   onDrillDown?: ((date: Date, view: ViewName) => void) | undefined
   getDrilldownView?:
-      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => void)
+      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => string)
       | null
       | undefined
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent>

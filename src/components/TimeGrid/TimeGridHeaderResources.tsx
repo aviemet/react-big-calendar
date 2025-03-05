@@ -4,7 +4,6 @@ import scrollbarSize from 'dom-helpers/scrollbarSize'
 import DateContentRow from '@/components/DateContentRow'
 import Header from '@/Header'
 import ResourceHeader from '@/ResourceHeader'
-import { notify } from '@/utils/helpers'
 import { CalendarEvent, Getters } from '@/types'
 import { Resource } from '@/utils/Resources'
 import { DateLocalizer } from '@/localizers'
@@ -143,7 +142,7 @@ const HeaderCells = ({
 
   const handleHeaderClick = (date, view, e) => {
     e.preventDefault()
-    notify(onDrillDown, [date, view])
+    onDrillDown?.(date, view)
   }
 
   const today = getNow()
