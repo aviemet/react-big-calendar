@@ -13,8 +13,8 @@ export type Accessors<TEvent extends CalendarEvent = CalendarEvent, TResource ex
   eventId?: ((event: TEvent) => string | number) | undefined
 }
 
-type AccessorInput = CalendarEvent | Resource
-type AccessorFunction<T extends AccessorInput = AccessorInput> = (data: T) => unknown
+// type AccessorInput = CalendarEvent | Resource
+// type AccessorFunction<T extends AccessorInput = AccessorInput> = (data: T) => unknown
 
 /**
  * Retrieve via an accessor-like property
@@ -23,35 +23,35 @@ type AccessorFunction<T extends AccessorInput = AccessorInput> = (data: T) => un
  *    accessor(data, func)    // => retrieves func(data)
  *    ... otherwise null
  */
-export function accessor<T extends AccessorInput>(
-  data: T,
-  field: keyof T | AccessorFunction<T>
-): unknown {
-  let value = null
+// export function accessor<T extends AccessorInput>(
+//   data: T,
+//   field: keyof T | AccessorFunction<T>
+// ): unknown {
+//   let value = null
 
-  if(typeof field === 'function') {
-    value = (field as AccessorFunction<T>)(data)
-  } else if(
-    typeof field === 'string' &&
-    typeof data === 'object' &&
-    data !== null &&
-    field in data
-  ) {
-    value = data[field as keyof T]
-  }
+//   if(typeof field === 'function') {
+//     value = (field as AccessorFunction<T>)(data)
+//   } else if(
+//     typeof field === 'string' &&
+//     typeof data === 'object' &&
+//     data !== null &&
+//     field in data
+//   ) {
+//     value = data[field as keyof T]
+//   }
 
-  return value
-}
+//   return value
+// }
 
-type AccessorKey<T extends AccessorInput> = keyof T | AccessorFunction<T>
+// type AccessorKey<T extends AccessorInput> = keyof T | AccessorFunction<T>
 
-export const wrapAccessor = <T extends AccessorInput>(acc: AccessorKey<T>) =>
-  (data: T) => accessor(data, acc)
+// export const wrapAccessor = <T extends AccessorInput>(acc: AccessorKey<T>) =>
+//   (data: T) => accessor(data, acc)
 
-export const wrapEventAccessor = <TEvent extends CalendarEvent = CalendarEvent, K extends keyof TEvent | string = string>(
-  acc: K | ((event: TEvent) => any)
-) => (data: TEvent) => accessor(data, acc as keyof TEvent | ((event: TEvent) => any))
+// export const wrapEventAccessor = <R = unknown, TEvent extends CalendarEvent = CalendarEvent, K extends keyof TEvent | string = string>(
+//   acc: K | ((event: TEvent) => R)
+// ) => (data: TEvent) => accessor(data, acc as keyof TEvent | ((event: TEvent) => R))
 
-export const wrapResourceAccessor = <TResource extends Resource = Resource, K extends keyof TResource | string = string>(
-  acc: K | ((resource: TResource) => any)
-) => (data: TResource) => accessor(data, acc as keyof TResource | ((resource: TResource) => any))
+// export const wrapResourceAccessor = <R = unknown, TResource extends Resource = Resource, K extends keyof TResource | string = string>(
+//   acc: K | ((resource: TResource) => R)
+// ) => (data: TResource) => accessor(data, acc as keyof TResource | ((resource: TResource) => R))

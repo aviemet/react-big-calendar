@@ -14,7 +14,7 @@ import { SlotInfo, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
 import { useCalendarContext } from '@/Calendar'
 
-interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   popup?: boolean
   enableAutoScroll?: boolean
   resizable?: boolean

@@ -8,7 +8,7 @@ import AgendaView from './AgendaView'
 import { DateLocalizer, type Culture, type DateFormat } from '../localizers'
 import { CalendarProps } from '../Calendar'
 import { CalendarEvent, type SlotInfo } from '../types'
-import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
 import { Resource } from '@/utils/Resources'
 
 export interface TitleOptions {
@@ -19,25 +19,24 @@ export interface TitleOptions {
 
 export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
 
-export interface ViewStatic {
-  navigate(date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer): Date
-  title(date: Date, options: TitleOptions): string
-}
+// export interface ViewStatic {
+//   navigate(date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer): Date
+//   title(date: Date, options: TitleOptions): string
+// }
 
 export type ViewsProps =
     | ViewName[]
     | {
-      work_week?: boolean | (React.ReactNode & ViewStatic) | undefined
-      day?: boolean | (React.ReactNode & ViewStatic) | undefined
-      agenda?: boolean | (React.ReactNode & ViewStatic) | undefined
-      month?: boolean | (React.ReactNode & ViewStatic) | undefined
-      week?: boolean | (React.ReactNode & ViewStatic) | undefined
+      work_week?: boolean | (React.ReactNode & ViewComponent) | undefined
+      day?: boolean | (React.ReactNode & ViewComponent) | undefined
+      agenda?: boolean | (React.ReactNode & ViewComponent) | undefined
+      month?: boolean | (React.ReactNode & ViewComponent) | undefined
+      week?: boolean | (React.ReactNode & ViewComponent) | undefined
     }
 
 export type Selectable = boolean | "ignoreEvents"
 
 export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  eventOffset?: number
   events?: TEvent[] | undefined
   backgroundEvents?: TEvent[] | undefined
   resources?: TResource[] | undefined
@@ -52,7 +51,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   selected?: object | undefined
   selectable?: Selectable | undefined
   longPressThreshold?: number | undefined
-  onNavigate?: ((action: NavigateAction) => void) | undefined
+  onNavigate?: ((action: NavigateAction, newDate?: Date) => void) | undefined
   onSelectSlot?: ((slotInfo: SlotInfo) => void) | undefined
   onSelectEnd?: ((...args: any[]) => any) | undefined
   onSelectStart?: ((...args: any[]) => any) | undefined
@@ -64,8 +63,9 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
       | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => void)
       | null
       | undefined
-  dayLayoutAlgorithm?: DayLayoutAlgorithm
+  dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent>
   className?: string | undefined
+  [key: string]: any
 }
 
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {

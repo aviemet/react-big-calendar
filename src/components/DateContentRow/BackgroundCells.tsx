@@ -14,7 +14,7 @@ interface BackgroundCellsProps {
   onSelectSlot: (range: Date[], slot: { start: number, end: number }) => void
   onSelectEnd?: (event: CalendarEvent) => void
   onSelectStart?: (event: CalendarEvent) => void
-  range: { start: Date, end: Date }
+  range: Date[]
   type?: string
   resourceId?: string | number
 }
@@ -43,8 +43,6 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const rangeArray = localizer.range(range.start, range.end)
-
   useEffect(() => {
     if(selectable) initSelectable()
   }, [selectable])
@@ -63,7 +61,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
         const rowBox = getBoundsForNode(containerRef.current)
 
         if(pointInBox(rowBox, point)) {
-          let currentCell = getSlotAtX(rowBox, point.x, rtl, rangeArray.length)
+          let currentCell = getSlotAtX(rowBox, point.x, rtl, range.length)
 
           selectSlot({
             startIndex: currentCell,
@@ -89,7 +87,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
           dateCellStart,
           nodeBox,
           box,
-          rangeArray.length,
+          range.length,
           rtl
         )
         setStartIndex(selectionIndices.startIndex)
@@ -145,12 +143,12 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
 
   return (
     <div className="rbc-row-bg" ref={ containerRef }>
-      { rangeArray.map((date, index) => {
+      { range.map((date, index) => {
         let selected = selecting && index >= startIndex && index <= endIndex
         const { className, style } = getters.dayProp(date)
 
         return (
-          <Wrapper key={ index } value={ date } range={ rangeArray }>
+          <Wrapper key={ index } value={ date } range={ range }>
             <div
               style={ style }
               className={ clsx(

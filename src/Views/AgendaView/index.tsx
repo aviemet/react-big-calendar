@@ -11,7 +11,7 @@ import { useCalendarContext } from '@/Calendar'
 
 const DEFAULT_LENGTH = 30
 
-interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+export interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   length?: number
 }
 

@@ -5,8 +5,8 @@ import { DateLocalizer } from '@/localizers'
 import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 
-interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
-  eventOffset: 0
+export interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+  eventOffset?: number
   Selectable: "ignoreEvents"
   getDrilldownView: null
 }
@@ -28,6 +28,7 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
    * as TimeGrid is converted to a functional component.
    */
   const {
+    eventOffset = 15, // TODO: 0 or 15 or default undefined?
     min = localizer.startOf(new Date(), 'day'),
     max = localizer.endOf(new Date(), 'day'),
     scrollToTime = localizer.startOf(new Date(), 'day'),
@@ -38,7 +39,7 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
     <TimeGrid
       { ...props }
       range={ weekViewRange(date, { localizer }) }
-      eventOffset={ 15 }
+      eventOffset={ eventOffset }
       min={ min }
       max={ max }
       scrollToTime={ scrollToTime }

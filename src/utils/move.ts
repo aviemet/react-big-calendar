@@ -1,15 +1,20 @@
 import invariant from 'invariant'
 import { navigate, NavigateAction } from './constants'
-import VIEWS, { CalendarPropsWithLocalizer, ViewStatic } from '../Views'
+import VIEWS, { ViewComponent } from '../Views'
+import { DateLocalizer } from '@/localizers'
 
 export type MoveDateOptions = {
   action: NavigateAction
   date: Date
   today: Date
-} & CalendarPropsWithLocalizer
+  localizer: DateLocalizer
+} // & CalendarProps
+
+// TODO: Removed extra props passthrough because it was making the types difficult
+// need to asses if passing props to the ViewComponent static methods is required
 
 export default function moveDate(
-  View: ViewStatic,
+  View: ViewComponent,
   { action, date, today, ...props }: MoveDateOptions
 ) {
   View = typeof View === 'string' ? VIEWS[View] : View
@@ -25,7 +30,7 @@ export default function moveDate(
         View && typeof View.navigate === 'function',
         'Calendar View components must implement a static `.navigate(date, action)` method.s'
       )
-      date = View.navigate(date, action, props)
+      date = View.navigate(date, action)
   }
   return date
 }

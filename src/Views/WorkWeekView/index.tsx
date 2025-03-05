@@ -11,12 +11,13 @@ const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, { localizer 
   return { start, end }
 }
 
-interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+export interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   date: Date
   min?: Date
   max?: Date
   scrollToTime?: Date
   enableAutoScroll?: boolean
+  eventOffset?: number
 }
 
 const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {

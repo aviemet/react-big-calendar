@@ -1,15 +1,15 @@
 import React from 'react'
 import { useCalendarContext } from './Calendar'
 import { navigate, NavigateAction } from './utils/constants'
-import { ViewName, ViewsProps } from './Views'
+import { ViewName } from './Views'
 import clsx from 'clsx'
 
 export interface ToolbarProps {
   view: ViewName
-  views: ViewsProps
+  views: string[]
   label: string
   onNavigate: (navigate: NavigateAction, date?: Date) => void
-  onView: (view: ViewName) => void
+  onView: (view: ViewName | string) => void
   children?: React.ReactNode | undefined
 }
 
@@ -33,16 +33,24 @@ export const Toolbar = ({
       <span className={ clsx("rbc-toolbar-label") }>{ label }</span>
 
       <span className={ clsx("rbc-btn-group") }>
-        { Array.isArray(views) && views.map(name => {
-          return (
-            <button
-              key={ name }
-              onClick={ () => onView(name) }
-              className={ clsx({ "rbc-active": view === name }) }
-            >
-              { localizer.messages[name] }
-            </button>
-          )
+        { views.map(name => {
+          const key = name as keyof typeof localizer.messages
+
+          if(key in localizer.messages
+            && typeof localizer.messages[key] !== "function") {
+
+            return (
+              <button
+                key={ key }
+                onClick={ () => onView(key) }
+                className={ clsx({ "rbc-active": view === key }) }
+              >
+                { localizer.messages[key] }
+              </button>
+            )
+          }
+
+          return <></>
         }) }
       </span>
     </div>

@@ -9,13 +9,13 @@ import {
   navigate,
   NavigateAction,
 } from '@/utils/constants'
-import { coerceDate, notify } from '@/utils/helpers'
+import { coerceDate } from '@/utils/helpers'
 import moveDate from '@/utils/move'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
 import { Messages } from '@/utils/messages'
 import {  } from '@/localizers/types'
-import { defaults,  mapValues,  omit,  transform } from 'lodash-es'
-import { Accessors, wrapEventAccessor, wrapResourceAccessor } from '@/utils/accessors'
+import { defaults,  omit,  transform } from 'lodash-es'
+import { Accessors } from '@/utils/accessors'
 import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, {
@@ -463,7 +463,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * @type Views ('month'|'week'|'work_week'|'day'|'agenda')
    * @View ['month', 'week', 'day', 'agenda']
    */
-  views?: ViewName[] | Record<ViewName, ViewComponent | boolean> & Record<string, ViewComponent> | undefined
+  views?: ViewName[] | Record<ViewName, ViewComponent | boolean> | Record<string, ViewComponent> | undefined
 
   /**
    * Determines whether the drill down should occur when clicking on the "+_x_ more" link.
@@ -506,7 +506,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * ```
    */
   getDrilldownView?:
-    | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => void)
+    | ((targetDate: Date, currentViewName: ViewName | string, configuredViewNames: ViewName[] | string[]) => void)
     | null
     | undefined
 
@@ -794,15 +794,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     date,
     events = [],
     backgroundEvents = [],
-    resources = [],
     elementProps = {},
-    popup = false,
     toolbar = true,
     view = viewStrings.MONTH,
     views = [viewStrings.MONTH, viewStrings.WEEK, viewStrings.DAY, viewStrings.AGENDA],
-    step = 30,
     length = 30,
-    allDayMaxRows = Infinity,
     doShowMoreDrillDown = true,
     drilldownView = viewStrings.DAY,
     getDrilldownView,
@@ -815,8 +811,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     resourceIdAccessor = 'id',
     resourceTitleAccessor = 'title',
     eventIdAccessor = 'id',
-    longPressThreshold = 250,
-    dayLayoutAlgorithm = 'overlap',
     className,
     rtl,
     style,
@@ -826,32 +820,34 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     onDoubleClickEvent,
     onKeyPressEvent,
     onSelectSlot,
-    onSelecting,
     onShowMore,
     onView,
     onDrillDown,
     showMultiDayTimes,
     formats,
     culture,
-    min,
-    max,
-    scrollToTime,
-    enableAutoScroll,
     eventPropGetter,
     slotPropGetter,
     slotGroupPropGetter,
     dayPropGetter,
-    showAllEvents,
-    selectable,
     resourceGroupingLayout,
+    // resources = [],
+    // popup = false,
+    // step = 30,
+    // allDayMaxRows = Infinity,
+    // longPressThreshold = 250,
+    // dayLayoutAlgorithm = 'overlap',
+    // onSelecting,
+    // min,
+    // max,
+    // scrollToTime,
+    // enableAutoScroll,
+    // showAllEvents,
+    // selectable,
   } = controlledProps
-
-  console.log({ controlledProps })
 
   const getNow = props.getNow ?? (() => new Date())
   const localLocalizer = mergeWithDefaults(localizer, culture, formats, messages)
-
-
 
   const viewNames = useMemo(() => {
     if(Array.isArray(views)) return views
@@ -862,6 +858,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
         viewsFromObject.push(key)
       }
     }
+
     return viewsFromObject
   }, [views])
 
@@ -870,17 +867,66 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     [viewNames]
   )
 
-  const accessors: Accessors = useMemo(() => {
+  const viewComponents = useMemo(() => {
+    if(Array.isArray(views)) {
+      return transform(
+        views,
+        (obj, name) => obj[name] = VIEWS[name],
+        {} as Record<ViewName, ViewComponent>
+      )
+    }
+
+    if(typeof views === 'object') {
+      return transform(views, (obj, value, key) => {
+        if(value === false) return
+
+        if(value === true) {
+          obj[key] = VIEWS[key as ViewName]
+        } else {
+          obj[key as string] = value
+        }
+      }, {} as Record<ViewName, ViewComponent> & Record<string, ViewComponent>)
+      // return mapValues(views, (value, key) => {
+      //   if(value === true) {
+      //     return VIEWS[key as ViewName]
+      //   }
+
+      //   return value
+      // })
+    }
+
+    return VIEWS
+  }, [views])
+
+  const accessors: Accessors<TEvent> = useMemo(() => {
     return {
-      start: wrapEventAccessor(startAccessor),
-      end: wrapEventAccessor(endAccessor),
-      allDay: wrapEventAccessor(allDayAccessor),
-      tooltip: wrapEventAccessor(tooltipAccessor),
-      title: wrapEventAccessor(titleAccessor),
-      resource: wrapResourceAccessor(resourceAccessor),
-      resourceId: wrapResourceAccessor(resourceIdAccessor),
-      resourceTitle: wrapResourceAccessor(resourceTitleAccessor),
-      eventId: wrapEventAccessor(eventIdAccessor),
+      start: typeof startAccessor === 'function'
+        ? startAccessor
+        : (event: TEvent) => event[startAccessor as keyof TEvent] as Date,
+      end: typeof endAccessor === 'function'
+        ? endAccessor
+        : (event: TEvent) => event[endAccessor as keyof TEvent] as Date,
+      allDay: typeof allDayAccessor === 'function'
+        ? allDayAccessor
+        : (event: TEvent) => event[allDayAccessor as keyof TEvent] as boolean,
+      tooltip: typeof tooltipAccessor === 'function'
+        ? tooltipAccessor
+        : (event: TEvent) => event[tooltipAccessor as keyof TEvent] as string,
+      title: typeof titleAccessor === 'function'
+        ? titleAccessor
+        : (event: TEvent) => event[titleAccessor as keyof TEvent] as string,
+      resource: typeof resourceAccessor === 'function'
+        ? resourceAccessor
+        : (event: TEvent) => event[resourceAccessor as keyof TEvent] as TResource,
+      resourceId: typeof resourceIdAccessor === 'function'
+        ? resourceIdAccessor
+        : (resource: TResource) => resource[resourceIdAccessor as keyof TResource] as string | number,
+      resourceTitle: typeof resourceTitleAccessor === 'function'
+        ? resourceTitleAccessor
+        : (resource: TResource) => resource[resourceTitleAccessor as keyof TResource] as string,
+      eventId: typeof eventIdAccessor === 'function'
+        ? eventIdAccessor
+        : (event: TEvent) => event[eventIdAccessor as keyof TEvent] as string | number,
     }
   }, [allDayAccessor, endAccessor, eventIdAccessor, resourceAccessor, resourceIdAccessor, resourceTitleAccessor, startAccessor, titleAccessor, tooltipAccessor])
 
@@ -899,28 +945,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       }
     )
   }, [components, view, viewNames])
-
-  const viewComponents = useMemo(() => {
-    if(Array.isArray(views)) {
-      return transform(
-        views,
-        (obj, name) => obj[name] = VIEWS[name],
-        {} as Record<ViewName, ViewComponent>
-      )
-    }
-
-    if(typeof views === 'object') {
-      return mapValues(views, (value, key) => {
-        if(value) {
-          return VIEWS[key]
-        }
-
-        return value
-      })
-    }
-
-    return VIEWS
-  }, [views])
 
   const getters: Getters<TEvent> = useMemo(() => {
     return {
@@ -968,11 +992,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     let today = getNow()
 
     const movedDate = moveDate(ViewComponent, {
-      ...props,
       localizer,
       action,
-      date: newDate || date || today,
+      date: coerceDate(newDate || date || today),
       today,
+      // ...controlledProps, # Removed props drilldown to static view methods
     })
 
     onNavigate?.(movedDate, view, action)
@@ -986,25 +1010,25 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
     handleRangeChange(
       coerceDate(date || getNow()),
-      views[newView],
-      viewComponents
+      viewComponents[newView],
+      view
     )
   }
 
-  const handleSelectEvent = (...args) => {
-    notify(onSelectEvent, args)
+  const handleSelectEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
+    onSelectEvent(event, e)
   }
 
-  const handleDoubleClickEvent = (...args) => {
-    notify(onDoubleClickEvent, args)
+  const handleDoubleClickEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
+    onDoubleClickEvent(event, e)
   }
 
-  const handleKeyPressEvent = (...args) => {
-    notify(onKeyPressEvent, args)
+  const handleKeyPressEvent = (event: TEvent, e: React.SyntheticEvent<HTMLElement>) => {
+    onKeyPressEvent(event, e)
   }
 
   const handleSelectSlot = (slotInfo: SlotInfo) => {
-    notify(onSelectSlot, slotInfo)
+    onSelectSlot(slotInfo)
   }
 
   const handleDrillDown = (date: Date, view: ViewName) => {
@@ -1017,7 +1041,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     handleNavigate(navigate.DATE, date)
   }
 
-  const handleGetDrilldownView = (date: Date) => {
+  const handleGetDrilldownView = (date: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => {
     if(!getDrilldownView) return drilldownView
 
     return getDrilldownView(date, view, Object.keys(viewComponents))
@@ -1050,10 +1074,8 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           />
         ) }
         <ViewComponent
-          { ...props }
           events={ events }
           backgroundEvents={ backgroundEvents }
-          length={ length }
           showMultiDayTimes={ showMultiDayTimes }
           getDrilldownView={ handleGetDrilldownView }
           onNavigate={ handleNavigate }
@@ -1062,9 +1084,16 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           onDoubleClickEvent={ handleDoubleClickEvent }
           onKeyPressEvent={ handleKeyPressEvent }
           onSelectSlot={ handleSelectSlot }
+
+          // props for Month view
           onShowMore={ onShowMore }
           doShowMoreDrillDown={ doShowMoreDrillDown }
           resourceGroupingLayout={ resourceGroupingLayout }
+
+          // props for Agenda view
+          length={ length }
+
+          // { ...controlledProps }
         />
       </div>
     </CalendarProvider>

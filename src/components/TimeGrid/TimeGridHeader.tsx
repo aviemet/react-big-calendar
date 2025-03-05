@@ -10,7 +10,7 @@ import { useCalendarContext } from '@/Calendar'
 import TimeGridHeaderCells from './TimeGridHeaderCells'
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  range: Date[]
+  range: { start: Date, end: Date } //Date[]
   events: TEvent[]
   resources: TResource[]
   isOverflowing: boolean
@@ -50,6 +50,8 @@ const TimeGridHeader = ({
   longPressThreshold,
   selected,
 }: TimeGridHeaderProps) => {
+  const { localizer } = useCalendarContext ()
+
   const {
     components: {
       timeGutterHeader: TimeGutterHeader,
@@ -66,6 +68,8 @@ const TimeGridHeader = ({
   }
 
   const groupedEvents = resources.groupEvents(events)
+
+  const rangeArray = localizer.range(range.start, range.end)
 
   return (
     <div
@@ -95,11 +99,11 @@ const TimeGridHeader = ({
           ) }
           <div
             className={ `rbc-row rbc-time-header-cell${
-              range.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
+              rangeArray.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
             }` }
           >
             { <TimeGridHeaderCells
-              range={ range }
+              range={ rangeArray }
               getDrilldownView={ getDrilldownView }
               getNow={ getNow }
               onDrillDown={ onDrillDown }
@@ -110,7 +114,7 @@ const TimeGridHeader = ({
             minRows={ 2 }
             // Add +1 to include showMore button row in the row limit
             maxRows={ allDayMaxRows + 1 }
-            range={ range }
+            range={ rangeArray }
             events={ groupedEvents.get(id) || [] }
             resourceId={ resource && id }
             className="rbc-allday-cell"

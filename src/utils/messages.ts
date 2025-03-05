@@ -5,17 +5,20 @@ export interface Messages<TEvent extends object = CalendarEvent> {
   time?: React.ReactNode | undefined
   event?: React.ReactNode | undefined
   allDay?: React.ReactNode | undefined
+
+  month?: React.ReactNode | undefined
   week?: React.ReactNode | undefined
   work_week?: React.ReactNode | undefined
   day?: React.ReactNode | undefined
-  month?: React.ReactNode | undefined
+  agenda?: React.ReactNode | undefined
+
   previous?: React.ReactNode | undefined
   next?: React.ReactNode | undefined
   yesterday?: React.ReactNode | undefined
   tomorrow?: React.ReactNode | undefined
   today?: React.ReactNode | undefined
-  agenda?: React.ReactNode | undefined
-  showMore?: ((count: number, remainingEvents: TEvent[], events: TEvent[]) => React.ReactNode) | undefined
+
+  showMore?: ((count: number, remainingEvents?: TEvent[], events?: TEvent[]) => React.ReactNode) | undefined
   noEventsInRange?: React.ReactNode | undefined
 }
 

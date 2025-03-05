@@ -5,7 +5,7 @@ import { coerceDate } from '@/utils/helpers'
 import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 
-interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+export interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   enableAutoScroll?: boolean
   resizable?: boolean
   allDayMaxRows?: number
@@ -14,6 +14,7 @@ interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends Bas
   popup?: boolean
   handleDragStart?: (event: React.DragEvent) => void
   popupOffset?: number | { x: number, y: number }
+  eventOffset?: number
 }
 
 
