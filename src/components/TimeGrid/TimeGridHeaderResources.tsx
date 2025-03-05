@@ -4,11 +4,9 @@ import scrollbarSize from 'dom-helpers/scrollbarSize'
 import DateContentRow from '@/components/DateContentRow'
 import Header from '@/Header'
 import ResourceHeader from '@/ResourceHeader'
-import { CalendarEvent, Getters } from '@/types'
 import { Resource } from '@/utils/Resources'
-import { DateLocalizer } from '@/localizers'
-import { Accessors } from '@/utils/accessors'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
@@ -51,7 +49,9 @@ const TimeGridHeaderResources = ({
   events,
   resizable,
 }: TimeGridHeaderResourcesProps) => {
-  const { components: { timeGutterHeader: TimeGutterHeader }, getters, accessors, rtl, getNow } = useCalendarContext()
+  const { getters, accessors, rtl, getNow, components: {
+    timeGutterHeader: TimeGutterHeader,
+  } } = useCalendarContext()
 
   let style = {}
   if(isOverflowing) {
@@ -128,17 +128,10 @@ const HeaderCells = ({
   longPressThreshold,
   onDrillDown,
 }: HeaderCellsProps) => {
-  const {
-    localizer,
-    components: {
-      header: HeaderComponent = Header,
-      resourceHeader: ResourceHeaderComponent = ResourceHeader,
-    },
-    getters,
-    accessors,
-    rtl,
-    getNow,
-  } = useCalendarContext()
+  const { getters, accessors, rtl, getNow, localizer, components: {
+    header: HeaderComponent,
+    resourceHeader: ResourceHeaderComponent,
+  } } = useCalendarContext()
 
   const handleHeaderClick = (date, view, e) => {
     e.preventDefault()

@@ -6,8 +6,9 @@ import scrollbarSize from 'dom-helpers/scrollbarSize'
 import { navigate } from '@/utils/move'
 import { inRange } from '@/utils/eventLevels'
 import { BaseViewProps, createViewComponent } from '..'
-import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
+import Day from './AgendaDay'
 
 const DEFAULT_LENGTH = 30
 
@@ -22,7 +23,9 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   onSelectEvent,
   selected,
 }: AgendaViewProps<TEvent>) => {
-  const { localizer, components, accessors, date } = useCalendarContext()
+  const { localizer, accessors, date, components: {
+    time: TimeComponent,
+  } } = useCalendarContext()
 
   const headerRef = useRef<HTMLTableElement>(null)
   const dateColRef = useRef<HTMLTableCellElement>(null)
@@ -56,17 +59,11 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
     if(localizer.gt(day, start, 'day')) labelClass = 'rbc-continues-prior'
     if(localizer.lt(day, end, 'day')) labelClass += ' rbc-continues-after'
 
-    const TimeComponent = components.time
-
     return (
       <span className={ labelClass.trim() }>
-        { TimeComponent
-          ? (
-            <TimeComponent event={ event } day={ day } label={ label } />
-          )
-          : (
-            label
-          ) }
+        <TimeComponent event={ event } day={ day } label={ label }>
+          { label }
+        </TimeComponent>
       </span>
     )
   }
@@ -120,43 +117,40 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   return (
     <div className="rbc-agenda-view">
       { events.length !== 0
-        ? (
-          <React.Fragment>
-            <table ref={ headerRef } className="rbc-agenda-table">
-              <thead>
-                <tr>
-                  <th className="rbc-header" ref={ dateColRef }>
-                    { messages.date }
-                  </th>
-                  <th className="rbc-header" ref={ timeColRef }>
-                    { messages.time }
-                  </th>
-                  <th className="rbc-header">{ messages.event }</th>
-                </tr>
-              </thead>
+        ? <>
+          <table ref={ headerRef } className="rbc-agenda-table">
+            <thead>
+              <tr>
+                <th className="rbc-header" ref={ dateColRef }>
+                  { messages.date }
+                </th>
+                <th className="rbc-header" ref={ timeColRef }>
+                  { messages.time }
+                </th>
+                <th className="rbc-header">{ messages.event }</th>
+              </tr>
+            </thead>
+          </table>
+          <div className="rbc-agenda-content" ref={ contentRef }>
+            <table className="rbc-agenda-table">
+              <tbody ref={ tbodyRef }>
+                { range.map((day, Index) => (
+                  <Day
+                    day={ day }
+                    events={ events }
+                    dayKey={ day.toISOString() }
+                    selected={ selected }
+                    timeRangeLabel={ timeRangeLabel }
+                    onSelectEvent={ onSelectEvent }
+                    onDoubleClickEvent={ onDoubleClickEvent }
+                  />
+                )) }
+              </tbody>
             </table>
-            <div className="rbc-agenda-content" ref={ contentRef }>
-              <table className="rbc-agenda-table">
-                <tbody ref={ tbodyRef }>
-                  { range.map((day, Index) => (
-                    <Day
-                      day={ day }
-                      events={ events }
-                      dayKey={ day.toISOString() }
-                      selected={ selected }
-                      timeRangeLabel={ timeRangeLabel }
-                      onSelectEvent={ onSelectEvent }
-                      onDoubleClickEvent={ onDoubleClickEvent }
-                    />
-                  )) }
-                </tbody>
-              </table>
-            </div>
-          </React.Fragment>
-        )
-        : (
-          <span className="rbc-agenda-empty">{ messages.noEventsInRange }</span>
-        ) }
+          </div>
+        </>
+        : <span className="rbc-agenda-empty">{ messages.noEventsInRange }</span>
+      }
     </div>
   )
 }

@@ -34,6 +34,11 @@ export default function Basic({
       components: {
         timeslotWrapper: ColoredDateCellWrapper,
       },
+      // components: {
+      //   month: {
+      //     header: () => <>BIG OL HEADER</>,
+      //   },
+      // },
       defaultDate: new Date(2015, 3, 1),
       max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'),
       views: Object.keys(Views).map((k) => Views[k]),

@@ -1,6 +1,5 @@
 import React from 'react'
 import clsx from 'clsx'
-import Header from '@/Header'
 import { useCalendarContext } from '@/Calendar'
 import { DateRange } from '@/localizers'
 
@@ -15,7 +14,9 @@ const TimeGridHeaderCells = ({
   getDrilldownView,
   onDrillDown,
 }: TimeGridHeaderCellsProps) => {
-  const { localizer, components, getters, getNow } = useCalendarContext()
+  const { localizer, getters, getNow, components: {
+    header: HeaderComponent,
+  } } = useCalendarContext()
 
   const today = getNow()
 
@@ -25,8 +26,6 @@ const TimeGridHeaderCells = ({
   }
 
   const rangeArray = localizer.range(range.start, range.end)
-
-  const HeaderComponent = components.header || Header
 
   return (
     <>{ rangeArray.map((date, i) => {

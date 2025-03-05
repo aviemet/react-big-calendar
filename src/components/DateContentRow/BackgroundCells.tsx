@@ -3,8 +3,8 @@ import { coerceDate } from '@/utils/helpers'
 import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
 import clsx from 'clsx'
-import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface BackgroundCellsProps {
   container?: () => HTMLElement
@@ -32,7 +32,9 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
     type,
     resourceId,
   } = props
-  const { localizer, components, rtl, getters, date, getNow } = useCalendarContext()
+  const { localizer, rtl, getters, date, getNow, components: {
+    dateCellWrapper: Wrapper,
+  } } = useCalendarContext()
 
   const [selecting, setSelecting] = useState(false)
   const [selector, setSelector] = useState<Selection | null>(null)
@@ -126,21 +128,19 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
   }
 
   const selectSlot = ({ endIndex, startIndex, action, bounds, box }) => {
-    if(endIndex !== -1 && startIndex !== -1)
-      onSelectSlot &&
-        onSelectSlot({
-          start: startIndex,
-          end: endIndex,
-          action,
-          bounds,
-          box,
-          resourceId: resourceId,
-        })
+    if(endIndex !== -1 && startIndex !== -1){
+      onSelectSlot?.({
+        start: startIndex,
+        end: endIndex,
+        action,
+        bounds,
+        box,
+        resourceId: resourceId,
+      })
+    }
   }
 
   const current = coerceDate(date || getNow())
-
-  const Wrapper = components.dateCellWrapper
 
   return (
     <div className="rbc-row-bg" ref={ containerRef }>

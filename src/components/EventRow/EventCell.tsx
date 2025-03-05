@@ -1,9 +1,8 @@
 import React from 'react'
 import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
-import { CalendarEvent, Getters } from '@/types'
 import clsx from 'clsx'
-import { Accessors } from '@/utils/accessors'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface EventCellProps {
   event: CalendarEvent
@@ -22,7 +21,6 @@ interface EventCellProps {
   className?: string
 }
 
-
 const EventCell = ({
   style,
   className,
@@ -39,41 +37,25 @@ const EventCell = ({
   slotEnd,
   ...props
 }: EventCellProps) => {
-  const { localizer, components, accessors, getters } = useCalendarContext()
+  const { localizer, accessors, getters, components: {
+    event: Event,
+    eventWrapper: EventWrapper,
+  } } = useCalendarContext()
 
-  let title = accessors.title(event)
-  let tooltip = accessors.tooltip(event)
-  let end = accessors.end(event)
-  let start = accessors.start(event)
-  let allDay = accessors.allDay(event)
+  const title = accessors.title(event)
+  const tooltip = accessors.tooltip(event)
+  const end = accessors.end(event)
+  const start = accessors.start(event)
+  const allDay = accessors.allDay(event)
 
-  let showAsAllDay =
+  const showAsAllDay =
       isAllDay ||
       allDay ||
       localizer.diff(start, localizer.ceil(end, 'day'), 'day') > 1
 
-  let userProps = getters.eventProp(event, start, end, selected)
+  const userProps = getters.eventProp(event, start, end, selected)
 
-  const { event: Event, eventWrapper: EventWrapper } = components
-
-  const content = (
-    <div className="rbc-event-content" title={ tooltip || undefined }>
-      { Event
-        ? <Event
-          event={ event }
-          continuesPrior={ continuesPrior }
-          continuesAfter={ continuesAfter }
-          title={ title }
-          isAllDay={ allDay }
-          slotStart={ slotStart }
-          slotEnd={ slotEnd }
-        />
-        : title
-      }
-    </div>
-  )
-
-  // Todo: EventWrapper is possiby redeclared
+  // Todo: EventWrapper is possibly redeclared for drag and drop addon
   return (
     <EventWrapper { ...props } type="date">
       <div
@@ -89,11 +71,22 @@ const EventCell = ({
         onDoubleClick={ (e) => onDoubleClick && onDoubleClick(event, e) }
         onKeyDown={ (e) => onKeyPress && onKeyPress(event, e) }
       >
-        { typeof children === 'function' ? children(content) : content }
+        <div className="rbc-event-content" title={ tooltip || undefined }>
+          <Event
+            event={ event }
+            continuesPrior={ continuesPrior }
+            continuesAfter={ continuesAfter }
+            title={ title }
+            isAllDay={ allDay }
+            slotStart={ slotStart }
+            slotEnd={ slotEnd }
+          >
+            { title }
+          </Event>
+        </div>
       </div>
     </EventWrapper>
   )
-
 }
 
 export default EventCell

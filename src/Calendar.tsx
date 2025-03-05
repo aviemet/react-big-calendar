@@ -37,6 +37,7 @@ import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 import createContext from './hooks/createContext'
 import { useUncontrolled } from 'uncontrollable'
+import { initComponents } from './utils/components'
 
 type CalendarContext = {
   localizer: DateLocalizer
@@ -932,19 +933,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   }, [allDayAccessor, endAccessor, eventIdAccessor, resourceAccessor, resourceIdAccessor, resourceTitleAccessor, startAccessor, titleAccessor, tooltipAccessor])
 
   const localComponents = useMemo(() => {
-    return defaults(
-      components[view] || {},
-      omit(components, viewNames),
-      {
-        eventWrapper: NoopWrapper,
-        backgroundEventWrapper: NoopWrapper,
-        eventContainerWrapper: NoopWrapper,
-        dateCellWrapper: NoopWrapper,
-        weekWrapper: NoopWrapper,
-        timeslotWrapper: NoopWrapper,
-        timeGutterWrapper: NoopWrapper,
-      }
-    )
+    return initComponents(components, view, viewNames)
   }, [components, view, viewNames])
 
   const getters: Getters<TEvent> = useMemo(() => {
@@ -965,7 +954,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
   const ViewComponent: ViewComponent = viewComponents[view]
 
-  const ToolbarComponent = components.toolbar || Toolbar
+  const ToolbarComponent = components?.toolbar || Toolbar
 
   /**
    *

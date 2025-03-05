@@ -4,14 +4,13 @@ import chunk from 'lodash/chunk'
 import { navigate } from '@/utils/move'
 import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
-import DateHeader, { DateHeaderProps } from '@/DateHeader'
-import MonthWeek from './MonthWeek'
-import MonthHeader from './MonthHeader'
-import MonthPopOverlay from './MonthPopOverlay'
 import { BaseViewProps, createViewComponent, ViewName, views } from '@/Views'
-import { SlotInfo, CalendarEvent } from '@/types'
 import { useMonthViewState } from './useMonthViewState'
 import { useCalendarContext } from '@/Calendar'
+import DateContentRow from '@/components/DateContentRow'
+import { inRange, sortWeekEvents } from '@/utils/eventLevels'
+import PopOverlay from '@/components/PopOverlay'
+import { CalendarEvent, SlotInfo } from '@/utils/components'
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   showAllEvents?: boolean
@@ -48,7 +47,10 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     onShowMore,
     className,
   } = props
-  const { localizer, components, date: calendarDate } = useCalendarContext()
+  const { localizer, date: calendarDate, accessors, components: {
+    dateHeader: DateHeaderComponent,
+    header: HeaderComponent,
+  } } = useCalendarContext()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const slotRowRef = useRef<HTMLDivElement>(null)
@@ -120,16 +122,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     [onSelectSlot, resizeListener]
   )
 
-  const handleHeadingClick = useCallback(
-    (date: Date, view: ViewName | null | undefined, e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
-      if(onDrillDown && view) onDrillDown(date, view)
-    },
-    [onDrillDown, resizeListener]
-  )
-
   const handleSelectEvent = useCallback((event: TEvent) => {
     clearTimeout(resizeListener)
     pendingSelection.current = []
@@ -188,6 +180,16 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     dispatch({ type: 'HIDE_OVERLAY' })
   }, [dispatch])
 
+  const handleHeadingClick = useCallback(
+    (date: Date, view: ViewName | null | undefined, e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+      clearTimeout(resizeListener)
+      pendingSelection.current = []
+      if(onDrillDown && view) onDrillDown(date, view)
+    },
+    [onDrillDown, resizeListener]
+  )
+
   const renderDateHeading = useCallback((
     {
       date,
@@ -199,7 +201,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     }: DateHeaderProps
   ) => {
     let isCurrent = localizer.isSameDate(date, calendarDate)
-    let DateHeaderComponent = components.month?.dateHeader || DateHeader
 
     return (
       <div
@@ -218,10 +219,15 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
         />
       </div>
     )
-  }, [localizer, calendarDate, components.month?.dateHeader, handleHeadingClick])
+  }, [localizer, calendarDate, handleHeadingClick])
+
+  const overlayDisplay = useCallback(() => {
+    hideOverlay()
+  }, [hideOverlay])
 
   const month = localizer.visibleDays(calendarDate, localizer)
   const weeks = chunk(month, 7)
+
 
   return (
     <div
@@ -230,40 +236,63 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       aria-label="Month View"
       ref={ containerRef }
     >
-      <MonthHeader dates={ weeks[0] } />
-      { weeks.map((week, weekIndex) => (
-        <MonthWeek
-          key={ weekIndex }
-          week={ week }
-          weekIndex={ weekIndex }
-          events={ events }
-          showAllEvents={ showAllEvents }
-          rowLimit={ state.rowLimit }
-          selected={ selected }
-          selectable={ selectable }
-          renderHeader={ renderDateHeading }
-          renderForMeasure={ state.needLimitMeasure }
-          onShowMore={ handleShowMore }
-          onSelect={ handleSelectEvent }
-          onDoubleClick={ handleDoubleClickEvent }
-          onKeyPress={ handleKeyPressEvent }
-          onSelectSlot={ handleSelectSlot }
-          longPressThreshold={ longPressThreshold }
-          resizable={ resizable }
-          slotRowRef={ weekIndex === 0 ? slotRowRef : undefined }
-          getContainer={ getContainer }
-        />
-      )) }
-      { popup && (
-        <MonthPopOverlay
+      <div className="rbc-row rbc-month-header" role="row">
+        { localizer.range(weeks[0][0], weeks[0][weeks[0].length - 1], 'day').map((day) => (
+          <div key={ 'header_' + day.toISOString() } className="rbc-header">
+            <HeaderComponent
+              date={ day }
+              label={ localizer.format(day, 'weekdayFormat') }
+            />
+          </div>
+        )) }
+      </div>
+      { weeks.map((week, weekIndex) => {
+
+        const weeksEvents = [...(events || [])].filter(event => inRange(
+          event,
+          week[0],
+          week[week.length - 1],
+          accessors,
+          localizer
+        ))
+
+        const sorted = sortWeekEvents(weeksEvents, accessors, localizer)
+
+        return (
+          <DateContentRow
+            key={ weekIndex }
+            ref={ slotRowRef }
+            className="rbc-month-row"
+            container={ getContainer }
+            range={ week }
+            events={ sorted }
+            maxRows={ showAllEvents ? Infinity : state.rowLimit }
+            selected={ selected }
+            selectable={ selectable }
+            renderHeader={ renderDateHeading }
+            renderForMeasure={ state.needLimitMeasure }
+            onShowMore={ onShowMore }
+            onSelect={ handleSelectEvent }
+            onDoubleClick={ handleDoubleClickEvent }
+            onKeyPress={ handleKeyPressEvent }
+            onSelectSlot={ onSelectSlot }
+            longPressThreshold={ longPressThreshold }
+            resizable={ resizable }
+            showAllEvents={ showAllEvents }
+          />
+        )
+      }) }
+      { popup && state.overlay && (
+        <PopOverlay
           overlay={ state.overlay }
           selected={ selected }
           popupOffset={ popupOffset }
-          containerRef={ containerRef }
+          ref={ containerRef }
           handleSelectEvent={ handleSelectEvent }
           handleDoubleClickEvent={ handleDoubleClickEvent }
           handleKeyPressEvent={ handleKeyPressEvent }
           handleDragStart={ handleDragStart }
+          overlayDisplay={ overlayDisplay }
           onHide={ hideOverlay }
         />
       ) }

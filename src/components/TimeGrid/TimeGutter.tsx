@@ -2,9 +2,9 @@ import { useEffect, useCallback, useMemo, forwardRef } from 'react'
 import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import TimeSlotGroup from './TimeSlotGroup'
 import clsx from 'clsx'
-import { Getters } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 import { Resource } from '@/utils/Resources'
+import { Getters } from '@/utils/components'
 
 interface TimeGutterProps<TResource extends Resource = Resource> {
   min: Date
@@ -28,7 +28,9 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   },
   ref
 ) => {
-  const { localizer, components: { timeGutterWrapper: TimeGutterWrapper } } = useCalendarContext()
+  const { localizer, components: {
+    timeGutterWrapper: TimeGutterWrapper,
+  } } = useCalendarContext()
   const slotMetrics = useTimeSlotMetrics({ min, max, timeslots, step })
 
   /**
@@ -86,7 +88,6 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
               group={ grp }
               resource={ resource }
               renderSlot={ renderSlot }
-              getters={ getters }
             />
           )
         }) }

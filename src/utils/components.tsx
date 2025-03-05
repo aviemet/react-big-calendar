@@ -1,9 +1,13 @@
-import React from "react"
-import { DateHeaderProps } from "../DateHeader"
-import { HeaderProps } from "../Header"
-import { DateLocalizer } from "../localizers"
-import { ResourceHeaderProps } from "../ResourceHeader"
-import { Accessors } from "@/utils/accessors"
+import { DateLocalizer } from "@/localizers"
+import { defaults, omit } from "lodash-es"
+import { Accessors } from "./accessors"
+import { HeaderProps } from "@/Header"
+import DateHeader, { DateHeaderProps } from "@/DateHeader"
+import ResourceHeader, { ResourceHeaderProps } from "@/ResourceHeader"
+import { ViewName } from "@/Views"
+import NoopWrapper from "@/NoopWrapper"
+import Header from '@/Header'
+import DayColumnWrapper from "@/DayColumnWrapper"
 
 export interface CalendarEvent {
   allDay?: boolean | undefined
@@ -11,6 +15,17 @@ export interface CalendarEvent {
   start?: Date | undefined
   end?: Date | undefined
   resource?: any
+}
+
+export interface EventProps<TEvent extends object = CalendarEvent> {
+  event: TEvent
+  title: string
+  continuesPrior: boolean
+  continuesAfter: boolean
+  isAllDay?: boolean
+  localizer: DateLocalizer
+  slotStart: Date
+  slotEnd: Date
 }
 
 export interface SlotInfo {
@@ -52,24 +67,6 @@ export type EventPropGetter<T> = (
 export type SlotPropGetter = (date: Date, resourceId?: number | string) => React.HTMLAttributes<HTMLDivElement>
 export type SlotGroupPropGetter = () => React.HTMLAttributes<HTMLDivElement>
 
-export type Getters<TEvent extends object = CalendarEvent> = {
-  eventProp?: EventPropGetter<TEvent> | undefined
-  slotProp?: SlotPropGetter | undefined
-  dayProp?: DayPropGetter | undefined
-  slotGroupProp?: SlotGroupPropGetter | undefined
-}
-
-export interface EventProps<TEvent extends object = CalendarEvent> {
-  event: TEvent
-  title: string
-  continuesPrior: boolean
-  continuesAfter: boolean
-  isAllDay?: boolean
-  localizer: DateLocalizer
-  slotStart: Date
-  slotEnd: Date
-}
-
 export interface DateCellWrapperProps {
   range: Date[]
   value: Date
@@ -83,6 +80,13 @@ export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
   count: number
   events: TEvent[]
   remainingEvents: TEvent[]
+}
+
+export type Getters<TEvent extends object = CalendarEvent> = {
+  eventProp?: EventPropGetter<TEvent> | undefined
+  slotProp?: SlotPropGetter | undefined
+  dayProp?: DayPropGetter | undefined
+  slotGroupProp?: SlotGroupPropGetter | undefined
 }
 
 export interface EventWrapperProps<TEvent extends object = CalendarEvent> {
@@ -150,4 +154,52 @@ export interface Components<TEvent extends object = CalendarEvent, TResource ext
   header?: React.ComponentType<HeaderProps> | undefined
   resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>> | undefined
   showMore?: React.ComponentType<ShowMoreProps<TEvent>>
+}
+
+const defaultComponents = {
+  eventWrapper: NoopWrapper,
+  backgroundEventWrapper: NoopWrapper,
+  eventContainerWrapper: NoopWrapper,
+  dateCellWrapper: NoopWrapper,
+  dayColumnWrapper: DayColumnWrapper,
+  weekWrapper: NoopWrapper,
+  timeslotWrapper: NoopWrapper,
+  timeGutterWrapper: NoopWrapper,
+
+  header: Header,
+  resourceHeader: ResourceHeader,
+}
+
+const defaultViewOverrideComponents = {
+  agenda: {
+    date: NoopWrapper,
+    time: NoopWrapper,
+    event: NoopWrapper,
+  },
+  day: {
+    header: Header,
+    event: NoopWrapper,
+  },
+  week: {
+    header: Header,
+    event: NoopWrapper,
+  },
+  work_week: {
+    header: Header,
+    event: NoopWrapper,
+  },
+  month: {
+    header: Header,
+    dateHeader: DateHeader,
+    event: NoopWrapper,
+  },
+}
+
+export const initComponents = <TEvent extends object = CalendarEvent, TResource extends object = object>(components: Components<TEvent, TResource> | undefined, view: ViewName, viewNames: string[]) => {
+  return defaults(
+    components?.[view] || {},
+    omit(components, viewNames),
+    defaultComponents,
+    defaultViewOverrideComponents[view],
+  )
 }

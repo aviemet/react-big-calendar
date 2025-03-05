@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
 import TimeSlotGroup from './TimeSlotGroup'
-import { CalendarEvent, SlotInfo } from '@/types'
 import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import DayColumnWrapper from '@/DayColumnWrapper'
 import { CalendarProps, useCalendarContext } from '@/Calendar'
 import EventsWrapper from './EventsWrapper'
 import { Resource } from '@/utils/Resources'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { CalendarEvent } from '@/utils/components'
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -59,7 +58,10 @@ const DayColumn = (props: DayColumnProps) => {
     onKeyPressEvent,
     dayLayoutAlgorithm,
   } = props
-  const { localizer, components, getNow, getters, rtl } = useCalendarContext()
+  const { localizer, getNow, getters, rtl, components: {
+    dayColumnWrapper: DayColumnWrapperComponent,
+    eventContainerWrapper: EventContainer,
+  } } = useCalendarContext()
 
   const [selecting, setSelecting] = useState(false)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState<number>(null)
@@ -243,9 +245,6 @@ const DayColumn = (props: DayColumnProps) => {
       box,
     })
   }
-
-  const DayColumnWrapperComponent = components.dayColumnWrapper || DayColumnWrapper
-  const EventContainer = components.eventContainerWrapper
 
   return (
     <DayColumnWrapperComponent

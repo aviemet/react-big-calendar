@@ -1,11 +1,11 @@
 import * as DayEventLayout from '@/utils/DayEventLayout'
 import TimeGridEvent from './TimeGridEvent'
-import { CalendarEvent } from '@/types'
 import { isSelected } from '@/utils/eventSelectionHelpers'
 import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import { CalendarProps, useCalendarContext } from '@/Calendar'
 import { Resource } from '@/utils/Resources'
 import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
+import { CalendarEvent } from '@/utils/components'
 
 interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -36,7 +36,7 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   onDoubleClickEvent,
   onKeyPressEvent,
 }: EventsWrapperProps<TEvent>) => {
-  const { localizer, components, accessors } = useCalendarContext()
+  const { localizer, accessors } = useCalendarContext()
 
   let styledEvents = DayEventLayout.getStyledEvents({
     events,
@@ -56,11 +56,11 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   }
 
   const handleDoubleClick = (event) => {
-    onDoubleClickEvent(event)
+    onDoubleClickEvent?.(event)
   }
 
   const handleKeyPress = (event) => {
-    onKeyPressEvent(event)
+    onKeyPressEvent?.(event)
   }
 
   return styledEvents.map(({ event, style }, index) => {

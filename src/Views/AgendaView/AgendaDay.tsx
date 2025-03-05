@@ -1,11 +1,8 @@
 import React from 'react'
 import { inRange } from '@/utils/eventLevels'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { CalendarEvent, Components } from '@/types'
-import { Getters } from '@/types'
-import { Accessors } from '@/utils/accessors'
-import { Resource } from '@/utils/Resources'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface DayProps<TEvent extends CalendarEvent = CalendarEvent> {
   day: Date
@@ -26,7 +23,10 @@ const Day = ({
   onSelectEvent,
   onDoubleClickEvent,
 }: DayProps) => {
-  const { localizer, components, accessors, getters } = useCalendarContext()
+  const { localizer, accessors, getters, components: {
+    event: EventComponent,
+    date: AgendaDate,
+  } } = useCalendarContext()
 
   events = events.filter((e) =>
     inRange(
@@ -37,7 +37,6 @@ const Day = ({
       localizer
     )
   )
-  const { event: EventComponent, date: AgendaDate } = components
 
   return events.map((event, index) => {
     let title = accessors.title(event)
@@ -56,12 +55,9 @@ const Day = ({
       index === 0
         ? <td rowSpan={ events.length } className="rbc-agenda-date-cell">
           { AgendaDate
-            ? (
-              <AgendaDate day={ day } label={ dateLabel } />
-            )
-            : (
-              dateLabel
-            ) }
+            ? <AgendaDate day={ day } label={ dateLabel } />
+            : dateLabel
+          }
         </td>
         : false
 

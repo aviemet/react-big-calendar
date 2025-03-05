@@ -1,14 +1,12 @@
-
 import React from 'react'
 import clsx from 'clsx'
 import scrollbarSize from 'dom-helpers/scrollbarSize'
 import DateContentRow from '@/components/DateContentRow'
-import ResourceHeader from '@/ResourceHeader'
-import { CalendarEvent } from '@/types'
 import { Resource } from '@/utils/Resources'
 import { useCalendarContext } from '@/Calendar'
 import TimeGridHeaderCells from './TimeGridHeaderCells'
 import { DateRange } from '@/localizers'
+import { CalendarEvent } from '@/utils/components'
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: DateRange //Date[]
@@ -53,15 +51,10 @@ const TimeGridHeader = ({
 }: TimeGridHeaderProps) => {
   const { localizer } = useCalendarContext ()
 
-  const {
-    components: {
-      timeGutterHeader: TimeGutterHeader,
-      resourceHeader: ResourceHeaderComponent = ResourceHeader,
-    },
-    accessors,
-    rtl,
-    getNow,
-  } = useCalendarContext()
+  const { accessors, rtl, getNow, components: {
+    timeGutterHeader: TimeGutterHeader,
+    resourceHeader: ResourceHeaderComponent,
+  } } = useCalendarContext()
 
   let style = {}
   if(isOverflowing) {

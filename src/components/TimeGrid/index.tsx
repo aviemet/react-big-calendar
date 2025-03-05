@@ -9,12 +9,12 @@ import TimeGridHeader from './TimeGridHeader'
 import TimeGridHeaderResources from './TimeGridHeaderResources'
 import TimeGutter from './TimeGutter'
 import { inRange, sortEvents } from '@/utils/eventLevels'
-import { CalendarEvent  } from '@/types'
 import { BaseViewProps } from '@/Views'
 import Resources, { Resource } from '@/utils/Resources'
 import { Accessors } from '@/utils/accessors'
 import { Overlay } from 'react-overlays'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   resourceGroupingLayout?: boolean
@@ -194,7 +194,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
         target,
       })
     } else if(doShowMoreDrillDown) {
-      onDrillDown([date, getDrilldownView?.(date) || views.DAY])
+      onDrillDown?.([date, getDrilldownView?.(date) || views.DAY])
       // notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
     }
     onShowMore?.(events, date, slot)
@@ -385,7 +385,6 @@ const DayColumnWrapper = (props) => {
     groupedBackgroundEvents,
     localizer,
     accessors,
-    components,
     dayLayoutAlgorithm,
     now,
   } = props
@@ -416,7 +415,6 @@ const DayColumnWrapper = (props) => {
       min={ localizer.merge(date, min) }
       max={ localizer.merge(date, max) }
       resource={ resource && id }
-      components={ components }
       isNow={ localizer.isSameDate(date, now) }
       key={ `${id}-${date}` }
       date={ date }

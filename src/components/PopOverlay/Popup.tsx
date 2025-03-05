@@ -3,8 +3,8 @@ import getOffset from 'dom-helpers/offset'
 import useClickOutside from '@/hooks/useClickOutside'
 import EventCell from '@/components/EventRow/EventCell'
 import { isSelected } from '@/utils/eventSelectionHelpers'
-import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 /**
  * Changes to react-overlays cause issue with auto positioning,
@@ -72,11 +72,13 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   },
   ref
 ) => {
-  const { localizer, accessors, getters } = useCalendarContext()
+  const { localizer, accessors } = useCalendarContext()
 
   useClickOutside({ ref: ref, callback: show })
 
   useLayoutEffect(() => {
+    if(!ref.current) return
+
     const { topOffset, leftOffset } = getPosition({
       target,
       offset,

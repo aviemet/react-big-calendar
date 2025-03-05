@@ -1,6 +1,5 @@
 import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent, Getters } from '@/types'
-import { Accessors } from '@/utils/accessors'
+import { CalendarEvent } from '@/utils/components'
 import clsx from 'clsx'
 
 function stringifyPercent(v: string | number) {
@@ -35,7 +34,10 @@ function TimeGridEvent(props: TimeGridEventProps) {
     isBackgroundEvent,
     onKeyPress,
   } = props
-  const { components: { event: Event, eventWrapper: EventWrapper }, accessors, getters, rtl } = useCalendarContext()
+  const { accessors, getters, rtl, components: {
+    event: Event,
+    eventWrapper: EventWrapper,
+  } } = useCalendarContext()
 
   let title = accessors.title(event)
   let tooltip = accessors.tooltip(event)

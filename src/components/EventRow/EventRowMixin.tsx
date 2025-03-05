@@ -33,14 +33,12 @@ export const Event = ({
 export const EventRowSpan = ({
   slots,
   len,
-  key,
   children = <></>,
 }) => {
   let per = (Math.abs(len) / slots) * 100 + '%'
 
   return (
     <div
-      key={ key }
       className="rbc-row-segment"
       // IE10/11 need max-width. flex-basis doesn't respect box-sizing
       style={ { WebkitFlexBasis: per, flexBasis: per, maxWidth: per } }

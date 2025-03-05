@@ -8,9 +8,9 @@ import NoopWrapper from '@/NoopWrapper'
 import ScrollableWeekWrapper from '@/ScrollableWeekWrapper'
 import Dummy from './Dummy'
 import clsx from 'clsx'
-import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
 import { useDateSlotMetrics } from '@/hooks/useDateSlotMetrics'
+import { CalendarEvent } from '@/utils/components'
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -65,7 +65,9 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     maxRows = Infinity,
     className,
   } = props
-  const { localizer, components, getters, accessors, getNow, rtl } = useCalendarContext()
+  const { localizer, getters, accessors, getNow, rtl, components: {
+    weekWrapper: WeekWrapper,
+  } } = useCalendarContext()
 
   const slotMetrics = useDateSlotMetrics({
     range,
@@ -137,13 +139,11 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
   let ScrollableWeekComponent = showAllEvents
     ? ScrollableWeekWrapper
     : NoopWrapper
-  let WeekWrapper = components.weekWrapper
 
   const eventRowProps = {
     selected,
     accessors,
     getters,
-    components,
     onSelect,
     onDoubleClick,
     onKeyPress,
@@ -179,8 +179,12 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
         ) }
         <ScrollableWeekComponent>
           <WeekWrapper isAllDay={ isAllDay } { ...eventRowProps } rtl={ rtl }>
-            { slotMetrics.levels.map((segs, Index) => (
-              <EventRow key={ Index } segments={ segs } { ...eventRowProps } />
+            { slotMetrics.levels.map((segs, index) => (
+              <EventRow
+                weekIndex={ index }
+                segments={ segs }
+                { ...eventRowProps }
+              />
             )) }
             { !!slotMetrics.extra.length && (
               <EventEndingRow
@@ -196,5 +200,25 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
   )
 })
 
-
 export default DateContentRow
+
+
+
+
+
+
+
+// const HeadingCell = () => {
+//   return renderHeader({
+//     date,
+//     key: `header_${index}`,
+//     className: clsx(
+//       'rbc-date-cell',
+//       localizer.isSameDate(date, getNow()) && 'rbc-now'
+//     ),
+//   })
+
+//   return (
+
+//   )
+// }

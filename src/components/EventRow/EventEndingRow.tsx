@@ -2,9 +2,9 @@ import { Event, EventRowSpan } from './EventRowMixin'
 import { eventLevels } from '@/utils/eventLevels'
 import { range } from 'lodash-es'
 import clsx from 'clsx'
-import { CalendarEvent } from '@/types'
 import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
@@ -39,7 +39,7 @@ const EventEndingRow = ({
   let row = []
 
   while(current <= slots) {
-    let key = '_lvl_' + current
+    let key = `row_lvl_${current}`
 
     const { event, left, right, span } =
         rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0] || {}
@@ -72,18 +72,17 @@ const EventEndingRow = ({
         row.push(<EventRowSpan slots={ slots } len={ gap } key={ `${key}_gap` } />)
       }
 
-      row.push(
-        // EventRowMixin.renderSpan(
-        //   slots,
-        //   1,
-        //   key,
-        //   <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } components={ components } onShowMore={ onShowMore } />
-        // )
-
-        row.push(<EventRowSpan slots={ slots } len={ 1 } key={ key }>
-          <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } onShowMore={ onShowMore } />
-        </EventRowSpan>)
-      )
+      // row.push(
+      // EventRowMixin.renderSpan(
+      //   slots,
+      //   1,
+      //   key,
+      //   <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } components={ components } onShowMore={ onShowMore } />
+      // )
+      // )
+      row.push(<EventRowSpan slots={ slots } len={ 1 } key={ key }>
+        <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } onShowMore={ onShowMore } />
+      </EventRowSpan>)
       lastEnd = current = current + 1
     }
   }
@@ -101,7 +100,9 @@ interface ShowMoreProps {
 }
 
 const ShowMore = ({ segments, slotMetrics, slot, onShowMore }: ShowMoreProps) => {
-  const { localizer, components } = useCalendarContext()
+  const { localizer, components: {
+    showMore: ShowMoreComponent,
+  } } = useCalendarContext()
 
   const events = slotMetrics.getEventsForSlot(slot)
   const remainingEvents = eventsInSlot(segments, slot)
@@ -113,34 +114,29 @@ const ShowMore = ({ segments, slotMetrics, slot, onShowMore }: ShowMoreProps) =>
     onShowMore(slot, e.target)
   }
 
-  if(components?.showMore) {
-    const ShowMoreComponent = components.showMore
+  if(ShowMoreComponent) {
     // The received slot seems to be 1-based, but the range we use to pull the date is 0-based
     const slotDate = slotMetrics.getDateForSlot(slot - 1)
 
     return count
-      ? (
-        <ShowMoreComponent
-          slotDate={ slotDate }
-          slot={ slot }
-          count={ count }
-          events={ events }
-          remainingEvents={ remainingEvents }
-        />
-      )
+      ? <ShowMoreComponent
+        slotDate={ slotDate }
+        slot={ slot }
+        count={ count }
+        events={ events }
+        remainingEvents={ remainingEvents }
+      />
       : false
   }
 
   return count
-    ? (
-      <button
-        type="button"
-        key={ 'sm_' + slot }
-        className={ clsx('rbc-button-link', 'rbc-show-more') }
-        onClick={ (e) => showMore(slot, e) }
-      >
-        { localizer.messages.showMore(count, remainingEvents, events) }
-      </button>
-    )
+    ? <button
+      type="button"
+      key={ 'sm_' + slot }
+      className={ clsx('rbc-button-link', 'rbc-show-more') }
+      onClick={ (e) => showMore(slot, e) }
+    >
+      { localizer.messages.showMore(count, remainingEvents, events) }
+    </button>
     : <></>
 }
