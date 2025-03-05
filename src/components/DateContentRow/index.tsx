@@ -121,7 +121,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     })
   }
 
-
   if(renderForMeasure) {
     return (
       <Dummy
@@ -201,24 +200,3 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
 })
 
 export default DateContentRow
-
-
-
-
-
-
-
-// const HeadingCell = () => {
-//   return renderHeader({
-//     date,
-//     key: `header_${index}`,
-//     className: clsx(
-//       'rbc-date-cell',
-//       localizer.isSameDate(date, getNow()) && 'rbc-now'
-//     ),
-//   })
-
-//   return (
-
-//   )
-// }
