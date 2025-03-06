@@ -23,14 +23,14 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   selected?: object
   selectable?: boolean | 'ignoreEvents'
   longPressThreshold?: number
-  onShowMore?: (events: CalendarEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
+  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   showAllEvents?: boolean
   onSelectSlot?: (range: Date[], slot: { start: number, end: number }) => void
-  onSelect?: (event: CalendarEvent) => void
-  onSelectEnd?: (event: CalendarEvent) => void
-  onSelectStart?: (event: CalendarEvent) => void
-  onDoubleClick?: (event: CalendarEvent) => void
-  onKeyPress?: (event: CalendarEvent) => void
+  onSelect?: (event: TEvent) => void
+  onSelectEnd?: (event: TEvent) => void
+  onSelectStart?: (event: TEvent) => void
+  onDoubleClick?: (event: TEvent) => void
+  onKeyPress?: (event: TEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
   isAllDay?: boolean
   minRows?: number
@@ -81,35 +81,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
   const headingRowRef = useRef<HTMLDivElement>(null)
   const eventRowRef = useRef<HTMLDivElement>(null)
 
-  const handleSelectSlot = (slot) => {
-    onSelectSlot(range.slice(slot.start, slot.end + 1), slot)
-  }
-
-  const handleShowMore = (slot, target) => {
-    let row = qsa(containerRef.current, '.rbc-row-bg')[0]
-
-    let cell
-    if(row) cell = row.children[slot - 1]
-
-    let events = slotMetrics.getEventsForSlot(slot)
-    onShowMore(events, range[slot - 1], cell, slot, target)
-  }
-
-  const getContainer = () => {
-    const { container } = props
-    return container ? container() : containerRef.current
-  }
-  /* Guessing this only gets called on the dummyRow */
-  const getRowLimit = () => {
-    const eventHeight = getHeight(eventRowRef.current)
-    const headingHeight = headingRowRef?.current
-      ? getHeight(headingRowRef.current)
-      : 0
-    const eventSpace = getHeight(containerRef.current) - headingHeight
-
-    return Math.max(Math.floor(eventSpace / eventHeight), 1)
-  }
-
   const renderHeadingCell = (date: Date, index: number) => {
     return renderHeader({
       date,
@@ -133,6 +104,36 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
         { ...props }
       />
     )
+  }
+
+  const handleSelectSlot = (slot) => {
+    onSelectSlot(range.slice(slot.start, slot.end + 1), slot)
+  }
+
+  const handleShowMore = (slot, target) => {
+    let row = qsa(containerRef.current, '.rbc-row-bg')[0]
+
+    let cell
+    if(row) cell = row.children[slot - 1]
+
+    let events = slotMetrics.getEventsForSlot(slot)
+    onShowMore?.(events, range[slot - 1], cell, slot, target)
+  }
+
+  const getContainer = () => {
+    const { container } = props
+    return container ? container() : containerRef.current
+  }
+
+  /* Guessing this only gets called on the dummyRow */
+  const getRowLimit = () => {
+    const eventHeight = getHeight(eventRowRef.current)
+    const headingHeight = headingRowRef?.current
+      ? getHeight(headingRowRef.current)
+      : 0
+    const eventSpace = getHeight(containerRef.current) - headingHeight
+
+    return Math.max(Math.floor(eventSpace / eventHeight), 1)
   }
 
   let ScrollableWeekComponent = showAllEvents

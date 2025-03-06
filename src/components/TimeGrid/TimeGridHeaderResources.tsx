@@ -199,7 +199,7 @@ const HeaderCells = ({
         <div className={ clsx('rbc-row', 'rbc-m-b-negative-3 rbc-h-full') }>
           { resources.map(([id, resource]) => {
             // Filter the grouped events by the current date.
-            const filteredEvents = (groupedEvents.get(id) || []).filter(event =>(
+            const filteredEvents = (groupedEvents.get(id) || []).filter(event => (
               localizer.isSameDate(event.start, date) || localizer.isSameDate(event.end, date)
             ))
 

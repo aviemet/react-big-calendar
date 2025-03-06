@@ -81,8 +81,14 @@ const EventEndingRow = ({
       // )
       // )
       row.push(<EventRowSpan slots={ slots } len={ 1 } key={ key }>
-        <ShowMore segments={ segments } slotMetrics={ slotMetrics } slot={ current } onShowMore={ onShowMore } />
+        <ShowMore
+          segments={ segments }
+          slotMetrics={ slotMetrics }
+          slot={ current }
+          onShowMore={ onShowMore }
+        />
       </EventRowSpan>)
+
       lastEnd = current = current + 1
     }
   }
@@ -91,6 +97,7 @@ const EventEndingRow = ({
 }
 
 export default EventEndingRow
+
 
 interface ShowMoreProps {
   segments: CalendarEvent[]

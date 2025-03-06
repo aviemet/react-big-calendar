@@ -14,30 +14,29 @@ import { coerceDate } from '@/utils/helpers'
 import moveDate from '@/utils/move'
 import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
 import { Messages } from '@/utils/messages'
-import { defaults,  omit,  transform } from 'lodash-es'
+import { transform } from 'lodash-es'
 import { Accessors } from '@/utils/accessors'
-import NoopWrapper from '@/NoopWrapper'
 import Toolbar from '@/Toolbar'
 import VIEWS, {
   ViewComponent,
   ViewName,
   views as viewStrings,
 } from '@/Views'
-import {
-  CalendarEvent,
-  type Components,
-  type DayPropGetter,
-  type EventPropGetter,
-  type Getters,
-  type SlotGroupPropGetter,
-  type SlotInfo,
-  type SlotPropGetter,
-} from '@/types'
 import clsx from 'clsx'
 import { Resource } from './utils/Resources'
 import createContext from './hooks/createContext'
 import { useUncontrolled } from 'uncontrollable'
-import { initComponents } from './utils/components'
+import {
+  CalendarEvent,
+  Components,
+  DayPropGetter,
+  EventPropGetter,
+  Getters,
+  initComponents,
+  SlotGroupPropGetter,
+  SlotInfo,
+  SlotPropGetter,
+} from './utils/components'
 
 type CalendarContext = {
   localizer: DateLocalizer
@@ -798,7 +797,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     elementProps = {},
     toolbar = true,
     view = viewStrings.MONTH,
-    views = [viewStrings.MONTH, viewStrings.WEEK, viewStrings.DAY, viewStrings.AGENDA],
+    views = Object.values(viewStrings),
     length = 30,
     doShowMoreDrillDown = true,
     drilldownView = viewStrings.DAY,
