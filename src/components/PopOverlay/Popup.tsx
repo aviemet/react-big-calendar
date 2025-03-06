@@ -77,16 +77,16 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   useClickOutside({ ref: ref, callback: show })
 
   useLayoutEffect(() => {
-    if(!ref.current) return
+    if(!ref) return
 
     const { topOffset, leftOffset } = getPosition({
       target,
       offset,
       container: containerRef.current,
-      box: ref.current,
+      box: ref,
     })
-    ref.current.style.top = `${topOffset}px`
-    ref.current.style.left = `${leftOffset}px`
+    ref.style.top = `${topOffset}px`
+    ref.style.left = `${leftOffset}px`
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offset.x, offset.y, target])
 

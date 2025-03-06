@@ -1,8 +1,8 @@
 import React, { forwardRef, useRef } from 'react'
 import { Overlay } from 'react-overlays'
 import Popup from './Popup'
-import { CalendarEvent } from '@/types'
 import { useCalendarContext } from '@/Calendar'
+import { CalendarEvent } from '@/utils/components'
 
 interface PopOverlayProps {
   popupOffset: number | { x: number, y: number }
@@ -14,7 +14,7 @@ interface PopOverlayProps {
   }
   selected: object
   handleSelectEvent: (event: CalendarEvent) => void
-  handleDoubleClickEvent: (event: CalendarEvent) => void
+  handleDoubleClickEvent: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
   handleKeyPressEvent: (event: CalendarEvent) => void
   handleDragStart: (event: React.MouseEvent<HTMLElement>) => void
   onHide: () => void

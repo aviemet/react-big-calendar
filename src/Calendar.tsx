@@ -831,7 +831,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     slotGroupPropGetter,
     dayPropGetter,
     resourceGroupingLayout,
-    // resources = [],
+    resources = [],
     // popup = false,
     // step = 30,
     // allDayMaxRows = Infinity,
@@ -1073,6 +1073,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           onDoubleClickEvent={ handleDoubleClickEvent }
           onKeyPressEvent={ handleKeyPressEvent }
           onSelectSlot={ handleSelectSlot }
+          resources={ resources }
 
           // props for Month view
           onShowMore={ onShowMore }

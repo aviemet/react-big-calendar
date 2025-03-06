@@ -303,6 +303,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     getDrilldownView: getDrilldownView,
     resizable,
   }
+  const localResources = memoizedResources(resources, accessors)
 
   return (
     <div
@@ -317,7 +318,22 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
           ? <TimeGridHeaderResources { ...headerProps } />
           : <TimeGridHeader { ...headerProps } />
       }
-      { popup && <OverlayWrapper
+      { popup && <PopOverlay
+        ref={ containerRef }
+        overlay={ overlay }
+        selected={ selected }
+        popupOffset={ popupOffset }
+        handleKeyPressEvent={ (e) => onKeyPressEvent?.(e) }
+        handleSelectEvent={ handleSelectEvent }
+        handleDoubleClickEvent={ (event, e) => onDoubleClickEvent?.(event, e) }
+        handleDragStart={ handleDragStart }
+        show={ !!overlay?.position }
+        overlayDisplay={ overlayDisplay }
+        onHide={ () => setOverlay(null) }
+      />
+
+      }
+      { /* { popup && <OverlayWrapper
         overlay={ overlay }
         selected={ selected }
         popupOffset={ popupOffset }
@@ -325,7 +341,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
         show={ !!overlay.position }
         overlayDisplay={ overlayDisplay }
         onHide={ () => setOverlay(null) }
-      /> }
+      /> } */ }
       <div
         ref={ contentRef }
         className="rbc-time-content"
@@ -338,13 +354,26 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
           step={ step }
           timeslots={ timeslots }
         />
-        <EventsWrapper
+        { resourceGroupingLayout
+          ? <RangeFirst
+            resources={ localResources }
+            groupedEvents={ localResources.groupEvents(events) }
+            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+          />
+          : <ResourcesFirst
+            resources={ localResources }
+            groupedEvents={ localResources.groupEvents(events) }
+            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+            accessors={ accessors }
+          />
+        }
+        { /* <EventsWrapper
           range={ range }
           events={ rangeEvents }
           backgroundEvents={ rangeBackgroundEvents }
           now={ getNow() }
           resources={ memoizedResources(resources, accessors) }
-        />
+        /> */ }
       </div>
     </div>
   )
@@ -425,11 +454,16 @@ const DayColumnWrapper = (props) => {
   )
 }
 
-const ResourcesFirst = ({
+interface ResourcesFirstProps<TResource extends Resource = Resource> {
+  range: Date[]
+  resources: TResource
+}
+
+const ResourcesFirst = <TResource extends Resource = Resource>({
   range,
   resources,
   ...props
-}) => {
+}: ResourcesFirstProps<TResource>) => {
   return resources.map(([id, resource]) =>
     range.map((date) =>
       <DayColumnWrapper
@@ -440,11 +474,16 @@ const ResourcesFirst = ({
   )
 }
 
-const RangeFirst = ({
+interface RangeFirstProps<TResource extends Resource = Resource> {
+  range: Date[]
+  resources: TResource
+}
+
+const RangeFirst = <TResource extends Resource = Resource>({
   range,
   resources,
   ...props
-}) => {
+}: RangeFirstProps<TResource>) => {
   const { accessors } = useCalendarContext()
 
   return range.map((date) => (
@@ -464,91 +503,91 @@ const RangeFirst = ({
 }
 
 
-interface EventsWrapperProps {
-  events: CalendarEvent[]
-  resources: Resource[]
-  backgroundEvents: CalendarEvent[]
-  resourceGroupingLayout: boolean
-}
+// interface EventsWrapperProps {
+//   events: CalendarEvent[]
+//   resources: Resource[]
+//   backgroundEvents: CalendarEvent[]
+//   resourceGroupingLayout: boolean
+// }
 
-const EventsWrapper = ({
-  events,
-  resources,
-  backgroundEvents,
-  ...props
-}: EventsWrapperProps) => {
-  const { accessors } = useCalendarContext()
+// const EventsWrapper = ({
+//   events,
+//   resources,
+//   backgroundEvents,
+//   ...props
+// }: EventsWrapperProps) => {
+//   const { accessors } = useCalendarContext()
 
-  const localResources = memoizedResources(resources, accessors)
-  const groupedEvents = localResources.groupEvents(events)
-  const groupedBackgroundEvents = localResources.groupEvents(backgroundEvents)
+//   const localResources = memoizedResources(resources, accessors)
+//   const groupedEvents = localResources.groupEvents(events)
+//   const groupedBackgroundEvents = localResources.groupEvents(backgroundEvents)
 
-  if(!resourceGroupingLayout) {
-    return <ResourcesFirst
-      resources={ localResources }
-      groupedEvents={ groupedEvents }
-      groupedBackgroundEvents={ groupedBackgroundEvents }
-      accessors={ accessors }
-      { ...props }
-    />
-  } else {
-    return <RangeFirst
-      resources={ localResources }
-      groupedEvents={ groupedEvents }
-      groupedBackgroundEvents={ groupedBackgroundEvents }
-      { ...props }
-    />
-  }
-}
+//   if(!resourceGroupingLayout) {
+//     return <ResourcesFirst
+//       resources={ localResources }
+//       groupedEvents={ groupedEvents }
+//       groupedBackgroundEvents={ groupedBackgroundEvents }
+//       accessors={ accessors }
+//       { ...props }
+//     />
+//   } else {
+//     return <RangeFirst
+//       resources={ localResources }
+//       groupedEvents={ groupedEvents }
+//       groupedBackgroundEvents={ groupedBackgroundEvents }
+//       { ...props }
+//     />
+//   }
+// }
 
-interface OverlayWrapperProps {
-  overlay: Overlay
-  selected: Selected
-  popupOffset: PopupOffset
-  handleDragStart: HandleDragStart
-  overlayDisplay: OverlayDisplay
-  onHide: () => void
-  onKeyPressEvent: (...args: any[]) => void
-  onSelectEvent: (...args: any[]) => void
-  onDoubleClickEvent: (...args: any[]) => void
-}
+// interface OverlayWrapperProps {
+//   overlay: Overlay
+//   selected: Selected
+//   popupOffset: PopupOffset
+//   handleDragStart: HandleDragStart
+//   overlayDisplay: OverlayDisplay
+//   onHide: () => void
+//   onKeyPressEvent: (...args: any[]) => void
+//   onSelectEvent: (...args: any[]) => void
+//   onDoubleClickEvent: (...args: any[]) => void
+// }
 
-const OverlayWrapper = ({
-  overlay = {},
-  selected,
-  popupOffset,
-  handleDragStart,
-  overlayDisplay,
-  onHide,
-  onKeyPressEvent,
-  onSelectEvent,
-  onDoubleClickEvent,
-}: OverlayWrapperProps) => {
-  const handleKeyPressEvent = (...args) => {
-    // clearSelection()
-    onKeyPressEvent?.(args)
-    // notify(onKeyPressEvent, args)
-  }
+// const OverlayWrapper = ({
+//   overlay = {},
+//   selected,
+//   popupOffset,
+//   handleDragStart,
+//   overlayDisplay,
+//   onHide,
+//   onKeyPressEvent,
+//   onSelectEvent,
+//   onDoubleClickEvent,
+// }: OverlayWrapperProps) => {
+//   const handleKeyPressEvent = (...args) => {
+//     // clearSelection()
+//     onKeyPressEvent?.(args)
+//     // notify(onKeyPressEvent, args)
+//   }
 
-  const handleDoubleClickEvent = (...args) => {
-    // clearSelection()
-    onDoubleClickEvent(args)
-    // notify(onDoubleClickEvent, args)
-  }
+//   const handleDoubleClickEvent = (...args) => {
+//     // clearSelection()
+//     onDoubleClickEvent(args)
+//     // notify(onDoubleClickEvent, args)
+//   }
 
-  return (
-    <PopOverlay
-      ref={ containerRef }
-      overlay={ overlay }
-      selected={ selected }
-      popupOffset={ popupOffset }
-      handleKeyPressEvent={ handleKeyPressEvent }
-      handleSelectEvent={ handleSelectEvent }
-      handleDoubleClickEvent={ handleDoubleClickEvent }
-      handleDragStart={ handleDragStart }
-      show={ !!overlay.position }
-      overlayDisplay={ overlayDisplay }
-      onHide={ onHide }
-    />
-  )
-}
+//   return (
+//     <PopOverlay
+//       ref={ containerRef }
+//       overlay={ overlay }
+//       selected={ selected }
+//       popupOffset={ popupOffset }
+//       handleKeyPressEvent={ handleKeyPressEvent }
+//       handleSelectEvent={ handleSelectEvent }
+//       handleDoubleClickEvent={ handleDoubleClickEvent }
+//       handleDragStart={ handleDragStart }
+//       show={ !!overlay.position }
+//       overlayDisplay={ overlayDisplay }
+//       onHide={ onHide }
+//     />
+//   )
+// }

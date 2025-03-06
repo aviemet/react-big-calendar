@@ -1,6 +1,5 @@
 import { useCalendarContext } from "@/Calendar"
 import { DateLocalizer } from "@/localizers"
-import { CalendarEvent } from "@/types"
 import { useMemo } from "react"
 
 export type SlotMetrics = {
@@ -17,9 +16,9 @@ export type SlotMetrics = {
   startsAfter: (date: Date) => boolean
   getRange: (rangeStart: Date, rangeEnd: Date, options?: { ignoreMin?: boolean, ignoreMax?: boolean }) => { top: number, height: number, start: number, startDate: Date, end: number, endDate: Date }
   getCurrentTimePosition: (rangeStart: Date) => number
-  getEventsForSlot: (slot: number) => CalendarEvent[]
-  getDateForSlot: (slot: number) => Date
-  slots: number
+  // getEventsForSlot: (slot: number) => CalendarEvent[]
+  // getDateForSlot: (slot: number) => Date
+  // slots: number
 }
 
 const getKey = ({ min, max, step, timeslots, localizer }: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) =>
@@ -53,12 +52,31 @@ function getSlotMetrics({
   timeslots: number
   localizer: DateLocalizer
 }): SlotMetrics {
+  // Add validation
+  if(!min || !max) {
+    throw new Error('min and max dates are required')
+  }
+
+  if(step <= 0) {
+    throw new Error('step must be a positive number')
+  }
+
+  if(timeslots <= 0) {
+    throw new Error('timeslots must be a positive number')
+  }
+
+  if(localizer.lt(max, min)) {
+    throw new Error('max date must be after min date')
+  }
+
   const key = getKey({ min, max, step, timeslots, localizer })
 
-  // DST differences are handled inside the localizer
-  const totalMin = 1 + localizer.getTotalMin(min, max)
+  // Ensure totalMin is at least 1 to prevent array length issues
+  const totalMin = Math.max(1, localizer.getTotalMin(min, max))
   const minutesFromMidnight = localizer.getMinutesFromMidnight(min)
-  const numGroups = Math.ceil((totalMin - 1) / (step * timeslots))
+
+  // Ensure we don't get negative or zero values for groups/slots
+  const numGroups = Math.max(1, Math.ceil((totalMin - 1) / (step * timeslots)))
   const numSlots = numGroups * timeslots
 
   const groups = new Array(numGroups)

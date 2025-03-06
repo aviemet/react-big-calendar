@@ -11,7 +11,6 @@ interface TimeGutterProps<TResource extends Resource = Resource> {
   max: Date
   timeslots: number
   step: number
-  getNow: () => Date
   resource: TResource
   getters: Getters
 }
@@ -20,18 +19,28 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   {
     min,
     max,
-    timeslots,
-    step,
-    getNow,
+    timeslots = 2,
+    step = 30,
     resource,
     getters,
   },
   ref
 ) => {
-  const { localizer, components: {
+  const { localizer, getNow, components: {
     timeGutterWrapper: TimeGutterWrapper,
   } } = useCalendarContext()
-  const slotMetrics = useTimeSlotMetrics({ min, max, timeslots, step })
+
+  const validMin = min || new Date()
+  const validMax = max || localizer.add(validMin, 1, 'day')
+  const validTimeslots = Math.max(1, timeslots)
+  const validStep = Math.max(1, step)
+
+  const slotMetrics = useTimeSlotMetrics({
+    min: validMin,
+    max: validMax,
+    timeslots: validTimeslots,
+    step: validStep,
+  })
 
   /**
    * Since the TimeGutter only displays the 'times' of slots in a day, and is separate
@@ -40,23 +49,23 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
    * used.
    */
   const { start, end } = useMemo(() => {
-    if(localizer.getTimezoneOffset(min) !== localizer.getTimezoneOffset(max)) {
+    if(localizer.getTimezoneOffset(validMin) !== localizer.getTimezoneOffset(validMax)) {
       return {
-        start: localizer.add(min, -1, 'day'),
-        end: localizer.add(max, -1, 'day'),
+        start: localizer.add(validMin, -1, 'day'),
+        end: localizer.add(validMax, -1, 'day'),
       }
     }
-    return { start: min, end: max }
+    return { start: validMin, end: validMax }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [min?.toISOString(), max?.toISOString(), localizer])
+  }, [validMin?.toISOString(), validMax?.toISOString(), localizer])
 
   useEffect(() => {
     if(slotMetrics) {
       slotMetrics.update({
         min: start,
         max: end,
-        timeslots,
-        step,
+        timeslots: validTimeslots,
+        step: validStep,
         localizer,
       })
     }
@@ -64,7 +73,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
      * We don't want this to fire when slotMetrics is updated as it would recursively bomb
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start?.toISOString(), end?.toISOString(), timeslots, step])
+  }, [start?.toISOString(), end?.toISOString(), validTimeslots, validStep])
 
   const renderSlot = useCallback((value: Date, index: number) => {
     if(index === 0) return null
