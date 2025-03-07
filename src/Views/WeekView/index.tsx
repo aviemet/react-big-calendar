@@ -35,16 +35,19 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
     enableAutoScroll = true,
   } = props
 
-  return (
+  const { start, end }  = weekViewRange(date, { localizer })
+  const range = localizer.range(start, end)
+
+  return (<>
     <TimeGrid
       { ...props }
-      range={ weekViewRange(date, { localizer }) }
+      range={ range }
       eventOffset={ eventOffset }
       min={ min }
       max={ max }
       scrollToTime={ scrollToTime }
       enableAutoScroll={ enableAutoScroll }
-    />
+    /></>
   )
 
 }

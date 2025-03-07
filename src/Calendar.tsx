@@ -28,6 +28,7 @@ import createContext from './hooks/createContext'
 import { useUncontrolled } from 'uncontrollable'
 import {
   CalendarEvent,
+  CompiledComponents,
   Components,
   DayPropGetter,
   EventPropGetter,
@@ -40,7 +41,7 @@ import {
 
 type CalendarContext = {
   localizer: DateLocalizer
-  components: Components
+  components: CompiledComponents
   accessors: Accessors
   getters: Getters
   rtl: boolean

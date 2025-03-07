@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 import * as animationFrame from 'dom-helpers/animationFrame'
 import getPosition from 'dom-helpers/position'
@@ -16,7 +16,7 @@ import { Overlay } from 'react-overlays'
 import { useCalendarContext } from '@/Calendar'
 import { CalendarEvent } from '@/utils/components'
 
-interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
+interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
   enableAutoScroll?: boolean
   resizable?: boolean
@@ -32,7 +32,7 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent> extends Ba
   }
 }
 
-const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
+const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>({
   events,
   backgroundEvents,
   min,
@@ -67,7 +67,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   popup,
   handleDragStart,
   popupOffset,
-}: TimeGridProps<TEvent>) => {
+}: TimeGridProps<TEvent, TResource>) => {
   const { localizer, getNow, accessors } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
@@ -100,7 +100,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     animationFrame.cancel(rafHandleRef.current)
     rafHandleRef.current = animationFrame.request(checkOverflow)
   }, [checkOverflow])
-
 
   const measureGutter = useCallback(() => {
     if(measureGutterAnimationFrameRequestRef.current) {
@@ -157,7 +156,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
       }
     }
   }, [enableAutoScroll, handleResize, localizer, max, measureGutter, min, scrollToTime, width])
-
 
   const memoizedResources = useCallback((resources: Resource[], accessors: Accessors) =>
     Resources(resources, accessors)
@@ -239,7 +237,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
   // Pretty sure this was totally unused
   // slots = range.length
 
-  const groupAndSortEvents = useCallback(() => {
+  const { allDayEvents, rangeEvents, rangeBackgroundEvents } = useMemo(() => {
     const start = range[0]
     const end = range[range.length - 1]
 
@@ -279,7 +277,16 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
     }
   }, [events, backgroundEvents, range, accessors, localizer])
 
-  const { allDayEvents, rangeEvents, rangeBackgroundEvents } = groupAndSortEvents()
+  const filterEventsInRange = (events: TEvent[], date: Date) => {
+    return events.filter(event =>(
+      localizer.inRange(
+        date,
+        accessors.start(event),
+        accessors.end(event),
+        'day'
+      )
+    ))
+  }
 
   const headerProps = {
     range,
@@ -333,15 +340,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
       />
 
       }
-      { /* { popup && <OverlayWrapper
-        overlay={ overlay }
-        selected={ selected }
-        popupOffset={ popupOffset }
-        handleDragStart={ handleDragStart }
-        show={ !!overlay.position }
-        overlayDisplay={ overlayDisplay }
-        onHide={ () => setOverlay(null) }
-      /> } */ }
       <div
         ref={ contentRef }
         className="rbc-time-content"
@@ -355,53 +353,75 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent>({
           timeslots={ timeslots }
         />
         { resourceGroupingLayout
-          ? <RangeFirst
-            resources={ localResources }
-            groupedEvents={ localResources.groupEvents(events) }
-            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
-          />
-          : <ResourcesFirst
-            resources={ localResources }
-            groupedEvents={ localResources.groupEvents(events) }
-            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
-            accessors={ accessors }
-          />
+          ? range.map((date) => (
+            <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date.toISOString() }>
+              { resources.map((resource) => (
+                <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+                  <DayColumn
+                    { ...props }
+                    date={ date }
+                    resource={ resource }
+                    min={ localizer.merge(date, min) }
+                    max={ localizer.merge(date, max) }
+                    isNow={ localizer.isSameDate(date, now) }
+                    key={ `${resource.id}-${date}` }
+                    events={ filterEventsInRange(localResources.groupEvents(events), date) }
+                    backgroundEvents={ filterEventsInRange(localResources.groupEvents(backgroundEvents), date) }
+                    dayLayoutAlgorithm={ dayLayoutAlgorithm }
+                  />
+                  { /* <DayColumnWrapper
+                    date={ date }
+                    resource={ resource }
+                    accessors={ accessors }
+                    { ...props }
+                  /> */ }
+                </div>
+              )) }
+            </div>
+          ))
+          // <RangeFirst
+          //   resources={ localResources }
+          //   groupedEvents={ localResources.groupEvents(events) }
+          //   groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+          //   min={ min }
+          //   max={ max }
+          // />
+          : resources.map((resource) =>
+            range.map((date) =>
+              <DayColumn
+                { ...props }
+                resource={ resource }
+                localizer={ localizer }
+                min={ localizer.merge(date, min) }
+                max={ localizer.merge(date, max) }
+                isNow={ localizer.isSameDate(date, now) }
+                key={ `${resource.id}-${date}` }
+                date={ date }
+                events={ filterEventsInRange(localResources.groupEvents(events), date) }
+                backgroundEvents={ filterEventsInRange(localResources.groupEvents(backgroundEvents), date) }
+                dayLayoutAlgorithm={ dayLayoutAlgorithm }
+              />
+              // <DayColumnWrapper
+              //   resource={ resource }
+              //   { ...props }
+              // />
+            )
+          )
+          // <ResourcesFirst
+          //   resources={ localResources }
+          //   groupedEvents={ localResources.groupEvents(events) }
+          //   groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+          //   accessors={ accessors }
+          //   min={ min }
+          //   max={ max }
+          // />
         }
-        { /* <EventsWrapper
-          range={ range }
-          events={ rangeEvents }
-          backgroundEvents={ rangeBackgroundEvents }
-          now={ getNow() }
-          resources={ memoizedResources(resources, accessors) }
-        /> */ }
       </div>
     </div>
   )
 }
 
 export default TimeGrid
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -412,11 +432,14 @@ const DayColumnWrapper = (props) => {
     resource,
     groupedEvents,
     groupedBackgroundEvents,
-    localizer,
     accessors,
     dayLayoutAlgorithm,
     now,
+    min,
+    max,
   } = props
+
+  const { localizer } = useCalendarContext()
 
   const daysEvents = (groupedEvents.get(id) || []).filter((event) =>
     localizer.inRange(
@@ -428,13 +451,12 @@ const DayColumnWrapper = (props) => {
   )
 
   const daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(
-    (event) =>
-      localizer.inRange(
-        date,
-        accessors.start(event),
-        accessors.end(event),
-        'day'
-      )
+    (event) => localizer.inRange(
+      date,
+      accessors.start(event),
+      accessors.end(event),
+      'day'
+    )
   )
 
   return (
@@ -464,12 +486,27 @@ const ResourcesFirst = <TResource extends Resource = Resource>({
   resources,
   ...props
 }: ResourcesFirstProps<TResource>) => {
+  const { localizer } = useCalendarContext()
+
   return resources.map(([id, resource]) =>
     range.map((date) =>
-      <DayColumnWrapper
-        resource={ resource }
+      <DayColumn
         { ...props }
+        resource={ resource }
+        localizer={ localizer }
+        min={ localizer.merge(date, min) }
+        max={ localizer.merge(date, max) }
+        isNow={ localizer.isSameDate(date, now) }
+        key={ `${id}-${date}` }
+        date={ date }
+        events={ daysEvents }
+        backgroundEvents={ daysBackgroundEvents }
+        dayLayoutAlgorithm={ dayLayoutAlgorithm }
       />
+      // <DayColumnWrapper
+      //   resource={ resource }
+      //   { ...props }
+      // />
     )
   )
 }
@@ -484,110 +521,32 @@ const RangeFirst = <TResource extends Resource = Resource>({
   resources,
   ...props
 }: RangeFirstProps<TResource>) => {
-  const { accessors } = useCalendarContext()
+  const { accessors, localizer } = useCalendarContext()
 
   return range.map((date) => (
-    <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date }>
+    <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date.toISOString() }>
       { resources.map(([id, resource]) => (
         <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
-          <DayColumnWrapper
+          <DayColumn
+            { ...props }
+            date={ date }
+            resource={ resource }
+            min={ localizer.merge(date, min) }
+            max={ localizer.merge(date, max) }
+            isNow={ localizer.isSameDate(date, now) }
+            key={ `${id}-${date}` }
+            events={ daysEvents }
+            backgroundEvents={ daysBackgroundEvents }
+            dayLayoutAlgorithm={ dayLayoutAlgorithm }
+          />
+          { /* <DayColumnWrapper
             date={ date }
             resource={ resource }
             accessors={ accessors }
             { ...props }
-          />
+          /> */ }
         </div>
       )) }
     </div>
   ))
 }
-
-
-// interface EventsWrapperProps {
-//   events: CalendarEvent[]
-//   resources: Resource[]
-//   backgroundEvents: CalendarEvent[]
-//   resourceGroupingLayout: boolean
-// }
-
-// const EventsWrapper = ({
-//   events,
-//   resources,
-//   backgroundEvents,
-//   ...props
-// }: EventsWrapperProps) => {
-//   const { accessors } = useCalendarContext()
-
-//   const localResources = memoizedResources(resources, accessors)
-//   const groupedEvents = localResources.groupEvents(events)
-//   const groupedBackgroundEvents = localResources.groupEvents(backgroundEvents)
-
-//   if(!resourceGroupingLayout) {
-//     return <ResourcesFirst
-//       resources={ localResources }
-//       groupedEvents={ groupedEvents }
-//       groupedBackgroundEvents={ groupedBackgroundEvents }
-//       accessors={ accessors }
-//       { ...props }
-//     />
-//   } else {
-//     return <RangeFirst
-//       resources={ localResources }
-//       groupedEvents={ groupedEvents }
-//       groupedBackgroundEvents={ groupedBackgroundEvents }
-//       { ...props }
-//     />
-//   }
-// }
-
-// interface OverlayWrapperProps {
-//   overlay: Overlay
-//   selected: Selected
-//   popupOffset: PopupOffset
-//   handleDragStart: HandleDragStart
-//   overlayDisplay: OverlayDisplay
-//   onHide: () => void
-//   onKeyPressEvent: (...args: any[]) => void
-//   onSelectEvent: (...args: any[]) => void
-//   onDoubleClickEvent: (...args: any[]) => void
-// }
-
-// const OverlayWrapper = ({
-//   overlay = {},
-//   selected,
-//   popupOffset,
-//   handleDragStart,
-//   overlayDisplay,
-//   onHide,
-//   onKeyPressEvent,
-//   onSelectEvent,
-//   onDoubleClickEvent,
-// }: OverlayWrapperProps) => {
-//   const handleKeyPressEvent = (...args) => {
-//     // clearSelection()
-//     onKeyPressEvent?.(args)
-//     // notify(onKeyPressEvent, args)
-//   }
-
-//   const handleDoubleClickEvent = (...args) => {
-//     // clearSelection()
-//     onDoubleClickEvent(args)
-//     // notify(onDoubleClickEvent, args)
-//   }
-
-//   return (
-//     <PopOverlay
-//       ref={ containerRef }
-//       overlay={ overlay }
-//       selected={ selected }
-//       popupOffset={ popupOffset }
-//       handleKeyPressEvent={ handleKeyPressEvent }
-//       handleSelectEvent={ handleSelectEvent }
-//       handleDoubleClickEvent={ handleDoubleClickEvent }
-//       handleDragStart={ handleDragStart }
-//       show={ !!overlay.position }
-//       overlayDisplay={ overlayDisplay }
-//       onHide={ onHide }
-//     />
-//   )
-// }

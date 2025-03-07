@@ -7,7 +7,8 @@ import ResourceHeader, { ResourceHeaderProps } from "@/ResourceHeader"
 import { ViewName } from "@/Views"
 import NoopWrapper from "@/NoopWrapper"
 import Header from '@/Header'
-import DayColumnWrapper from "@/DayColumnWrapper"
+import DayColumnWrapper from "@/components/DayColumnWrapper"
+import { Resource } from "./Resources"
 
 export interface CalendarEvent {
   allDay?: boolean | undefined
@@ -89,7 +90,7 @@ export type Getters<TEvent extends object = CalendarEvent> = {
   slotGroupProp?: SlotGroupPropGetter | undefined
 }
 
-export interface EventWrapperProps<TEvent extends object = CalendarEvent> {
+export interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
   // https://github.com/intljusticemission/react-big-calendar/blob/27a2656b40ac8729634d24376dff8ea781a66d50/src/TimeGridEvent.js#L28
   style?: (React.CSSProperties & { xOffset: number }) | undefined
   className: string
@@ -105,8 +106,9 @@ export interface EventWrapperProps<TEvent extends object = CalendarEvent> {
   continuesLater: boolean
 }
 
-export interface Components<TEvent extends object = CalendarEvent, TResource extends object = object> {
+interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   event?: React.ComponentType<EventProps<TEvent>> | undefined
+  backgroundEventWrapper?: React.ComponentType<EventWrapperProps<TEvent>> | undefined
   eventWrapper?: React.ComponentType<EventWrapperProps<TEvent>> | undefined
   eventContainerWrapper?: React.ComponentType | undefined
   dateCellWrapper?: React.ComponentType<DateCellWrapperProps> | undefined
@@ -116,6 +118,14 @@ export interface Components<TEvent extends object = CalendarEvent, TResource ext
   timeGutterHeader?: React.ComponentType | undefined
   timeGutterWrapper?: React.ComponentType | undefined
   toolbar?: React.ComponentType | undefined
+
+  // components used as a header for each column in the TimeGridHeader
+  header?: React.ComponentType<HeaderProps> | undefined
+  resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>> | undefined
+  showMore?: React.ComponentType<ShowMoreProps<TEvent>>
+}
+
+interface ViewOverrideComponents<TEvent extends CalendarEvent = CalendarEvent> {
   agenda?:
 			| {
 			  date?: React.ComponentType | undefined
@@ -148,15 +158,19 @@ export interface Components<TEvent extends object = CalendarEvent, TResource ext
 			  event?: React.ComponentType<EventProps<TEvent>> | undefined
 			}
 			| undefined
-  /**
-	 * component used as a header for each column in the TimeGridHeader
-	 */
-  header?: React.ComponentType<HeaderProps> | undefined
-  resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>> | undefined
-  showMore?: React.ComponentType<ShowMoreProps<TEvent>>
 }
 
-const defaultComponents = {
+export interface Components<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends CommonComponents<TEvent, TResource>, ViewOverrideComponents<TEvent> {}
+
+export type CompiledComponents<TEvent extends object = CalendarEvent, TResource extends object = object> = CommonComponents<TEvent, TResource> & (
+  ViewOverrideComponents<TEvent>['agenda'] &
+  ViewOverrideComponents<TEvent>['day'] &
+  ViewOverrideComponents<TEvent>['week'] &
+  ViewOverrideComponents<TEvent>['work_week'] &
+  ViewOverrideComponents<TEvent>['month']
+)
+
+const defaultComponents: CommonComponents = {
   eventWrapper: NoopWrapper,
   backgroundEventWrapper: NoopWrapper,
   eventContainerWrapper: NoopWrapper,
@@ -170,7 +184,7 @@ const defaultComponents = {
   resourceHeader: ResourceHeader,
 }
 
-const defaultViewOverrideComponents = {
+const defaultViewOverrideComponents: ViewOverrideComponents = {
   agenda: {
     date: NoopWrapper,
     time: NoopWrapper,
@@ -195,7 +209,11 @@ const defaultViewOverrideComponents = {
   },
 }
 
-export const initComponents = <TEvent extends object = CalendarEvent, TResource extends object = object>(components: Components<TEvent, TResource> | undefined, view: ViewName, viewNames: string[]) => {
+export const initComponents = <TEvent extends object = CalendarEvent, TResource extends object = object>(
+  components: Components<TEvent, TResource> | undefined,
+  view: ViewName,
+  viewNames: string[]
+) => {
   return defaults(
     components?.[view] || {},
     omit(components, viewNames),

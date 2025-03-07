@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import addClass from 'dom-helpers/addClass'
 import removeClass from 'dom-helpers/removeClass'
 import getWidth from 'dom-helpers/width'
@@ -38,11 +38,11 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   })
 
   const timeRangeLabel = (day, event) => {
-    const labelClass = ''
+    let labelClass = ''
     let label = localizer.messages.allDay
 
-    let end = accessors.end(event)
-    let start = accessors.start(event)
+    const end = accessors.end(event)
+    const start = accessors.start(event)
 
     if(!accessors.allDay(event)) {
       if(localizer.eq(start, end)) {
@@ -76,13 +76,11 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
 
     if(!firstRow) return
 
-    let isOverflowing =
-      contentRef.current.scrollHeight > contentRef.current.clientHeight
+    let isOverflowing = contentRef.current.scrollHeight > contentRef.current.clientHeight
 
-    let _widths = []
-    let widths = _widths
+    let widths = []
 
-    _widths = [getWidth(firstRow.children[0]), getWidth(firstRow.children[1])]
+    let _widths = [getWidth(firstRow.children[0]), getWidth(firstRow.children[1])]
 
     if(widths[0] !== _widths[0] || widths[1] !== _widths[1]) {
       dateColRef.current.style.width = _widths[0] + 'px'

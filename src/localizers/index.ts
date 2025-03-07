@@ -31,7 +31,7 @@ import {
 } from '../utils/dates'
 import { StartOfWeek, Unit } from 'date-arithmetic'
 import { buildMessages, type Messages } from '@/utils/messages'
-import { CalendarEvent } from '@/types'
+import { CalendarEvent } from '@/utils/components'
 
 export type DateRange = { start: Date, end: Date }
 
@@ -241,7 +241,7 @@ export const localizerDefaultMethods = {
 
 export interface DateLocalizerSpec {
   firstOfWeek: (culture?: Culture) => StartOfWeek
-  format: (value: FormatInput, format: string, culture?: Culture) => string
+  format: (value: FormatInput, format: keyof Formats | string | DateFormat | DateRangeFormatFunction, culture?: Culture) => string
   formats: Formats
   merge?: (date: Date, time: Date) => Date | null
   inRange?: typeof inRange
@@ -381,12 +381,12 @@ export function mergeWithDefaults(
     ...localizer,
     messages: buildMessages(messages),
     startOfWeek: () => localizer.startOfWeek(culture),
-    format: (value: FormatInput, format: string | keyof Formats) => {
-
-      return localizer.format(value, typeof formats[format as keyof Formats] === 'string'
-        ? formats[format as keyof Formats] as string
-        : format as string,
-      culture)
+    format: (value: FormatInput, format: keyof Formats | string) => {
+      return localizer.format(
+        value,
+        format in formats ? formats[format as keyof Formats] : format as string,
+        culture
+      )
     },
   }
 }

@@ -48,7 +48,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     className,
   } = props
   const { localizer, date: calendarDate, accessors, components: {
-    dateHeader: DateHeaderComponent,
     header: HeaderComponent,
   } } = useCalendarContext()
 
@@ -190,37 +189,6 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     [onDrillDown, resizeListener]
   )
 
-  const renderDateHeading = useCallback((
-    {
-      date,
-      className,
-      drilldownView,
-      isOffRange,
-      label,
-      onDrillDown,
-    }: DateHeaderProps
-  ) => {
-    let isCurrent = localizer.isSameDate(date, calendarDate)
-
-    return (
-      <div
-        role="cell"
-        className={ clsx(className, {
-          'rbc-off-range': isOffRange,
-          'rbc-current': isCurrent,
-        }) }
-      >
-        <DateHeaderComponent
-          label={ label || localizer.format(date, 'dateFormat') }
-          date={ date }
-          drilldownView={ drilldownView }
-          isOffRange={ isOffRange }
-          onDrillDown={ (e: React.MouseEvent<HTMLElement>) => handleHeadingClick(date, drilldownView, e) }
-        />
-      </div>
-    )
-  }, [localizer, calendarDate, handleHeadingClick])
-
   const overlayDisplay = useCallback(() => {
     hideOverlay()
   }, [hideOverlay])
@@ -269,13 +237,13 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
             maxRows={ showAllEvents ? Infinity : state.rowLimit }
             selected={ selected }
             selectable={ selectable }
-            renderHeader={ renderDateHeading }
             renderForMeasure={ state.needLimitMeasure }
             onShowMore={ onShowMore }
             onSelect={ handleSelectEvent }
             onDoubleClick={ handleDoubleClickEvent }
             onKeyPress={ handleKeyPressEvent }
             onSelectSlot={ onSelectSlot }
+            onHeadingClick={ handleHeadingClick }
             longPressThreshold={ longPressThreshold }
             resizable={ resizable }
             showAllEvents={ showAllEvents }

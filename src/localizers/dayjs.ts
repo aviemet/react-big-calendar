@@ -1,4 +1,4 @@
-import { DateLocalizer, EventComparison, EventRangeComparison, RangeFunction } from '.'
+import { DateLocalizer, EventComparison, EventRangeComparison, RangeFunction, DateRangeFormatFunction, DateFormatFunction } from '.'
 
 // import dayjs plugins
 // Note that the timezone plugin is not imported here
@@ -13,25 +13,25 @@ import utc from 'dayjs/plugin/utc'
 
 import { Culture, Formats } from '.'
 import { Unit } from 'date-arithmetic'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { Dayjs, OpUnitType, ManipulateType } from 'dayjs'
 
-const weekRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  local.format(start, 'MMMM DD', culture) +
+const weekRangeFormat: RangeFunction = ({ start, end }, culture, locale) => {
+  return locale.format(start, 'MMMM DD', culture) +
   ' – ' +
-  // updated to use this localizer 'eq()' method
-  local.format(end, local.eq(start, end, 'month') ? 'DD' : 'MMMM DD', culture)
+  locale.format(end, locale.eq(start, end, 'month') ? 'DD' : 'MMMM DD', culture)
+}
 
-const dateRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  local.format(start, 'L', culture) + ' – ' + local.format(end, 'L', culture)
+const dateRangeFormat: RangeFunction = ({ start, end }, culture, locale) =>
+  locale.format(start, 'L', culture) + ' – ' + locale.format(end, 'L', culture)
 
-const timeRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  local.format(start, 'LT', culture) + ' – ' + local.format(end, 'LT', culture)
+const timeRangeFormat: RangeFunction = ({ start, end }, culture, locale) =>
+  locale.format(start, 'LT', culture) + ' – ' + locale.format(end, 'LT', culture)
 
-const timeRangeStartFormat: RangeFunction = ({ start }, culture, local) =>
-  local.format(start, 'LT', culture) + ' – '
+const timeRangeStartFormat: RangeFunction = ({ start }, culture, locale) =>
+  locale.format(start, 'LT', culture) + ' – '
 
-const timeRangeEndFormat: RangeFunction = ({ end }, culture, local) =>
-  ' – ' + local.format(end, 'LT', culture)
+const timeRangeEndFormat: RangeFunction = ({ end }, culture, locale) =>
+  ' – ' + locale.format(end, 'LT', culture)
 
 export const formats: Formats = {
   dateFormat: 'DD',
@@ -55,18 +55,41 @@ export const formats: Formats = {
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
-function fixUnit(unit?: Unit) {
-  let datePart = unit ? unit.toLowerCase() : unit
+type TimeUnit = OpUnitType & ManipulateType & Unit
 
-  if(datePart === 'FullYear') {
-    datePart = 'year'
-  } else if(!datePart) {
-    datePart = undefined
-  }
-  return datePart as Unit | undefined
+function fixUnit(unit?: Unit): TimeUnit | undefined {
+  if(!unit) return undefined
+
+  const conversions: Record<string, TimeUnit> = {
+    FullYear: 'year',
+    decade: 'year',
+    milliseconds: 'milliseconds',
+    seconds: 'seconds',
+    minutes: 'minutes',
+    hours: 'hours',
+    day: 'day',
+    week: 'week',
+    month: 'month',
+  } as const
+
+  return (conversions[unit] || unit) as TimeUnit
 }
 
-type DayjsLib = typeof dayjs
+interface TZ {
+  (date: number | Date | string | Dayjs, timezone?: string): Dayjs
+  guess(): string
+}
+
+type DayjsLib = typeof dayjs & {
+  tz?: TZ
+}
+
+declare module 'dayjs' {
+  // eslint-disable-next-line no-unused-vars
+  interface Dayjs {
+    tz(timezone?: string): any  // Using any since we only need $x.$timezone internally
+  }
+}
 
 function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   // load dayjs plugins
@@ -82,7 +105,11 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
 
   // if the timezone plugin is loaded,
   // then use the timezone aware version
-  const dayjs = dayjsLib.tz ? dayjsLib.tz : dayjsLib
+  const dayjs = (
+    dayjsLib.tz
+      ? dayjsLib.tz
+      : dayjsLib
+  ) as DayjsLib
 
   function getTimezoneOffset(date: Date) {
     // ensures this gets cast to timezone
@@ -111,11 +138,11 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
 
   function getDayStartDstOffset(start: Date) {
     const dayStart = dayjs(start).startOf('day')
-    return getDstOffset(dayStart, start)
+    return getDstOffset(dayStart as unknown as Date, start)
   }
 
   /*** BEGIN localized date arithmetic methods with dayjs ***/
-  function defineComparators(a: Date, b: Date, unit?: Unit) {
+  function defineComparators(a: Date, b: Date, unit?: Unit): [Dayjs, Dayjs, OpUnitType | undefined] {
     const datePart = fixUnit(unit)
     const dtA = datePart ? dayjs(a).startOf(datePart) : dayjs(a)
     const dtB = datePart ? dayjs(b).startOf(datePart) : dayjs(b)
@@ -234,13 +261,15 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     return dtB.diff(dtA, datePart)
   }
 
-  function minutes(date: Date) {
+  function minutes(date: Date): number
+  function minutes(date: Date, value: number): Date
+  function minutes(date: Date, value?: number): Date | number {
     const dt = dayjs(date)
-    return dt.minutes()
+    return value === undefined ? dt.minute() : dt.minute(value).toDate()
   }
 
-  function firstOfWeek(culture: Culture) {
-    const data = culture ? dayjsLib.localeData(culture) : dayjsLib.localeData()
+  function firstOfWeek(culture?: Culture) {
+    const data = dayjsLib.localeData()
     return data ? data.firstDayOfWeek() : 0
   }
 
@@ -385,8 +414,8 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     lastVisibleDay,
     visibleDays,
 
-    format(value, format, culture) {
-      return locale(dayjs(value), culture).format(format)
+    format(value: Date | string | number, format: string | DateFormatFunction | DateRangeFormatFunction, culture?: string) {
+      return locale(dayjs(value), culture).format(format as string)
     },
 
     lt,
