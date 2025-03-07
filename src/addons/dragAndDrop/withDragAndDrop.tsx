@@ -6,7 +6,7 @@ import EventContainerWrapper from "./EventContainerWrapper"
 import WeekWrapper from "./WeekWrapper"
 import { mergeComponents } from "./common"
 import { DnDContext } from "./DnDContext"
-import CalendarComponent, { CalendarProps } from "@/Calendar"
+import CalendarComponent, { CalendarProps } from "@/components/Calendar"
 
 interface DragAndDropCalendarProps extends CalendarProps {
   onEventDrop: (event: any) => void

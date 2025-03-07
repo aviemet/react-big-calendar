@@ -15,15 +15,15 @@ import moveDate from "@/utils/move"
 import { Messages } from "@/utils/messages"
 import { transform } from "lodash-es"
 import { Accessors } from "@/utils/accessors"
-import Toolbar from "@/Toolbar"
+import Toolbar from "@/components/Toolbar"
 import VIEWS, {
   ViewComponent,
   ViewName,
   views as viewStrings,
 } from "@/Views"
 import clsx from "clsx"
-import { Resource } from "./utils/Resources"
-import createContext from "./hooks/createContext"
+import { Resource } from "../utils/Resources"
+import createContext from "../hooks/createContext"
 import { useUncontrolled } from "uncontrollable"
 import {
   CalendarEvent,
@@ -36,8 +36,8 @@ import {
   SlotGroupPropGetter,
   SlotInfo,
   SlotPropGetter,
-} from "./utils/components"
-import { DayLayoutAlgorithm, DayLayoutFunction } from "./utils/layout-algorithms/LayoutAlgorithmEvent"
+} from "../utils/components"
+import { DayLayoutAlgorithm, DayLayoutFunction } from "../utils/layout-algorithms/LayoutAlgorithmEvent"
 
 type CalendarContext = {
   localizer: DateLocalizer

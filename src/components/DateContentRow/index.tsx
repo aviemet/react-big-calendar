@@ -4,14 +4,14 @@ import qsa from "dom-helpers/querySelectorAll"
 import BackgroundCells from "./BackgroundCells"
 import EventRow from "@/components/EventRow"
 import EventEndingRow from "@/components/EventRow/EventEndingRow"
-import NoopWrapper from "@/NoopWrapper"
-import ScrollableWeekWrapper from "@/ScrollableWeekWrapper"
+import NoopWrapper from "@/components/NoopWrapper"
+import ScrollableWeekWrapper from "@/components/ScrollableWeekWrapper"
 import Dummy from "./Dummy"
 import clsx from "clsx"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent } from "@/utils/components"
-import { DateHeaderProps } from "@/DateHeader"
+import { DateHeaderProps } from "@/components/DateHeader"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]

@@ -1,6 +1,6 @@
 import React from "react"
 import clsx from "clsx"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { DateRange } from "@/localizers"
 
 interface TimeGridHeaderCellsProps {

@@ -1,5 +1,5 @@
 import React from "react"
-import { ViewName } from "./Views"
+import { ViewName } from "../Views"
 
 export interface DateHeaderProps {
   date: Date

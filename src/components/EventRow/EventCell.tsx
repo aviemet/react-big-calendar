@@ -1,7 +1,7 @@
 import React from "react"
 import EventWrapper from "@/addons/dragAndDrop/EventWrapper"
 import clsx from "clsx"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 interface EventCellProps {

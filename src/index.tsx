@@ -1,4 +1,4 @@
-import NoopWrapper from "./NoopWrapper"
+import NoopWrapper from "./components/NoopWrapper"
 
 export const components = {
   eventWrapper: NoopWrapper,
@@ -6,7 +6,7 @@ export const components = {
   dateCellWrapper: NoopWrapper,
 }
 
-export { default as Calendar, useCalendarContext } from "./Calendar"
+export { default as Calendar, useCalendarContext } from "./components/Calendar"
 
 export {
   DateLocalizer,

@@ -13,7 +13,7 @@ import { BaseViewProps } from "@/Views"
 import Resources, { Resource } from "@/utils/Resources"
 import { Accessors } from "@/utils/accessors"
 import { Overlay } from "react-overlays"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {

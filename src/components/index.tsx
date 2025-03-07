@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { DateHeaderProps } from "@/DateHeader"
+import { DateHeaderProps } from "@/components/DateHeader"
 import createContext from "@/hooks/createContext"
 
 export interface CalendarSlotsContextValue {

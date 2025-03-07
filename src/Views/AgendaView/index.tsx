@@ -6,7 +6,7 @@ import scrollbarSize from "dom-helpers/scrollbarSize"
 import { navigate } from "@/utils/move"
 import { inRange } from "@/utils/eventLevels"
 import { BaseViewProps, createViewComponent } from ".."
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import Day from "./AgendaDay"
 

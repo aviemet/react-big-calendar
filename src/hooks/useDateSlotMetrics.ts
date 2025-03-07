@@ -1,7 +1,7 @@
 import { eventSegments, endOfRange, eventLevels } from "../utils/eventLevels"
 import { useMemo } from "react"
 import { Accessors } from "../utils/accessors"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { DateLocalizer } from "@/localizers"
 import { CalendarEvent } from "@/utils/components"
 

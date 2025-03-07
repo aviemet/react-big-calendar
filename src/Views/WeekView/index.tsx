@@ -2,7 +2,7 @@ import { navigate } from "@/utils/move"
 import TimeGrid from "@/components/TimeGrid"
 import { BaseViewProps, createViewComponent, ViewComponent } from ".."
 import { DateLocalizer } from "@/localizers"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 export interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {

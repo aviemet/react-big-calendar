@@ -1,4 +1,4 @@
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { Resource } from "@/utils/Resources"
 import clsx from "clsx"
 

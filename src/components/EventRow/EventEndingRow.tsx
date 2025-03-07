@@ -3,7 +3,7 @@ import { eventLevels } from "@/utils/eventLevels"
 import { range } from "lodash-es"
 import clsx from "clsx"
 import { SlotMetrics } from "@/hooks/useTimeSlotMetrics"
-import { useCalendarContext } from "@/Calendar"
+import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
