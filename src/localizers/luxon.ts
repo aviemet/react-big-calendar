@@ -1,53 +1,53 @@
-import { DateLocalizer } from '.'
+import { DateLocalizer } from "."
 
 function pluralizeUnit(unit) {
-  return /s$/.test(unit) ? unit : unit + 's'
+  return /s$/.test(unit) ? unit : unit + "s"
 }
 
 const weekRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'MMMM dd', culture) +
-  ' – ' +
+  local.format(start, "MMMM dd", culture) +
+  " – " +
   // updated to use this localizer 'eq()' method
-  local.format(end, local.eq(start, end, 'month') ? 'dd' : 'MMMM dd', culture)
+  local.format(end, local.eq(start, end, "month") ? "dd" : "MMMM dd", culture)
 
 const dateRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'D', culture) + ' – ' + local.format(end, 'D', culture)
+  local.format(start, "D", culture) + " – " + local.format(end, "D", culture)
 
 const timeRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 't', culture) + ' – ' + local.format(end, 't', culture)
+  local.format(start, "t", culture) + " – " + local.format(end, "t", culture)
 
 const timeRangeStartFormat = ({ start }, culture, local) =>
-  local.format(start, 't', culture) + ' – '
+  local.format(start, "t", culture) + " – "
 
 const timeRangeEndFormat = ({ end }, culture, local) =>
-  ' – ' + local.format(end, 't', culture)
+  " – " + local.format(end, "t", culture)
 
 export const formats = {
-  dateFormat: 'dd',
-  dayFormat: 'dd EEE',
-  weekdayFormat: 'EEE',
+  dateFormat: "dd",
+  dayFormat: "dd EEE",
+  weekdayFormat: "EEE",
 
   selectRangeFormat: timeRangeFormat,
   eventTimeRangeFormat: timeRangeFormat,
   eventTimeRangeStartFormat: timeRangeStartFormat,
   eventTimeRangeEndFormat: timeRangeEndFormat,
 
-  timeGutterFormat: 't',
+  timeGutterFormat: "t",
 
-  monthHeaderFormat: 'MMMM yyyy',
-  dayHeaderFormat: 'EEEE MMM dd',
+  monthHeaderFormat: "MMMM yyyy",
+  dayHeaderFormat: "EEEE MMM dd",
   dayRangeHeaderFormat: weekRangeFormat,
   agendaHeaderFormat: dateRangeFormat,
 
-  agendaDateFormat: 'EEE MMM dd',
-  agendaTimeFormat: 't',
+  agendaDateFormat: "EEE MMM dd",
+  agendaTimeFormat: "t",
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
 function fixUnit(unit) {
   let datePart = unit ? pluralizeUnit(unit.toLowerCase()) : unit
-  if(datePart === 'FullYear') {
-    datePart = 'year'
+  if(datePart === "FullYear") {
+    datePart = "year"
   } else if(!datePart) {
     datePart = undefined
   }
@@ -97,25 +97,25 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
   function startOfDTWeek(dtObj) {
     const weekday = dtObj.weekday
     if(weekday === firstDayOfWeek) {
-      return dtObj.startOf('day') // already beginning of week
+      return dtObj.startOf("day") // already beginning of week
     } else if(firstDayOfWeek === 1) {
-      return dtObj.startOf('week') // fow is Monday, which is Luxon default
+      return dtObj.startOf("week") // fow is Monday, which is Luxon default
     }
     const diff = firstDayOfWeek === 7 ? weekday : weekday + (7 - firstDayOfWeek)
-    return dtObj.minus({ day: diff }).startOf('day')
+    return dtObj.minus({ day: diff }).startOf("day")
   }
 
   function endOfDTWeek(dtObj) {
     const weekday = dtObj.weekday
     const eow = firstDayOfWeek === 1 ? 7 : firstDayOfWeek - 1
     if(weekday === eow) {
-      return dtObj.endOf('day') // already last day of the week
+      return dtObj.endOf("day") // already last day of the week
     } else if(firstDayOfWeek === 1) {
-      return dtObj.endOf('week') // use Luxon default (Sunday)
+      return dtObj.endOf("week") // use Luxon default (Sunday)
     }
     const fromDate =
       firstDayOfWeek > eow ? dtObj.plus({ day: firstDayOfWeek - eow }) : dtObj
-    return fromDate.set({ weekday: eow }).endOf('day')
+    return fromDate.set({ weekday: eow }).endOf("day")
   }
 
   // This returns a DateTime instance
@@ -123,7 +123,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     const datePart = fixUnit(unit)
     if(datePart) {
       const dt = DateTime.fromJSDate(date)
-      return datePart.includes('week')
+      return datePart.includes("week")
         ? startOfDTWeek(dt)
         : dt.startOf(datePart)
     }
@@ -144,7 +144,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     const datePart = fixUnit(unit)
     if(datePart) {
       const dt = DateTime.fromJSDate(date)
-      return datePart.includes('week') ? endOfDTWeek(dt) : dt.endOf(datePart)
+      return datePart.includes("week") ? endOfDTWeek(dt) : dt.endOf(datePart)
     }
     return DateTime.fromJSDate(date)
   }
@@ -182,7 +182,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     return +dtA <= +dtB
   }
 
-  function inRange(day, min, max, unit = 'day') {
+  function inRange(day, min, max, unit = "day") {
     const datePart = fixUnit(unit)
     const mDay = startOfDT(day, datePart)
     const mMin = startOfDT(min, datePart)
@@ -208,7 +208,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     if(!date && !time) return null
 
     const tm = DateTime.fromJSDate(time)
-    const dt = startOfDT(date, 'day')
+    const dt = startOfDT(date, "day")
     return dt
       .set({
         hour: tm.hour,
@@ -226,7 +226,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
       .toJSDate()
   }
 
-  function range(start, end, unit = 'day') {
+  function range(start, end, unit = "day") {
     const datePart = fixUnit(unit)
     let current = DateTime.fromJSDate(start).toJSDate() // this is to get it to tz
     const days = []
@@ -246,25 +246,25 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     return eq(floor, date) ? floor : add(floor, 1, datePart)
   }
 
-  function diff(a, b, unit = 'day') {
+  function diff(a, b, unit = "day") {
     const datePart = fixUnit(unit)
     // don't use 'defineComparators' here, as we don't want to mutate the values
     const dtA = DateTime.fromJSDate(a)
     const dtB = DateTime.fromJSDate(b)
     return Math.floor(
-      dtB.diff(dtA, datePart, { conversionAccuracy: 'longterm' }).toObject()[
+      dtB.diff(dtA, datePart, { conversionAccuracy: "longterm" }).toObject()[
         datePart
       ]
     )
   }
 
   function firstVisibleDay(date) {
-    const startOfMonth = startOfDT(date, 'month')
+    const startOfMonth = startOfDT(date, "month")
     return startOfDTWeek(startOfMonth).toJSDate()
   }
 
   function lastVisibleDay(date) {
-    const endOfMonth = endOfDT(date, 'month')
+    const endOfMonth = endOfDT(date, "month")
     return endOfDTWeek(endOfMonth).toJSDate()
   }
 
@@ -275,7 +275,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
 
     while(lte(current, last)) {
       days.push(current)
-      current = add(current, 1, 'day')
+      current = add(current, 1, "day")
     }
 
     return days
@@ -291,22 +291,22 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
    * @returns {Date}
    */
   function getSlotDate(dt, minutesFromMidnight, offset) {
-    return startOfDT(dt, 'day')
+    return startOfDT(dt, "day")
       .set({ minutes: minutesFromMidnight + offset })
       .toJSDate()
   }
 
   // Luxon will automatically handle DST differences in it's calculations
   function getTotalMin(start, end) {
-    return diff(start, end, 'minutes')
+    return diff(start, end, "minutes")
   }
 
   function getMinutesFromMidnight(start) {
-    const dayStart = startOfDT(start, 'day')
+    const dayStart = startOfDT(start, "day")
     const day = DateTime.fromJSDate(start)
     return Math.round(
       day
-        .diff(dayStart, 'minutes', { conversionAccuracy: 'longterm' })
+        .diff(dayStart, "minutes", { conversionAccuracy: "longterm" })
         .toObject().minutes
     )
   }
@@ -323,7 +323,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
   function daySpan(start, end) {
     const dtStart = DateTime.fromJSDate(start)
     const dtEnd = DateTime.fromJSDate(end)
-    return dtEnd.diff(dtStart).as('days')
+    return dtEnd.diff(dtStart).as("days")
   }
 
   // These two are used by eventLevels
@@ -331,7 +331,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     evtA: { start: aStart, end: aEnd, allDay: aAllDay },
     evtB: { start: bStart, end: bEnd, allDay: bAllDay },
   }) {
-    const startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
+    const startSort = +startOf(aStart, "day") - +startOf(bStart, "day")
 
     const durA = daySpan(aStart, aEnd)
 
@@ -350,14 +350,14 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     event: { start, end },
     range: { start: rangeStart, end: rangeEnd },
   }) {
-    const eStart = startOf(start, 'day')
+    const eStart = startOf(start, "day")
 
-    const startsBeforeEnd = lte(eStart, rangeEnd, 'day')
+    const startsBeforeEnd = lte(eStart, rangeEnd, "day")
     // when the event is zero duration we need to handle a bit differently
-    const sameMin = neq(eStart, end, 'minutes')
+    const sameMin = neq(eStart, end, "minutes")
     const endsAfterStart = sameMin
-      ? gt(end, rangeStart, 'minutes')
-      : gte(end, rangeStart, 'minutes')
+      ? gt(end, rangeStart, "minutes")
+      : gte(end, rangeStart, "minutes")
     return startsBeforeEnd && endsAfterStart
   }
 
@@ -367,7 +367,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
   function isSameDate(date1, date2) {
     const dt = DateTime.fromJSDate(date1)
     const dt2 = DateTime.fromJSDate(date2)
-    return dt.hasSame(dt2, 'day')
+    return dt.hasSame(dt2, "day")
   }
 
   /**
@@ -383,7 +383,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
      * we can actually compare.
      */
     const dt = new Date()
-    const neg = /-/.test(dt.toString()) ? '-' : ''
+    const neg = /-/.test(dt.toString()) ? "-" : ""
     const dtOffset = dt.getTimezoneOffset()
     const comparator = Number(`${neg}${Math.abs(dtOffset)}`)
     // moment correctly provides positive/negative offset, as expected

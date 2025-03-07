@@ -1,4 +1,4 @@
-import { CalendarEvent } from "@/types"
+import { CalendarEvent } from "./components"
 
 export interface Messages<TEvent extends object = CalendarEvent> {
   date?: React.ReactNode | undefined
@@ -23,22 +23,22 @@ export interface Messages<TEvent extends object = CalendarEvent> {
 }
 
 let defaultMessages: Messages = {
-  date: 'Date',
-  time: 'Time',
-  event: 'Event',
-  allDay: 'All Day',
-  week: 'Week',
-  work_week: 'Work Week',
-  day: 'Day',
-  month: 'Month',
-  previous: 'Back',
-  next: 'Next',
-  yesterday: 'Yesterday',
-  tomorrow: 'Tomorrow',
-  today: 'Today',
-  agenda: 'Agenda',
+  date: "Date",
+  time: "Time",
+  event: "Event",
+  allDay: "All Day",
+  week: "Week",
+  work_week: "Work Week",
+  day: "Day",
+  month: "Month",
+  previous: "Back",
+  next: "Next",
+  yesterday: "Yesterday",
+  tomorrow: "Tomorrow",
+  today: "Today",
+  agenda: "Agenda",
 
-  noEventsInRange: 'There are no events in this range.',
+  noEventsInRange: "There are no events in this range.",
 
   showMore: (total) => `+${total} more`,
 }

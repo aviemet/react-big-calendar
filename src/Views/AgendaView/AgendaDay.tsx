@@ -1,8 +1,8 @@
-import React from 'react'
-import { inRange } from '@/utils/eventLevels'
-import { isSelected } from '@/utils/eventSelectionHelpers'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import React from "react"
+import { inRange } from "@/utils/eventLevels"
+import { isSelected } from "@/utils/eventSelectionHelpers"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 interface DayProps<TEvent extends CalendarEvent = CalendarEvent> {
   day: Date
@@ -31,8 +31,8 @@ const Day = ({
   events = events.filter((e) =>
     inRange(
       e,
-      localizer.startOf(day, 'day'),
-      localizer.endOf(day, 'day'),
+      localizer.startOf(day, "day"),
+      localizer.endOf(day, "day"),
       accessors,
       localizer
     )
@@ -50,7 +50,7 @@ const Day = ({
       isSelected(event, selected)
     )
 
-    let dateLabel = index === 0 && localizer.format(day, 'agendaDateFormat')
+    let dateLabel = index === 0 && localizer.format(day, "agendaDateFormat")
     let first =
       index === 0
         ? <td rowSpan={ events.length } className="rbc-agenda-date-cell">

@@ -1,10 +1,10 @@
-import { DateLocalizer } from '@/localizers'
-import { findIndex } from 'lodash-es'
-import { Accessors } from './accessors'
-import { CalendarEvent } from '@/types'
+import { DateLocalizer } from "@/localizers"
+import { findIndex } from "lodash-es"
+import { Accessors } from "./accessors"
+import { CalendarEvent } from "./components"
 
-type EndOfRangeArgs = { dateRange: Date[], unit?: 'day', localizer: DateLocalizer }
-export function endOfRange({ dateRange, unit = 'day', localizer }: EndOfRangeArgs) {
+type EndOfRangeArgs = { dateRange: Date[], unit?: "day", localizer: DateLocalizer }
+export function endOfRange({ dateRange, unit = "day", localizer }: EndOfRangeArgs) {
   return {
     first: dateRange[0],
     last: localizer.add(dateRange[dateRange.length - 1], 1, unit),
@@ -16,15 +16,15 @@ export function endOfRange({ dateRange, unit = 'day', localizer }: EndOfRangeArg
 export function eventSegments<TEvent extends CalendarEvent>(event: TEvent, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
   let { first, last } = endOfRange({ dateRange: range, localizer })
 
-  let slots = localizer.diff(first, last, 'day')
+  let slots = localizer.diff(first, last, "day")
   let start = localizer.max(
-    localizer.startOf(accessors.start(event), 'day'),
+    localizer.startOf(accessors.start(event), "day"),
     first
   )
-  let end = localizer.min(localizer.ceil(accessors.end(event), 'day'), last)
+  let end = localizer.min(localizer.ceil(accessors.end(event), "day"), last)
 
   let padding = findIndex(range, (x) => localizer.isSameDate(x, start))
-  let span = localizer.diff(start, end, 'day')
+  let span = localizer.diff(start, end, "day")
 
   span = Math.min(span, slots)
   // The segmentOffset is necessary when adjusting for timezones

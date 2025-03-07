@@ -1,9 +1,9 @@
-import { navigate } from '@/utils/move'
-import TimeGrid from '@/components/TimeGrid'
-import { BaseViewProps, createViewComponent, ViewComponent } from '..'
-import { DateLocalizer } from '@/localizers'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import { navigate } from "@/utils/move"
+import TimeGrid from "@/components/TimeGrid"
+import { BaseViewProps, createViewComponent, ViewComponent } from ".."
+import { DateLocalizer } from "@/localizers"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 export interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   eventOffset?: number
@@ -11,10 +11,10 @@ export interface WeekViewProps<TEvent extends CalendarEvent = CalendarEvent> ext
   getDrilldownView: null
 }
 
-const weekViewRange: ViewComponent<WeekViewProps>['range'] = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
+const weekViewRange: ViewComponent<WeekViewProps>["range"] = (date: Date, { localizer }: { localizer: DateLocalizer }) => {
   let firstOfWeek = localizer.startOfWeek()
-  let start = localizer.startOf(date, 'week', firstOfWeek)
-  let end = localizer.endOf(date, 'week', firstOfWeek)
+  let start = localizer.startOf(date, "week", firstOfWeek)
+  let end = localizer.endOf(date, "week", firstOfWeek)
 
   return { start, end }
 }
@@ -29,9 +29,9 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
    */
   const {
     eventOffset = 15, // TODO: 0 or 15 or default undefined?
-    min = localizer.startOf(new Date(), 'day'),
-    max = localizer.endOf(new Date(), 'day'),
-    scrollToTime = localizer.startOf(new Date(), 'day'),
+    min = localizer.startOf(new Date(), "day"),
+    max = localizer.endOf(new Date(), "day"),
+    scrollToTime = localizer.startOf(new Date(), "day"),
     enableAutoScroll = true,
   } = props
 
@@ -58,9 +58,9 @@ export default createViewComponent(WeekView, {
   navigate: (date, action, { localizer }) => {
     switch(action) {
       case navigate.PREVIOUS:
-        return localizer.add(date, -1, 'week')
+        return localizer.add(date, -1, "week")
       case navigate.NEXT:
-        return localizer.add(date, 1, 'week')
+        return localizer.add(date, 1, "week")
       default:
         return date
     }
@@ -68,6 +68,6 @@ export default createViewComponent(WeekView, {
 
   title: (date, { localizer }) => {
     let { start, end } = weekViewRange(date, { localizer })
-    return localizer.format({ start, end }, 'dayRangeHeaderFormat')
+    return localizer.format({ start, end }, "dayRangeHeaderFormat")
   },
 })

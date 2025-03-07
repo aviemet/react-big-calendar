@@ -1,48 +1,48 @@
 // TODO: fix the globalizeLocalizer to work with globalize 1.x
-import * as dates from '../utils/dates'
-import oldGlobalize from './oldGlobalize'
-import { DateLocalizer } from '.'
+import * as dates from "../utils/dates"
+import oldGlobalize from "./oldGlobalize"
+import { DateLocalizer } from "."
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, { date: 'short' }, culture) +
-  ' – ' +
-  local.format(end, { date: 'short' }, culture)
+  local.format(start, { date: "short" }, culture) +
+  " – " +
+  local.format(end, { date: "short" }, culture)
 
 let timeRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, { time: 'short' }, culture) +
-  ' – ' +
-  local.format(end, { time: 'short' }, culture)
+  local.format(start, { time: "short" }, culture) +
+  " – " +
+  local.format(end, { time: "short" }, culture)
 
 let timeRangeStartFormat = ({ start }, culture, local) =>
-  local.format(start, { time: 'short' }, culture) + ' – '
+  local.format(start, { time: "short" }, culture) + " – "
 
 let timeRangeEndFormat = ({ end }, culture, local) =>
-  ' – ' + local.format(end, { time: 'short' }, culture)
+  " – " + local.format(end, { time: "short" }, culture)
 
 let weekRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'MMM dd', culture) +
-  ' – ' +
-  local.format(end, dates.eq(start, end, 'month') ? 'dd' : 'MMM dd', culture)
+  local.format(start, "MMM dd", culture) +
+  " – " +
+  local.format(end, dates.eq(start, end, "month") ? "dd" : "MMM dd", culture)
 
 export let formats = {
-  dateFormat: 'dd',
-  dayFormat: 'eee dd/MM',
-  weekdayFormat: 'eee',
+  dateFormat: "dd",
+  dayFormat: "eee dd/MM",
+  weekdayFormat: "eee",
 
   selectRangeFormat: timeRangeFormat,
   eventTimeRangeFormat: timeRangeFormat,
   eventTimeRangeStartFormat: timeRangeStartFormat,
   eventTimeRangeEndFormat: timeRangeEndFormat,
 
-  timeGutterFormat: { time: 'short' },
+  timeGutterFormat: { time: "short" },
 
-  monthHeaderFormat: 'MMMM yyyy',
-  dayHeaderFormat: 'eeee MMM dd',
+  monthHeaderFormat: "MMMM yyyy",
+  dayHeaderFormat: "eeee MMM dd",
   dayRangeHeaderFormat: weekRangeFormat,
   agendaHeaderFormat: dateRangeFormat,
 
-  agendaDateFormat: 'eee MMM dd',
-  agendaTimeFormat: { time: 'short' },
+  agendaDateFormat: "eee MMM dd",
+  agendaTimeFormat: { time: "short" },
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
@@ -55,24 +55,24 @@ const globalizeLocalizer = (globalize: object): DateLocalizer => {
   // method of getting first day of week.
   function firstOfWeek(culture) {
     try {
-      const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+      const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
       const cldr = locale(culture).cldr
       const territory = cldr.attributes.territory
-      const weekData = cldr.get('supplemental').weekData
-      const firstDay = weekData.firstDay[territory || '001']
+      const weekData = cldr.get("supplemental").weekData
+      const firstDay = weekData.firstDay[territory || "001"]
       return days.indexOf(firstDay)
     } catch(e) {
-      if(process.env.NODE_ENV !== 'production') {
+      if(process.env.NODE_ENV !== "production") {
         console.error(
-          'Failed to accurately determine first day of the week.' +
-            ' Is supplemental data loaded into CLDR?'
+          "Failed to accurately determine first day of the week." +
+            " Is supplemental data loaded into CLDR?"
         )
       }
       // maybe cldr supplemental is not loaded? revert to original method
       const date = new Date()
       //cldr-data doesn't seem to be zero based
       let localeDay = Math.max(
-        parseInt(locale(culture).formatDate(date, { raw: 'e' }), 10) - 1,
+        parseInt(locale(culture).formatDate(date, { raw: "e" }), 10) - 1,
         0
       )
 
@@ -86,7 +86,7 @@ const globalizeLocalizer = (globalize: object): DateLocalizer => {
     firstOfWeek,
     formats,
     format(value, format, culture) {
-      format = typeof format === 'string' ? { raw: format } : format
+      format = typeof format === "string" ? { raw: format } : format
       return locale(culture).formatDate(value, format)
     },
   })

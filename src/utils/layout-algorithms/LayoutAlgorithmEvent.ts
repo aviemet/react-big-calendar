@@ -1,6 +1,24 @@
-import { CalendarEvent } from "@/types"
 import { Accessors } from "../accessors"
 import { SlotMetrics } from "../../hooks/useTimeSlotMetrics"
+import { CalendarEvent } from "../components"
+
+export type DayLayoutFunction<TEvent extends object = CalendarEvent> = (_: {
+  events: TEvent[]
+  minimumStartDifference: number
+  slotMetrics: any
+  accessors: any
+}) => Array<{
+  event: TEvent
+  style: {
+    top: number
+    height: number
+    left: number
+    width: number
+    xOffset: number
+  }
+}>
+
+export type DayLayoutAlgorithm = "overlap" | "no-overlap"
 
 class LayoutAlgorithmEvent {
   start: number

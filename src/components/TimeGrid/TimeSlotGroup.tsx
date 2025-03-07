@@ -1,6 +1,6 @@
-import { useCalendarContext } from '@/Calendar'
-import { Resource } from '@/utils/Resources'
-import clsx from 'clsx'
+import { useCalendarContext } from "@/Calendar"
+import { Resource } from "@/utils/Resources"
+import clsx from "clsx"
 
 interface TimeSlotGroupProps<TResource extends Resource = Resource> {
   renderSlot: (value: any, index: number) => React.ReactNode
@@ -28,7 +28,7 @@ const TimeSlotGroup = ({
           <Wrapper key={ Index } value={ value } resource={ resource }>
             <div
               { ...slotProps }
-              className={ clsx('rbc-time-slot', slotProps.className) }
+              className={ clsx("rbc-time-slot", slotProps.className) }
             >
               { renderSlot && renderSlot(value, Index) }
             </div>

@@ -1,4 +1,4 @@
-import NoopWrapper from './NoopWrapper'
+import NoopWrapper from "./NoopWrapper"
 
 export const components = {
   eventWrapper: NoopWrapper,
@@ -6,7 +6,7 @@ export const components = {
   dateCellWrapper: NoopWrapper,
 }
 
-export { default as Calendar, useCalendarContext } from './Calendar'
+export { default as Calendar, useCalendarContext } from "./Calendar"
 
 export {
   DateLocalizer,
@@ -15,12 +15,12 @@ export {
   globalizeLocalizer,
   dateFnsLocalizer,
   dayjsLocalizer,
-} from './localizers'
+} from "./localizers"
 
-export { default as move } from './utils/move'
+export { default as move } from "./utils/move"
 
 export {
   navigate as Navigate,
-} from './utils/move'
+} from "./utils/move"
 
-export { views as Views } from './Views'
+export { views as Views } from "./Views"

@@ -1,7 +1,7 @@
-import React from 'react'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { DateRange } from '@/localizers'
+import React from "react"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { DateRange } from "@/localizers"
 
 interface TimeGridHeaderCellsProps {
   range: DateRange
@@ -30,7 +30,7 @@ const TimeGridHeaderCells = ({
   return (
     <>{ rangeArray.map((date, i) => {
       let drilldownView = getDrilldownView(date)
-      let label = localizer.format(date, 'dayFormat')
+      let label = localizer.format(date, "dayFormat")
 
       const { className, style } = getters.dayProp(date)
 
@@ -42,8 +42,8 @@ const TimeGridHeaderCells = ({
         <div
           key={ i }
           style={ style }
-          className={ clsx('rbc-header', className, {
-            'rbc-today': localizer.isSameDate(date, today),
+          className={ clsx("rbc-header", className, {
+            "rbc-today": localizer.isSameDate(date, today),
           }) }
         >
           { drilldownView

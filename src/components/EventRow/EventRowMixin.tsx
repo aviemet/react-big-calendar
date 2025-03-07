@@ -1,5 +1,5 @@
-import EventCell from './EventCell'
-import { isSelected } from '@/utils/eventSelectionHelpers'
+import EventCell from "./EventCell"
+import { isSelected } from "@/utils/eventSelectionHelpers"
 
 export const Event = ({
   event,
@@ -35,7 +35,7 @@ export const EventRowSpan = ({
   len,
   children = <></>,
 }) => {
-  let per = (Math.abs(len) / slots) * 100 + '%'
+  let per = (Math.abs(len) / slots) * 100 + "%"
 
   return (
     <div

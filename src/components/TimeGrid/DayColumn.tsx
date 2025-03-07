@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import clsx from 'clsx'
-import Selection, { getBoundsForNode, isEvent } from '@/utils/selection'
-import TimeSlotGroup from './TimeSlotGroup'
-import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import { CalendarProps, useCalendarContext } from '@/Calendar'
-import EventsWrapper from './EventsWrapper'
-import { Resource } from '@/utils/Resources'
-import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
-import { CalendarEvent } from '@/utils/components'
+import { useEffect, useRef, useState } from "react"
+import clsx from "clsx"
+import Selection, { getBoundsForNode, isEvent } from "@/utils/selection"
+import TimeSlotGroup from "./TimeSlotGroup"
+import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarProps, useCalendarContext } from "@/Calendar"
+import EventsWrapper from "./EventsWrapper"
+import { Resource } from "@/utils/Resources"
+import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/types"
+import { CalendarEvent } from "@/utils/components"
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -22,14 +22,14 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource
   culture: string
   timeslots: number
   selected: any
-  selectable: boolean | 'ignoreEvents'
+  selectable: boolean | "ignoreEvents"
   eventOffset: number
   longPressThreshold: number
-  onSelecting: CalendarProps['onSelecting']
-  onSelectSlot: CalendarProps['onSelectSlot']
-  onSelectEvent: CalendarProps['onSelectEvent']
-  onDoubleClickEvent: CalendarProps['onDoubleClickEvent']
-  onKeyPressEvent: CalendarProps['onKeyPressEvent']
+  onSelecting: CalendarProps["onSelecting"]
+  onSelectSlot: CalendarProps["onSelectSlot"]
+  onSelectEvent: CalendarProps["onSelectEvent"]
+  onDoubleClickEvent: CalendarProps["onDoubleClickEvent"]
+  onKeyPressEvent: CalendarProps["onKeyPressEvent"]
   className: string
   dragThroughEvents: boolean
   resource: TResource
@@ -145,8 +145,8 @@ const DayColumn = (props: DayColumnProps) => {
 
       if(onSelecting) {
         if(
-          (localizer.eq(selectState.startDate, start, 'minutes') &&
-            localizer.eq(selectState.endDate, end, 'minutes')) ||
+          (localizer.eq(selectState.startDate, start, "minutes") &&
+            localizer.eq(selectState.endDate, end, "minutes")) ||
           onSelecting({ start, end, resourceId: resource }) === false
         )
           return
@@ -168,21 +168,21 @@ const DayColumn = (props: DayColumnProps) => {
       setSelecting(false)
     }
 
-    selector.on('selecting', maybeSelect)
-    selector.on('selectStart', maybeSelect)
-    selector.on('beforeSelect', (box) => {
-      if(selectable !== 'ignoreEvents') return true
+    selector.on("selecting", maybeSelect)
+    selector.on("selectStart", maybeSelect)
+    selector.on("beforeSelect", (box) => {
+      if(selectable !== "ignoreEvents") return true
       return !isEvent(containerRef.current, box)
     })
-    selector.on('click', (box) => selectorClicksHandler(box, 'click'))
-    selector.on('doubleClick', (box) => selectorClicksHandler(box, 'doubleClick'))
-    selector.on('select', (bounds) => {
+    selector.on("click", (box) => selectorClicksHandler(box, "click"))
+    selector.on("doubleClick", (box) => selectorClicksHandler(box, "doubleClick"))
+    selector.on("select", (bounds) => {
       if(selecting) {
-        selectSlot({ ...selectState, action: 'select', bounds })
+        selectSlot({ ...selectState, action: "select", bounds })
         setSelecting(false)
       }
     })
-    selector.on('reset', () => {
+    selector.on("reset", () => {
       if(selecting) {
         setSelecting(false)
       }
@@ -253,12 +253,12 @@ const DayColumn = (props: DayColumnProps) => {
       style={ getters.dayProp(max, resource).style }
       className={ clsx(
         getters.dayProp(max, resource).className,
-        'rbc-day-slot',
-        'rbc-time-column',
+        "rbc-day-slot",
+        "rbc-time-column",
         {
-          'rbc-now': isNow ,
-          'rbc-today': isNow ,
-          'rbc-slot-selecting': selecting,
+          "rbc-now": isNow ,
+          "rbc-today": isNow ,
+          "rbc-slot-selecting": selecting,
         }
       ) }
       slotMetrics={ slotMetrics }
@@ -275,7 +275,7 @@ const DayColumn = (props: DayColumnProps) => {
         resource={ resource }
         slotMetrics={ slotMetrics }
       >
-        <div className={ clsx('rbc-events-container', { rtl }) }>
+        <div className={ clsx("rbc-events-container", { rtl }) }>
           <EventsWrapper
             events={ backgroundEvents }
             isBackgroundEvent={ true }
@@ -312,7 +312,7 @@ const DayColumn = (props: DayColumnProps) => {
           className="rbc-slot-selection"
           style={ { top: selectState.top, height: selectState.height } }
         >
-          <span>{ localizer.format(selectState, 'selectRangeFormat') }</span>
+          <span>{ localizer.format(selectState, "selectRangeFormat") }</span>
         </div>
       ) }
       { isNow && intervalTriggeredRef.current && (

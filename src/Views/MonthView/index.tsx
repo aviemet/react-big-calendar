@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import clsx from 'clsx'
-import chunk from 'lodash/chunk'
-import { navigate } from '@/utils/move'
-import getPosition from 'dom-helpers/position'
-import * as animationFrame from 'dom-helpers/animationFrame'
-import { BaseViewProps, createViewComponent, ViewName, views } from '@/Views'
-import { useMonthViewState } from './useMonthViewState'
-import { useCalendarContext } from '@/Calendar'
-import DateContentRow from '@/components/DateContentRow'
-import { inRange, sortWeekEvents } from '@/utils/eventLevels'
-import PopOverlay from '@/components/PopOverlay'
-import { CalendarEvent, SlotInfo } from '@/utils/components'
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import clsx from "clsx"
+import chunk from "lodash/chunk"
+import { navigate } from "@/utils/move"
+import getPosition from "dom-helpers/position"
+import * as animationFrame from "dom-helpers/animationFrame"
+import { BaseViewProps, createViewComponent, ViewName, views } from "@/Views"
+import { useMonthViewState } from "./useMonthViewState"
+import { useCalendarContext } from "@/Calendar"
+import DateContentRow from "@/components/DateContentRow"
+import { inRange, sortWeekEvents } from "@/utils/eventLevels"
+import PopOverlay from "@/components/PopOverlay"
+import { CalendarEvent, SlotInfo } from "@/utils/components"
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   showAllEvents?: boolean
@@ -61,10 +61,10 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
   useEffect(() => {
     dispatch({
-      type: 'SET_MEASURE_LIMIT',
-      needLimitMeasure: localizer.neq(calendarDate, state.date || new Date(), 'month'),
+      type: "SET_MEASURE_LIMIT",
+      needLimitMeasure: localizer.neq(calendarDate, state.date || new Date(), "month"),
     })
-    dispatch({ type: 'SET_DATE', date: calendarDate })
+    dispatch({ type: "SET_DATE", date: calendarDate })
   }, [calendarDate, dispatch, localizer, state.date])
 
   useEffect(() => {
@@ -74,52 +74,49 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       if(!running) {
         animationFrame.request(() => {
           running = false
-          dispatch({ type: 'SET_MEASURE_LIMIT', needLimitMeasure: true })
+          dispatch({ type: "SET_MEASURE_LIMIT", needLimitMeasure: true })
         })
       }
     }
 
-    window.addEventListener('resize', handleResize, false)
-    return () => window.removeEventListener('resize', handleResize, false)
+    window.addEventListener("resize", handleResize, false)
+    return () => window.removeEventListener("resize", handleResize, false)
   }, [dispatch])
 
   useEffect(() => {
     if(state.needLimitMeasure && slotRowRef.current) {
-      dispatch({ type: 'RESET_MEASURE' })
+      dispatch({ type: "RESET_MEASURE" })
     }
   }, [dispatch, state.needLimitMeasure])
 
   const getContainer = useCallback(() => containerRef.current, [])
 
-  const handleSelectSlot = useCallback(
-    (range: Date[], slotInfo: SlotInfo) => {
-      pendingSelection.current = pendingSelection.current.concat(range)
+  const handleSelectSlot = useCallback((range: Date[], slotInfo: SlotInfo) => {
+    pendingSelection.current = pendingSelection.current.concat(range)
 
-      clearTimeout(resizeListener)
-      setResizeListener(
-        window.setTimeout(() => {
-          let slots = pendingSelection.current.slice()
-          pendingSelection.current = []
+    clearTimeout(resizeListener)
+    setResizeListener(
+      window.setTimeout(() => {
+        let slots = pendingSelection.current.slice()
+        pendingSelection.current = []
 
-          slots.sort((a, b) => +a - +b)
+        slots.sort((a, b) => +a - +b)
 
-          const start = new Date(slots[0])
-          const end = new Date(slots[slots.length - 1])
-          end.setDate(slots[slots.length - 1].getDate() + 1)
+        const start = new Date(slots[0])
+        const end = new Date(slots[slots.length - 1])
+        end.setDate(slots[slots.length - 1].getDate() + 1)
 
-          onSelectSlot?.({
-            slots,
-            start,
-            end,
-            action: slotInfo.action,
-            bounds: slotInfo.bounds,
-            box: slotInfo.box,
-          })
-        }, 100)
-      )
-    },
-    [onSelectSlot, resizeListener]
-  )
+        onSelectSlot?.({
+          slots,
+          start,
+          end,
+          action: slotInfo.action,
+          bounds: slotInfo.bounds,
+          box: slotInfo.box,
+        })
+      }, 100)
+    )
+  }, [onSelectSlot, resizeListener])
 
   const handleSelectEvent = useCallback((event: TEvent) => {
     clearTimeout(resizeListener)
@@ -156,7 +153,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       let position = getPosition(cell, containerRef.current)
 
       dispatch({
-        type: 'SET_OVERLAY',
+        type: "SET_OVERLAY",
         overlay: {
           date,
           events,
@@ -167,7 +164,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       })
     } else if(doShowMoreDrillDown && onDrillDown && getDrilldownView) {
       const drilldownResult = getDrilldownView(date, views.MONTH, Object.values(views))
-      const view = typeof drilldownResult === 'string' ? drilldownResult as ViewName : null
+      const view = typeof drilldownResult === "string" ? drilldownResult as ViewName : null
 
       if(view) onDrillDown(date, view)
     }
@@ -176,7 +173,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
   }, [resizeListener, popup, doShowMoreDrillDown, onDrillDown, getDrilldownView, onShowMore, dispatch])
 
   const hideOverlay = useCallback(() => {
-    dispatch({ type: 'HIDE_OVERLAY' })
+    dispatch({ type: "HIDE_OVERLAY" })
   }, [dispatch])
 
   const handleHeadingClick = useCallback(
@@ -199,17 +196,17 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
   return (
     <div
-      className={ clsx('rbc-month-view', className) }
+      className={ clsx("rbc-month-view", className) }
       role="table"
       aria-label="Month View"
       ref={ containerRef }
     >
       <div className="rbc-row rbc-month-header" role="row">
-        { localizer.range(weeks[0][0], weeks[0][weeks[0].length - 1], 'day').map((day) => (
-          <div key={ 'header_' + day.toISOString() } className="rbc-header">
+        { localizer.range(weeks[0][0], weeks[0][weeks[0].length - 1], "day").map((day) => (
+          <div key={ "header_" + day.toISOString() } className="rbc-header">
             <HeaderComponent
               date={ day }
-              label={ localizer.format(day, 'weekdayFormat') }
+              label={ localizer.format(day, "weekdayFormat") }
             />
           </div>
         )) }
@@ -238,11 +235,11 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
             selected={ selected }
             selectable={ selectable }
             renderForMeasure={ state.needLimitMeasure }
-            onShowMore={ onShowMore }
+            onShowMore={ handleShowMore }
             onSelect={ handleSelectEvent }
             onDoubleClick={ handleDoubleClickEvent }
             onKeyPress={ handleKeyPressEvent }
-            onSelectSlot={ onSelectSlot }
+            onSelectSlot={ handleSelectSlot }
             onHeadingClick={ handleHeadingClick }
             longPressThreshold={ longPressThreshold }
             resizable={ resizable }
@@ -277,12 +274,12 @@ export default createViewComponent(MonthView, {
   navigate: (date, action, { localizer }) => {
     switch(action) {
       case navigate.PREVIOUS:
-        return localizer.add(date, -1, 'month')
+        return localizer.add(date, -1, "month")
       case navigate.NEXT:
-        return localizer.add(date, 1, 'month')
+        return localizer.add(date, 1, "month")
       default:
         return date
     }
   },
-  title: (date, { localizer }) => localizer.format(date, 'monthHeaderFormat'),
+  title: (date, { localizer }) => localizer.format(date, "monthHeaderFormat"),
 })

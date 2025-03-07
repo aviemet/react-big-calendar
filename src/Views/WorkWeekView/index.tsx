@@ -1,12 +1,12 @@
-import { BaseViewProps, createViewComponent, ViewComponent } from '@/Views'
-import TimeGrid from '@/components/TimeGrid'
-import WeekView from '../WeekView'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import { BaseViewProps, createViewComponent, ViewComponent } from "@/Views"
+import TimeGrid from "@/components/TimeGrid"
+import WeekView from "../WeekView"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
-const workWeekRange: ViewComponent<WorkWeekProps>['range'] = (date, { localizer }) => {
-  let start = localizer.startOf(date, 'week', 1)
-  let end = localizer.add(start, 4, 'day')
+const workWeekRange: ViewComponent<WorkWeekProps>["range"] = (date, { localizer }) => {
+  let start = localizer.startOf(date, "week", 1)
+  let end = localizer.add(start, 4, "day")
 
   return { start, end }
 }
@@ -24,9 +24,9 @@ const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekP
   const { localizer, date } = useCalendarContext()
 
   const {
-    min = localizer.startOf(new Date(), 'day'),
-    max = localizer.endOf(new Date(), 'day'),
-    scrollToTime = localizer.startOf(new Date(), 'day'),
+    min = localizer.startOf(new Date(), "day"),
+    max = localizer.endOf(new Date(), "day"),
+    scrollToTime = localizer.startOf(new Date(), "day"),
     enableAutoScroll = true,
   } = props
 
@@ -54,6 +54,6 @@ export default createViewComponent(WorkWeek, {
   navigate: WeekView.navigate,
   title: (date, { localizer }) => {
     let { start, end } = workWeekRange(date, { localizer })
-    return localizer.format({ start, end }, 'dayRangeHeaderFormat')
+    return localizer.format({ start, end }, "dayRangeHeaderFormat")
   },
 })

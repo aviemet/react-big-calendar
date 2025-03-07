@@ -1,10 +1,10 @@
-import { useEffect, useCallback, useMemo, forwardRef } from 'react'
-import { useTimeSlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import TimeSlotGroup from './TimeSlotGroup'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { Resource } from '@/utils/Resources'
-import { Getters } from '@/utils/components'
+import { useEffect, useCallback, useMemo, forwardRef } from "react"
+import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import TimeSlotGroup from "./TimeSlotGroup"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { Resource } from "@/utils/Resources"
+import { Getters } from "@/utils/components"
 
 interface TimeGutterProps<TResource extends Resource = Resource> {
   min: Date
@@ -31,7 +31,7 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   } } = useCalendarContext()
 
   const validMin = min || new Date()
-  const validMax = max || localizer.add(validMin, 1, 'day')
+  const validMax = max || localizer.add(validMin, 1, "day")
   const validTimeslots = Math.max(1, timeslots)
   const validStep = Math.max(1, step)
 
@@ -51,8 +51,8 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   const { start, end } = useMemo(() => {
     if(localizer.getTimezoneOffset(validMin) !== localizer.getTimezoneOffset(validMax)) {
       return {
-        start: localizer.add(validMin, -1, 'day'),
-        end: localizer.add(validMax, -1, 'day'),
+        start: localizer.add(validMin, -1, "day"),
+        end: localizer.add(validMax, -1, "day"),
       }
     }
     return { start: validMin, end: validMax }
@@ -81,8 +81,8 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
     const isNow = slotMetrics.dateIsInGroup(getNow(), index)
 
     return (
-      <span className={ clsx('rbc-label', isNow && 'rbc-now') }>
-        { localizer.format(value, 'timeGutterFormat') }
+      <span className={ clsx("rbc-label", isNow && "rbc-now") }>
+        { localizer.format(value, "timeGutterFormat") }
       </span>
     )
   }, [slotMetrics, localizer, getNow])

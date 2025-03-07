@@ -1,15 +1,15 @@
-import React from 'react'
-import { NavigateAction } from '../utils/move'
-import MonthView from './MonthView'
-import WeekView from './WeekView'
-import WorkWeekView from './WorkWeekView'
-import DayView from './DayView'
-import AgendaView from './AgendaView'
-import { DateLocalizer, DateRange } from '../localizers'
-import { CalendarProps } from '../Calendar'
-import { CalendarEvent, type SlotInfo } from '../types'
-import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
-import { Resource } from '@/utils/Resources'
+import React from "react"
+import { NavigateAction } from "../utils/move"
+import MonthView from "./MonthView"
+import WeekView from "./WeekView"
+import WorkWeekView from "./WorkWeekView"
+import DayView from "./DayView"
+import AgendaView from "./AgendaView"
+import { DateLocalizer, DateRange } from "../localizers"
+import { CalendarProps } from "../Calendar"
+import { Resource } from "@/utils/Resources"
+import { CalendarEvent, SlotInfo } from "@/utils/components"
+import { DayLayoutAlgorithm, DayLayoutFunction } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
 
@@ -69,9 +69,9 @@ export function createViewComponent<
 >(
   component: React.ComponentType<TProps>,
   staticProps: {
-    range: ViewComponent<TProps>['range']
-    navigate: ViewComponent<TProps>['navigate']
-    title: ViewComponent<TProps>['title']
+    range: ViewComponent<TProps>["range"]
+    navigate: ViewComponent<TProps>["navigate"]
+    title: ViewComponent<TProps>["title"]
   }
 ): ViewComponent<TProps> {
   const viewComponent = component as ViewComponent<TProps>
@@ -82,11 +82,11 @@ export function createViewComponent<
 }
 
 export const views = {
-  MONTH: 'month',
-  WEEK: 'week',
-  WORK_WEEK: 'work_week',
-  DAY: 'day',
-  AGENDA: 'agenda',
+  MONTH: "month",
+  WEEK: "week",
+  WORK_WEEK: "work_week",
+  DAY: "day",
+  AGENDA: "agenda",
 } as const
 
 export type ViewKey = keyof typeof views

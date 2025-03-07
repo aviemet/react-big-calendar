@@ -1,12 +1,12 @@
-import React from 'react'
-import clsx from 'clsx'
-import scrollbarSize from 'dom-helpers/scrollbarSize'
-import DateContentRow from '@/components/DateContentRow'
-import { Resource } from '@/utils/Resources'
-import { useCalendarContext } from '@/Calendar'
-import TimeGridHeaderCells from './TimeGridHeaderCells'
-import { DateRange } from '@/localizers'
-import { CalendarEvent } from '@/utils/components'
+import React from "react"
+import clsx from "clsx"
+import scrollbarSize from "dom-helpers/scrollbarSize"
+import DateContentRow from "@/components/DateContentRow"
+import { Resource } from "@/utils/Resources"
+import { useCalendarContext } from "@/Calendar"
+import TimeGridHeaderCells from "./TimeGridHeaderCells"
+import { DateRange } from "@/localizers"
+import { CalendarEvent } from "@/utils/components"
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: DateRange //Date[]
@@ -16,7 +16,7 @@ interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TRes
   resizable: boolean
   width: number
   selected: TEvent
-  selectable: boolean | 'ignoreEvents'
+  selectable: boolean | "ignoreEvents"
   longPressThreshold: number
   allDayMaxRows: number
   onSelectSlot: (slot: Date[]) => void
@@ -58,7 +58,7 @@ const TimeGridHeader = ({
 
   let style = {}
   if(isOverflowing) {
-    style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize() - 1}px`
+    style[rtl ? "marginLeft" : "marginRight"] = `${scrollbarSize() - 1}px`
   }
 
   const groupedEvents = resources.groupEvents(events)
@@ -69,7 +69,7 @@ const TimeGridHeader = ({
     <div
       style={ style }
       ref={ scrollRef }
-      className={ clsx('rbc-time-header', isOverflowing && 'rbc-overflowing') }
+      className={ clsx("rbc-time-header", isOverflowing && "rbc-overflowing") }
     >
       <div
         className="rbc-label rbc-time-header-gutter"
@@ -93,7 +93,7 @@ const TimeGridHeader = ({
           ) }
           <div
             className={ `rbc-row rbc-time-header-cell${
-              rangeArray.length <= 1 ? ' rbc-time-header-cell-single-day' : ''
+              rangeArray.length <= 1 ? " rbc-time-header-cell-single-day" : ""
             }` }
           >
             { <TimeGridHeaderCells

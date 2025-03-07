@@ -22,8 +22,8 @@ export type SlotMetrics = {
 }
 
 const getKey = ({ min, max, step, timeslots, localizer }: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) =>
-  `${+localizer.startOf(min, 'minutes')}` +
-  `${+localizer.startOf(max, 'minutes')}` +
+  `${+localizer.startOf(min, "minutes")}` +
+  `${+localizer.startOf(max, "minutes")}` +
   `${step}-${timeslots}`
 
 interface UseTimeSlotMetricsProps {
@@ -54,19 +54,19 @@ function getSlotMetrics({
 }): SlotMetrics {
   // Add validation
   if(!min || !max) {
-    throw new Error('min and max dates are required')
+    throw new Error("min and max dates are required")
   }
 
   if(step <= 0) {
-    throw new Error('step must be a positive number')
+    throw new Error("step must be a positive number")
   }
 
   if(timeslots <= 0) {
-    throw new Error('timeslots must be a positive number')
+    throw new Error("timeslots must be a positive number")
   }
 
   if(localizer.lt(max, min)) {
-    throw new Error('max date must be after min date')
+    throw new Error("max date must be after min date")
   }
 
   const key = getKey({ min, max, step, timeslots, localizer })
@@ -106,7 +106,7 @@ function getSlotMetrics({
 
   function positionFromDate(date: Date) {
     const diff =
-      localizer.diff(min, date, 'minutes') +
+      localizer.diff(min, date, "minutes") +
       localizer.getDstOffset(min, date)
     return Math.min(diff, totalMin)
   }
@@ -124,7 +124,7 @@ function getSlotMetrics({
         date,
         groups[groupIndex][0],
         nextGroup ? nextGroup[0] : max,
-        'minutes'
+        "minutes"
       )
     },
 
@@ -139,7 +139,7 @@ function getSlotMetrics({
           )
         ]
       // in the case of the last slot we won't a long enough range so manually get it
-      if(localizer.eq(next, slot)) next = localizer.add(slot, step, 'minutes')
+      if(localizer.eq(next, slot)) next = localizer.add(slot, step, "minutes")
       return next
     },
     closestSlotToPosition(percent) {
@@ -156,27 +156,27 @@ function getSlotMetrics({
     },
 
     closestSlotFromDate(date, offset = 0) {
-      if(localizer.lt(date, min, 'minutes')) return slots[0]
-      if(localizer.gt(date, max, 'minutes')) return slots[slots.length - 1]
+      if(localizer.lt(date, min, "minutes")) return slots[0]
+      if(localizer.gt(date, max, "minutes")) return slots[slots.length - 1]
 
-      const diffMins = localizer.diff(min, date, 'minutes')
+      const diffMins = localizer.diff(min, date, "minutes")
       return slots[(diffMins - (diffMins % step)) / step + offset]
     },
 
     startsBeforeDay(date) {
-      return localizer.lt(date, min, 'day')
+      return localizer.lt(date, min, "day")
     },
 
     startsAfterDay(date) {
-      return localizer.gt(date, max, 'day')
+      return localizer.gt(date, max, "day")
     },
 
     startsBefore(date) {
-      return localizer.lt(localizer.merge(min, date), min, 'minutes')
+      return localizer.lt(localizer.merge(min, date), min, "minutes")
     },
 
     startsAfter(date) {
-      return localizer.gt(localizer.merge(max, date), max, 'minutes')
+      return localizer.gt(localizer.merge(max, date), max, "minutes")
     },
 
     getRange(rangeStart, rangeEnd, options) {

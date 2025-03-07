@@ -1,12 +1,12 @@
-import invariant from 'invariant'
-import VIEWS, { ViewComponent } from '../Views'
-import { DateLocalizer } from '@/localizers'
+import invariant from "invariant"
+import VIEWS, { ViewComponent } from "../Views"
+import { DateLocalizer } from "@/localizers"
 
 export let navigate = {
-  PREVIOUS: 'PREV',
-  NEXT: 'NEXT',
-  TODAY: 'TODAY',
-  DATE: 'DATE',
+  PREVIOUS: "PREV",
+  NEXT: "NEXT",
+  TODAY: "TODAY",
+  DATE: "DATE",
 } as const
 
 export type NavigateKey = keyof typeof navigate
@@ -26,7 +26,7 @@ export default function moveDate(
   View: ViewComponent,
   { action, date, today, ...props }: MoveDateOptions
 ) {
-  View = typeof View === 'string' ? VIEWS[View] : View
+  View = typeof View === "string" ? VIEWS[View] : View
 
   switch(action) {
     case navigate.TODAY:
@@ -36,8 +36,8 @@ export default function moveDate(
       break
     default:
       invariant(
-        View && typeof View.navigate === 'function',
-        'Calendar View components must implement a static `.navigate(date, action)` method.s'
+        View && typeof View.navigate === "function",
+        "Calendar View components must implement a static `.navigate(date, action)` method.s"
       )
       date = View.navigate(date, action /* , ...props */)
   }

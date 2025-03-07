@@ -1,10 +1,10 @@
-import { Event, EventRowSpan } from './EventRowMixin'
-import { eventLevels } from '@/utils/eventLevels'
-import { range } from 'lodash-es'
-import clsx from 'clsx'
-import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import { Event, EventRowSpan } from "./EventRowMixin"
+import { eventLevels } from "@/utils/eventLevels"
+import { range } from "lodash-es"
+import clsx from "clsx"
+import { SlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
@@ -139,8 +139,8 @@ const ShowMore = ({ segments, slotMetrics, slot, onShowMore }: ShowMoreProps) =>
   return count
     ? <button
       type="button"
-      key={ 'sm_' + slot }
-      className={ clsx('rbc-button-link', 'rbc-show-more') }
+      key={ "sm_" + slot }
+      className={ clsx("rbc-button-link", "rbc-show-more") }
       onClick={ (e) => showMore(slot, e) }
     >
       { localizer.messages.showMore(count, remainingEvents, events) }

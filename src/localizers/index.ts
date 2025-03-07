@@ -1,10 +1,10 @@
-export { default as dayjsLocalizer } from './dayjs'
-export { default as dateFnsLocalizer } from './date-fns'
-export { default as momentLocalizer } from './moment'
-export { default as globalizeLocalizer } from './globalize'
-export { default as luxonLocalizer } from './luxon'
+export { default as dayjsLocalizer } from "./dayjs"
+export { default as dateFnsLocalizer } from "./date-fns"
+export { default as momentLocalizer } from "./moment"
+export { default as globalizeLocalizer } from "./globalize"
+export { default as luxonLocalizer } from "./luxon"
 
-import invariant from 'invariant'
+import invariant from "invariant"
 import {
   merge,
   inRange,
@@ -28,10 +28,10 @@ import {
   visibleDays,
   minutes,
   isJustDate,
-} from '../utils/dates'
-import { StartOfWeek, Unit } from 'date-arithmetic'
-import { buildMessages, type Messages } from '@/utils/messages'
-import { CalendarEvent } from '@/utils/components'
+} from "../utils/dates"
+import { StartOfWeek, Unit } from "date-arithmetic"
+import { buildMessages, type Messages } from "@/utils/messages"
+import { CalendarEvent } from "@/utils/components"
 
 export type DateRange = { start: Date, end: Date }
 
@@ -135,13 +135,13 @@ export const localizerDefaultMethods = {
     format: string | FormatFunction,
     culture: Culture
   ) => {
-    const result = typeof format === 'function'
+    const result = typeof format === "function"
       ? format(value, culture, localizer)
       : formatter.call(localizer, value, format, culture)
 
     invariant(
-      result === null || typeof result === 'string',
-      '`localizer format(..)` must be a function'
+      result === null || typeof result === "string",
+      "`localizer format(..)` must be a function"
     )
 
     return result
@@ -170,35 +170,35 @@ export const localizerDefaultMethods = {
   // if the start is on a DST-changing day but *after* the moment of DST
   // transition we need to add those extra minutes to our minutesFromMidnight
   getTotalMin: (start: Date, end: Date) => {
-    return diff(start, end, 'minutes') + localizerDefaultMethods.getDstOffset(start, end)
+    return diff(start, end, "minutes") + localizerDefaultMethods.getDstOffset(start, end)
   },
 
   getMinutesFromMidnight: (start: Date) => {
-    const dayStart = startOf(start, 'day')
-    return diff(dayStart, start, 'minutes') + localizerDefaultMethods.getDstOffset(dayStart, start)
+    const dayStart = startOf(start, "day")
+    return diff(dayStart, start, "minutes") + localizerDefaultMethods.getDstOffset(dayStart, start)
   },
 
   // These two are used by DateSlotMetrics
   continuesPrior: (start: Date, first: Date) => {
-    return lt(start, first, 'day')
+    return lt(start, first, "day")
   },
 
   continuesAfter: (start: Date, end: Date, last: Date) => {
-    const singleDayDuration = eq(start, end, 'minutes')
+    const singleDayDuration = eq(start, end, "minutes")
     return singleDayDuration
-      ? gte(end, last, 'minutes')
-      : gt(end, last, 'minutes')
+      ? gte(end, last, "minutes")
+      : gt(end, last, "minutes")
   },
 
   daySpan: (start: Date, end: Date) => {
-    return duration(start, end, 'day')
+    return duration(start, end, "day")
   },
 
   sortEvents: ({
     evtA: { start: aStart, end: aEnd, allDay: aAllDay },
     evtB: { start: bStart, end: bEnd, allDay: bAllDay },
   }: EventComparison): number => {
-    const startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
+    const startSort = +startOf(aStart, "day") - +startOf(bStart, "day")
 
     const durA = localizerDefaultMethods.daySpan(aStart, aEnd)
     const durB = localizerDefaultMethods.daySpan(bStart, bEnd)
@@ -216,14 +216,14 @@ export const localizerDefaultMethods = {
     event: { start, end },
     range: { start: rangeStart, end: rangeEnd },
   }: EventRangeComparison): boolean => {
-    const eStart = startOf(start, 'day')
+    const eStart = startOf(start, "day")
 
-    const startsBeforeEnd = lte(eStart, rangeEnd, 'day')
+    const startsBeforeEnd = lte(eStart, rangeEnd, "day")
     // when the event is zero duration we need to handle a bit differently
-    const sameMin = neq(eStart, end, 'minutes')
+    const sameMin = neq(eStart, end, "minutes")
     const endsAfterStart = sameMin
-      ? gt(end, rangeStart, 'minutes')
-      : gte(end, rangeStart, 'minutes')
+      ? gt(end, rangeStart, "minutes")
+      : gte(end, rangeStart, "minutes")
     return startsBeforeEnd && endsAfterStart
   },
 
@@ -231,7 +231,7 @@ export const localizerDefaultMethods = {
   // change the 'localizer.eq(date1, date2, 'day') into this new method, where
   // they can be treated correctly by the localizer overrides
   isSameDate: (date1: Date, date2: Date) => {
-    return eq(date1, date2, 'day')
+    return eq(date1, date2, "day")
   },
 
   startAndEndAreDateOnly: (start: Date, end: Date) => {
@@ -279,52 +279,52 @@ export interface DateLocalizerSpec {
 }
 
 export class DateLocalizer {
-  formats: DateLocalizerSpec['formats']
-  startOfWeek: DateLocalizerSpec['firstOfWeek']
+  formats: DateLocalizerSpec["formats"]
+  startOfWeek: DateLocalizerSpec["firstOfWeek"]
   messages: Messages<CalendarEvent>
-  merge: DateLocalizerSpec['merge']
-  inRange: DateLocalizerSpec['inRange']
-  lt: DateLocalizerSpec['lt']
-  lte: DateLocalizerSpec['lte']
-  gt: DateLocalizerSpec['gt']
-  gte: DateLocalizerSpec['gte']
-  eq: DateLocalizerSpec['eq']
-  neq: DateLocalizerSpec['neq']
-  startOf: DateLocalizerSpec['startOf']
-  endOf: DateLocalizerSpec['endOf']
-  add: DateLocalizerSpec['add']
-  range: DateLocalizerSpec['range']
-  diff: DateLocalizerSpec['diff']
-  ceil: DateLocalizerSpec['ceil']
-  min: DateLocalizerSpec['min']
-  max: DateLocalizerSpec['max']
-  minutes: DateLocalizerSpec['minutes']
-  daySpan: DateLocalizerSpec['daySpan']
-  firstVisibleDay: DateLocalizerSpec['firstVisibleDay']
-  lastVisibleDay: DateLocalizerSpec['lastVisibleDay']
-  visibleDays: DateLocalizerSpec['visibleDays']
-  getSlotDate: DateLocalizerSpec['getSlotDate']
-  getTimezoneOffset: DateLocalizerSpec['getTimezoneOffset']
-  getDstOffset: DateLocalizerSpec['getDstOffset']
-  getTotalMin: DateLocalizerSpec['getTotalMin']
-  getMinutesFromMidnight: DateLocalizerSpec['getMinutesFromMidnight']
-  continuesPrior: DateLocalizerSpec['continuesPrior']
-  continuesAfter: DateLocalizerSpec['continuesAfter']
-  sortEvents: DateLocalizerSpec['sortEvents']
-  inEventRange: DateLocalizerSpec['inEventRange']
-  isSameDate: DateLocalizerSpec['isSameDate']
-  startAndEndAreDateOnly: DateLocalizerSpec['startAndEndAreDateOnly']
+  merge: DateLocalizerSpec["merge"]
+  inRange: DateLocalizerSpec["inRange"]
+  lt: DateLocalizerSpec["lt"]
+  lte: DateLocalizerSpec["lte"]
+  gt: DateLocalizerSpec["gt"]
+  gte: DateLocalizerSpec["gte"]
+  eq: DateLocalizerSpec["eq"]
+  neq: DateLocalizerSpec["neq"]
+  startOf: DateLocalizerSpec["startOf"]
+  endOf: DateLocalizerSpec["endOf"]
+  add: DateLocalizerSpec["add"]
+  range: DateLocalizerSpec["range"]
+  diff: DateLocalizerSpec["diff"]
+  ceil: DateLocalizerSpec["ceil"]
+  min: DateLocalizerSpec["min"]
+  max: DateLocalizerSpec["max"]
+  minutes: DateLocalizerSpec["minutes"]
+  daySpan: DateLocalizerSpec["daySpan"]
+  firstVisibleDay: DateLocalizerSpec["firstVisibleDay"]
+  lastVisibleDay: DateLocalizerSpec["lastVisibleDay"]
+  visibleDays: DateLocalizerSpec["visibleDays"]
+  getSlotDate: DateLocalizerSpec["getSlotDate"]
+  getTimezoneOffset: DateLocalizerSpec["getTimezoneOffset"]
+  getDstOffset: DateLocalizerSpec["getDstOffset"]
+  getTotalMin: DateLocalizerSpec["getTotalMin"]
+  getMinutesFromMidnight: DateLocalizerSpec["getMinutesFromMidnight"]
+  continuesPrior: DateLocalizerSpec["continuesPrior"]
+  continuesAfter: DateLocalizerSpec["continuesAfter"]
+  sortEvents: DateLocalizerSpec["sortEvents"]
+  inEventRange: DateLocalizerSpec["inEventRange"]
+  isSameDate: DateLocalizerSpec["isSameDate"]
+  startAndEndAreDateOnly: DateLocalizerSpec["startAndEndAreDateOnly"]
   segmentOffset: number
-  format: DateLocalizerSpec['format']
+  format: DateLocalizerSpec["format"]
 
   constructor(spec: DateLocalizerSpec) {
     invariant(
-      typeof spec.format === 'function',
-      'date localizer `format(..)` must be a function'
+      typeof spec.format === "function",
+      "date localizer `format(..)` must be a function"
     )
     invariant(
-      typeof spec.firstOfWeek === 'function',
-      'date localizer `firstOfWeek(..)` must be a function'
+      typeof spec.firstOfWeek === "function",
+      "date localizer `firstOfWeek(..)` must be a function"
     )
 
     this.formats = spec.formats

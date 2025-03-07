@@ -1,16 +1,16 @@
-import overlap from './layout-algorithms/overlap'
-import noOverlap from './layout-algorithms/no-overlap'
-import { CalendarEvent } from '@/types'
-import { SlotMetrics } from '../hooks/useTimeSlotMetrics'
-import { Accessors } from './accessors'
+import overlap from "./layout-algorithms/overlap"
+import noOverlap from "./layout-algorithms/no-overlap"
+import { SlotMetrics } from "../hooks/useTimeSlotMetrics"
+import { Accessors } from "./accessors"
+import { CalendarEvent } from "./components"
 
 const DefaultAlgorithms = {
   overlap: overlap,
-  'no-overlap': noOverlap,
+  "no-overlap": noOverlap,
 }
 
 function isFunction(a: string | Function): a is Function {
-  return typeof a === 'function'
+  return typeof a === "function"
 }
 
 export function getStyledEvents({

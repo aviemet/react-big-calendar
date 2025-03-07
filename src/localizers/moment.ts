@@ -1,49 +1,49 @@
-import { DateLocalizer } from '.'
+import { DateLocalizer } from "."
 
 const weekRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'MMMM DD', culture) +
-  ' – ' +
+  local.format(start, "MMMM DD", culture) +
+  " – " +
   // updated to use this localizer 'eq()' method
-  local.format(end, local.eq(start, end, 'month') ? 'DD' : 'MMMM DD', culture)
+  local.format(end, local.eq(start, end, "month") ? "DD" : "MMMM DD", culture)
 
 const dateRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'L', culture) + ' – ' + local.format(end, 'L', culture)
+  local.format(start, "L", culture) + " – " + local.format(end, "L", culture)
 
 const timeRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'LT', culture) + ' – ' + local.format(end, 'LT', culture)
+  local.format(start, "LT", culture) + " – " + local.format(end, "LT", culture)
 
 const timeRangeStartFormat = ({ start }, culture, local) =>
-  local.format(start, 'LT', culture) + ' – '
+  local.format(start, "LT", culture) + " – "
 
 const timeRangeEndFormat = ({ end }, culture, local) =>
-  ' – ' + local.format(end, 'LT', culture)
+  " – " + local.format(end, "LT", culture)
 
 export const formats = {
-  dateFormat: 'DD',
-  dayFormat: 'DD ddd',
-  weekdayFormat: 'ddd',
+  dateFormat: "DD",
+  dayFormat: "DD ddd",
+  weekdayFormat: "ddd",
 
   selectRangeFormat: timeRangeFormat,
   eventTimeRangeFormat: timeRangeFormat,
   eventTimeRangeStartFormat: timeRangeStartFormat,
   eventTimeRangeEndFormat: timeRangeEndFormat,
 
-  timeGutterFormat: 'LT',
+  timeGutterFormat: "LT",
 
-  monthHeaderFormat: 'MMMM YYYY',
-  dayHeaderFormat: 'dddd MMM DD',
+  monthHeaderFormat: "MMMM YYYY",
+  dayHeaderFormat: "dddd MMM DD",
   dayRangeHeaderFormat: weekRangeFormat,
   agendaHeaderFormat: dateRangeFormat,
 
-  agendaDateFormat: 'ddd MMM DD',
-  agendaTimeFormat: 'LT',
+  agendaDateFormat: "ddd MMM DD",
+  agendaTimeFormat: "LT",
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
 function fixUnit(unit) {
   let datePart = unit ? unit.toLowerCase() : unit
-  if(datePart === 'FullYear') {
-    datePart = 'year'
+  if(datePart === "FullYear") {
+    datePart = "year"
   } else if(!datePart) {
     datePart = undefined
   }
@@ -80,7 +80,7 @@ function momentLocalizer(moment): DateLocalizer {
   }
 
   function getDayStartDstOffset(start) {
-    const dayStart = moment(start).startOf('day')
+    const dayStart = moment(start).startOf("day")
     return getDstOffset(dayStart, start)
   }
 
@@ -139,12 +139,12 @@ function momentLocalizer(moment): DateLocalizer {
     return dtA.isSameOrBefore(dtB, datePart)
   }
 
-  function inRange(day, min, max, unit = 'day') {
+  function inRange(day, min, max, unit = "day") {
     const datePart = fixUnit(unit)
     const mDay = moment(day)
     const mMin = moment(min)
     const mMax = moment(max)
-    return mDay.isBetween(mMin, mMax, datePart, '[]')
+    return mDay.isBetween(mMin, mMax, datePart, "[]")
   }
 
   function min(dateA, dateB) {
@@ -164,10 +164,10 @@ function momentLocalizer(moment): DateLocalizer {
   function merge(date, time) {
     if(!date && !time) return null
 
-    const tm = moment(time).format('HH:mm:ss')
-    const dt = moment(date).startOf('day').format('MM/DD/YYYY')
+    const tm = moment(time).format("HH:mm:ss")
+    const dt = moment(date).startOf("day").format("MM/DD/YYYY")
     // We do it this way to avoid issues when timezone switching
-    return moment(`${dt} ${tm}`, 'MM/DD/YYYY HH:mm:ss').toDate()
+    return moment(`${dt} ${tm}`, "MM/DD/YYYY HH:mm:ss").toDate()
   }
 
   function add(date, adder, unit) {
@@ -175,7 +175,7 @@ function momentLocalizer(moment): DateLocalizer {
     return moment(date).add(adder, datePart).toDate()
   }
 
-  function range(start, end, unit = 'day') {
+  function range(start, end, unit = "day") {
     const datePart = fixUnit(unit)
     // because the add method will put these in tz, we have to start that way
     let current = moment(start).toDate()
@@ -196,7 +196,7 @@ function momentLocalizer(moment): DateLocalizer {
     return eq(floor, date) ? floor : add(floor, 1, datePart)
   }
 
-  function diff(a, b, unit = 'day') {
+  function diff(a, b, unit = "day") {
     const datePart = fixUnit(unit)
     // don't use 'defineComparators' here, as we don't want to mutate the values
     const dtA = moment(a)
@@ -215,11 +215,11 @@ function momentLocalizer(moment): DateLocalizer {
   }
 
   function firstVisibleDay(date) {
-    return moment(date).startOf('month').startOf('week').toDate()
+    return moment(date).startOf("month").startOf("week").toDate()
   }
 
   function lastVisibleDay(date) {
-    return moment(date).endOf('month').endOf('week').toDate()
+    return moment(date).endOf("month").endOf("week").toDate()
   }
 
   function visibleDays(date) {
@@ -229,7 +229,7 @@ function momentLocalizer(moment): DateLocalizer {
 
     while(lte(current, last)) {
       days.push(current)
-      current = add(current, 1, 'd')
+      current = add(current, 1, "d")
     }
 
     return days
@@ -246,33 +246,33 @@ function momentLocalizer(moment): DateLocalizer {
    */
   function getSlotDate(dt, minutesFromMidnight, offset) {
     return moment(dt)
-      .startOf('day')
+      .startOf("day")
       .minute(minutesFromMidnight + offset)
       .toDate()
   }
 
   // moment will automatically handle DST differences in it's calculations
   function getTotalMin(start, end) {
-    return diff(start, end, 'minutes')
+    return diff(start, end, "minutes")
   }
 
   function getMinutesFromMidnight(start) {
-    const dayStart = moment(start).startOf('day')
+    const dayStart = moment(start).startOf("day")
     const day = moment(start)
-    return day.diff(dayStart, 'minutes') + getDayStartDstOffset(start)
+    return day.diff(dayStart, "minutes") + getDayStartDstOffset(start)
   }
 
   // These two are used by DateSlotMetrics
   function continuesPrior(start, first) {
     const mStart = moment(start)
     const mFirst = moment(first)
-    return mStart.isBefore(mFirst, 'day')
+    return mStart.isBefore(mFirst, "day")
   }
 
   function continuesAfter(start, end, last) {
     const mEnd = moment(end)
     const mLast = moment(last)
-    return mEnd.isSameOrAfter(mLast, 'minutes')
+    return mEnd.isSameOrAfter(mLast, "minutes")
   }
 
   function daySpan(start, end) {
@@ -287,7 +287,7 @@ function momentLocalizer(moment): DateLocalizer {
     evtA: { start: aStart, end: aEnd, allDay: aAllDay },
     evtB: { start: bStart, end: bEnd, allDay: bAllDay },
   }) {
-    const startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
+    const startSort = +startOf(aStart, "day") - +startOf(bStart, "day")
 
     const durA = daySpan(aStart, aEnd)
 
@@ -306,17 +306,17 @@ function momentLocalizer(moment): DateLocalizer {
     event: { start, end },
     range: { start: rangeStart, end: rangeEnd },
   }) {
-    const startOfDay = moment(start).startOf('day')
+    const startOfDay = moment(start).startOf("day")
     const eEnd = moment(end)
     const rStart = moment(rangeStart)
     const rEnd = moment(rangeEnd)
 
-    const startsBeforeEnd = startOfDay.isSameOrBefore(rEnd, 'day')
+    const startsBeforeEnd = startOfDay.isSameOrBefore(rEnd, "day")
     // when the event is zero duration we need to handle a bit differently
-    const sameMin = !startOfDay.isSame(eEnd, 'minutes')
+    const sameMin = !startOfDay.isSame(eEnd, "minutes")
     const endsAfterStart = sameMin
-      ? eEnd.isAfter(rStart, 'minutes')
-      : eEnd.isSameOrAfter(rStart, 'minutes')
+      ? eEnd.isAfter(rStart, "minutes")
+      : eEnd.isSameOrAfter(rStart, "minutes")
 
     return startsBeforeEnd && endsAfterStart
   }
@@ -324,7 +324,7 @@ function momentLocalizer(moment): DateLocalizer {
   function isSameDate(date1, date2) {
     const dt = moment(date1)
     const dt2 = moment(date2)
-    return dt.isSame(dt2, 'day')
+    return dt.isSame(dt2, "day")
   }
 
   /**
@@ -340,7 +340,7 @@ function momentLocalizer(moment): DateLocalizer {
      * we can actually compare.
      */
     const dt = new Date()
-    const neg = /-/.test(dt.toString()) ? '-' : ''
+    const neg = /-/.test(dt.toString()) ? "-" : ""
     const dtOffset = dt.getTimezoneOffset()
     const comparator = Number(`${neg}${Math.abs(dtOffset)}`)
     // moment correctly provides positive/negative offset, as expected

@@ -1,7 +1,7 @@
-import { DateLocalizer } from '@/localizers'
-import * as dateArithmetic from 'date-arithmetic'
-import { Unit } from 'date-arithmetic'
-import { StartOfWeek } from 'date-arithmetic'
+import { DateLocalizer } from "@/localizers"
+import * as dateArithmetic from "date-arithmetic"
+import { Unit } from "date-arithmetic"
+import { StartOfWeek } from "date-arithmetic"
 
 export {
   milliseconds,
@@ -21,7 +21,7 @@ export {
   inRange,
   min,
   max,
-} from 'date-arithmetic'
+} from "date-arithmetic"
 
 const MILLI = {
   seconds: 1000,
@@ -39,15 +39,15 @@ export function monthsInYear(year: number) {
 }
 
 export function firstVisibleDay(date: Date, localizer: DateLocalizer) {
-  let firstOfMonth = dateArithmetic.startOf(date, 'month')
+  let firstOfMonth = dateArithmetic.startOf(date, "month")
 
-  return dateArithmetic.startOf(firstOfMonth, 'week', localizer.startOfWeek())
+  return dateArithmetic.startOf(firstOfMonth, "week", localizer.startOfWeek())
 }
 
 export function lastVisibleDay(date: Date, localizer: DateLocalizer) {
-  let endOfMonth = dateArithmetic.endOf(date, 'month')
+  let endOfMonth = dateArithmetic.endOf(date, "month")
 
-  return dateArithmetic.endOf(endOfMonth, 'week', localizer.startOfWeek())
+  return dateArithmetic.endOf(endOfMonth, "week", localizer.startOfWeek())
 }
 
 export function visibleDays(date: Date, localizer: DateLocalizer) {
@@ -55,9 +55,9 @@ export function visibleDays(date: Date, localizer: DateLocalizer) {
       last = lastVisibleDay(date, localizer),
       days = []
 
-  while(dateArithmetic.lte(current, last, 'day')) {
+  while(dateArithmetic.lte(current, last, "day")) {
     days.push(current)
-    current = dateArithmetic.add(current, 1, 'day')
+    current = dateArithmetic.add(current, 1, "day")
   }
 
   return days
@@ -65,7 +65,7 @@ export function visibleDays(date: Date, localizer: DateLocalizer) {
 
 export function ceil(date: Date, unit: Unit, startOfWeek?: StartOfWeek) {
   let floor
-  if(unit === 'week') {
+  if(unit === "week") {
     floor = dateArithmetic.startOf(date, unit, startOfWeek)
   } else {
     floor = dateArithmetic.startOf(date, unit)
@@ -74,7 +74,7 @@ export function ceil(date: Date, unit: Unit, startOfWeek?: StartOfWeek) {
   return dateArithmetic.eq(floor, date) ? floor : dateArithmetic.add(floor, 1, unit)
 }
 
-export function range(start: Date, end: Date, unit: Unit = 'day') {
+export function range(start: Date, end: Date, unit: Unit = "day") {
   let current = start,
       days = []
 
@@ -92,7 +92,7 @@ export function merge(date: Date, time: Date) {
   if(time === null) time = new Date()
   if(date === null) date = new Date()
 
-  date = dateArithmetic.startOf(date, 'day')
+  date = dateArithmetic.startOf(date, "day")
   date = dateArithmetic.hours(date, dateArithmetic.hours(time))
   date = dateArithmetic.minutes(date, dateArithmetic.minutes(time))
   date = dateArithmetic.seconds(date, dateArithmetic.seconds(time))
@@ -116,17 +116,17 @@ export function isJustDate(date: Date) {
   )
 }
 
-type DateArithmeticUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'date' | 'weekday' | 'month' | 'year' | 'decade' | 'century'
+type DateArithmeticUnit = "milliseconds" | "seconds" | "minutes" | "hours" | "date" | "weekday" | "month" | "year" | "decade" | "century"
 
-export function duration(start: Date, end: Date, unit: DateArithmeticUnit | 'week' | 'day', firstOfWeek?: StartOfWeek) {
-  if(unit === 'week' || unit === 'weekday') {
+export function duration(start: Date, end: Date, unit: DateArithmeticUnit | "week" | "day", firstOfWeek?: StartOfWeek) {
+  if(unit === "week" || unit === "weekday") {
     return Math.abs(
       dateArithmetic.weekday(start, undefined, firstOfWeek) -
       dateArithmetic.weekday(end, undefined, firstOfWeek)
     )
   }
 
-  const actualUnit = unit === 'day' ? 'date' as const : unit as DateArithmeticUnit
+  const actualUnit = unit === "day" ? "date" as const : unit as DateArithmeticUnit
 
   return Math.abs(
     dateArithmetic[actualUnit](start, undefined) -
@@ -154,7 +154,7 @@ export function duration(start: Date, end: Date, unit: DateArithmeticUnit | 'wee
 // }
 
 export function diff(dateA: Date, dateB: Date, unit: Unit) {
-  if(!unit || unit === 'milliseconds') return Math.abs(+dateA - +dateB)
+  if(!unit || unit === "milliseconds") return Math.abs(+dateA - +dateB)
 
   // the .round() handles an edge case
   // with DST where the total won't be exact
@@ -172,15 +172,15 @@ export function total(date: Date, unit: Unit) {
       div = 1
 
   switch(unit) {
-    case 'week':
+    case "week":
       div *= 7
-    case 'day':
+    case "day":
       div *= 24
-    case 'hours':
+    case "hours":
       div *= 60
-    case 'minutes':
+    case "minutes":
       div *= 60
-    case 'seconds':
+    case "seconds":
       div *= 1000
   }
 
@@ -195,13 +195,13 @@ export function week(date: Date) {
 }
 
 export function today() {
-  return dateArithmetic.startOf(new Date(), 'day')
+  return dateArithmetic.startOf(new Date(), "day")
 }
 
 export function yesterday() {
-  return dateArithmetic.add(dateArithmetic.startOf(new Date(), 'day'), -1, 'day')
+  return dateArithmetic.add(dateArithmetic.startOf(new Date(), "day"), -1, "day")
 }
 
 export function tomorrow() {
-  return dateArithmetic.add(dateArithmetic.startOf(new Date(), 'day'), 1, 'day')
+  return dateArithmetic.add(dateArithmetic.startOf(new Date(), "day"), 1, "day")
 }

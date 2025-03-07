@@ -1,7 +1,5 @@
-import sortBy from 'lodash/sortBy'
-import LayoutAlgorithmEvent from './LayoutAlgorithmEvent'
-import { DayLayoutFunction } from './types'
-
+import sortBy from "lodash/sortBy"
+import LayoutAlgorithmEvent, { DayLayoutFunction } from "./LayoutAlgorithmEvent"
 /**
  * Return true if event a and b is considered to be on the same row.
  */
@@ -15,7 +13,7 @@ function onSameRow(a: LayoutAlgorithmEvent, b: LayoutAlgorithmEvent, minimumStar
 }
 
 function sortByRender(events: LayoutAlgorithmEvent[]) {
-  const sortedByTime = sortBy(events, ['startMs', e => -e.endMs])
+  const sortedByTime = sortBy(events, ["startMs", e => -e.endMs])
 
   const sorted = []
   while(sortedByTime.length > 0) {

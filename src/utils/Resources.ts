@@ -1,5 +1,5 @@
-import { CalendarEvent } from "@/types"
 import { Accessors } from "./accessors"
+import { CalendarEvent } from "./components"
 
 export type Resource = object
 

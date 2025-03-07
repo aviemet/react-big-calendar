@@ -1,6 +1,6 @@
-import { CalendarEvent } from '@/utils/components'
-import { Event, EventRowSpan } from './EventRowMixin'
-import clsx from 'clsx'
+import { CalendarEvent } from "@/utils/components"
+import { Event, EventRowSpan } from "./EventRowMixin"
+import clsx from "clsx"
 
 interface EventRowProps<TEvent extends CalendarEvent> {
   segments: TEvent[]
@@ -20,7 +20,7 @@ const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) =>
   let lastEnd = 1
 
   return (
-    <div className={ clsx(className, 'rbc-row') }>
+    <div className={ clsx(className, "rbc-row") }>
       { segments.map(({ event, left, right, span }, li) => {
 
         let key = `row_${weekIndex}_lvl_${li}`

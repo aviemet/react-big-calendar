@@ -1,7 +1,7 @@
-import { DateLocalizer } from '@/localizers'
-import { CalendarEvent } from '@/types'
-import { Accessors, wrapAccessor } from '@/utils/accessors'
-import { ComponentClass, createElement, FunctionComponent } from 'react'
+import { DateLocalizer } from "@/localizers"
+import { Accessors, wrapAccessor } from "@/utils/accessors"
+import { CalendarEvent } from "@/utils/components"
+import { ComponentClass, createElement, FunctionComponent } from "react"
 
 function createFactory(type: string | FunctionComponent<{}> | ComponentClass<{}, any>) {
   return createElement(type).bind(null, type)
@@ -43,10 +43,10 @@ export function eventTimes(event: CalendarEvent, accessors: Accessors, localizer
   let end = accessors.end(event)
 
   const isZeroDuration =
-    localizer.eq(start, end, 'minutes') &&
-    localizer.diff(start, end, 'minutes') === 0
+    localizer.eq(start, end, "minutes") &&
+    localizer.diff(start, end, "minutes") === 0
   // make zero duration midnight events at least one day long
-  if(isZeroDuration) end = localizer.add(end, 1, 'day')
-  const duration = localizer.diff(start, end, 'milliseconds')
+  if(isZeroDuration) end = localizer.add(end, 1, "day")
+  const duration = localizer.diff(start, end, "milliseconds")
   return { start, end, duration }
 }

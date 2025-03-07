@@ -1,8 +1,8 @@
 
-import React from 'react'
-import clsx from 'clsx'
-import { accessor as get } from '@/utils/accessors'
-import { DnDContext } from './DnDContext'
+import React from "react"
+import clsx from "clsx"
+import { accessor as get } from "@/utils/accessors"
+import { DnDContext } from "./DnDContext"
 
 class EventWrapper extends React.Component {
   static contextType = DnDContext
@@ -24,19 +24,19 @@ class EventWrapper extends React.Component {
 
   handleResizeUp = (e) => {
     if(e.button !== 0) return
-    this.context.draggable.onBeginAction(this.props.event, 'resize', 'UP')
+    this.context.draggable.onBeginAction(this.props.event, "resize", "UP")
   }
   handleResizeDown = (e) => {
     if(e.button !== 0) return
-    this.context.draggable.onBeginAction(this.props.event, 'resize', 'DOWN')
+    this.context.draggable.onBeginAction(this.props.event, "resize", "DOWN")
   }
   handleResizeLeft = (e) => {
     if(e.button !== 0) return
-    this.context.draggable.onBeginAction(this.props.event, 'resize', 'LEFT')
+    this.context.draggable.onBeginAction(this.props.event, "resize", "LEFT")
   }
   handleResizeRight = (e) => {
     if(e.button !== 0) return
-    this.context.draggable.onBeginAction(this.props.event, 'resize', 'RIGHT')
+    this.context.draggable.onBeginAction(this.props.event, "resize", "RIGHT")
   }
   handleStartDragging = (e) => {
     if(e.button !== 0) return
@@ -44,17 +44,17 @@ class EventWrapper extends React.Component {
     // anchor events will bubble up to the move anchor listener. Don't start
     // move operations when we're on a resize anchor.
     const isResizeHandle = e.target
-      .getAttribute('class')
-      ?.includes('rbc-addons-dnd-resize')
+      .getAttribute("class")
+      ?.includes("rbc-addons-dnd-resize")
     if(!isResizeHandle) {
       let extendedEvent = { ...this.props.event }
       extendedEvent.sourceResource = this.props.resource
-      this.context.draggable.onBeginAction(this.props.event, 'move')
+      this.context.draggable.onBeginAction(this.props.event, "move")
     }
   }
 
   renderAnchor(direction) {
-    const cls = direction === 'Up' || direction === 'Down' ? 'ns' : 'ew'
+    const cls = direction === "Up" || direction === "Down" ? "ns" : "ew"
     return (
       <div
         className={ `rbc-addons-dnd-resize-${cls}-anchor` }
@@ -75,7 +75,7 @@ class EventWrapper extends React.Component {
       return React.cloneElement(children, {
         className: clsx(
           children.props.className,
-          'rbc-addons-dnd-drag-preview'
+          "rbc-addons-dnd-drag-preview"
         ),
       })
 
@@ -132,12 +132,12 @@ class EventWrapper extends React.Component {
         let StartAnchor = null
         let EndAnchor = null
 
-        if(type === 'date') {
-          StartAnchor = !continuesPrior && this.renderAnchor('Left')
-          EndAnchor = !continuesAfter && this.renderAnchor('Right')
+        if(type === "date") {
+          StartAnchor = !continuesPrior && this.renderAnchor("Left")
+          EndAnchor = !continuesAfter && this.renderAnchor("Right")
         } else {
-          StartAnchor = !continuesPrior && this.renderAnchor('Up')
-          EndAnchor = !continuesAfter && this.renderAnchor('Down')
+          StartAnchor = !continuesPrior && this.renderAnchor("Up")
+          EndAnchor = !continuesAfter && this.renderAnchor("Down")
         }
 
         newProps.children = (
@@ -156,7 +156,7 @@ class EventWrapper extends React.Component {
         // add a new class to it
         newProps.className = clsx(
           children.props.className,
-          'rbc-addons-dnd-dragged-event'
+          "rbc-addons-dnd-dragged-event"
         )
       }
 

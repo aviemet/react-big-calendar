@@ -1,31 +1,30 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from "react"
 import {
   DateLocalizer,
   DateRange,
   mergeWithDefaults,
   type Culture,
   type Formats,
-} from '@/localizers'
+} from "@/localizers"
 import {
   navigate,
   NavigateAction,
-} from '@/utils/move'
-import { coerceDate } from '@/utils/helpers'
-import moveDate from '@/utils/move'
-import { DayLayoutAlgorithm, DayLayoutFunction } from '@/utils/layout-algorithms/types'
-import { Messages } from '@/utils/messages'
-import { transform } from 'lodash-es'
-import { Accessors } from '@/utils/accessors'
-import Toolbar from '@/Toolbar'
+} from "@/utils/move"
+import { coerceDate } from "@/utils/helpers"
+import moveDate from "@/utils/move"
+import { Messages } from "@/utils/messages"
+import { transform } from "lodash-es"
+import { Accessors } from "@/utils/accessors"
+import Toolbar from "@/Toolbar"
 import VIEWS, {
   ViewComponent,
   ViewName,
   views as viewStrings,
-} from '@/Views'
-import clsx from 'clsx'
-import { Resource } from './utils/Resources'
-import createContext from './hooks/createContext'
-import { useUncontrolled } from 'uncontrollable'
+} from "@/Views"
+import clsx from "clsx"
+import { Resource } from "./utils/Resources"
+import createContext from "./hooks/createContext"
+import { useUncontrolled } from "uncontrollable"
 import {
   CalendarEvent,
   CompiledComponents,
@@ -37,7 +36,8 @@ import {
   SlotGroupPropGetter,
   SlotInfo,
   SlotPropGetter,
-} from './utils/components'
+} from "./utils/components"
+import { DayLayoutAlgorithm, DayLayoutFunction } from "./utils/layout-algorithms/LayoutAlgorithmEvent"
 
 type CalendarContext = {
   localizer: DateLocalizer
@@ -786,9 +786,9 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   ...props
 }: CalendarProps<TEvent, TResource>) => {
   const controlledProps = useUncontrolled(props, {
-    view: 'onView',
-    date: 'onNavigate',
-    selected: 'onSelectEvent',
+    view: "onView",
+    date: "onNavigate",
+    selected: "onSelectEvent",
   })
 
   const {
@@ -803,15 +803,15 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     doShowMoreDrillDown = true,
     drilldownView = viewStrings.DAY,
     getDrilldownView,
-    titleAccessor = 'title',
-    tooltipAccessor = 'title',
-    allDayAccessor = 'allDay',
-    startAccessor = 'start',
-    endAccessor = 'end',
-    resourceAccessor = 'resourceId',
-    resourceIdAccessor = 'id',
-    resourceTitleAccessor = 'title',
-    eventIdAccessor = 'id',
+    titleAccessor = "title",
+    tooltipAccessor = "title",
+    allDayAccessor = "allDay",
+    startAccessor = "start",
+    endAccessor = "end",
+    resourceAccessor = "resourceId",
+    resourceIdAccessor = "id",
+    resourceTitleAccessor = "title",
+    eventIdAccessor = "id",
     className,
     rtl,
     style,
@@ -877,7 +877,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       )
     }
 
-    if(typeof views === 'object') {
+    if(typeof views === "object") {
       return transform(views, (obj, value, key) => {
         if(value === false) return
 
@@ -902,31 +902,31 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   // TODO: Revert to using accessor methods
   const accessors: Accessors<TEvent> = useMemo(() => {
     return {
-      start: typeof startAccessor === 'function'
+      start: typeof startAccessor === "function"
         ? startAccessor
         : (event: TEvent) => event[startAccessor as keyof TEvent] as Date,
-      end: typeof endAccessor === 'function'
+      end: typeof endAccessor === "function"
         ? endAccessor
         : (event: TEvent) => event[endAccessor as keyof TEvent] as Date,
-      allDay: typeof allDayAccessor === 'function'
+      allDay: typeof allDayAccessor === "function"
         ? allDayAccessor
         : (event: TEvent) => event[allDayAccessor as keyof TEvent] as boolean,
-      tooltip: typeof tooltipAccessor === 'function'
+      tooltip: typeof tooltipAccessor === "function"
         ? tooltipAccessor
         : (event: TEvent) => event[tooltipAccessor as keyof TEvent] as string,
-      title: typeof titleAccessor === 'function'
+      title: typeof titleAccessor === "function"
         ? titleAccessor
         : (event: TEvent) => event[titleAccessor as keyof TEvent] as string,
-      resource: typeof resourceAccessor === 'function'
+      resource: typeof resourceAccessor === "function"
         ? resourceAccessor
         : (event: TEvent) => event[resourceAccessor as keyof TEvent] as TResource,
-      resourceId: typeof resourceIdAccessor === 'function'
+      resourceId: typeof resourceIdAccessor === "function"
         ? resourceIdAccessor
         : (resource: TResource) => resource[resourceIdAccessor as keyof TResource] as string | number,
-      resourceTitle: typeof resourceTitleAccessor === 'function'
+      resourceTitle: typeof resourceTitleAccessor === "function"
         ? resourceTitleAccessor
         : (resource: TResource) => resource[resourceTitleAccessor as keyof TResource] as string,
-      eventId: typeof eventIdAccessor === 'function'
+      eventId: typeof eventIdAccessor === "function"
         ? eventIdAccessor
         : (event: TEvent) => event[eventIdAccessor as keyof TEvent] as string | number,
     }
@@ -969,7 +969,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     if(!viewComponent.range) {
       // if(process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.error('onRangeChange prop not supported for this view')
+      console.error("onRangeChange prop not supported for this view")
       // }
       return
     }
@@ -1051,7 +1051,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     } }>
       <div
         { ...elementProps }
-        className={ clsx(className, 'rbc-calendar', rtl && 'rbc-rtl') }
+        className={ clsx(className, "rbc-calendar", rtl && "rbc-rtl") }
         style={ style }
       >
         { toolbar && (

@@ -1,8 +1,8 @@
-import React from 'react'
-import EventWrapper from '@/addons/dragAndDrop/EventWrapper'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import React from "react"
+import EventWrapper from "@/addons/dragAndDrop/EventWrapper"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 interface EventCellProps {
   event: CalendarEvent
@@ -51,7 +51,7 @@ const EventCell = ({
   const showAsAllDay =
       isAllDay ||
       allDay ||
-      localizer.diff(start, localizer.ceil(end, 'day'), 'day') > 1
+      localizer.diff(start, localizer.ceil(end, "day"), "day") > 1
 
   const userProps = getters.eventProp(event, start, end, selected)
 
@@ -61,11 +61,11 @@ const EventCell = ({
       <div
         { ...props }
         style={ { ...userProps.style, ...style } }
-        className={ clsx('rbc-event', className, userProps.className, {
-          'rbc-selected': selected,
-          'rbc-event-allday': showAsAllDay,
-          'rbc-event-continues-prior': continuesPrior,
-          'rbc-event-continues-after': continuesAfter,
+        className={ clsx("rbc-event", className, userProps.className, {
+          "rbc-selected": selected,
+          "rbc-event-allday": showAsAllDay,
+          "rbc-event-continues-prior": continuesPrior,
+          "rbc-event-continues-after": continuesAfter,
         }) }
         onClick={ (e) => onSelect && onSelect(event, e) }
         onDoubleClick={ (e) => onDoubleClick && onDoubleClick(event, e) }

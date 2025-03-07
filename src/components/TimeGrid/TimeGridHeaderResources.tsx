@@ -1,12 +1,12 @@
-import React from 'react'
-import clsx from 'clsx'
-import scrollbarSize from 'dom-helpers/scrollbarSize'
-import DateContentRow from '@/components/DateContentRow'
-import Header from '@/Header'
-import ResourceHeader from '@/ResourceHeader'
-import { Resource } from '@/utils/Resources'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import React from "react"
+import clsx from "clsx"
+import scrollbarSize from "dom-helpers/scrollbarSize"
+import DateContentRow from "@/components/DateContentRow"
+import Header from "@/Header"
+import ResourceHeader from "@/ResourceHeader"
+import { Resource } from "@/utils/Resources"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
@@ -16,7 +16,7 @@ interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEv
   resizable: boolean
   width: number
   selected: TEvent
-  selectable: boolean | 'ignoreEvents'
+  selectable: boolean | "ignoreEvents"
   longPressThreshold: number
   allDayMaxRows: number
   onSelectSlot: (slot: Date[]) => void
@@ -55,17 +55,17 @@ const TimeGridHeaderResources = ({
 
   let style = {}
   if(isOverflowing) {
-    style[rtl ? 'marginLeft' : 'marginRight'] = `${scrollbarSize() - 1}px`
+    style[rtl ? "marginLeft" : "marginRight"] = `${scrollbarSize() - 1}px`
   }
 
   return (
     <div
       style={ style }
       ref={ scrollRef }
-      className={ clsx('rbc-time-header', isOverflowing && 'rbc-overflowing') }
+      className={ clsx("rbc-time-header", isOverflowing && "rbc-overflowing") }
     >
       <div
-        className={ clsx('rbc-label', 'rbc-time-header-gutter') }
+        className={ clsx("rbc-label", "rbc-time-header-gutter") }
         style={ { width, minWidth: width, maxWidth: width } }
       >
         { TimeGutterHeader && <TimeGutterHeader /> }
@@ -144,7 +144,7 @@ const HeaderCells = ({
 
   return range.map((date) => {
     let drilldownView = getDrilldownView(date)
-    let label = localizer.format(date, 'dayFormat')
+    let label = localizer.format(date, "dayFormat")
 
     const { className, style } = getters.dayProp(date)
 
@@ -154,17 +154,17 @@ const HeaderCells = ({
 
     return (
       <div key={ date.toISOString() }
-        className={ clsx('rbc-time-header-content', 'rbc-resource-grouping') }
+        className={ clsx("rbc-time-header-content", "rbc-resource-grouping") }
       >
         <div
-          className={ clsx('rbc-row', 'rbc-time-header-cell', {
-            'rbc-time-header-cell-single-day': range.length <= 1,
+          className={ clsx("rbc-row", "rbc-time-header-cell", {
+            "rbc-time-header-cell-single-day": range.length <= 1,
           }) }
         >
           <div
             style={ style }
-            className={ clsx('rbc-header', className, {
-              'rbc-today': localizer.isSameDate(date, today),
+            className={ clsx("rbc-header", className, {
+              "rbc-today": localizer.isSameDate(date, today),
             }) }
           >
             { drilldownView
@@ -183,8 +183,8 @@ const HeaderCells = ({
           { resources.map(([id, resource], index) => (
             <div
               key={ `resource_${id}` }
-              className={ clsx('rbc-header', className, {
-                'rbc-today': localizer.isSameDate(date, today),
+              className={ clsx("rbc-header", className, {
+                "rbc-today": localizer.isSameDate(date, today),
               }) }
             >
               <ResourceHeaderComponent
@@ -196,7 +196,7 @@ const HeaderCells = ({
           )) }
         </div>
 
-        <div className={ clsx('rbc-row', 'rbc-m-b-negative-3 rbc-h-full') }>
+        <div className={ clsx("rbc-row", "rbc-m-b-negative-3 rbc-h-full") }>
           { resources.map(([id, resource]) => {
             // Filter the grouped events by the current date.
             const filteredEvents = (groupedEvents.get(id) || []).filter(event => (

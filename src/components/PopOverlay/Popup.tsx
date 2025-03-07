@@ -1,10 +1,10 @@
-import React, { forwardRef, useLayoutEffect } from 'react'
-import getOffset from 'dom-helpers/offset'
-import useClickOutside from '@/hooks/useClickOutside'
-import EventCell from '@/components/EventRow/EventCell'
-import { isSelected } from '@/utils/eventSelectionHelpers'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import React, { forwardRef, useLayoutEffect } from "react"
+import getOffset from "dom-helpers/offset"
+import useClickOutside from "@/hooks/useClickOutside"
+import EventCell from "@/components/EventRow/EventCell"
+import { isSelected } from "@/utils/eventSelectionHelpers"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 /**
  * Changes to react-overlays cause issue with auto positioning,
@@ -98,7 +98,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   return (
     <div style={ style } className="rbc-overlay" ref={ ref }>
       <div className="rbc-overlay-header">
-        { localizer.format(slotStart, 'dayHeaderFormat') }
+        { localizer.format(slotStart, "dayHeaderFormat") }
       </div>
       { events.map((event, Index) => (
         <EventCell
@@ -108,8 +108,8 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
           onSelect={ onSelect }
           onDoubleClick={ onDoubleClick }
           onKeyPress={ onKeyPress }
-          continuesPrior={ localizer.lt(accessors.end(event), slotStart, 'day') }
-          continuesAfter={ localizer.gte(accessors.start(event), slotEnd, 'day') }
+          continuesPrior={ localizer.lt(accessors.end(event), slotStart, "day") }
+          continuesAfter={ localizer.gte(accessors.start(event), slotEnd, "day") }
           slotStart={ slotStart }
           slotEnd={ slotEnd }
           selected={ isSelected(event, selected) }

@@ -1,46 +1,46 @@
-import * as dates from '../utils/dates'
-import { DateLocalizer, RangeFunction } from '.'
+import * as dates from "../utils/dates"
+import { DateLocalizer, RangeFunction } from "."
 
-import { FormatInput, Formats } from '.'
+import { FormatInput, Formats } from "."
 
 let dateRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  `${local.format(start, 'P', culture)} – ${local.format(end, 'P', culture)}`
+  `${local.format(start, "P", culture)} – ${local.format(end, "P", culture)}`
 
 let timeRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  `${local.format(start, 'p', culture)} – ${local.format(end, 'p', culture)}`
+  `${local.format(start, "p", culture)} – ${local.format(end, "p", culture)}`
 
 let timeRangeStartFormat: RangeFunction = ({ start }, culture, local) =>
-  `${local.format(start, 'h:mma', culture)} – `
+  `${local.format(start, "h:mma", culture)} – `
 
 let timeRangeEndFormat: RangeFunction = ({ end }, culture, local) =>
-  ` – ${local.format(end, 'h:mma', culture)}`
+  ` – ${local.format(end, "h:mma", culture)}`
 
 let weekRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
-  `${local.format(start, 'MMMM dd', culture)} – ${local.format(
+  `${local.format(start, "MMMM dd", culture)} – ${local.format(
     end,
-    dates.eq(start, end, 'month') ? 'dd' : 'MMMM dd',
+    dates.eq(start, end, "month") ? "dd" : "MMMM dd",
     culture
   )}`
 
 export let formats: Formats = {
-  dateFormat: 'dd',
-  dayFormat: 'dd eee',
-  weekdayFormat: 'ccc',
+  dateFormat: "dd",
+  dayFormat: "dd eee",
+  weekdayFormat: "ccc",
 
   selectRangeFormat: timeRangeFormat,
   eventTimeRangeFormat: timeRangeFormat,
   eventTimeRangeStartFormat: timeRangeStartFormat,
   eventTimeRangeEndFormat: timeRangeEndFormat,
 
-  timeGutterFormat: 'p',
+  timeGutterFormat: "p",
 
-  monthHeaderFormat: 'MMMM yyyy',
-  dayHeaderFormat: 'cccc MMM dd',
+  monthHeaderFormat: "MMMM yyyy",
+  dayHeaderFormat: "cccc MMM dd",
   dayRangeHeaderFormat: weekRangeFormat,
   agendaHeaderFormat: dateRangeFormat,
 
-  agendaDateFormat: 'ccc MMM dd',
-  agendaTimeFormat: 'p',
+  agendaDateFormat: "ccc MMM dd",
+  agendaTimeFormat: "p",
   agendaTimeRangeFormat: timeRangeFormat,
 }
 

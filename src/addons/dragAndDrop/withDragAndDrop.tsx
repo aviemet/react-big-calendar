@@ -1,12 +1,12 @@
 
-import { useState } from 'react'
-import clsx from 'clsx'
-import EventWrapper from './EventWrapper'
-import EventContainerWrapper from './EventContainerWrapper'
-import WeekWrapper from './WeekWrapper'
-import { mergeComponents } from './common'
-import { DnDContext } from './DnDContext'
-import CalendarComponent, { CalendarProps } from '@/Calendar'
+import { useState } from "react"
+import clsx from "clsx"
+import EventWrapper from "./EventWrapper"
+import EventContainerWrapper from "./EventContainerWrapper"
+import WeekWrapper from "./WeekWrapper"
+import { mergeComponents } from "./common"
+import { DnDContext } from "./DnDContext"
+import CalendarComponent, { CalendarProps } from "@/Calendar"
 
 interface DragAndDropCalendarProps extends CalendarProps {
   onEventDrop: (event: any) => void
@@ -17,7 +17,7 @@ interface DragAndDropCalendarProps extends CalendarProps {
   dragFromOutsideItem: (event: any) => void
   draggableAccessor: (event: any) => void
   resizableAccessor: (event: any) => void
-  selectable: boolean | 'ignoreEvents'
+  selectable: boolean | "ignoreEvents"
   resizable: boolean
 }
 
@@ -68,8 +68,8 @@ export default function withDragAndDrop(Calendar: typeof CalendarComponent) {
 
       interactionInfo.event = event
       const { onEventDrop, onEventResize } = this.props
-      if(action === 'move' && onEventDrop) onEventDrop(interactionInfo)
-      if(action === 'resize' && onEventResize) onEventResize(interactionInfo)
+      if(action === "move" && onEventDrop) onEventDrop(interactionInfo)
+      if(action === "resize" && onEventResize) onEventResize(interactionInfo)
     }
 
     const dndComponents = mergeComponents(components, {
@@ -87,8 +87,8 @@ export default function withDragAndDrop(Calendar: typeof CalendarComponent) {
 
     props.className = clsx(
       props.className,
-      'rbc-addons-dnd',
-      !!interacting && 'rbc-addons-dnd-is-dragging'
+      "rbc-addons-dnd",
+      !!interacting && "rbc-addons-dnd-is-dragging"
     )
 
     return (

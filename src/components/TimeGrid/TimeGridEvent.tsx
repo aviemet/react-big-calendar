@@ -1,9 +1,9 @@
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
-import clsx from 'clsx'
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
+import clsx from "clsx"
 
 function stringifyPercent(v: string | number) {
-  return typeof v === 'string' ? v : v + '%'
+  return typeof v === "string" ? v : v + "%"
 }
 
 interface TimeGridEventProps<TEvent extends CalendarEvent = CalendarEvent> {
@@ -62,7 +62,7 @@ function TimeGridEvent(props: TimeGridEventProps) {
     top: stringifyPercent(top),
     height: stringifyPercent(height),
     width: stringifyPercent(width),
-    [rtl ? 'right' : 'left']: stringifyPercent(xOffset),
+    [rtl ? "right" : "left"]: stringifyPercent(xOffset),
   }
 
   return (
@@ -76,17 +76,17 @@ function TimeGridEvent(props: TimeGridEventProps) {
         onKeyDown={ onKeyPress }
         title={
           tooltip
-            ? (typeof label === 'string' ? label + ': ' : '') + tooltip
+            ? (typeof label === "string" ? label + ": " : "") + tooltip
             : undefined
         }
         className={ clsx(
-          isBackgroundEvent ? 'rbc-background-event' : 'rbc-event',
+          isBackgroundEvent ? "rbc-background-event" : "rbc-event",
           className,
           userProps.className,
           {
-            'rbc-selected': selected,
-            'rbc-event-continues-earlier': continuesPrior,
-            'rbc-event-continues-later': continuesAfter,
+            "rbc-selected": selected,
+            "rbc-event-continues-earlier": continuesPrior,
+            "rbc-event-continues-later": continuesAfter,
           }
         ) }
       >

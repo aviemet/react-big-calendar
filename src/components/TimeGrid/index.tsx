@@ -1,20 +1,20 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import clsx from 'clsx'
-import * as animationFrame from 'dom-helpers/animationFrame'
-import getPosition from 'dom-helpers/position'
-import getWidth from 'dom-helpers/width'
-import DayColumn from './DayColumn'
-import PopOverlay from '../PopOverlay'
-import TimeGridHeader from './TimeGridHeader'
-import TimeGridHeaderResources from './TimeGridHeaderResources'
-import TimeGutter from './TimeGutter'
-import { inRange, sortEvents } from '@/utils/eventLevels'
-import { BaseViewProps } from '@/Views'
-import Resources, { Resource } from '@/utils/Resources'
-import { Accessors } from '@/utils/accessors'
-import { Overlay } from 'react-overlays'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import clsx from "clsx"
+import * as animationFrame from "dom-helpers/animationFrame"
+import getPosition from "dom-helpers/position"
+import getWidth from "dom-helpers/width"
+import DayColumn from "./DayColumn"
+import PopOverlay from "../PopOverlay"
+import TimeGridHeader from "./TimeGridHeader"
+import TimeGridHeaderResources from "./TimeGridHeaderResources"
+import TimeGutter from "./TimeGutter"
+import { inRange, sortEvents } from "@/utils/eventLevels"
+import { BaseViewProps } from "@/Views"
+import Resources, { Resource } from "@/utils/Resources"
+import { Accessors } from "@/utils/accessors"
+import { Overlay } from "react-overlays"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -130,9 +130,9 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     const diffMillis = localizer.diff(
       localizer.merge(scrollToTime, min),
       scrollToTime,
-      'milliseconds'
+      "milliseconds"
     )
-    const totalMillis = localizer.diff(min, max, 'milliseconds')
+    const totalMillis = localizer.diff(min, max, "milliseconds")
 
     scrollRatioRef.current = diffMillis / totalMillis
 
@@ -144,10 +144,10 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       scrollRatioRef.current = null
     }
 
-    window.addEventListener('resize', handleResize)
+    window.addEventListener("resize", handleResize)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener("resize", handleResize)
 
       animationFrame.cancel(rafHandleRef.current)
 
@@ -188,7 +188,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       setOverlay({
         date,
         events,
-        position: { ...position, width: '200px' },
+        position: { ...position, width: "200px" },
         target,
       })
     } else if(doShowMoreDrillDown) {
@@ -283,7 +283,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         date,
         accessors.start(event),
         accessors.end(event),
-        'day'
+        "day"
       )
     ))
   }
@@ -316,8 +316,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     <div
       ref={ containerRef }
       className={ clsx(
-        'rbc-time-view',
-        { 'rbc-time-view-resources': resources }
+        "rbc-time-view",
+        { "rbc-time-view-resources": resources }
       ) }
     >
       {
@@ -354,7 +354,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         />
         { resourceGroupingLayout
           ? range.map((date) => (
-            <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date.toISOString() }>
+            <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
               { resources.map((resource) => (
                 <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
                   <DayColumn
@@ -446,7 +446,7 @@ const DayColumnWrapper = (props) => {
       date,
       accessors.start(event),
       accessors.end(event),
-      'day'
+      "day"
     )
   )
 
@@ -455,7 +455,7 @@ const DayColumnWrapper = (props) => {
       date,
       accessors.start(event),
       accessors.end(event),
-      'day'
+      "day"
     )
   )
 
@@ -524,7 +524,7 @@ const RangeFirst = <TResource extends Resource = Resource>({
   const { accessors, localizer } = useCalendarContext()
 
   return range.map((date) => (
-    <div style={ { display: 'flex', minHeight: '100%', flex: 1 } } key={ date.toISOString() }>
+    <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
       { resources.map(([id, resource]) => (
         <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
           <DayColumn

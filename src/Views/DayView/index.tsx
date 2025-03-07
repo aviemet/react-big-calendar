@@ -1,8 +1,8 @@
-import { navigate } from '@/utils/move'
-import TimeGrid from '@/components/TimeGrid'
-import { BaseViewProps, createViewComponent } from '@/Views'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import { navigate } from "@/utils/move"
+import TimeGrid from "@/components/TimeGrid"
+import { BaseViewProps, createViewComponent } from "@/Views"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 export interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   enableAutoScroll?: boolean
@@ -25,16 +25,16 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
    * as TODO: TimeGrid is converted to a functional component.
    */
   const {
-    min = localizer.startOf(new Date(), 'day'),
-    max = localizer.endOf(new Date(), 'day'),
-    scrollToTime = localizer.startOf(new Date(), 'day'),
+    min = localizer.startOf(new Date(), "day"),
+    max = localizer.endOf(new Date(), "day"),
+    scrollToTime = localizer.startOf(new Date(), "day"),
     enableAutoScroll = true,
   } = props
 
   return (
     <TimeGrid
       { ...props }
-      range={ [localizer.startOf(date, 'day')] }
+      range={ [localizer.startOf(date, "day")] }
       eventOffset={ 10 }
       min={ min }
       max={ max }
@@ -46,19 +46,19 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
 
 export default createViewComponent(DayView, {
   range: (date: Date, { localizer }) => {
-    return { start: localizer.startOf(date, 'day'), end: localizer.endOf(date, 'day') }
+    return { start: localizer.startOf(date, "day"), end: localizer.endOf(date, "day") }
   },
   navigate: (date, action, { localizer }) => {
     switch(action) {
       case navigate.PREVIOUS:
-        return localizer.add(date, -1, 'day')
+        return localizer.add(date, -1, "day")
 
       case navigate.NEXT:
-        return localizer.add(date, 1, 'day')
+        return localizer.add(date, 1, "day")
 
       default:
         return date
     }
   },
-  title: (date, { localizer }) => localizer.format(date, 'dayHeaderFormat'),
+  title: (date, { localizer }) => localizer.format(date, "dayHeaderFormat"),
 })

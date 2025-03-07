@@ -1,11 +1,11 @@
-import * as DayEventLayout from '@/utils/DayEventLayout'
-import TimeGridEvent from './TimeGridEvent'
-import { isSelected } from '@/utils/eventSelectionHelpers'
-import { SlotMetrics } from '@/hooks/useTimeSlotMetrics'
-import { CalendarProps, useCalendarContext } from '@/Calendar'
-import { Resource } from '@/utils/Resources'
-import { DayLayoutAlgorithm } from '@/utils/layout-algorithms/types'
-import { CalendarEvent } from '@/utils/components'
+import * as DayEventLayout from "@/utils/DayEventLayout"
+import TimeGridEvent from "./TimeGridEvent"
+import { isSelected } from "@/utils/eventSelectionHelpers"
+import { SlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarProps, useCalendarContext } from "@/Calendar"
+import { Resource } from "@/utils/Resources"
+import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/types"
+import { CalendarEvent } from "@/utils/components"
 
 interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -17,9 +17,9 @@ interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TReso
   dayLayoutAlgorithm: DayLayoutAlgorithm
   resizable: boolean
   slotMetrics: SlotMetrics
-  onSelectEvent: CalendarProps['onSelectEvent']
-  onDoubleClickEvent: CalendarProps['onDoubleClickEvent']
-  onKeyPressEvent: CalendarProps['onKeyPressEvent']
+  onSelectEvent: CalendarProps["onSelectEvent"]
+  onDoubleClickEvent: CalendarProps["onDoubleClickEvent"]
+  onKeyPressEvent: CalendarProps["onKeyPressEvent"]
 }
 
 const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
@@ -72,14 +72,14 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
 
     let format
     if(startsBeforeDay) {
-      format = 'eventTimeRangeEndFormat'
+      format = "eventTimeRangeEndFormat"
     } else if(startsAfterDay) {
-      format = 'eventTimeRangeStartFormat'
+      format = "eventTimeRangeStartFormat"
     } else {
-      format = 'eventTimeRangeFormat'
+      format = "eventTimeRangeFormat"
     }
 
-    const key = accessors.eventId(event) ?? 'evt_' + index
+    const key = accessors.eventId(event) ?? "evt_" + index
     const label = (startsBeforeDay && startsAfterDay) ? localizer.messages.allDay : localizer.format({ start, end }, format)
 
     let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)

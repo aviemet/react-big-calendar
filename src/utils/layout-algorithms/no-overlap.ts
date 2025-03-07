@@ -1,6 +1,5 @@
-import LayoutAlgorithmEvent from './LayoutAlgorithmEvent'
-import overlap from './overlap'
-import { DayLayoutFunction } from './types'
+import LayoutAlgorithmEvent, { DayLayoutFunction } from "./LayoutAlgorithmEvent"
+import overlap from "./overlap"
 
 function getMaxIndexDFS(node, maxIndex, visited) {
   for(let i = 0; i < node.friends.length; ++i) {

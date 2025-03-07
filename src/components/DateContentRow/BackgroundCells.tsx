@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
-import { coerceDate } from '@/utils/helpers'
-import { dateCellSelection, getSlotAtX, pointInBox } from '@/utils/eventSelectionHelpers'
-import Selection, { getBoundsForNode, isEvent, isShowMore } from '@/utils/selection'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { CalendarEvent } from '@/utils/components'
+import { useEffect, useRef, useState } from "react"
+import { coerceDate } from "@/utils/helpers"
+import { dateCellSelection, getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
+import Selection, { getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { CalendarEvent } from "@/utils/components"
 
 interface BackgroundCellsProps {
   container?: () => HTMLElement
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
-  selectable?: boolean | 'ignoreEvents'
+  selectable?: boolean | "ignoreEvents"
   longPressThreshold?: number
   onSelectSlot: (range: Date[], slot: { start: number, end: number }) => void
   onSelectEnd?: (event: CalendarEvent) => void
@@ -78,7 +78,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
       setSelecting(false)
     }
 
-    selector.on('selecting', (box) => {
+    selector.on("selecting", (box) => {
       if(!selecting) {
         onSelectStart?.(box)
         setDateCellStart({ x: box.x, y: box.y })
@@ -101,20 +101,20 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
       setEndIndex(selectionIndices.endIndex)
     })
 
-    selector.on('beforeSelect', (box) => {
-      if(selectable !== 'ignoreEvents') return
+    selector.on("beforeSelect", (box) => {
+      if(selectable !== "ignoreEvents") return
 
       return !isEvent(containerRef.current, box)
     })
 
-    selector.on('click', (point) => selectorClicksHandler(point, 'click'))
+    selector.on("click", (point) => selectorClicksHandler(point, "click"))
 
-    selector.on('doubleClick', (point) =>
-      selectorClicksHandler(point, 'doubleClick')
+    selector.on("doubleClick", (point) =>
+      selectorClicksHandler(point, "doubleClick")
     )
 
-    selector.on('select', (bounds) => {
-      selectSlot({ ...state, action: 'select', bounds })
+    selector.on("select", (bounds) => {
+      selectSlot({ ...state, action: "select", bounds })
       setSelecting(false)
       onSelectEnd(...state)
       // notify(onSelectEnd, [state])
@@ -153,12 +153,12 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
             <div
               style={ style }
               className={ clsx(
-                'rbc-day-bg',
+                "rbc-day-bg",
                 className,
                 {
-                  'rbc-selected-cell': selected,
-                  'rbc-today': localizer.isSameDate(date, current),
-                  'rbc-off-range-bg': current && localizer.neq(current, date, 'month'),
+                  "rbc-selected-cell": selected,
+                  "rbc-today": localizer.isSameDate(date, current),
+                  "rbc-off-range-bg": current && localizer.neq(current, date, "month"),
                 },
               ) }
             />

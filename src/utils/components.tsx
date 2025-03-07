@@ -6,7 +6,7 @@ import DateHeader, { DateHeaderProps } from "@/DateHeader"
 import ResourceHeader, { ResourceHeaderProps } from "@/ResourceHeader"
 import { ViewName } from "@/Views"
 import NoopWrapper from "@/NoopWrapper"
-import Header from '@/Header'
+import Header from "@/Header"
 import DayColumnWrapper from "@/components/DayColumnWrapper"
 import { Resource } from "./Resources"
 
@@ -163,11 +163,11 @@ interface ViewOverrideComponents<TEvent extends CalendarEvent = CalendarEvent> {
 export interface Components<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends CommonComponents<TEvent, TResource>, ViewOverrideComponents<TEvent> {}
 
 export type CompiledComponents<TEvent extends object = CalendarEvent, TResource extends object = object> = CommonComponents<TEvent, TResource> & (
-  ViewOverrideComponents<TEvent>['agenda'] &
-  ViewOverrideComponents<TEvent>['day'] &
-  ViewOverrideComponents<TEvent>['week'] &
-  ViewOverrideComponents<TEvent>['work_week'] &
-  ViewOverrideComponents<TEvent>['month']
+  ViewOverrideComponents<TEvent>["agenda"] &
+  ViewOverrideComponents<TEvent>["day"] &
+  ViewOverrideComponents<TEvent>["week"] &
+  ViewOverrideComponents<TEvent>["work_week"] &
+  ViewOverrideComponents<TEvent>["month"]
 )
 
 const defaultComponents: CommonComponents = {

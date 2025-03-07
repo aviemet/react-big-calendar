@@ -1,15 +1,15 @@
 
-import React from 'react'
-import { DnDContext } from './DnDContext'
-import { scrollParent, scrollTop } from 'dom-helpers'
-import qsa from 'dom-helpers/cjs/querySelectorAll'
+import React from "react"
+import { DnDContext } from "./DnDContext"
+import { scrollParent, scrollTop } from "dom-helpers"
+import qsa from "dom-helpers/cjs/querySelectorAll"
 
 import Selection, {
   getBoundsForNode,
   getEventNodeFromPoint,
-} from '@/utils/selection'
-import TimeGridEvent from '@/components/TimeGrid/TimeGridEvent'
-import { dragAccessors, eventTimes, pointInColumn } from './common'
+} from "@/utils/selection"
+import TimeGridEvent from "@/components/TimeGrid/TimeGridEvent"
+import { dragAccessors, eventTimes, pointInColumn } from "./common"
 
 class EventContainerWrapper extends React.Component {
   // static propTypes = {
@@ -70,7 +70,7 @@ class EventContainerWrapper extends React.Component {
     )
 
     const { duration } = eventTimes(event, accessors, this.props.localizer)
-    let newEnd = this.props.localizer.add(newSlot, duration, 'milliseconds')
+    let newEnd = this.props.localizer.add(newSlot, duration, "milliseconds")
     this.update(event, slotMetrics.getRange(newSlot, newEnd, false, true))
   }
 
@@ -81,7 +81,7 @@ class EventContainerWrapper extends React.Component {
 
     let { start, end } = eventTimes(event, accessors, localizer)
     let newRange
-    if(direction === 'UP') {
+    if(direction === "UP") {
       const newStart = localizer.min(
         newTime,
         slotMetrics.closestSlotFromDate(end, -1)
@@ -93,7 +93,7 @@ class EventContainerWrapper extends React.Component {
         ...newRange,
         endDate: end,
       }
-    } else if(direction === 'DOWN') {
+    } else if(direction === "DOWN") {
       // Get the new range based on the new end
       // but don't overwrite the start date as it could be outside this day boundary.
       const newEnd = localizer.max(
@@ -148,7 +148,7 @@ class EventContainerWrapper extends React.Component {
     let end = slotMetrics.nextSlot(start)
     const eventHasDuration = !isNaN(eventDuration)
     if(eventHasDuration) {
-      const eventEndSlot = localizer.add(start, eventDuration, 'milliseconds')
+      const eventEndSlot = localizer.add(start, eventDuration, "milliseconds")
       end = new Date(Math.max(eventEndSlot, end))
     }
     return end
@@ -156,7 +156,7 @@ class EventContainerWrapper extends React.Component {
 
   updateParentScroll = (parent, node) => {
     setTimeout(() => {
-      const draggedEl = qsa(node, '.rbc-addons-dnd-drag-preview')[0]
+      const draggedEl = qsa(node, ".rbc-addons-dnd-drag-preview")[0]
       if(draggedEl) {
         if(draggedEl.offsetTop < parent.scrollTop) {
           scrollTop(parent, Math.max(draggedEl.offsetTop, 0))
@@ -183,15 +183,15 @@ class EventContainerWrapper extends React.Component {
     let node = wrapper.children[0]
     let isBeingDragged = false
     let selector = (this._selector = new Selection(() =>
-      wrapper.closest('.rbc-time-view')
+      wrapper.closest(".rbc-time-view")
     ))
     let parent = scrollParent(wrapper)
 
-    selector.on('beforeSelect', (point) => {
+    selector.on("beforeSelect", (point) => {
       const { dragAndDropAction } = this.context.draggable
 
       if(!dragAndDropAction.action) return false
-      if(dragAndDropAction.action === 'resize') {
+      if(dragAndDropAction.action === "resize") {
         return pointInColumn(getBoundsForNode(node), point)
       }
 
@@ -207,28 +207,28 @@ class EventContainerWrapper extends React.Component {
       this.eventOffsetTop = point.y - getBoundsForNode(eventNode).top
     })
 
-    selector.on('selecting', (box) => {
+    selector.on("selecting", (box) => {
       const bounds = getBoundsForNode(node)
       const { dragAndDropAction } = this.context.draggable
 
-      if(dragAndDropAction.action === 'move') {
+      if(dragAndDropAction.action === "move") {
         this.updateParentScroll(parent, node)
         this.handleMove(box, bounds)
       }
-      if(dragAndDropAction.action === 'resize') {
+      if(dragAndDropAction.action === "resize") {
         this.updateParentScroll(parent, node)
         this.handleResize(box, bounds)
       }
     })
 
-    selector.on('dropFromOutside', (point) => {
+    selector.on("dropFromOutside", (point) => {
       if(!this.context.draggable.onDropFromOutside) return
       const bounds = getBoundsForNode(node)
       if(!pointInColumn(bounds, point)) return
       this.handleDropFromOutside(point, bounds)
     })
 
-    selector.on('dragOverFromOutside', (point) => {
+    selector.on("dragOverFromOutside", (point) => {
       const item = this.context.draggable.dragFromOutsideItem ? this.context.draggable.dragFromOutsideItem() : null
       if(!item) return
       const bounds = getBoundsForNode(node)
@@ -236,16 +236,16 @@ class EventContainerWrapper extends React.Component {
       this.handleDragOverFromOutside(point, bounds)
     })
 
-    selector.on('selectStart', () => {
+    selector.on("selectStart", () => {
       isBeingDragged = true
       this.context.draggable.onStart()
     })
 
-    selector.on('select', (point) => {
+    selector.on("select", (point) => {
       const bounds = getBoundsForNode(node)
       isBeingDragged = false
       const { dragAndDropAction } = this.context.draggable
-      if(dragAndDropAction.action === 'resize') {
+      if(dragAndDropAction.action === "resize") {
         this.handleInteractionEnd()
       } else if(!this.state.event || !pointInColumn(bounds, point)) {
         return
@@ -254,11 +254,11 @@ class EventContainerWrapper extends React.Component {
       }
     })
 
-    selector.on('click', () => {
+    selector.on("click", () => {
       if(isBeingDragged) this.reset()
       this.context.draggable.onEnd(null)
     })
-    selector.on('reset', () => {
+    selector.on("reset", () => {
       this.reset()
       this.context.draggable.onEnd(null)
     })
@@ -293,13 +293,13 @@ class EventContainerWrapper extends React.Component {
     const { start, end } = event
 
     let label
-    let format = 'eventTimeRangeFormat'
+    let format = "eventTimeRangeFormat"
 
     const startsBeforeDay = slotMetrics.startsBeforeDay(start)
     const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-    if(startsBeforeDay) format = 'eventTimeRangeEndFormat'
-    else if(startsAfterDay) format = 'eventTimeRangeStartFormat'
+    if(startsBeforeDay) format = "eventTimeRangeEndFormat"
+    else if(startsAfterDay) format = "eventTimeRangeStartFormat"
 
     if(startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
     else label = localizer.format({ start, end }, format)

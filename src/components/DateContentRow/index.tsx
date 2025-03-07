@@ -1,17 +1,17 @@
-import React, { forwardRef, useRef } from 'react'
-import getHeight from 'dom-helpers/height'
-import qsa from 'dom-helpers/querySelectorAll'
-import BackgroundCells from './BackgroundCells'
-import EventRow from '@/components/EventRow'
-import EventEndingRow from '@/components/EventRow/EventEndingRow'
-import NoopWrapper from '@/NoopWrapper'
-import ScrollableWeekWrapper from '@/ScrollableWeekWrapper'
-import Dummy from './Dummy'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { useDateSlotMetrics } from '@/hooks/useDateSlotMetrics'
-import { CalendarEvent } from '@/utils/components'
-import { DateHeaderProps } from '@/DateHeader'
+import React, { forwardRef, useRef } from "react"
+import getHeight from "dom-helpers/height"
+import qsa from "dom-helpers/querySelectorAll"
+import BackgroundCells from "./BackgroundCells"
+import EventRow from "@/components/EventRow"
+import EventEndingRow from "@/components/EventRow/EventEndingRow"
+import NoopWrapper from "@/NoopWrapper"
+import ScrollableWeekWrapper from "@/ScrollableWeekWrapper"
+import Dummy from "./Dummy"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
+import { DateHeaderProps } from "@/DateHeader"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -22,7 +22,7 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
   container?: () => HTMLElement
   selected?: object
-  selectable?: boolean | 'ignoreEvents'
+  selectable?: boolean | "ignoreEvents"
   longPressThreshold?: number
   onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   showAllEvents?: boolean
@@ -37,7 +37,6 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   isAllDay?: boolean
   minRows?: number
   maxRows?: number
-
   className?: string
 }
 
@@ -68,7 +67,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     maxRows = Infinity,
     className,
   } = props
-  const { date: calendarDate, localizer, getters, accessors, getNow, rtl, components: {
+  const { date: calendarDate, localizer, getNow, rtl, components: {
     dateHeader: DateHeaderComponent,
     weekWrapper: WeekWrapper,
   } } = useCalendarContext()
@@ -78,45 +77,13 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     events,
     maxRows,
     minRows,
-    accessors,
   })
+
+  console.log(slotMetrics)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const headingRowRef = useRef<HTMLDivElement>(null)
   const eventRowRef = useRef<HTMLDivElement>(null)
-
-  // const HeadingCell = ({ date, isOffRange, drilldownView, label, className }: DateHeaderProps) => {
-  //   let isCurrent = localizer.isSameDate(date, calendarDate)
-
-  //   return (
-  //     <div
-  //       role="cell"
-  //       className={ clsx(className, {
-  //         'rbc-off-range': isOffRange,
-  //         'rbc-current': isCurrent,
-  //       }) }
-  //     >
-  //       <DateHeaderComponent
-  //         label={ label || localizer.format(date, 'dateFormat') }
-  //         date={ date }
-  //         drilldownView={ drilldownView }
-  //         isOffRange={ isOffRange }
-  //         onDrillDown={ onHeadingClick }
-  //       />
-  //     </div>
-  //   )
-  // }
-
-  // const renderHeadingCell = (date: Date, index: number) => {
-  //   return renderHeader({
-  //     date,
-  //     key: `header_${index}`,
-  //     className: clsx(
-  //       'rbc-date-cell',
-  //       localizer.isSameDate(date, getNow()) && 'rbc-now'
-  //     ),
-  //   })
-  // }
 
   if(renderForMeasure) {
     return (
@@ -135,7 +102,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
   }
 
   const handleShowMore = (slot, target) => {
-    let row = qsa(containerRef.current, '.rbc-row-bg')[0]
+    let row = qsa(containerRef.current, ".rbc-row-bg")[0]
 
     let cell
     if(row) cell = row.children[slot - 1]
@@ -166,13 +133,11 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
 
   const eventRowProps = {
     selected,
-    accessors,
-    getters,
     onSelect,
     onDoubleClick,
     onKeyPress,
     resourceId,
-    slotMetrics: slotMetrics,
+    slotMetrics,
     resizable,
   }
 
@@ -192,29 +157,29 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
       <div
         ref={ ref }
         role="row"
-        className={ clsx('rbc-row-content', {
-          'rbc-row-content-scrollable': showAllEvents,
+        className={ clsx("rbc-row-content", {
+          "rbc-row-content-scrollable": showAllEvents,
         }) }
       >
         <div className="rbc-row " ref={ headingRowRef }>
           { range.map((date, index) => {
-            let isOffRange = localizer.neq(date, calendarDate, 'month')
+            let isOffRange = localizer.neq(date, calendarDate, "month")
             let isCurrent = localizer.isSameDate(date, calendarDate)
-            let drilldownView = 'day'// getDrilldownView(date)
-            let label = localizer.format(date, 'dateFormat')
+            let drilldownView = "day"// getDrilldownView(date)
+            let label = localizer.format(date, "dateFormat")
 
             return <>
               <div
                 role="cell"
                 key={ `header_${index}` }
-                className={ clsx('rbc-date-cell', {
-                  'rbc-off-range': isOffRange,
-                  'rbc-current': isCurrent,
-                  'rbc-now': localizer.isSameDate(date, getNow()),
+                className={ clsx("rbc-date-cell", {
+                  "rbc-off-range": isOffRange,
+                  "rbc-current": isCurrent,
+                  "rbc-now": localizer.isSameDate(date, getNow()),
                 }) }
               >
                 <DateHeaderComponent
-                  label={ label || localizer.format(date, 'dateFormat') }
+                  label={ label || localizer.format(date, "dateFormat") }
                   date={ date }
                   drilldownView={ drilldownView }
                   isOffRange={ isOffRange }

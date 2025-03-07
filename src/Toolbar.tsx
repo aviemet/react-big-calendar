@@ -1,8 +1,8 @@
-import React from 'react'
-import { useCalendarContext } from './Calendar'
-import { navigate, NavigateAction } from './utils/move'
-import { ViewName } from './Views'
-import clsx from 'clsx'
+import React from "react"
+import { useCalendarContext } from "./Calendar"
+import { navigate, NavigateAction } from "./utils/move"
+import { ViewName } from "./Views"
+import clsx from "clsx"
 
 export interface ToolbarProps {
   view: ViewName

@@ -103,6 +103,8 @@ export default [
         },
       }],
 			'@stylistic/semi': ['error', 'never'],
+			'@stylistic/jsx-quotes': ["error", "prefer-double"],
+			'@stylistic/quotes': ["error", "double"],
 			'no-trailing-spaces': ['error', {
         skipBlankLines: false,
         ignoreComments: false

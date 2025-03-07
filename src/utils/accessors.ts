@@ -1,4 +1,4 @@
-import { CalendarEvent } from "@/types"
+import { CalendarEvent } from "./components"
 import { Resource } from "./Resources"
 
 export type Accessors<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
@@ -29,11 +29,11 @@ export function accessor<T extends AccessorInput>(
 ): unknown {
   let value = null
 
-  if(typeof field === 'function') {
+  if(typeof field === "function") {
     value = (field as AccessorFunction<T>)(data)
   } else if(
-    typeof field === 'string' &&
-    typeof data === 'object' &&
+    typeof field === "string" &&
+    typeof data === "object" &&
     data !== null &&
     field in data
   ) {

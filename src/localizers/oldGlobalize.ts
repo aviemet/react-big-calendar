@@ -1,42 +1,42 @@
-import * as dates from '../utils/dates'
-import { DateLocalizer } from '.'
+import * as dates from "../utils/dates"
+import { DateLocalizer } from "."
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'd', culture) + ' – ' + local.format(end, 'd', culture)
+  local.format(start, "d", culture) + " – " + local.format(end, "d", culture)
 
 let timeRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 't', culture) + ' – ' + local.format(end, 't', culture)
+  local.format(start, "t", culture) + " – " + local.format(end, "t", culture)
 
 let timeRangeStartFormat = ({ start }, culture, local) =>
-  local.format(start, 't', culture) + ' – '
+  local.format(start, "t", culture) + " – "
 
 let timeRangeEndFormat = ({ end }, culture, local) =>
-  ' – ' + local.format(end, 't', culture)
+  " – " + local.format(end, "t", culture)
 
 let weekRangeFormat = ({ start, end }, culture, local) =>
-  local.format(start, 'MMM dd', culture) +
-  ' – ' +
-  local.format(end, dates.eq(start, end, 'month') ? 'dd' : 'MMM dd', culture)
+  local.format(start, "MMM dd", culture) +
+  " – " +
+  local.format(end, dates.eq(start, end, "month") ? "dd" : "MMM dd", culture)
 
 export let formats = {
-  dateFormat: 'dd',
-  dayFormat: 'ddd dd/MM',
-  weekdayFormat: 'ddd',
+  dateFormat: "dd",
+  dayFormat: "ddd dd/MM",
+  weekdayFormat: "ddd",
 
   selectRangeFormat: timeRangeFormat,
   eventTimeRangeFormat: timeRangeFormat,
   eventTimeRangeStartFormat: timeRangeStartFormat,
   eventTimeRangeEndFormat: timeRangeEndFormat,
 
-  timeGutterFormat: 't',
+  timeGutterFormat: "t",
 
-  monthHeaderFormat: 'Y',
-  dayHeaderFormat: 'dddd MMM dd',
+  monthHeaderFormat: "Y",
+  dayHeaderFormat: "dddd MMM dd",
   dayRangeHeaderFormat: weekRangeFormat,
   agendaHeaderFormat: dateRangeFormat,
 
-  agendaDateFormat: 'ddd MMM dd',
-  agendaTimeFormat: 't',
+  agendaDateFormat: "ddd MMM dd",
+  agendaTimeFormat: "t",
   agendaTimeRangeFormat: timeRangeFormat,
 }
 

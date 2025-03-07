@@ -1,9 +1,9 @@
-import { eventSegments, endOfRange, eventLevels } from '../utils/eventLevels'
-import { useMemo } from 'react'
-import { CalendarEvent } from '@/types'
-import { Accessors } from '../utils/accessors'
-import { useCalendarContext } from '@/Calendar'
-import { DateLocalizer } from '@/localizers'
+import { eventSegments, endOfRange, eventLevels } from "../utils/eventLevels"
+import { useMemo } from "react"
+import { Accessors } from "../utils/accessors"
+import { useCalendarContext } from "@/Calendar"
+import { DateLocalizer } from "@/localizers"
+import { CalendarEvent } from "@/utils/components"
 
 let isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
 
@@ -15,16 +15,15 @@ type SlotMetricsOptions = {
   events: CalendarEvent[]
   maxRows: number
   minRows: number
-  accessors: Accessors
 }
 
 export function useDateSlotMetrics(options: SlotMetricsOptions) {
-  const { localizer } = useCalendarContext()
+  const { localizer, accessors } = useCalendarContext()
 
-  return useMemo(() => getSlotMetrics({ ...options, localizer }), [localizer, options])
+  return useMemo(() => getSlotMetrics({ ...options, localizer, accessors }), [localizer, accessors, options])
 }
 
-function getSlotMetrics(options: SlotMetricsOptions & { localizer: DateLocalizer }) {
+function getSlotMetrics(options: SlotMetricsOptions & { localizer: DateLocalizer, accessors: Accessors }) {
   const { range, events, maxRows, minRows, accessors, localizer } = options
   let { first, last } = endOfRange({ dateRange: range, localizer })
 

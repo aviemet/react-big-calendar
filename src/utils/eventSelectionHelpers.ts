@@ -1,5 +1,5 @@
-import isEqual from 'lodash/isEqual'
-import { CalendarEvent } from '@/types'
+import isEqual from "lodash/isEqual"
+import { CalendarEvent } from "./components"
 
 export function isSelected(event: CalendarEvent, selected: CalendarEvent | null) {
   if(!event || selected === null) return false

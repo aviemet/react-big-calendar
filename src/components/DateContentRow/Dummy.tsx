@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react'
-import clsx from 'clsx'
-import { useCalendarContext } from '@/Calendar'
-import { DateHeaderProps } from '@/DateHeader'
+import React, { forwardRef } from "react"
+import clsx from "clsx"
+import { useCalendarContext } from "@/Calendar"
+import { DateHeaderProps } from "@/DateHeader"
 
 interface DummyProps {
   className?: string
@@ -24,29 +24,29 @@ const Dummy = forwardRef<HTMLDivElement, DummyProps>((
     <div className={ className } ref={ ref }>
       <div
         className={ clsx(
-          'rbc-row-content',
-          showAllEvents && 'rbc-row-content-scrollable'
+          "rbc-row-content",
+          showAllEvents && "rbc-row-content-scrollable"
         ) }
       >
         <div className="rbc-row" ref={ headingRowRef }>
           { range.map((date, index) => {
-            let isOffRange = localizer.neq(date, calendarDate, 'month')
+            let isOffRange = localizer.neq(date, calendarDate, "month")
             let isCurrent = localizer.isSameDate(date, calendarDate)
-            let drilldownView = 'day'// getDrilldownView(date)
-            let label = localizer.format(date, 'dateFormat')
+            let drilldownView = "day"// getDrilldownView(date)
+            let label = localizer.format(date, "dateFormat")
 
             return <>
               <div
                 role="cell"
                 key={ `header_${index}` }
-                className={ clsx('rbc-date-cell', {
-                  'rbc-off-range': isOffRange,
-                  'rbc-current': isCurrent,
-                  'rbc-now': localizer.isSameDate(date, getNow()),
+                className={ clsx("rbc-date-cell", {
+                  "rbc-off-range": isOffRange,
+                  "rbc-current": isCurrent,
+                  "rbc-now": localizer.isSameDate(date, getNow()),
                 }) }
               >
                 <DateHeaderComponent
-                  label={ label || localizer.format(date, 'dateFormat') }
+                  label={ label || localizer.format(date, "dateFormat") }
                   date={ date }
                   drilldownView={ drilldownView }
                   isOffRange={ isOffRange }
