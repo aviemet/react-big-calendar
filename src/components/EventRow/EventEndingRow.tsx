@@ -53,7 +53,7 @@ const EventEndingRow = ({
 
     if(canRenderSlotEvent(left, span)) {
       // const content = EventRowMixin.renderEvent(props, event)
-      const content = <Event event={ event } { ...props } />
+      const content = <Event event={ event } slotMetrics={ slotMetrics } />
 
       if(Boolean(gap)) {
         // row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))

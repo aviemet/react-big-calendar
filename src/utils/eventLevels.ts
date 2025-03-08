@@ -13,7 +13,12 @@ export function endOfRange({ dateRange, unit = "day", localizer }: EndOfRangeArg
 
 // properly calculating segments requires working with dates in
 // the timezone we're working with, so we use the localizer
-export function eventSegments<TEvent extends CalendarEvent>(event: TEvent, range: Date[], accessors: Accessors, localizer: DateLocalizer) {
+export function eventSegments<TEvent extends CalendarEvent>(
+  event: TEvent,
+  range: Date[],
+  accessors: Accessors,
+  localizer: DateLocalizer
+) {
   let { first, last } = endOfRange({ dateRange: range, localizer })
 
   let slots = localizer.diff(first, last, "day")
@@ -40,16 +45,16 @@ export function eventSegments<TEvent extends CalendarEvent>(event: TEvent, range
 }
 
 export function eventLevels(rowSegments, limit = Infinity) {
-  let i,
-      j,
-      seg,
-      levels = [],
-      extra = []
+  let i
+  let j
+  let seg
+  const levels = []
+  const extra = []
 
   for(i = 0; i < rowSegments.length; i++) {
     seg = rowSegments[i]
 
-    for(j = 0; j < levels.length; j++) if(!segsOverlap(seg, levels[j])) break
+    for(j = 0; j < levels.length; j++) if(!segmentsOverlap(seg, levels[j])) break
 
     if(j >= limit) {
       extra.push(seg)
@@ -75,7 +80,7 @@ export function inRange<TEvent extends CalendarEvent>(e: TEvent, start: Date, en
   return localizer.inEventRange({ event, range })
 }
 
-export function segsOverlap(seg, otherSegs) {
+export function segmentsOverlap(seg, otherSegs) {
   return otherSegs.some(
     (otherSeg) => otherSeg.left <= seg.right && otherSeg.right >= seg.left
   )

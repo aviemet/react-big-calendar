@@ -47,7 +47,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   onSelectEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
   onDoubleClickEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
   onKeyPressEvent?: ((...args: any[]) => any) | undefined
-  onDrillDown?: ((date: Date, view: ViewName) => void) | undefined
+  onDrillDown?: ((date: Date, view: ViewName | string) => void) | undefined
   getDrilldownView?:
       | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => string)
       | null

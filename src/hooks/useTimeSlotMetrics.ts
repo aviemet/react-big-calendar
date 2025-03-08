@@ -2,9 +2,9 @@ import { useCalendarContext } from "@/components/Calendar"
 import { DateLocalizer } from "@/localizers"
 import { useMemo } from "react"
 
-export type SlotMetrics = {
+export type TimeSlotMetrics = {
   groups: Date[][]
-  update: (args: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) => SlotMetrics
+  update: (args: { min: Date, max: Date, step: number, timeslots: number, localizer: DateLocalizer }) => TimeSlotMetrics
   dateIsInGroup: (date: Date, groupIndex: number) => boolean
   nextSlot: (slot: Date) => Date
   closestSlotToPosition: (percent: number) => Date
@@ -33,7 +33,7 @@ interface UseTimeSlotMetricsProps {
   timeslots: number
 }
 
-export function useTimeSlotMetrics(props: UseTimeSlotMetricsProps): SlotMetrics {
+export function useTimeSlotMetrics(props: UseTimeSlotMetricsProps): TimeSlotMetrics {
   const { localizer } = useCalendarContext()
 
   return useMemo(() => getSlotMetrics({ ...props, localizer }), [localizer, props])
@@ -51,7 +51,7 @@ function getSlotMetrics({
   step: number
   timeslots: number
   localizer: DateLocalizer
-}): SlotMetrics {
+}): TimeSlotMetrics {
   // Add validation
   if(!min || !max) {
     throw new Error("min and max dates are required")

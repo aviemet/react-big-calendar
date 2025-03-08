@@ -1,7 +1,11 @@
 import { Accessors } from "./accessors"
 import { CalendarEvent } from "./components"
 
-export type Resource = object
+export type Resource = {
+  id: string | number
+  title: string
+  [key: string | number]: any
+}
 
 type MapCallback = (resource: [string | number, Resource], index: number) => Resource[]
 

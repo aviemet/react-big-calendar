@@ -3,14 +3,25 @@ import clsx from "clsx"
 import chunk from "lodash/chunk"
 import { navigate } from "@/utils/move"
 import getPosition from "dom-helpers/position"
-import * as animationFrame from "dom-helpers/animationFrame"
 import { BaseViewProps, createViewComponent, ViewName, views } from "@/Views"
-import { useMonthViewState } from "./useMonthViewState"
+import { MonthViewAction, MonthViewState, useMonthViewState } from "./useMonthViewState"
 import { useCalendarContext } from "@/components/Calendar"
-import DateContentRow from "@/components/DateContentRow"
 import { inRange, sortWeekEvents } from "@/utils/eventLevels"
 import PopOverlay from "@/components/PopOverlay"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
+import { DateHeaderProps } from "@/components/DateHeader"
+import { useResizeObserver } from "@/hooks/useResizeListener"
+import createContext from "@/hooks/createContext"
+import DateContentRow from "@/components/DateContentRow"
+
+interface MonthViewContext<TEvent extends CalendarEvent = CalendarEvent> extends MonthViewState<TEvent> {
+  setRowLimit: (limit: number) => void
+  containerHeight: number
+  setMonthState: React.ActionDispatch<[action: MonthViewAction<TEvent>]>
+}
+
+const [useMonthViewContext, MonthViewContextProvider] = createContext<MonthViewContext>()
+export { useMonthViewContext }
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   showAllEvents?: boolean
@@ -20,13 +31,15 @@ export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> ex
   resizable?: boolean
   doShowMoreDrillDown?: boolean
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
-  onShowMore?: (events: TEvent[], date: Date, slot: HTMLElement) => void
+  onShowMore?: (events: TEvent[], date: Date, slot: number) => void
   onSelectEvent?: (event: TEvent) => void
   onDoubleClickEvent?: (event: TEvent) => void
   onKeyPressEvent?: (event: TEvent) => void
 }
 
-const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthViewProps<TEvent>) => {
+const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(
+  props: MonthViewProps<TEvent>
+) => {
   const {
     events = [],
     selected,
@@ -51,13 +64,14 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     header: HeaderComponent,
   } } = useCalendarContext()
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const slotRowRef = useRef<HTMLDivElement>(null)
+  const monthContainerRef = useRef<HTMLDivElement>(null)
   const pendingSelection = useRef<Date[]>([])
 
   const [resizeListener, setResizeListener] = useState<number | null>(null)
 
-  const [state, dispatch] = useMonthViewState(calendarDate)
+  const [state, dispatch] = useMonthViewState<TEvent>(calendarDate)
+
+  const { height: containerHeight } = useResizeObserver(monthContainerRef)
 
   useEffect(() => {
     dispatch({
@@ -65,31 +79,9 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
       needLimitMeasure: localizer.neq(calendarDate, state.date || new Date(), "month"),
     })
     dispatch({ type: "SET_DATE", date: calendarDate })
-  }, [calendarDate, dispatch, localizer, state.date])
+  }, [calendarDate, state.date, dispatch, localizer])
 
-  useEffect(() => {
-    let running = false
-
-    const handleResize = () => {
-      if(!running) {
-        animationFrame.request(() => {
-          running = false
-          dispatch({ type: "SET_MEASURE_LIMIT", needLimitMeasure: true })
-        })
-      }
-    }
-
-    window.addEventListener("resize", handleResize, false)
-    return () => window.removeEventListener("resize", handleResize, false)
-  }, [dispatch])
-
-  useEffect(() => {
-    if(state.needLimitMeasure && slotRowRef.current) {
-      dispatch({ type: "RESET_MEASURE" })
-    }
-  }, [dispatch, state.needLimitMeasure])
-
-  const getContainer = useCallback(() => containerRef.current, [])
+  const getContainer = useCallback(() => monthContainerRef.current, [])
 
   const handleSelectSlot = useCallback((range: Date[], slotInfo: SlotInfo) => {
     pendingSelection.current = pendingSelection.current.concat(range)
@@ -150,7 +142,7 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     pendingSelection.current = []
 
     if(popup) {
-      let position = getPosition(cell, containerRef.current)
+      let position = getPosition(cell, monthContainerRef.current)
 
       dispatch({
         type: "SET_OVERLAY",
@@ -176,15 +168,17 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
     dispatch({ type: "HIDE_OVERLAY" })
   }, [dispatch])
 
-  const handleHeadingClick = useCallback(
-    (date: Date, view: ViewName | null | undefined, e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-      clearTimeout(resizeListener)
-      pendingSelection.current = []
-      if(onDrillDown && view) onDrillDown(date, view)
-    },
-    [onDrillDown, resizeListener]
-  )
+  const handleHeadingClick = useCallback((
+    date: Date,
+    view: DateHeaderProps,
+    e: React.MouseEvent<HTMLElement>
+  ) => {
+    e.preventDefault()
+
+    clearTimeout(resizeListener)
+    pendingSelection.current = []
+    if(onDrillDown && view) onDrillDown(date, view)
+  }, [onDrillDown, resizeListener])
 
   const overlayDisplay = useCallback(() => {
     hideOverlay()
@@ -195,73 +189,79 @@ const MonthView = <TEvent extends CalendarEvent = CalendarEvent>(props: MonthVie
 
 
   return (
-    <div
-      className={ clsx("rbc-month-view", className) }
-      role="table"
-      aria-label="Month View"
-      ref={ containerRef }
-    >
-      <div className="rbc-row rbc-month-header" role="row">
-        { localizer.range(weeks[0][0], weeks[0][weeks[0].length - 1], "day").map((day) => (
-          <div key={ "header_" + day.toISOString() } className="rbc-header">
-            <HeaderComponent
-              date={ day }
-              label={ localizer.format(day, "weekdayFormat") }
+    <MonthViewContextProvider value={ {
+      setRowLimit: (limit: number) => dispatch({ type: "RESET_MEASURE", rowLimit: limit }),
+      containerHeight,
+      setMonthState: dispatch,
+      ...state,
+    } }>
+      <div
+        className={ clsx("rbc-month-view", className) }
+        role="table"
+        aria-label="Month View"
+        ref={ monthContainerRef }
+      >
+        <div className="rbc-row rbc-month-header" role="row">
+          { localizer.range(weeks[0][0], weeks[0][weeks[0].length - 1], "day").map((day) => (
+            <div key={ "header_" + day.toISOString() } className="rbc-header">
+              <HeaderComponent
+                date={ day }
+                label={ localizer.format(day, "weekdayFormat") }
+              />
+            </div>
+          )) }
+        </div>
+        { weeks.map((week, weekIndex) => {
+
+          const weeksEvents = [...(events || [])].filter(event => inRange(
+            event,
+            week[0],
+            week[week.length - 1],
+            accessors,
+            localizer
+          ))
+
+          const sorted = sortWeekEvents(weeksEvents, accessors, localizer)
+
+          return (
+            <DateContentRow
+              key={ weekIndex }
+              className="rbc-month-row"
+              container={ getContainer }
+              range={ week }
+              events={ sorted }
+              maxRows={ showAllEvents ? Infinity : state.rowLimit }
+              selected={ selected }
+              selectable={ selectable }
+              renderForMeasure={ state.needLimitMeasure }
+              onShowMore={ handleShowMore }
+              onSelect={ handleSelectEvent }
+              onDoubleClick={ handleDoubleClickEvent }
+              onKeyPress={ handleKeyPressEvent }
+              onSelectSlot={ handleSelectSlot }
+              onHeadingClick={ handleHeadingClick }
+              longPressThreshold={ longPressThreshold }
+              resizable={ resizable }
+              showAllEvents={ showAllEvents }
             />
-          </div>
-        )) }
-      </div>
-      { weeks.map((week, weekIndex) => {
-
-        const weeksEvents = [...(events || [])].filter(event => inRange(
-          event,
-          week[0],
-          week[week.length - 1],
-          accessors,
-          localizer
-        ))
-
-        const sorted = sortWeekEvents(weeksEvents, accessors, localizer)
-
-        return (
-          <DateContentRow
-            key={ weekIndex }
-            ref={ slotRowRef }
-            className="rbc-month-row"
-            container={ getContainer }
-            range={ week }
-            events={ sorted }
-            maxRows={ showAllEvents ? Infinity : state.rowLimit }
+          )
+        }) }
+        { popup && state.overlay && (
+          <PopOverlay
+            overlay={ state.overlay }
             selected={ selected }
-            selectable={ selectable }
-            renderForMeasure={ state.needLimitMeasure }
-            onShowMore={ handleShowMore }
-            onSelect={ handleSelectEvent }
-            onDoubleClick={ handleDoubleClickEvent }
-            onKeyPress={ handleKeyPressEvent }
-            onSelectSlot={ handleSelectSlot }
-            onHeadingClick={ handleHeadingClick }
-            longPressThreshold={ longPressThreshold }
-            resizable={ resizable }
-            showAllEvents={ showAllEvents }
+            popupOffset={ popupOffset }
+            ref={ monthContainerRef }
+            handleSelectEvent={ handleSelectEvent }
+            handleDoubleClickEvent={ handleDoubleClickEvent }
+            handleKeyPressEvent={ handleKeyPressEvent }
+            handleDragStart={ handleDragStart }
+            overlayDisplay={ overlayDisplay }
+            onHide={ hideOverlay }
           />
-        )
-      }) }
-      { popup && state.overlay && (
-        <PopOverlay
-          overlay={ state.overlay }
-          selected={ selected }
-          popupOffset={ popupOffset }
-          ref={ containerRef }
-          handleSelectEvent={ handleSelectEvent }
-          handleDoubleClickEvent={ handleDoubleClickEvent }
-          handleKeyPressEvent={ handleKeyPressEvent }
-          handleDragStart={ handleDragStart }
-          overlayDisplay={ overlayDisplay }
-          onHide={ hideOverlay }
-        />
-      ) }
-    </div>
+        ) }
+      </div>
+    </MonthViewContextProvider>
   )
 }
 

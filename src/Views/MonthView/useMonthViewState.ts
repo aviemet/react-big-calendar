@@ -1,7 +1,7 @@
 import { CalendarEvent } from "@/utils/components"
 import { useReducer } from "react"
 
-interface MonthViewState<TEvent extends CalendarEvent = CalendarEvent> {
+export interface MonthViewState<TEvent extends CalendarEvent = CalendarEvent> {
   rowLimit: number
   needLimitMeasure: boolean
   date?: Date
@@ -14,14 +14,17 @@ interface MonthViewState<TEvent extends CalendarEvent = CalendarEvent> {
   } | null
 }
 
-type MonthViewAction =
+export type MonthViewAction<TEvent extends CalendarEvent = CalendarEvent> =
   | { type: "SET_MEASURE_LIMIT", needLimitMeasure: boolean }
   | { type: "SET_DATE", date: Date }
-  | { type: "SET_OVERLAY", overlay: MonthViewState["overlay"] }
-  | { type: "RESET_MEASURE" }
+  | { type: "SET_OVERLAY", overlay: MonthViewState<TEvent>["overlay"] }
+  | { type: "RESET_MEASURE", rowLimit: number }
   | { type: "HIDE_OVERLAY" }
 
-function monthViewReducer(state: MonthViewState, action: MonthViewAction): MonthViewState {
+function monthViewReducer<TEvent extends CalendarEvent = CalendarEvent>(
+  state: MonthViewState<TEvent>,
+  action: MonthViewAction<TEvent>
+): MonthViewState<TEvent> {
   switch(action.type) {
     case "SET_MEASURE_LIMIT":
       return {
@@ -42,7 +45,7 @@ function monthViewReducer(state: MonthViewState, action: MonthViewAction): Month
       return {
         ...state,
         needLimitMeasure: false,
-        rowLimit: 5,
+        rowLimit: action.rowLimit,
       }
     case "HIDE_OVERLAY":
       return {
@@ -54,9 +57,9 @@ function monthViewReducer(state: MonthViewState, action: MonthViewAction): Month
   }
 }
 
-export const useMonthViewState = (date: Date) => {
-  const [state, dispatch] = useReducer(monthViewReducer, {
-    date,
+export const useMonthViewState = <TEvent extends CalendarEvent = CalendarEvent>(date?: Date) => {
+  const [state, dispatch] = useReducer(monthViewReducer<TEvent>, {
+    date: date || new Date(),
     rowLimit: 5,
     needLimitMeasure: true,
     overlay: null,

@@ -1,30 +1,45 @@
 import isEqual from "lodash/isEqual"
 import { CalendarEvent } from "./components"
 
+type Box = {
+  top: number
+  bottom: number
+  right: number
+  left: number
+  x: number
+  y: number
+}
+
 export function isSelected(event: CalendarEvent, selected: CalendarEvent | null) {
   if(!event || selected === null) return false
   return isEqual(event, selected)
 }
 
-export function slotWidth(rowBox: { right: number, left: number }, slots: number) {
+export function slotWidth(rowBox: Box, slots: number) {
   let rowWidth = rowBox.right - rowBox.left
   let cellWidth = rowWidth / slots
 
   return cellWidth
 }
 
-export function getSlotAtX(rowBox: { right: number, left: number }, x: number, rtl: boolean, slots: number) {
+export function getSlotAtX(rowBox: Box, x: number, rtl: boolean, slots: number) {
   const cellWidth = slotWidth(rowBox, slots)
   return rtl
     ? slots - 1 - Math.floor((x - rowBox.left) / cellWidth)
     : Math.floor((x - rowBox.left) / cellWidth)
 }
 
-export function pointInBox(box: { right: number, left: number, top: number, bottom: number }, { x, y }: { x: number, y: number }) {
+export function pointInBox(box: Box, { x, y }: { x: number, y: number }) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
 }
 
-export function dateCellSelection(start: { x: number, y: number }, rowBox: { right: number, left: number }, box: { x: number, y: number }, slots: number, rtl: boolean) {
+export function dateCellSelection(
+  start: Box,
+  rowBox: Box,
+  box: Box,
+  slots: number,
+  rtl: boolean
+) {
   let startIndex = -1
   let endIndex = -1
   let lastSlotIndex = slots - 1

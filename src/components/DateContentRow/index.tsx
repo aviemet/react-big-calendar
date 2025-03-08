@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react"
+import React, { forwardRef, useEffect, useRef } from "react"
 import getHeight from "dom-helpers/height"
 import qsa from "dom-helpers/querySelectorAll"
 import BackgroundCells from "./BackgroundCells"
@@ -10,8 +10,9 @@ import Dummy from "./Dummy"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
-import { CalendarEvent } from "@/utils/components"
+import { CalendarEvent, SlotInfo } from "@/utils/components"
 import { DateHeaderProps } from "@/components/DateHeader"
+import { useMonthViewContext } from "@/Views/MonthView"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -26,7 +27,7 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   longPressThreshold?: number
   onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   showAllEvents?: boolean
-  onSelectSlot?: (range: Date[], slot: { start: number, end: number }) => void
+  onSelectSlot?: (range: Date[], slot: SlotInfo) => void
   onSelect?: (event: TEvent) => void
   onSelectEnd?: (event: TEvent) => void
   onSelectStart?: (event: TEvent) => void
@@ -40,15 +41,13 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   className?: string
 }
 
-const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObject<HTMLDivElement>) => {
+const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, ref) => {
   const {
     events,
     range,
     resizable,
     resourceId,
     renderForMeasure,
-    renderHeader,
-    container,
     selected,
     selectable,
     longPressThreshold,
@@ -61,7 +60,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     onDoubleClick,
     onKeyPress,
     onHeadingClick,
-    dayPropGetter,
     isAllDay,
     minRows = 0,
     maxRows = Infinity,
@@ -72,18 +70,33 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     weekWrapper: WeekWrapper,
   } } = useCalendarContext()
 
+  const { setRowLimit, containerHeight, needLimitMeasure } = useMonthViewContext()
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headingRowRef = useRef<HTMLDivElement>(null)
+  const eventRowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if(!eventRowRef.current
+      || !headingRowRef.current
+      || !containerRef.current
+    ) return
+
+    const eventHeight = getHeight(eventRowRef.current)
+    const headingHeight = headingRowRef.current
+      ? getHeight(headingRowRef.current)
+      : 0
+    const eventSpace = getHeight(containerRef.current) - headingHeight
+
+    setRowLimit(Math.max(Math.floor(eventSpace / eventHeight), 1))
+  }, [needLimitMeasure, containerHeight, setRowLimit])
+
   const slotMetrics = useDateSlotMetrics({
     range,
     events,
     maxRows,
     minRows,
   })
-
-  console.log(slotMetrics)
-
-  const containerRef = useRef<HTMLDivElement>(null)
-  const headingRowRef = useRef<HTMLDivElement>(null)
-  const eventRowRef = useRef<HTMLDivElement>(null)
 
   if(renderForMeasure) {
     return (
@@ -116,17 +129,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
     return container ? container() : containerRef.current
   }
 
-  /* Guessing this only gets called on the dummyRow */
-  const getRowLimit = () => {
-    const eventHeight = getHeight(eventRowRef.current)
-    const headingHeight = headingRowRef?.current
-      ? getHeight(headingRowRef.current)
-      : 0
-    const eventSpace = getHeight(containerRef.current) - headingHeight
-
-    return Math.max(Math.floor(eventSpace / eventHeight), 1)
-  }
-
   let ScrollableWeekComponent = showAllEvents
     ? ScrollableWeekWrapper
     : NoopWrapper
@@ -155,7 +157,6 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
       />
 
       <div
-        ref={ ref }
         role="row"
         className={ clsx("rbc-row-content", {
           "rbc-row-content-scrollable": showAllEvents,
@@ -183,7 +184,7 @@ const DateContentRow = forwardRef((props: DateContentRowProps, ref: React.RefObj
                   date={ date }
                   drilldownView={ drilldownView }
                   isOffRange={ isOffRange }
-                  onDrillDown={ onHeadingClick }
+                  onDrillDown={ (e) => onHeadingClick?.(date, drilldownView, e) }
                 />
               </div>
             </>
