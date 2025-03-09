@@ -1,13 +1,13 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useMemo, useState } from "react"
 
-import events from '../../resources/events'
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import Card from '../../resources/Card'
-import DemoLink from '../../DemoLink.component'
+import events from "../../resources/events"
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import Card from "../../resources/Card"
+import DemoLink from "../../DemoLink.component"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
-import withDragAndDrop from '../../../src/addons/dragAndDrop'
+import { withDragAndDrop } from "../../../src/addons/dragAndDrop"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
-import '../../../src/addons/dragAndDrop/styles.scss'
+import "../../../src/addons/dragAndDrop/styles.scss"
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -27,15 +27,15 @@ export default function DnDOutsideResource({ localizer }) {
   const eventPropGetter = useCallback(
     (event) => ({
       ...(event.isDraggable
-        ? { className: 'isDraggable' }
-        : { className: 'nonDraggable' }),
+        ? { className: "isDraggable" }
+        : { className: "nonDraggable" }),
     }),
     []
   )
   //,
   const handleDragStart = useCallback((event) => setDraggedEvent(event), [])
 
-  const dragFromOutsideItem = useCallback(() => draggedEvent === 'undroppable' ? null : draggedEvent, [draggedEvent])
+  const dragFromOutsideItem = useCallback(() => draggedEvent === "undroppable" ? null : draggedEvent, [draggedEvent])
 
   const customOnDragOverFromOutside = useCallback(
     (dragEvent) => {
@@ -44,7 +44,7 @@ export default function DnDOutsideResource({ localizer }) {
       // onDragOver can optionally be passed to conditionally
       // allow draggable items to be dropped on cal, based on
       // whether event.preventDefault is called
-      if(draggedEvent !== 'undroppable') {
+      if(draggedEvent !== "undroppable") {
         dragEvent.preventDefault()
       }
     },
@@ -85,7 +85,7 @@ export default function DnDOutsideResource({ localizer }) {
 
   const onDropFromOutside = useCallback(
     ({ start, end, allDay: isAllDay }) => {
-      if(draggedEvent === 'undroppable') {
+      if(draggedEvent === "undroppable") {
         setDraggedEvent(null)
         return
       }
@@ -146,7 +146,7 @@ export default function DnDOutsideResource({ localizer }) {
             )) }
             <div
               draggable="true"
-              onDragStart={ () => handleDragStart('undroppable') }
+              onDragStart={ () => handleDragStart("undroppable") }
             >
               Draggable but not for calendar.
             </div>

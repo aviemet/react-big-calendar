@@ -1,10 +1,9 @@
-import React from 'react'
-import { DateTime } from 'luxon'
-import { Calendar, luxonLocalizer } from '../../src'
-import Luxon from './exampleCode/luxon'
+import { DateTime } from "luxon"
+import { Calendar, luxonLocalizer } from "../../src"
+import Luxon from "./exampleCode/luxon"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {

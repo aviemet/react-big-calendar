@@ -1,5 +1,5 @@
 import invariant from "invariant"
-import VIEWS, { ViewComponent } from "../Views"
+import { VIEW_COMPONENTS, type ViewComponent } from "@/Views"
 import { DateLocalizer } from "@/localizers"
 
 export let navigate = {
@@ -22,11 +22,11 @@ export type MoveDateOptions = {
 // TODO: Removed extra props passthrough because it was making the types difficult
 // need to assess if passing props to the ViewComponent static methods is required
 
-export default function moveDate(
+export const moveDate = (
   View: ViewComponent,
   { action, date, today, ...props }: MoveDateOptions
-) {
-  View = typeof View === "string" ? VIEWS[View] : View
+) => {
+  View = typeof View === "string" ? VIEW_COMPONENTS[View] : View
 
   switch(action) {
     case navigate.TODAY:

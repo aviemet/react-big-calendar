@@ -1,6 +1,6 @@
 // TODO: fix the globalizeLocalizer to work with globalize 1.x
 import * as dates from "../utils/dates"
-import oldGlobalize from "./oldGlobalize"
+import { globalize as oldGlobalize } from "./oldGlobalize"
 import { DateLocalizer } from "."
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
@@ -92,4 +92,4 @@ const globalizeLocalizer = (globalize: object): DateLocalizer => {
   })
 }
 
-export default globalizeLocalizer
+export { globalizeLocalizer }

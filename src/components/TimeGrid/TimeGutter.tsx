@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo, forwardRef } from "react"
 import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
-import TimeSlotGroup from "./TimeSlotGroup"
+import { TimeSlotGroup } from "./TimeSlotGroup"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
 import { Resource } from "@/utils/Resources"
@@ -105,4 +105,4 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
   )
 })
 
-export default TimeGutter
+export { TimeGutter }

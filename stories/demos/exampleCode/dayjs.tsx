@@ -1,8 +1,8 @@
-import React, { Fragment, useMemo } from 'react'
-import dayjs from 'dayjs'
-import { Calendar, Views, dayjsLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
+import React, { Fragment, useMemo } from "react"
+import dayjs from "dayjs"
+import { Calendar, Views, dayjsLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
 
 // Note that the dayjsLocalizer extends Day.js with the following plugins:
 // - IsBetween
@@ -14,7 +14,7 @@ import events from '../../resources/events'
 // - UTC
 
 // add optional time zone support
-import timezone from 'dayjs/plugin/timezone'
+import timezone from "dayjs/plugin/timezone"
 dayjs.extend(timezone)
 
 const djLocalizer = dayjsLocalizer(dayjs)
@@ -22,7 +22,7 @@ const djLocalizer = dayjsLocalizer(dayjs)
 const ColoredDateCellWrapper = ({ children }) =>
   React.cloneElement(React.Children.only(children), {
     style: {
-      backgroundColor: 'lightblue',
+      backgroundColor: "lightblue",
     },
   })
 
@@ -33,7 +33,7 @@ export default function Dayjs({ ...props }) {
         timeslotWrapper: ColoredDateCellWrapper,
       },
       defaultDate: new Date(2015, 3, 1),
-      max: dayjs().endOf('day').subtract(1, 'hours').toDate(),
+      max: dayjs().endOf("day").subtract(1, "hours").toDate(),
       views: Object.keys(Views).map((k) => Views[k]),
     }),
     []

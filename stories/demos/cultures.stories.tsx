@@ -1,10 +1,9 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import CultureDemo from './exampleCode/cultures'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import CultureDemo from "./exampleCode/cultures"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {
@@ -18,4 +17,4 @@ const localizer = momentLocalizer(moment)
 export function Example5() {
   return <CultureDemo localizer={ localizer } />
 }
-Example5.storyName = 'Localization'
+Example5.storyName = "Localization"

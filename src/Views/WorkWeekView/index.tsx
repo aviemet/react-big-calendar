@@ -1,6 +1,6 @@
 import { BaseViewProps, createViewComponent, ViewComponent } from "@/Views"
-import TimeGrid from "@/components/TimeGrid"
-import WeekView from "../WeekView"
+import { TimeGrid } from "@/components/TimeGrid"
+import { WeekView } from "../WeekView"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
@@ -20,7 +20,7 @@ export interface WorkWeekProps<TEvent extends CalendarEvent = CalendarEvent> ext
   eventOffset?: number
 }
 
-const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
+const WorkWeekViewComponent = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekProps<TEvent>) => {
   const { localizer, date } = useCalendarContext()
 
   const {
@@ -49,7 +49,7 @@ const WorkWeek = <TEvent extends CalendarEvent = CalendarEvent>(props: WorkWeekP
   )
 }
 
-export default createViewComponent(WorkWeek, {
+export const WorkWeekView = createViewComponent(WorkWeekViewComponent, {
   range: workWeekRange,
   navigate: WeekView.navigate,
   title: (date, { localizer }) => {

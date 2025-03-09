@@ -1,14 +1,12 @@
-import React from 'react'
-
-import clsx from 'clsx'
-import { Navigate as navigate } from '../../../src'
+import clsx from "clsx"
+import { Navigate as navigate } from "../../../src"
 
 function ViewNamesGroup({ views: viewNames, view, messages, onView }) {
   return viewNames.map((name) => (
     <button
       type="button"
       key={ name }
-      className={ clsx({ 'rbc-active': view === name }) }
+      className={ clsx({ "rbc-active": view === name }) }
       onClick={ () => onView(name) }
     >
       { messages[name] }
@@ -44,7 +42,7 @@ export default function CustomToolbar({
 
       <span className="rbc-toolbar-label">{ label }</span>
 
-      <span className={ clsx('rbc-btn-group', 'examples--custom-toolbar') }>
+      <span className={ clsx("rbc-btn-group", "examples--custom-toolbar") }>
         <button
           type="button"
           onClick={ () => onNavigate(navigate.PREVIOUS) }

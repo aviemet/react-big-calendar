@@ -1,13 +1,12 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './rtl.mdx'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./rtl.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -17,7 +16,7 @@ export default {
         type: null,
       },
     },
-    rtl: 'boolean',
+    rtl: "boolean",
   },
   parameters: {
     docs: {
@@ -34,21 +33,21 @@ const Template = (args) => (
 )
 
 export const RightToLeft = Template.bind({})
-RightToLeft.storyName = 'rtl'
+RightToLeft.storyName = "rtl"
 RightToLeft.args = {
   defaultDate: new Date(2015, 3, 13),
   events: demoEvents,
   localizer: mLocalizer,
   rtl: true,
   messages: {
-    week: 'أسبوع',
-    work_week: 'أسبوع العمل',
-    day: 'يوم',
-    month: 'شهر',
-    previous: 'سابق',
-    next: 'التالي',
-    today: 'اليوم',
-    agenda: 'جدول أعمال',
+    week: "أسبوع",
+    work_week: "أسبوع العمل",
+    day: "يوم",
+    month: "شهر",
+    previous: "سابق",
+    next: "التالي",
+    today: "اليوم",
+    agenda: "جدول أعمال",
 
     showMore: (total) => `+${total} إضافي`,
   },

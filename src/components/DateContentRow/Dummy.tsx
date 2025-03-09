@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
-import { DateHeaderProps } from "@/components/DateHeader"
+import { ViewHeaderProps } from ".."
 
 interface DummyProps {
   className?: string
@@ -9,7 +9,7 @@ interface DummyProps {
   showAllEvents?: boolean
   headingRowRef: React.RefObject<HTMLDivElement>
   eventRowRef: React.RefObject<HTMLDivElement>
-  onHeadingClick?: (date: Date, drilldownView: DateHeaderProps, e: React.MouseEvent<HTMLElement>) => void
+  onHeadingClick?: (date: Date, drilldownView: ViewHeaderProps, e: React.MouseEvent<HTMLElement>) => void
 }
 
 const Dummy = forwardRef<HTMLDivElement, DummyProps>((
@@ -68,5 +68,5 @@ const Dummy = forwardRef<HTMLDivElement, DummyProps>((
   )
 })
 
-export default Dummy
+export { Dummy }
 

@@ -1,14 +1,16 @@
 import { DateLocalizer } from "@/localizers"
 import { defaults, omit } from "lodash-es"
 import { Accessors } from "./accessors"
-import { HeaderProps } from "@/components/Header"
-import DateHeader, { DateHeaderProps } from "@/components/DateHeader"
-import ResourceHeader, { ResourceHeaderProps } from "@/components/ResourceHeader"
+import { DateHeader } from "@/components/DateHeader"
+import { ResourceHeader, ResourceHeaderProps } from "@/components/ResourceHeader"
 import { ViewName } from "@/Views"
-import NoopWrapper from "@/components/NoopWrapper"
-import Header from "@/components/Header"
-import DayColumnWrapper from "@/components/DayColumnWrapper"
+import { NoopWrapper } from "@/components/NoopWrapper"
+import { Header } from "@/components/Header"
+import { DayColumnWrapper } from "@/components/DayColumnWrapper"
 import { Resource } from "./Resources"
+import { Toolbar, ToolbarProps } from "@/components/Toolbar"
+import { ViewHeaderProps } from "@/components"
+import { WeekdayHeader } from "@/components/WeekdayHeader"
 
 export interface CalendarEvent {
   allDay?: boolean | undefined
@@ -107,62 +109,55 @@ export interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent>
 }
 
 interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  event?: React.ComponentType<EventProps<TEvent>> | undefined
-  backgroundEventWrapper?: React.ComponentType<EventWrapperProps<TEvent>> | undefined
-  eventWrapper?: React.ComponentType<EventWrapperProps<TEvent>> | undefined
-  eventContainerWrapper?: React.ComponentType | undefined
-  dateCellWrapper?: React.ComponentType<DateCellWrapperProps> | undefined
-  dayColumnWrapper?: React.ComponentType | undefined
-  weekWrapper?: React.ComponentType | undefined
-  timeslotWrapper?: React.ComponentType | undefined
-  timeGutterHeader?: React.ComponentType | undefined
-  timeGutterWrapper?: React.ComponentType | undefined
-  toolbar?: React.ComponentType | undefined
+  event: React.ComponentType<EventProps<TEvent>>
+  backgroundEventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
+  eventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
+  eventContainerWrapper: React.ComponentType
+  dateCellWrapper: React.ComponentType<DateCellWrapperProps>
+  dayColumnWrapper: React.ComponentType
+  weekWrapper: React.ComponentType
+  timeslotWrapper: React.ComponentType
+  timeGutterHeader: React.ComponentType
+  timeGutterWrapper: React.ComponentType
+  toolbar: React.ComponentType<ToolbarProps>
 
   // components used as a header for each column in the TimeGridHeader
-  header?: React.ComponentType<HeaderProps> | undefined
-  resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>> | undefined
+  header?: React.ComponentType<ViewHeaderProps>
+  resourceHeader?: React.ComponentType<ResourceHeaderProps<TResource>>
   showMore?: React.ComponentType<ShowMoreProps<TEvent>>
 }
 
 interface ViewOverrideComponents<TEvent extends CalendarEvent = CalendarEvent> {
-  agenda?:
-			| {
-			  date?: React.ComponentType | undefined
-			  time?: React.ComponentType | undefined
-			  event?: React.ComponentType<EventProps<TEvent>> | undefined
-			}
-			| undefined
-  day?:
-			| {
-			  header?: React.ComponentType<HeaderProps> | undefined
-			  event?: React.ComponentType<EventProps<TEvent>> | undefined
-			}
-			| undefined
-  week?:
-			| {
-			  header?: React.ComponentType<HeaderProps> | undefined
-			  event?: React.ComponentType<EventProps<TEvent>> | undefined
-			}
-			| undefined
-  work_week?:
-			| {
-			  header?: React.ComponentType<HeaderProps> | undefined
-			  event?: React.ComponentType<EventProps<TEvent>> | undefined
-			}
-			| undefined
-  month?:
-			| {
-			  header?: React.ComponentType<HeaderProps> | undefined
-			  dateHeader?: React.ComponentType<DateHeaderProps> | undefined
-			  event?: React.ComponentType<EventProps<TEvent>> | undefined
-			}
-			| undefined
+  agenda?: {
+    date?: React.ComponentType
+    time?: React.ComponentType
+    event?: React.ComponentType<EventProps<TEvent>>
+  }
+  day?: {
+    header?: React.ComponentType<ViewHeaderProps>
+    dateHeader?: React.ComponentType<ViewHeaderProps>
+    event?: React.ComponentType<EventProps<TEvent>>
+  }
+  week?:{
+    header?: React.ComponentType<ViewHeaderProps>
+    dateHeader?: React.ComponentType<ViewHeaderProps>
+    event?: React.ComponentType<EventProps<TEvent>>
+  }
+  work_week?:{
+    header?: React.ComponentType<ViewHeaderProps>
+    dateHeader?: React.ComponentType<ViewHeaderProps>
+    event?: React.ComponentType<EventProps<TEvent>>
+  }
+  month?: {
+    header?: React.ComponentType<ViewHeaderProps>
+    dateHeader?: React.ComponentType<ViewHeaderProps>
+    event?: React.ComponentType<EventProps<TEvent>>
+  }
 }
 
 export interface Components<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends CommonComponents<TEvent, TResource>, ViewOverrideComponents<TEvent> {}
 
-export type CompiledComponents<TEvent extends object = CalendarEvent, TResource extends object = object> = CommonComponents<TEvent, TResource> & (
+export type CompiledComponents<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = CommonComponents<TEvent, TResource> & (
   ViewOverrideComponents<TEvent>["agenda"] &
   ViewOverrideComponents<TEvent>["day"] &
   ViewOverrideComponents<TEvent>["week"] &
@@ -179,9 +174,12 @@ const defaultComponents: CommonComponents = {
   weekWrapper: NoopWrapper,
   timeslotWrapper: NoopWrapper,
   timeGutterWrapper: NoopWrapper,
+  timeGutterHeader: NoopWrapper,
+  toolbar: Toolbar,
 
   header: Header,
   resourceHeader: ResourceHeader,
+  event: NoopWrapper,
 }
 
 const defaultViewOverrideComponents: ViewOverrideComponents = {
@@ -192,14 +190,17 @@ const defaultViewOverrideComponents: ViewOverrideComponents = {
   },
   day: {
     header: Header,
+    dateHeader: WeekdayHeader,
     event: NoopWrapper,
   },
   week: {
     header: Header,
+    dateHeader: WeekdayHeader,
     event: NoopWrapper,
   },
   work_week: {
     header: Header,
+    dateHeader: WeekdayHeader,
     event: NoopWrapper,
   },
   month: {
@@ -209,8 +210,8 @@ const defaultViewOverrideComponents: ViewOverrideComponents = {
   },
 }
 
-export const initComponents = <TEvent extends object = CalendarEvent, TResource extends object = object>(
-  components: Components<TEvent, TResource> | undefined,
+export const initComponents = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(
+  components: Partial<Components<TEvent, TResource>> | undefined,
   view: ViewName,
   viewNames: string[]
 ) => {

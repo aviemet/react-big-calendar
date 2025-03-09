@@ -17,4 +17,4 @@ const DayColumnWrapper = forwardRef<HTMLDivElement, DayColumnWrapperProps>((
   )
 })
 
-export default DayColumnWrapper
+export { DayColumnWrapper }

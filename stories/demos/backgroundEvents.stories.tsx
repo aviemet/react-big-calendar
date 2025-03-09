@@ -1,10 +1,9 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import BackgroundCalendar from './exampleCode/backgroundEvents'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import BackgroundCalendar from "./exampleCode/backgroundEvents"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {
@@ -18,4 +17,4 @@ const localizer = momentLocalizer(moment)
 export function Example10() {
   return <BackgroundCalendar localizer={ localizer } />
 }
-Example10.storyName = 'Background Events'
+Example10.storyName = "Background Events"

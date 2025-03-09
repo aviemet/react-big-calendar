@@ -1,14 +1,13 @@
-
-import React from "react"
 import { DnDContext } from "./DnDContext"
 import { scrollParent, scrollTop } from "dom-helpers"
 import qsa from "dom-helpers/cjs/querySelectorAll"
 
-import Selection, {
+import {
+  Selection,
   getBoundsForNode,
   getEventNodeFromPoint,
 } from "@/utils/selection"
-import TimeGridEvent from "@/components/TimeGrid/TimeGridEvent"
+import { TimeGridEvent } from "@/components/TimeGrid/TimeGridEvent"
 import { dragAccessors, eventTimes, pointInColumn } from "./common"
 
 class EventContainerWrapper extends React.Component {
@@ -332,4 +331,4 @@ class EventContainerWrapper extends React.Component {
   }
 }
 
-export default EventContainerWrapper
+export { EventContainerWrapper }

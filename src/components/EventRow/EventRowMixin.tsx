@@ -1,5 +1,5 @@
 import { CalendarEvent } from "@/utils/components"
-import EventCell from "./EventCell"
+import { EventCell } from "./EventCell"
 import { isSelected } from "@/utils/eventSelectionHelpers"
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 

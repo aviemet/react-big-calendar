@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/react'
-import '../stories/resources/main.scss'
+import type { Preview } from "@storybook/react"
+import "../stories/resources/main.scss"
 
 const preview: Preview = {
   parameters: {
@@ -18,17 +18,17 @@ const preview: Preview = {
     // Updated sorting configuration syntax remains similar
     storySort: {
       order: [
-        'About Big Calendar',
-        'About Our Examples',
-        'props',
-        'Examples',
-        'Guides',
-        'Addons',
-        ['Introduction', 'props'],
+        "About Big Calendar",
+        "About Our Examples",
+        "props",
+        "Examples",
+        "Guides",
+        "Addons",
+        ["Introduction", "props"],
       ],
     },
     // Default view mode remains the same
-    viewMode: 'docs',
+    viewMode: "docs",
   },
 }
 

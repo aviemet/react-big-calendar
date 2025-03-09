@@ -1,11 +1,11 @@
 import * as DayEventLayout from "@/utils/DayEventLayout"
-import TimeGridEvent from "./TimeGridEvent"
+import { TimeGridEvent } from "./TimeGridEvent"
 import { isSelected } from "@/utils/eventSelectionHelpers"
-import { SlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarProps, useCalendarContext } from "@/components/Calendar"
 import { Resource } from "@/utils/Resources"
-import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/types"
 import { CalendarEvent } from "@/utils/components"
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -16,7 +16,7 @@ interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TReso
   timeslots: number
   dayLayoutAlgorithm: DayLayoutAlgorithm
   resizable: boolean
-  slotMetrics: SlotMetrics
+  slotMetrics: TimeSlotMetrics
   onSelectEvent: CalendarProps["onSelectEvent"]
   onDoubleClickEvent: CalendarProps["onDoubleClickEvent"]
   onKeyPressEvent: CalendarProps["onKeyPressEvent"]
@@ -105,4 +105,4 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   })
 }
 
-export default EventsWrapper
+export { EventsWrapper }

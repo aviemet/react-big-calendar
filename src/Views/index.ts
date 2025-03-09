@@ -1,10 +1,9 @@
-import React from "react"
 import { NavigateAction } from "../utils/move"
-import MonthView from "./MonthView"
-import WeekView from "./WeekView"
-import WorkWeekView from "./WorkWeekView"
-import DayView from "./DayView"
-import AgendaView from "./AgendaView"
+import { MonthView } from "./MonthView"
+import { WeekView } from "./WeekView"
+import { WorkWeekView } from "./WorkWeekView"
+import { DayView } from "./DayView"
+import { AgendaView } from "./AgendaView"
 import { DateLocalizer, DateRange } from "../localizers"
 import { CalendarProps } from "../components/Calendar"
 import { Resource } from "@/utils/Resources"
@@ -49,12 +48,12 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   onKeyPressEvent?: ((...args: any[]) => any) | undefined
   onDrillDown?: ((date: Date, view: ViewName | string) => void) | undefined
   getDrilldownView?:
-      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => string)
+      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => ViewName | string)
       | null
       | undefined
   dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent>
   className?: string | undefined
-  [key: string]: any
+  // [key: string]: any
 }
 
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {
@@ -100,7 +99,6 @@ const VIEW_COMPONENTS: Record<ViewName, ViewComponent> = {
   [views.AGENDA]: AgendaView,
 }
 
-export default VIEW_COMPONENTS
-
+export { VIEW_COMPONENTS }
 
 

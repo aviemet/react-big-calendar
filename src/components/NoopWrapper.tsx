@@ -4,4 +4,4 @@ function NoopWrapper({ children, ...props }: PropsWithChildren<any>) {
   return children
 }
 
-export default NoopWrapper
+export { NoopWrapper }

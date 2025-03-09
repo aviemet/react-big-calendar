@@ -1,5 +1,6 @@
-import sortBy from "lodash/sortBy"
-import LayoutAlgorithmEvent, { DayLayoutFunction } from "./LayoutAlgorithmEvent"
+import { sortBy } from "lodash-es"
+import { LayoutAlgorithmEvent, DayLayoutFunction } from "./LayoutAlgorithmEvent"
+
 /**
  * Return true if event a and b is considered to be on the same row.
  */
@@ -42,7 +43,7 @@ function sortByRender(events: LayoutAlgorithmEvent[]) {
   return sorted
 }
 
-const getStyledEvents: DayLayoutFunction = ({
+export const overlap: DayLayoutFunction = ({
   events,
   minimumStartDifference,
   slotMetrics,
@@ -109,5 +110,3 @@ const getStyledEvents: DayLayoutFunction = ({
     },
   }))
 }
-
-export default getStyledEvents

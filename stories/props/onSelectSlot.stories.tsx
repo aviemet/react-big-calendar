@@ -1,13 +1,13 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './onSelectSlot.mdx'
+import React, { useCallback, useRef, useEffect, useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./onSelectSlot.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -63,4 +63,4 @@ export function OnSelectSlot() {
     </div>
   )
 }
-OnSelectSlot.storyName = 'onSelectSlot'
+OnSelectSlot.storyName = "onSelectSlot"

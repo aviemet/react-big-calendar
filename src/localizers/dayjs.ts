@@ -1,4 +1,13 @@
-import { DateLocalizer, EventComparison, EventRangeComparison, RangeFunction, DateRangeFormatFunction, DateFormatFunction } from "."
+import {
+  DateLocalizer,
+  EventComparison,
+  EventRangeComparison,
+  RangeFunction,
+  DateRangeFormatFunction,
+  DateFormatFunction,
+  Culture,
+  Formats,
+} from "."
 
 // import dayjs plugins
 // Note that the timezone plugin is not imported here
@@ -11,7 +20,6 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import minMax from "dayjs/plugin/minMax"
 import utc from "dayjs/plugin/utc"
 
-import { Culture, Formats } from "."
 import { Unit } from "date-arithmetic"
 import dayjs, { Dayjs, OpUnitType, ManipulateType } from "dayjs"
 
@@ -87,7 +95,7 @@ type DayjsLib = typeof dayjs & {
 declare module "dayjs" {
   // eslint-disable-next-line no-unused-vars
   interface Dayjs {
-    tz(timezone?: string): any  // Using any since we only need $x.$timezone internally
+    tz(timezone?: string): any // Using any since we only need $x.$timezone internally
   }
 }
 
@@ -450,4 +458,4 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
   })
 }
 
-export default dayjsLocalizer
+export { dayjsLocalizer }

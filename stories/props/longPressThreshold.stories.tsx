@@ -1,13 +1,12 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './longPressThreshold.mdx'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./longPressThreshold.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -17,7 +16,7 @@ export default {
         type: null,
       },
     },
-    longPressThreshold: 'number',
+    longPressThreshold: "number",
   },
   parameters: {
     docs: {
@@ -33,7 +32,7 @@ const Template = (args) => (
 )
 
 export const LongPressThreshold = Template.bind({})
-LongPressThreshold.storyName = 'longPressThreshold'
+LongPressThreshold.storyName = "longPressThreshold"
 LongPressThreshold.args = {
   defaultDate: new Date(2015, 3, 13),
   events: demoEvents,

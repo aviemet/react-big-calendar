@@ -1,8 +1,7 @@
-import React from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from "@storybook/addon-actions"
 
-import demoEvents from './resources/events'
-import { Calendar } from '../src'
+import demoEvents from "./resources/events"
+import { Calendar } from "../src"
 
 import {
   events,
@@ -10,13 +9,13 @@ import {
   Views,
   resourceEvents,
   resources,
-} from './helpers'
+} from "./helpers"
 
-import createEvents from './helpers/createEvents'
-import customComponents from './resources/customComponents'
+import createEvents from "./helpers/createEvents"
+import customComponents from "./resources/customComponents"
 
 export default {
-  title: 'Additional Examples',
+  title: "Additional Examples",
   component: Calendar,
   decorators: [
     (Story) => (
@@ -30,7 +29,7 @@ export default {
 const Template = (args) => <BaseCalendar { ...args } />
 
 export const ComplexDayViewLayout = Template.bind({})
-ComplexDayViewLayout.storyName = 'complex day view layout'
+ComplexDayViewLayout.storyName = "complex day view layout"
 ComplexDayViewLayout.args = {
   defaultView: Views.DAY,
   defaultDate: new Date(),
@@ -41,11 +40,11 @@ ComplexDayViewLayout.args = {
 const TimeGutter = () => <p>Custom gutter text</p>
 
 export const CustomTimeGutterHeader = Template.bind({})
-CustomTimeGutterHeader.storyName = 'custom TimeGutter header'
+CustomTimeGutterHeader.storyName = "custom TimeGutter header"
 CustomTimeGutterHeader.args = {
   popup: true,
   events: demoEvents,
-  onSelectEvent: action('event selected'),
+  onSelectEvent: action("event selected"),
   defaultDate: new Date(2015, 3, 1),
   defaultView: Views.WEEK,
   views: [Views.WEEK, Views.DAY],
@@ -55,11 +54,11 @@ CustomTimeGutterHeader.args = {
 }
 
 export const CustomTimeGutterWrapper = Template.bind({})
-CustomTimeGutterWrapper.storyName = 'custom TimeGutter wrapper'
+CustomTimeGutterWrapper.storyName = "custom TimeGutter wrapper"
 CustomTimeGutterWrapper.args = {
   popup: true,
   events: demoEvents,
-  onSelectEvent: action('event selected'),
+  onSelectEvent: action("event selected"),
   defaultDate: new Date(2015, 3, 1),
   defaultView: Views.WEEK,
   views: [Views.WEEK, Views.DAY],
@@ -69,7 +68,7 @@ CustomTimeGutterWrapper.args = {
 }
 
 export const CustomDateCellWrapper = Template.bind({})
-CustomDateCellWrapper.storyName = 'add custom dateCellWrapper'
+CustomDateCellWrapper.storyName = "add custom dateCellWrapper"
 CustomDateCellWrapper.args = {
   defaultView: Views.MONTH,
   events,
@@ -79,7 +78,7 @@ CustomDateCellWrapper.args = {
 }
 
 export const CustomTimeSlotWrapper = Template.bind({})
-CustomTimeSlotWrapper.storyName = 'add custom timeslotWrapper'
+CustomTimeSlotWrapper.storyName = "add custom timeslotWrapper"
 CustomTimeSlotWrapper.args = {
   defaultView: Views.DAY,
   events,
@@ -89,7 +88,7 @@ CustomTimeSlotWrapper.args = {
 }
 
 export const CustomEventWrapper = Template.bind({})
-CustomEventWrapper.storyName = 'add custom eventWrapper'
+CustomEventWrapper.storyName = "add custom eventWrapper"
 CustomEventWrapper.args = {
   defaultView: Views.DAY,
   events,
@@ -99,24 +98,24 @@ CustomEventWrapper.args = {
 }
 
 export const CustomNoAgendaEventsLabel = Template.bind({})
-CustomNoAgendaEventsLabel.storyName = 'add custom no agenda events label'
+CustomNoAgendaEventsLabel.storyName = "add custom no agenda events label"
 CustomNoAgendaEventsLabel.args = {
   defaultView: Views.AGENDA,
   events,
   messages: {
-    noEventsInRange: 'There are no special events in this range [test message]',
+    noEventsInRange: "There are no special events in this range [test message]",
   },
 }
 
 export const CustomDayColumnWrapper = Template.bind({})
-CustomDayColumnWrapper.storyName = 'add custom dayColumnWrapper'
+CustomDayColumnWrapper.storyName = "add custom dayColumnWrapper"
 CustomDayColumnWrapper.args = {
   defaultView: Views.DAY,
   events: resourceEvents,
   resources: resources,
-  resourceAccessor: 'resourceId',
-  resourceIdAccessor: 'id',
-  resourceTitleAccessor: 'name',
+  resourceAccessor: "resourceId",
+  resourceIdAccessor: "id",
+  resourceTitleAccessor: "name",
   components: {
     dayColumnWrapper: customComponents.dayColumnWrapper,
   },
@@ -125,13 +124,13 @@ CustomDayColumnWrapper.parameters = {
   docs: {
     description: {
       story:
-        'The custom DayColumnWrapper allows you to add your own custom logic when rendering a Day Column.',
+        "The custom DayColumnWrapper allows you to add your own custom logic when rendering a Day Column.",
     },
   },
 }
 
 export const CustomShowMore = Template.bind({})
-CustomShowMore.storyName = 'add custom showMore'
+CustomShowMore.storyName = "add custom showMore"
 CustomShowMore.args = {
   defaultView: Views.MONTH,
   events,

@@ -7,23 +7,23 @@ import {
   type Formats,
 } from "@/localizers"
 import {
+  moveDate,
   navigate,
   NavigateAction,
 } from "@/utils/move"
 import { coerceDate } from "@/utils/helpers"
-import moveDate from "@/utils/move"
 import { Messages } from "@/utils/messages"
 import { transform } from "lodash-es"
 import { Accessors } from "@/utils/accessors"
-import Toolbar from "@/components/Toolbar"
-import VIEWS, {
+import {
+  VIEW_COMPONENTS,
   ViewComponent,
   ViewName,
   views as viewStrings,
 } from "@/Views"
 import clsx from "clsx"
-import { Resource } from "../utils/Resources"
-import createContext from "../hooks/createContext"
+import { Resource } from "@/utils/Resources"
+import { createContext } from "@/hooks/createContext"
 import { useUncontrolled } from "uncontrollable"
 import {
   CalendarEvent,
@@ -36,8 +36,8 @@ import {
   SlotGroupPropGetter,
   SlotInfo,
   SlotPropGetter,
-} from "../utils/components"
-import { DayLayoutAlgorithm, DayLayoutFunction } from "../utils/layout-algorithms/LayoutAlgorithmEvent"
+} from "@/utils/components"
+import { DayLayoutAlgorithm, DayLayoutFunction } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 type CalendarContext = {
   localizer: DateLocalizer
@@ -85,6 +85,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * import {luxonLocalizer} from 'react-big-calendar'
    * import {DateTime, Settings} from 'luxon'
    * import useMemo from 'react';
+import { VIEW_COMPONENTS } from '@/Views';
    * // only use `Settings` if you require optional time zone support
    * Settings.defaultZone = 'America/Los_Angeles'
    * // end optional time zone support
@@ -735,7 +736,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
      * <Calendar components={components} />
      * ```
      */
-  components?: Components<TEvent, TResource> | undefined
+  components?: Partial<Components<TEvent, TResource>> | undefined
 
   /**
      * String messages used throughout the component, override to provide localizations
@@ -872,7 +873,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     if(Array.isArray(views)) {
       return transform(
         views,
-        (obj, name) => obj[name] = VIEWS[name],
+        (obj, name) => obj[name] = VIEW_COMPONENTS[name],
         {} as Record<ViewName, ViewComponent>
       )
     }
@@ -882,21 +883,21 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
         if(value === false) return
 
         if(value === true) {
-          obj[key] = VIEWS[key as ViewName]
+          obj[key] = VIEW_COMPONENTS[key as ViewName]
         } else {
           obj[key as string] = value
         }
       }, {} as Record<ViewName, ViewComponent> & Record<string, ViewComponent>)
       // return mapValues(views, (value, key) => {
       //   if(value === true) {
-      //     return VIEWS[key as ViewName]
+      //     return VIEW_COMPONENTS[key as ViewName]
       //   }
 
       //   return value
       // })
     }
 
-    return VIEWS
+    return VIEW_COMPONENTS
   }, [views])
 
   // TODO: Revert to using accessor methods
@@ -954,7 +955,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
   const ViewComponent: ViewComponent = viewComponents[view]
 
-  const ToolbarComponent = components?.toolbar || Toolbar
+  const ToolbarComponent = localComponents?.toolbar
 
   /**
    *
@@ -1084,6 +1085,9 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           // props for Agenda view
           length={ length }
 
+          // passing localizer to avoid breaking changes in custom view setups
+          localizer={ localizer }
+
           // { ...controlledProps }
         />
       </div>
@@ -1091,4 +1095,4 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   )
 }
 
-export default Calendar
+export { Calendar }

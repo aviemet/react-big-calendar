@@ -1,13 +1,13 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useMemo, useState } from "react"
 
-import events from '../../resources/events'
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import Card from '../../resources/Card'
-import DemoLink from '../../DemoLink.component'
+import events from "../../resources/events"
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import Card from "../../resources/Card"
+import DemoLink from "../../DemoLink.component"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
-import withDragAndDrop from '../../../src/addons/dragAndDrop'
+import { withDragAndDrop } from "../../../src/addons/dragAndDrop"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
-import '../../../src/addons/dragAndDrop/styles.scss'
+import "../../../src/addons/dragAndDrop/styles.scss"
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -25,7 +25,7 @@ export default function Resizable({ localizer }) {
     (event) => ({
       // add class if not allowing resizing at all, or if
       // allowing resizing, but not on a specific event
-      ...((!resizable || !event.isResizable) && { className: 'nonResizable' }),
+      ...((!resizable || !event.isResizable) && { className: "nonResizable" }),
     }),
     [resizable]
   )
@@ -84,7 +84,7 @@ export default function Resizable({ localizer }) {
           localizer={ localizer }
           onEventResize={ resizeEvent }
           resizable={ resizable }
-          resizableAccessor={ resizable ? 'isResizable' : 'fakeKey' }
+          resizableAccessor={ resizable ? "isResizable" : "fakeKey" }
         />
       </div>
     </Fragment>

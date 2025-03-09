@@ -1,26 +1,25 @@
 import React, { forwardRef, useEffect, useRef } from "react"
 import getHeight from "dom-helpers/height"
 import qsa from "dom-helpers/querySelectorAll"
-import BackgroundCells from "./BackgroundCells"
-import EventRow from "@/components/EventRow"
-import EventEndingRow from "@/components/EventRow/EventEndingRow"
-import NoopWrapper from "@/components/NoopWrapper"
-import ScrollableWeekWrapper from "@/components/ScrollableWeekWrapper"
-import Dummy from "./Dummy"
+import { BackgroundCells } from "./BackgroundCells"
+import { EventRow } from "@/components/EventRow"
+import { EventEndingRow } from "@/components/EventRow/EventEndingRow"
+import { NoopWrapper } from "@/components/NoopWrapper"
+import { ScrollableWeekWrapper } from "@/components/ScrollableWeekWrapper"
+import { Dummy } from "./Dummy"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
-import { DateHeaderProps } from "@/components/DateHeader"
-import { useMonthViewContext } from "@/Views/MonthView"
+import { ViewHeaderProps } from ".."
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
   range: Date[]
   resizable?: boolean
   resourceId?: any
+  renderHeader?: boolean
   renderForMeasure?: boolean
-  renderHeader?: (props: { date: Date, key: string, className: string }) => React.ReactNode
   container?: () => HTMLElement
   selected?: object
   selectable?: boolean | "ignoreEvents"
@@ -34,11 +33,15 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   onDoubleClick?: (event: TEvent) => void
   onKeyPress?: (event: TEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
-  onHeadingClick?: (date: Date, drilldownView: DateHeaderProps, e: React.MouseEvent<HTMLElement>) => void
+  onHeadingClick?: (date: Date, drilldownView: ViewHeaderProps, e: React.MouseEvent<HTMLElement>) => void
   isAllDay?: boolean
   minRows?: number
   maxRows?: number
   className?: string
+
+  setRowLimit?: (limit: number) => void
+  containerHeight?: number
+  needLimitMeasure?: boolean
 }
 
 const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, ref) => {
@@ -47,6 +50,7 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
     range,
     resizable,
     resourceId,
+    renderHeader = true,
     renderForMeasure,
     selected,
     selectable,
@@ -70,14 +74,14 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
     weekWrapper: WeekWrapper,
   } } = useCalendarContext()
 
-  const { setRowLimit, containerHeight, needLimitMeasure } = useMonthViewContext()
-
   const containerRef = useRef<HTMLDivElement>(null)
   const headingRowRef = useRef<HTMLDivElement>(null)
   const eventRowRef = useRef<HTMLDivElement>(null)
 
+  const { setRowLimit, containerHeight, needLimitMeasure } = props
   useEffect(() => {
-    if(!eventRowRef.current
+    if(!setRowLimit
+      || !eventRowRef.current
       || !headingRowRef.current
       || !containerRef.current
     ) return
@@ -89,7 +93,7 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
     const eventSpace = getHeight(containerRef.current) - headingHeight
 
     setRowLimit(Math.max(Math.floor(eventSpace / eventHeight), 1))
-  }, [needLimitMeasure, containerHeight, setRowLimit])
+  }, [containerHeight, needLimitMeasure, props, setRowLimit])
 
   const slotMetrics = useDateSlotMetrics({
     range,
@@ -179,13 +183,14 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
                   "rbc-now": localizer.isSameDate(date, getNow()),
                 }) }
               >
-                <DateHeaderComponent
+                { renderHeader && <DateHeaderComponent
                   label={ label || localizer.format(date, "dateFormat") }
                   date={ date }
                   drilldownView={ drilldownView }
                   isOffRange={ isOffRange }
                   onDrillDown={ (e) => onHeadingClick?.(date, drilldownView, e) }
-                />
+                  range={ range }
+                /> }
               </div>
             </>
           }) }
@@ -214,4 +219,4 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
   )
 })
 
-export default DateContentRow
+export { DateContentRow }

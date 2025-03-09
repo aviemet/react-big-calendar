@@ -530,4 +530,4 @@ function pageOffset(dir) {
   if(dir === "left") return window.pageXOffset || document.body.scrollLeft || 0
   if(dir === "top") return window.pageYOffset || document.body.scrollTop || 0
 }
-export default Selection
+export { Selection }

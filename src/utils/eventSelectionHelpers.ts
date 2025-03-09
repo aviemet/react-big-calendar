@@ -1,4 +1,4 @@
-import isEqual from "lodash/isEqual"
+import { isEqual } from "lodash-es"
 import { CalendarEvent } from "./components"
 
 type Box = {

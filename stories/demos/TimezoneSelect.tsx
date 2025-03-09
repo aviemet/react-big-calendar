@@ -1,11 +1,9 @@
-import React from 'react'
-
-import Layout from 'react-tackle-box/Layout'
-import moment from 'moment'
-import 'moment-timezone'
+import Layout from "react-tackle-box/Layout"
+import moment from "moment"
+import "moment-timezone"
 
 const allZones = moment.tz.names()
-allZones.unshift('clear')
+allZones.unshift("clear")
 
 export default function TimezoneSelect({
   title,
@@ -20,15 +18,15 @@ export default function TimezoneSelect({
     <div>
       <Layout direction="column" align="center">
         { title ? <strong style={ { marginBottom: 10 } }>{ title }</strong> : null }
-        <label>Select a Timezone</label>{ ' ' }
+        <label>Select a Timezone</label>{ " " }
         <select
           className="form-control"
-          style={ { width: 200, display: 'inline-block' } }
+          style={ { width: 200, display: "inline-block" } }
           value={ timezone }
           onChange={ onChange }
         >
           { allZones.map((c, Index) => (
-            <option key={ Index } value={ c !== 'clear' ? c : '' }>
+            <option key={ Index } value={ c !== "clear" ? c : "" }>
               { c }
             </option>
           )) }

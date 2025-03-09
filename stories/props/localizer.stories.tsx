@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './localizer.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./localizer.mdx"
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -34,4 +34,4 @@ export function Localizer() {
     </div>
   )
 }
-Localizer.storyName = 'localizer *'
+Localizer.storyName = "localizer *"

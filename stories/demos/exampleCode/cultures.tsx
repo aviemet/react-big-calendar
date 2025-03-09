@@ -1,61 +1,61 @@
-import React, { Fragment, useState, useCallback, useMemo } from 'react'
+import React, { Fragment, useState, useCallback, useMemo } from "react"
 
-import { Calendar, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
-import Layout from 'react-tackle-box/Layout'
+import { Calendar, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
+import Layout from "react-tackle-box/Layout"
 
-const cultures = ['en', 'en-GB', 'es', 'fr', 'ar-AE']
+const cultures = ["en", "en-GB", "es", "fr", "ar-AE"]
 const lang = {
   en: null,
-  'en-GB': null,
+  "en-GB": null,
   es: {
-    week: 'Semana',
-    work_week: 'Semana de trabajo',
-    day: 'Día',
-    month: 'Mes',
-    previous: 'Atrás',
-    next: 'Después',
-    today: 'Hoy',
-    agenda: 'El Diario',
+    week: "Semana",
+    work_week: "Semana de trabajo",
+    day: "Día",
+    month: "Mes",
+    previous: "Atrás",
+    next: "Después",
+    today: "Hoy",
+    agenda: "El Diario",
 
     showMore: (total) => `+${total} más`,
   },
   fr: {
-    week: 'La semaine',
-    work_week: 'Semaine de travail',
-    day: 'Jour',
-    month: 'Mois',
-    previous: 'Antérieur',
-    next: 'Prochain',
-    today: `Aujourd'hui`,
-    agenda: 'Ordre du jour',
+    week: "La semaine",
+    work_week: "Semaine de travail",
+    day: "Jour",
+    month: "Mois",
+    previous: "Antérieur",
+    next: "Prochain",
+    today: "Aujourd'hui",
+    agenda: "Ordre du jour",
 
     showMore: (total) => `+${total} plus`,
   },
-  'ar-AE': {
-    week: 'أسبوع',
-    work_week: 'أسبوع العمل',
-    day: 'يوم',
-    month: 'شهر',
-    previous: 'سابق',
-    next: 'التالي',
-    today: 'اليوم',
-    agenda: 'جدول أعمال',
+  "ar-AE": {
+    week: "أسبوع",
+    work_week: "أسبوع العمل",
+    day: "يوم",
+    month: "شهر",
+    previous: "سابق",
+    next: "التالي",
+    today: "اليوم",
+    agenda: "جدول أعمال",
 
     showMore: (total) => `+${total} إضافي`,
   },
 }
 
 export default function CulturesDemo({ localizer }: { localizer: DateLocalizer }) {
-  const [culture, setCulture] = useState('fr')
+  const [culture, setCulture] = useState("fr")
   const [rightToLeft, setRightToLeft] = useState(false)
 
   const cultureOnClick = useCallback(
     ({ target: { value } }) => {
       // really better to useReducer for simultaneously setting multiple state values
       setCulture(value)
-      setRightToLeft(value === 'ar-AE')
+      setRightToLeft(value === "ar-AE")
     },
     [setCulture]
   )
@@ -72,11 +72,11 @@ export default function CulturesDemo({ localizer }: { localizer: DateLocalizer }
     <Fragment>
       <DemoLink fileName="cultures">
         <Layout direction="column" align="center">
-          <label>Select a Culture</label>{ ' ' }
+          <label>Select a Culture</label>{ " " }
           <select
             className="form-control"
-            style={ { width: 200, display: 'inline-block' } }
-            defaultValue={ 'fr' }
+            style={ { width: 200, display: "inline-block" } }
+            defaultValue={ "fr" }
             onChange={ cultureOnClick }
           >
             { cultures.map((c, Index) => (

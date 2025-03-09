@@ -1,13 +1,12 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './drilldownView.mdx'
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./drilldownView.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -19,8 +18,8 @@ export default {
     },
     drilldownView: {
       control: {
-        type: 'select',
-        options: ['day', 'agenda'],
+        type: "select",
+        options: ["day", "agenda"],
         defaultValue: Views.DAY,
       },
     },
@@ -39,7 +38,7 @@ const Template = (args) => (
 )
 
 export const DrilldownView = Template.bind({})
-DrilldownView.storyName = 'drilldownView'
+DrilldownView.storyName = "drilldownView"
 DrilldownView.args = {
   defaultDate: new Date(2015, 3, 1),
   drilldownView: Views.AGENDA,

@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsTimeGutterFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsTimeGutterFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,7 +22,7 @@ export function FormatsTimeGutterFormat() {
       defaultDate: new Date(2015, 3, 13),
       formats: {
         timeGutterFormat: (date, culture, localizer) =>
-          localizer.format(date, 'hh:mm a', culture),
+          localizer.format(date, "hh:mm a", culture),
       },
       views: [Views.WEEK, Views.DAY],
     }),
@@ -42,4 +42,4 @@ export function FormatsTimeGutterFormat() {
     </div>
   )
 }
-FormatsTimeGutterFormat.storyName = 'formats.timeGutterFormat'
+FormatsTimeGutterFormat.storyName = "formats.timeGutterFormat"

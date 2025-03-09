@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './date.mdx'
+import React, { useState, useCallback } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./date.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -32,4 +32,4 @@ export function CalDate() {
     </div>
   )
 }
-CalDate.storyName = 'date'
+CalDate.storyName = "date"

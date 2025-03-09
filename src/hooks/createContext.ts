@@ -1,5 +1,3 @@
-import React from "react"
-
 /**
  * createContext
  * Custom hook for initializing React Context. Returns a hook and Provider component
@@ -23,4 +21,4 @@ const createContext = <T extends {} | null>() => {
   return [useContext, context.Provider] as const
 }
 
-export default createContext
+export { createContext }

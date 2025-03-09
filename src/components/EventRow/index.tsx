@@ -41,4 +41,4 @@ const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) =>
   )
 }
 
-export default EventRow
+export { EventRow }

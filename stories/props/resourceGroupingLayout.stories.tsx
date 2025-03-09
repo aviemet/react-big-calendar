@@ -1,10 +1,9 @@
-import React from 'react'
-import { Calendar } from '../../src'
-import { resourceAccessorStoryArgs } from './storyDefaults'
-import mdx from './resourceGroupingLayout.mdx'
+import { Calendar } from "../../src"
+import { resourceAccessorStoryArgs } from "./storyDefaults"
+import mdx from "./resourceGroupingLayout.mdx"
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -25,10 +24,10 @@ const Template = (args) => (
 )
 
 const resources = [
-  { resourceId: 1, resourceTitle: 'Board room' },
-  { resourceId: 2, resourceTitle: 'Training room' },
-  { resourceId: 3, resourceTitle: 'Meeting room 1' },
-  { resourceId: 4, resourceTitle: 'Meeting room 2' },
+  { resourceId: 1, resourceTitle: "Board room" },
+  { resourceId: 2, resourceTitle: "Training room" },
+  { resourceId: 3, resourceTitle: "Meeting room 1" },
+  { resourceId: 4, resourceTitle: "Meeting room 2" },
 ]
 
 let eventId = 0
@@ -45,13 +44,13 @@ const events = Array.from({ length: 20 }, (_, k) => k).flatMap((i) => {
   }))
 })
 export const ResourceGroupingLayout = Template.bind({})
-ResourceGroupingLayout.storyName = 'resourceGroupingLayout'
+ResourceGroupingLayout.storyName = "resourceGroupingLayout"
 ResourceGroupingLayout.args = {
   ...resourceAccessorStoryArgs,
   defaultDate: new Date(2018, 0, 29),
   resourceGroupingLayout: true,
-  resourceIdAccessor: 'resourceId',
-  resourceTitleAccessor: 'resourceTitle',
+  resourceIdAccessor: "resourceId",
+  resourceTitleAccessor: "resourceTitle",
   resources,
   events,
 }

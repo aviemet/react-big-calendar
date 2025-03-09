@@ -1,5 +1,5 @@
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { Accessors } from "../accessors"
-import { SlotMetrics } from "../../hooks/useTimeSlotMetrics"
 import { CalendarEvent } from "../components"
 
 export type DayLayoutFunction<TEvent extends object = CalendarEvent> = (_: {
@@ -39,7 +39,7 @@ class LayoutAlgorithmEvent {
     _width: number
   }
 
-  constructor(data: CalendarEvent, { accessors, slotMetrics }: { accessors: Accessors, slotMetrics: SlotMetrics }) {
+  constructor(data: CalendarEvent, { accessors, slotMetrics }: { accessors: Accessors, slotMetrics: TimeSlotMetrics }) {
     const { start, startDate, end, endDate, top, height } =
       slotMetrics.getRange(accessors.start(data), accessors.end(data))
 
@@ -117,4 +117,4 @@ class LayoutAlgorithmEvent {
   }
 }
 
-export default LayoutAlgorithmEvent
+export { LayoutAlgorithmEvent }

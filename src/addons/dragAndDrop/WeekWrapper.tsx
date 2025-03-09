@@ -1,7 +1,5 @@
-
-import React from "react"
-import EventRow from "@/components/EventRow"
-import Selection, { getBoundsForNode } from "@/utils/selection"
+import { EventRow } from "@/components/EventRow"
+import { Selection, getBoundsForNode } from "@/utils/selection"
 import { eventSegments } from "@/utils/eventLevels"
 import { getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
 import { dragAccessors, eventTimes } from "./common"
@@ -258,4 +256,4 @@ class WeekWrapper extends React.Component {
   }
 }
 
-export default WeekWrapper
+export { WeekWrapper }

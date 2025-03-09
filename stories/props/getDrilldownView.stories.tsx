@@ -1,13 +1,13 @@
-import React, { useCallback, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './getDrilldownView.mdx'
+import React, { useCallback, useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./getDrilldownView.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -19,8 +19,8 @@ export default {
 export function GetDrilldownView() {
   const getDrilldownView = useCallback(
     (targetDate, currentViewName, configuredViewNames) => {
-      if(currentViewName === 'month' && configuredViewNames.includes('week'))
-        return 'week'
+      if(currentViewName === "month" && configuredViewNames.includes("week"))
+        return "week"
 
       return null
     },
@@ -40,4 +40,4 @@ export function GetDrilldownView() {
     </div>
   )
 }
-GetDrilldownView.storyName = 'getDrilldownView'
+GetDrilldownView.storyName = "getDrilldownView"

@@ -1,8 +1,8 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { Fragment, useMemo } from "react"
 
-import { Calendar, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
+import { Calendar, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
 
 export default function Popup({ localizer }) {
   const defaultDate = useMemo(() => new Date(2015, 3, 1), [])

@@ -1,13 +1,12 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './dayLayoutAlgorithm.mdx'
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./dayLayoutAlgorithm.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -15,9 +14,9 @@ export default {
     defaultView: { control: { type: null } },
     events: { control: { type: null } },
     dayLayoutAlgorithm: {
-      options: ['overlap', 'no-overlap'],
+      options: ["overlap", "no-overlap"],
       control: {
-        type: 'select',
+        type: "select",
       },
     },
   },
@@ -35,11 +34,11 @@ const Template = (args) => (
 )
 
 export const DayLayoutAlgorithm = Template.bind({})
-DayLayoutAlgorithm.storyName = 'dayLayoutAlgorithm'
+DayLayoutAlgorithm.storyName = "dayLayoutAlgorithm"
 DayLayoutAlgorithm.args = {
   defaultDate: new Date(2015, 3, 13),
   defaultView: Views.WEEK,
   events: demoEvents,
   localizer: mLocalizer,
-  dayLayoutAlgorithm: 'no-overlap',
+  dayLayoutAlgorithm: "no-overlap",
 }

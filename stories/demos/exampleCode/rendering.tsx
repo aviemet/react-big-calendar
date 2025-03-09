@@ -1,15 +1,15 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { Fragment, useMemo } from "react"
 
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
-import styles from './rendering.module.scss'
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
+import styles from "./rendering.module.scss"
 
 function Event({ event }) {
   return (
     <span>
       <strong>{ event.title }</strong>
-      { event.desc && ':  ' + event.desc }
+      { event.desc && ":  " + event.desc }
     </span>
   )
 }
@@ -20,7 +20,7 @@ function Event({ event }) {
 function EventAgenda({ event }) {
   return (
     <span>
-      <em style={ { color: 'magenta' } }>{ event.title }</em>
+      <em style={ { color: "magenta" } }>{ event.title }</em>
       <p>{ event.desc }</p>
     </span>
   )
@@ -34,7 +34,7 @@ const customDayPropGetter = (date) => {
     return {
       className: styles.specialDay,
       style: {
-        border: 'solid 3px ' + (date.getDate() === 7 ? '#faa' : '#afa'),
+        border: "solid 3px " + (date.getDate() === 7 ? "#faa" : "#afa"),
       },
     }
   else return {}

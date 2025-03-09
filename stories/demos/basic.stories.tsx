@@ -1,8 +1,7 @@
-import React from 'react'
-import Basic from './exampleCode/basic'
+import Basic from "./exampleCode/basic"
 
 const meta = {
-  title: 'Examples/Basic',
+  title: "Examples/Basic",
   component: Basic,
   parameters: {
     docs: {

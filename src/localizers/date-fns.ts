@@ -1,7 +1,6 @@
 import * as dates from "../utils/dates"
-import { DateLocalizer, RangeFunction } from "."
+import { DateLocalizer, RangeFunction, FormatInput, Formats } from "."
 
-import { FormatInput, Formats } from "."
 
 let dateRangeFormat: RangeFunction = ({ start, end }, culture, local) =>
   `${local.format(start, "P", culture)} – ${local.format(end, "P", culture)}`
@@ -69,4 +68,4 @@ function dateFnsLocalizer({
   })
 }
 
-export default dateFnsLocalizer
+export { dateFnsLocalizer }

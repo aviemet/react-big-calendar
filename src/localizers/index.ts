@@ -1,12 +1,11 @@
-export { default as dayjsLocalizer } from "./dayjs"
-export { default as dateFnsLocalizer } from "./date-fns"
-export { default as momentLocalizer } from "./moment"
-export { default as globalizeLocalizer } from "./globalize"
-export { default as luxonLocalizer } from "./luxon"
+export { dayjsLocalizer } from "./dayjs"
+export { dateFnsLocalizer } from "./date-fns"
+export { momentLocalizer } from "./moment"
+export { globalizeLocalizer } from "./globalize"
+export { luxonLocalizer } from "./luxon"
 
 import invariant from "invariant"
-import {
-  merge,
+import { merge,
   inRange,
   lt,
   lte,
@@ -28,8 +27,8 @@ import {
   visibleDays,
   minutes,
   isJustDate,
-} from "../utils/dates"
-import { StartOfWeek, Unit } from "date-arithmetic"
+} from "@/utils/dates"
+import { StartOfWeek, type Unit } from "date-arithmetic"
 import { buildMessages, type Messages } from "@/utils/messages"
 import { CalendarEvent } from "@/utils/components"
 

@@ -393,4 +393,4 @@ function momentLocalizer(moment): DateLocalizer {
   })
 }
 
-export default momentLocalizer
+export { momentLocalizer }

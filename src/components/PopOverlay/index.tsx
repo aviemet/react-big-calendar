@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef } from "react"
 import { Overlay } from "react-overlays"
-import Popup from "./Popup"
+import { Popup } from "./Popup"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
@@ -79,4 +79,4 @@ const PopOverlay = forwardRef<HTMLDivElement, PopOverlayProps>((
   )
 })
 
-export default PopOverlay
+export { PopOverlay }

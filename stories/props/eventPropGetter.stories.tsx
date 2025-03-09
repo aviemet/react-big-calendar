@@ -1,14 +1,14 @@
-import React, { useCallback } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './eventPropGetter.mdx'
-import '../resources/propGetter.scss'
+import React, { useCallback } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./eventPropGetter.mdx"
+import "../resources/propGetter.scss"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,14 +22,14 @@ export function EventPropGetter() {
     (event, start, end, isSelected) => ({
       ...(isSelected && {
         style: {
-          backgroundColor: '#000',
+          backgroundColor: "#000",
         },
       }),
       ...(moment(start).hour() < 12 && {
-        className: 'powderBlue',
+        className: "powderBlue",
       }),
-      ...(event.title.includes('Meeting') && {
-        className: 'darkGreen',
+      ...(event.title.includes("Meeting") && {
+        className: "darkGreen",
       }),
     }),
     []
@@ -47,4 +47,4 @@ export function EventPropGetter() {
     </div>
   )
 }
-EventPropGetter.storyName = 'eventPropGetter'
+EventPropGetter.storyName = "eventPropGetter"

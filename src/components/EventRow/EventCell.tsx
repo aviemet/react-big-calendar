@@ -1,5 +1,4 @@
-import React from "react"
-import EventWrapper from "@/addons/dragAndDrop/EventWrapper"
+// import { EventWrapper } from "@/addons/dragAndDrop/EventWrapper"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
@@ -89,4 +88,4 @@ const EventCell = ({
   )
 }
 
-export default EventCell
+export { EventCell }

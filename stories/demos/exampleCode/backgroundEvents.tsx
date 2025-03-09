@@ -1,10 +1,10 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { Fragment, useMemo } from "react"
 
-import { Calendar, Views, DateLocalizer } from '@/index'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
-import backgroundEvents from '../../resources/backgroundEvents'
-import * as dates from '../../../src/utils/dates'
+import { Calendar, Views, DateLocalizer } from "@/index"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
+import backgroundEvents from "../../resources/backgroundEvents"
+import * as dates from "../../../src/utils/dates"
 
 let allViews = Object.keys(Views).map((k) => Views[k])
 
@@ -12,7 +12,7 @@ export default function BackgroundEventsCalendar({ localizer }: { localizer: Dat
   const { defaultDate, max } = useMemo(
     () => ({
       defaultDate: new Date(2015, 3, 13),
-      max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'),
+      max: dates.add(dates.endOf(new Date(2015, 17, 1), "day"), -1, "hours"),
     }),
     []
   )

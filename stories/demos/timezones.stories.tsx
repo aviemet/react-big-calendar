@@ -1,9 +1,8 @@
-import React from 'react'
-import { Calendar } from '../../src'
-import TimezoneCalendar from './exampleCode/timezones'
+import { Calendar } from "../../src"
+import TimezoneCalendar from "./exampleCode/timezones"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {
@@ -15,4 +14,4 @@ export default {
 export function Example4() {
   return <TimezoneCalendar />
 }
-Example4.storyName = 'Timezones'
+Example4.storyName = "Timezones"

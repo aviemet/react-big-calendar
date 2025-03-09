@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsSelectRangeFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsSelectRangeFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,9 +22,9 @@ export function FormatsSelectRangeFormat() {
       defaultDate: new Date(2015, 3, 13),
       formats: {
         selectRangeFormat: ({ start, end }, culture, localizer) =>
-          localizer.format(start, 'hh:mm a', culture) +
-          ' - ' +
-          localizer.format(end, 'hh:mm a', culture),
+          localizer.format(start, "hh:mm a", culture) +
+          " - " +
+          localizer.format(end, "hh:mm a", culture),
       },
       views: [Views.WEEK, Views.DAY],
     }),
@@ -45,4 +45,4 @@ export function FormatsSelectRangeFormat() {
     </div>
   )
 }
-FormatsSelectRangeFormat.storyName = 'formats.selectRangeFormat'
+FormatsSelectRangeFormat.storyName = "formats.selectRangeFormat"

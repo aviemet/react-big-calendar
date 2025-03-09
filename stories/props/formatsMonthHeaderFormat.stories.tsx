@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsMonthHeaderFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsMonthHeaderFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,7 +22,7 @@ export function FormatsMonthHeaderFormat() {
       defaultDate: new Date(2015, 3, 1),
       formats: {
         monthHeaderFormat: (date, culture, localizer) =>
-          localizer.format(date, `MMMM [']YY`, culture),
+          localizer.format(date, "MMMM [']YY", culture),
       },
     }),
     []
@@ -39,4 +39,4 @@ export function FormatsMonthHeaderFormat() {
     </div>
   )
 }
-FormatsMonthHeaderFormat.storyName = 'formats.monthHeaderFormat'
+FormatsMonthHeaderFormat.storyName = "formats.monthHeaderFormat"

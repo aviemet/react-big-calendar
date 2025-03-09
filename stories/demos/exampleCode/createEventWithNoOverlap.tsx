@@ -1,18 +1,18 @@
-import React, { useCallback, useState, useMemo, Fragment } from 'react'
+import React, { useCallback, useState, useMemo, Fragment } from "react"
 
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
 
 export default function CreateEventWithNoOverlap({
   localizer,
-  dayLayoutAlgorithm = 'no-overlap',
+  dayLayoutAlgorithm = "no-overlap",
 }) {
   const [myEvents, setEvents] = useState(events)
 
   const handleSelectSlot = useCallback(
     ({ start, end }) => {
-      const title = window.prompt('New Event Name')
+      const title = window.prompt("New Event Name")
       if(title) {
         setEvents((prev) => [...prev, { start, end, title }])
       }

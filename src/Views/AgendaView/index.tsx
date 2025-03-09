@@ -8,7 +8,7 @@ import { inRange } from "@/utils/eventLevels"
 import { BaseViewProps, createViewComponent } from ".."
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
-import Day from "./AgendaDay"
+import { Day } from "./AgendaDay"
 
 const DEFAULT_LENGTH = 30
 
@@ -16,7 +16,7 @@ export interface AgendaViewProps<TEvent extends CalendarEvent = CalendarEvent> e
   length?: number
 }
 
-const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
+const AgendaViewComponent = <TEvent extends CalendarEvent = CalendarEvent>({
   events,
   length = DEFAULT_LENGTH,
   onDoubleClickEvent,
@@ -153,7 +153,7 @@ const AgendaView = <TEvent extends CalendarEvent = CalendarEvent>({
   )
 }
 
-export default createViewComponent(AgendaView, {
+export const AgendaView = createViewComponent(AgendaViewComponent, {
   range: (start, { length = DEFAULT_LENGTH, localizer }) => {
     let end = localizer.add(start, length, "day")
     return { start, end }

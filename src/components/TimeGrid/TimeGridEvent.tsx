@@ -96,4 +96,4 @@ function TimeGridEvent(props: TimeGridEventProps) {
   )
 }
 
-export default TimeGridEvent
+export { TimeGridEvent }

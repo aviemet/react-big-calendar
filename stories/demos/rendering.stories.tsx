@@ -1,10 +1,9 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import Rendering from './exampleCode/rendering'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import Rendering from "./exampleCode/rendering"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {
@@ -18,4 +17,4 @@ const localizer = momentLocalizer(moment)
 export function Example8() {
   return <Rendering localizer={ localizer } />
 }
-Example8.storyName = 'Customized Component Rendering'
+Example8.storyName = "Customized Component Rendering"

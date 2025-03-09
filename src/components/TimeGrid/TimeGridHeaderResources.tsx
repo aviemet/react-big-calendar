@@ -1,9 +1,8 @@
-import React from "react"
 import clsx from "clsx"
 import scrollbarSize from "dom-helpers/scrollbarSize"
-import DateContentRow from "@/components/DateContentRow"
-import Header from "@/components/Header"
-import ResourceHeader from "@/components/ResourceHeader"
+import { DateContentRow } from "@/components/DateContentRow"
+import { Header } from "@/components/Header"
+import { ResourceHeader } from "@/components/ResourceHeader"
 import { Resource } from "@/utils/Resources"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
@@ -93,7 +92,7 @@ const TimeGridHeaderResources = ({
 }
 
 
-export default TimeGridHeaderResources
+export { TimeGridHeaderResources }
 
 interface HeaderCellsProps {
   range: Date[]

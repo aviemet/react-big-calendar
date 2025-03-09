@@ -1,5 +1,5 @@
-import LayoutAlgorithmEvent, { DayLayoutFunction } from "./LayoutAlgorithmEvent"
-import overlap from "./overlap"
+import { LayoutAlgorithmEvent, DayLayoutFunction } from "./LayoutAlgorithmEvent"
+import { overlap } from "./overlap"
 
 function getMaxIndexDFS(node, maxIndex, visited) {
   for(let i = 0; i < node.friends.length; ++i) {
@@ -13,7 +13,7 @@ function getMaxIndexDFS(node, maxIndex, visited) {
   return maxIndex
 }
 
-const noOverlap: DayLayoutFunction = ({
+export const noOverlap: DayLayoutFunction = ({
   events,
   minimumStartDifference,
   slotMetrics,
@@ -29,7 +29,7 @@ const noOverlap: DayLayoutFunction = ({
   styledEvents.sort((a, b) => {
     if(a.style.top !== b.style.top) {
       return a.style.top > b.style.top ? 1 : -1
-    } else if(a.style.height !== b.style.height){
+    } else if(a.style.height !== b.style.height) {
       return a.style.top + a.style.height < b.style.top + b.style.height ? 1 : -1
     } else {
       return 0
@@ -114,4 +114,3 @@ const noOverlap: DayLayoutFunction = ({
   return styledEvents
 }
 
-export default noOverlap

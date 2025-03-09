@@ -1,13 +1,13 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './onKeyPressEvent.mdx'
+import React, { useCallback, useRef, useEffect, useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./onKeyPressEvent.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -17,15 +17,15 @@ export default {
 }
 
 function buildMessage(event, { altKey, ctrlKey, shiftKey, metaKey, key }) {
-  let prefix = ''
+  let prefix = ""
   if(altKey) {
-    prefix = 'ALT + '
+    prefix = "ALT + "
   } else if(ctrlKey) {
-    prefix = 'CTRL + '
+    prefix = "CTRL + "
   } else if(shiftKey) {
-    prefix = 'SHIFT + '
+    prefix = "SHIFT + "
   } else if(metaKey) {
-    prefix = 'CMD + '
+    prefix = "CMD + "
   }
   return `You pressed on the "${prefix}${key}" on "event":
 JSON.stringify(event, null, 2)`
@@ -64,4 +64,4 @@ export function OnKeyPressEvent() {
     </div>
   )
 }
-OnKeyPressEvent.storyName = 'onKeypressEvent'
+OnKeyPressEvent.storyName = "onKeypressEvent"

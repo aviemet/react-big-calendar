@@ -1,16 +1,16 @@
-import React, { Fragment, useState, useEffect, useMemo } from 'react'
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
-import moment from 'moment'
-import 'moment-timezone'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
-import TimezoneSelect from '../TimezoneSelect'
+import { Fragment, useState, useEffect, useMemo } from "react"
+import { Calendar, momentLocalizer, Views } from "react-big-calendar"
+import moment from "moment"
+import "moment-timezone"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
+import TimezoneSelect from "../TimezoneSelect"
 
 const defaultTZ = moment.tz.guess()
-const defaultDateStr = '2015-4-13'
+const defaultDateStr = "2015-4-13"
 
 function getDate(str, momentObj) {
-  return momentObj(str, 'YYYY-MM-DD').toDate()
+  return momentObj(str, "YYYY-MM-DD").toDate()
 }
 
 export default function Timezones() {

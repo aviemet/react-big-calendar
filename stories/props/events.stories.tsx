@@ -1,13 +1,12 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './events.mdx'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./events.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -31,7 +30,7 @@ const Template = (args) => (
 )
 
 export const Events = Template.bind({})
-Events.storyName = 'events'
+Events.storyName = "events"
 Events.args = {
   defaultDate: new Date(2015, 3, 13),
   events: demoEvents,

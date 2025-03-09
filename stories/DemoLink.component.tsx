@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react'
+import React, { Fragment } from "react"
 
 const linkBase =
-  'https://github.com/jquense/react-big-calendar/blob/master/stories/demos/exampleCode/'
+  "https://github.com/jquense/react-big-calendar/blob/master/stories/demos/exampleCode/"
 
 export default function DemoLink({ fileName, children }: { fileName: string, children?: React.ReactNode }) {
   return (

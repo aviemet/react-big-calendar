@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { coerceDate } from "@/utils/helpers"
 import { dateCellSelection, getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
-import Selection, { getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
+import { Selection, getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
 import clsx from "clsx"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
@@ -128,7 +128,7 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
   }
 
   const selectSlot = ({ endIndex, startIndex, action, bounds, box }) => {
-    if(endIndex !== -1 && startIndex !== -1){
+    if(endIndex !== -1 && startIndex !== -1) {
       onSelectSlot?.({
         start: startIndex,
         end: endIndex,
@@ -169,4 +169,4 @@ const BackgroundCells = (props: BackgroundCellsProps) => {
   )
 }
 
-export default BackgroundCells
+export { BackgroundCells }

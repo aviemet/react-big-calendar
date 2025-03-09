@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './slotPropGetter.mdx'
-import '../resources/propGetter.scss'
+import React, { useCallback, useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./slotPropGetter.mdx"
+import "../resources/propGetter.scss"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -20,17 +20,17 @@ export default {
 export function SlotPropGetter() {
   const slotPropGetter = useCallback(
     (date) => ({
-      className: 'slotDefault',
+      className: "slotDefault",
       ...(moment(date).hour() < 8 && {
         style: {
-          backgroundColor: 'powderblue',
-          color: 'black',
+          backgroundColor: "powderblue",
+          color: "black",
         },
       }),
       ...(moment(date).hour() > 12 && {
         style: {
-          backgroundColor: 'darkgreen',
-          color: 'white',
+          backgroundColor: "darkgreen",
+          color: "white",
         },
       }),
     }),
@@ -51,4 +51,4 @@ export function SlotPropGetter() {
     </div>
   )
 }
-SlotPropGetter.storyName = 'slotPropGetter'
+SlotPropGetter.storyName = "slotPropGetter"

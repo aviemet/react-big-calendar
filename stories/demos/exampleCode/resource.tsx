@@ -1,16 +1,15 @@
-import LinkTo from '@storybook/addon-links/react'
-
-import React, { Fragment, useMemo, useState, useCallback } from 'react'
-import { Calendar, DateLocalizer, Views } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import withDragAndDrop from '../../../src/addons/dragAndDrop'
+import { Fragment, useMemo, useState, useCallback } from "react"
+import LinkTo from "@storybook/addon-links/react"
+import { Calendar, DateLocalizer, Views } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import { withDragAndDrop } from "@/addons/dragAndDrop"
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 const resources = [
-  { resourceId: 1, resourceTitle: 'Board room' },
-  { resourceId: 2, resourceTitle: 'Training room' },
-  { resourceId: 3, resourceTitle: 'Meeting room 1' },
-  { resourceId: 4, resourceTitle: 'Meeting room 2' },
+  { resourceId: 1, resourceTitle: "Board room" },
+  { resourceId: 2, resourceTitle: "Training room" },
+  { resourceId: 3, resourceTitle: "Meeting room 1" },
+  { resourceId: 4, resourceTitle: "Meeting room 2" },
 ]
 
 let eventId = 0
@@ -33,7 +32,7 @@ export default function Resource({ localizer }) {
   const { defaultDate, views } = useMemo(
     () => ({
       defaultDate: new Date(2018, 0, 29),
-      views: ['day', 'work_week'],
+      views: ["day", "work_week"],
     }),
     []
   )
@@ -42,7 +41,7 @@ export default function Resource({ localizer }) {
 
   const handleSelectSlot = useCallback(
     ({ start, end, resourceId }) => {
-      const title = window.prompt('New Event Name')
+      const title = window.prompt("New Event Name")
       if(title) {
         setEvents((prev) => [...prev, { start, end, title, resourceId }])
       }
@@ -91,23 +90,23 @@ export default function Resource({ localizer }) {
     <Fragment>
       <DemoLink fileName="resource" />
       <strong>
-        The calendar below uses the{ ' ' }
+        The calendar below uses the{ " " }
         <LinkTo kind="props" story="resource-id-accessor">
           resourceIdAccessor
         </LinkTo>
-        ,{ ' ' }
+        ,{ " " }
         <LinkTo kind="props" story="resource-title-accessor">
           resourceTitleAccessor
-        </LinkTo>{ ' ' }
-        and{ ' ' }
+        </LinkTo>{ " " }
+        and{ " " }
         <LinkTo kind="props" story="resources">
           resources
-        </LinkTo>{ ' ' }
+        </LinkTo>{ " " }
         props to show events scheduled for different resources.
         <br />
         Events can be mapped to a single resource, or multiple resources.
       </strong>
-      <div style={ { margin: '10px 0 20px 0' } }>
+      <div style={ { margin: "10px 0 20px 0" } }>
         <label>
           <input
             type="checkbox"

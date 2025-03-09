@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsAgendaHeaderFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsAgendaHeaderFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,9 +22,9 @@ export function FormatsAgendHeaderFormat() {
       defaultDate: new Date(2015, 3, 13),
       formats: {
         agendaHeaderFormat: ({ start, end }, culture, localizer) =>
-          localizer.format(start, 'dddd MMMM Do, YYYY', culture) +
-          ' - ' +
-          localizer.format(end, 'dddd MMMM Do, YYYY', culture),
+          localizer.format(start, "dddd MMMM Do, YYYY", culture) +
+          " - " +
+          localizer.format(end, "dddd MMMM Do, YYYY", culture),
       },
       views: [Views.WEEK, Views.DAY, Views.AGENDA],
     }),
@@ -44,4 +44,4 @@ export function FormatsAgendHeaderFormat() {
     </div>
   )
 }
-FormatsAgendHeaderFormat.storyName = 'formats.agendaHeaderFormat'
+FormatsAgendHeaderFormat.storyName = "formats.agendaHeaderFormat"

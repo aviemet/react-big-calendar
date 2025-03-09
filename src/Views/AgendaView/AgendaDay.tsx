@@ -1,4 +1,3 @@
-import React from "react"
 import { inRange } from "@/utils/eventLevels"
 import { isSelected } from "@/utils/eventSelectionHelpers"
 import { useCalendarContext } from "@/components/Calendar"
@@ -83,4 +82,4 @@ const Day = ({
   })
 }
 
-export default Day
+export { Day }

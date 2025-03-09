@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './selected.mdx'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./selected.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -20,7 +20,7 @@ export function Selected() {
   const [selected, setSelected] = useState(() => {
     // let's make an initial selection
     return demoEvents.find(
-      (event) => event.title === 'Itaewon Halloween Meeting'
+      (event) => event.title === "Itaewon Halloween Meeting"
     )
   })
   const clickRef = useRef(null)
@@ -67,4 +67,4 @@ export function Selected() {
     </div>
   )
 }
-Selected.storyName = 'selected'
+Selected.storyName = "selected"

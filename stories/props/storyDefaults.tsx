@@ -1,7 +1,7 @@
-import moment from 'moment'
-import { momentLocalizer, Views } from '../../src'
-import demoEvents from '../resources/events'
-import resourceData from '../resources/resourceEvents'
+import moment from "moment"
+import { momentLocalizer, Views } from "../../src"
+import demoEvents from "../resources/events"
+import resourceData from "../resources/resourceEvents"
 
 const { events: resourceEvents, list: resources } = resourceData
 
@@ -20,15 +20,15 @@ const adjusted = demoEvents.map((event) => {
 })
 
 export const accessorStoryArgs = {
-  allDayAccessor: 'allDayEvent',
+  allDayAccessor: "allDayEvent",
   defaultDate: new Date(2015, 3, 13),
-  endAccessor: 'endDate',
+  endAccessor: "endDate",
   events: adjusted,
   localizer: mLocalizer,
-  titleAccessor: 'label',
-  tooltipAccessor: 'label',
-  startAccessor: 'startDate',
-  idAccessor: 'id',
+  titleAccessor: "label",
+  tooltipAccessor: "label",
+  startAccessor: "startDate",
+  idAccessor: "id",
 }
 /** END Specific to event key accessors */
 
@@ -43,8 +43,8 @@ export const resourceAccessorStoryArgs = {
   defaultView: Views.DAY,
   events: resourceEvents,
   localizer: mLocalizer,
-  resourceIdAccessor: 'Id',
+  resourceIdAccessor: "Id",
   resources: adjustedResources,
-  resourceTitleAccessor: 'Title',
+  resourceTitleAccessor: "Title",
 }
 /** ENDSpecific to resource key accessors */

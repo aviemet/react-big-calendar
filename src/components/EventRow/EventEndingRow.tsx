@@ -2,9 +2,9 @@ import { Event, EventRowSpan } from "./EventRowMixin"
 import { eventLevels } from "@/utils/eventLevels"
 import { range } from "lodash-es"
 import clsx from "clsx"
-import { SlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 
 const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
@@ -13,7 +13,7 @@ const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
 
 interface EventEndingRowProps {
   segments: CalendarEvent[]
-  slotMetrics: SlotMetrics
+  slotMetrics: TimeSlotMetrics
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
 }
 
@@ -96,7 +96,7 @@ const EventEndingRow = ({
   return <div className="rbc-row">{ row }</div>
 }
 
-export default EventEndingRow
+export { EventEndingRow }
 
 
 interface ShowMoreProps {

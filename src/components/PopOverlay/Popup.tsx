@@ -1,7 +1,7 @@
 import React, { forwardRef, useLayoutEffect } from "react"
 import getOffset from "dom-helpers/offset"
-import useClickOutside from "@/hooks/useClickOutside"
-import EventCell from "@/components/EventRow/EventCell"
+import { useClickOutside } from "@/hooks/useClickOutside"
+import { EventCell } from "@/components/EventRow/EventCell"
 import { isSelected } from "@/utils/eventSelectionHelpers"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
@@ -122,4 +122,4 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
   )
 })
 
-export default Popup
+export { Popup }

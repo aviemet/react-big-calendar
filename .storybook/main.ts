@@ -1,7 +1,7 @@
-import type { StorybookConfig } from '@storybook/react-webpack5'
-import path from 'path'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import webpack from 'webpack'
+import { StorybookConfig } from "@storybook/react-webpack5"
+import path from "path"
+import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin"
+import webpack from "webpack"
 
 const config: StorybookConfig = {
   stories: [
@@ -15,7 +15,7 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/blocks",
     {
-      name: '@storybook/addon-styling-webpack',
+      name: "@storybook/addon-styling-webpack",
       options: {
         rules: [
           {
@@ -32,8 +32,8 @@ const config: StorybookConfig = {
           {
             test: /\.css$/,
             use: [
-              'style-loader',
-              'css-loader',
+              "style-loader",
+              "css-loader",
             ],
           },
         ],
@@ -46,9 +46,9 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: true,
-    defaultName: 'Documentation',
+    defaultName: "Documentation",
   },
-  webpackFinal: async (config) => {
+  webpackFinal: async(config) => {
     if(!config.module) config.module = { rules: [] }
     if(!config.resolve) config.resolve = { alias: {}, plugins: [] }
     if(!config.plugins) config.plugins = []
@@ -62,17 +62,17 @@ const config: StorybookConfig = {
 
     config.plugins.push(
       new webpack.ProvidePlugin({
-        React: 'react',
+        React: "react",
       })
     )
 
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': path.resolve(__dirname, '../src'),
-      'react-big-calendar': path.resolve(__dirname, '../src'),
-      'globalize$': 'globalize/dist/globalize',
-      'cldr$': 'cldrjs',
-      'cldr': 'cldrjs/dist/cldr',
+      "@": path.resolve(__dirname, "../src"),
+      "react-big-calendar": path.resolve(__dirname, "../src"),
+      "globalize$": "globalize/dist/globalize",
+      "cldr$": "cldrjs",
+      "cldr": "cldrjs/dist/cldr",
     }
 
     return config

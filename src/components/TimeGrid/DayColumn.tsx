@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import clsx from "clsx"
-import Selection, { getBoundsForNode, isEvent } from "@/utils/selection"
-import TimeSlotGroup from "./TimeSlotGroup"
+import { Selection, getBoundsForNode, isEvent } from "@/utils/selection"
+import { TimeSlotGroup } from "./TimeSlotGroup"
 import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarProps, useCalendarContext } from "@/components/Calendar"
-import EventsWrapper from "./EventsWrapper"
+import { EventsWrapper } from "./EventsWrapper"
 import { Resource } from "@/utils/Resources"
-import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/types"
 import { CalendarEvent } from "@/utils/components"
+import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]
@@ -40,7 +40,7 @@ const DayColumn = (props: DayColumnProps) => {
   let {
     events,
     backgroundEvents,
-    step,
+    step = 1,
     date,
     min,
     max,
@@ -155,7 +155,7 @@ const DayColumn = (props: DayColumnProps) => {
       setSelectState(state)
     }
 
-    const selectorClicksHandler = (box: any, actionType: string) => {
+    const selectorClicksHandler = (box, actionType) => {
       if(!isEvent(containerRef.current, box)) {
         const { startDate, endDate } = selectionState(box)
         selectSlot({
@@ -256,8 +256,8 @@ const DayColumn = (props: DayColumnProps) => {
         "rbc-day-slot",
         "rbc-time-column",
         {
-          "rbc-now": isNow ,
-          "rbc-today": isNow ,
+          "rbc-now": isNow,
+          "rbc-today": isNow,
           "rbc-slot-selecting": selecting,
         }
       ) }
@@ -326,4 +326,4 @@ const DayColumn = (props: DayColumnProps) => {
 
 }
 
-export default DayColumn
+export { DayColumn }

@@ -1,5 +1,4 @@
-import React from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from "@storybook/addon-actions"
 
 const customComponents = {
   dateCellWrapper: (dateCellWrapperProps) => {
@@ -11,15 +10,15 @@ const customComponents = {
       : false
 
     const style = {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      borderLeft: '1px solid #DDD',
-      backgroundColor: hasAlert ? '#f5f5dc' : '#fff',
+      borderLeft: "1px solid #DDD",
+      backgroundColor: hasAlert ? "#f5f5dc" : "#fff",
     }
     return (
       <div style={ style }>
         { hasAlert && (
-          <a onClick={ action('custom dateCellWrapper component clicked') }>
+          <a onClick={ action("custom dateCellWrapper component clicked") }>
             Click me
           </a>
         ) }
@@ -33,23 +32,23 @@ const customComponents = {
       ? timeslotWrapperProps.value.getHours() === 4
       : false
     const style = {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      backgroundColor: hasCustomInfo ? '#f5f5dc' : '#fff',
+      backgroundColor: hasCustomInfo ? "#f5f5dc" : "#fff",
     }
     return (
       <div style={ style }>
-        { hasCustomInfo && 'Custom Day Wrapper' }
+        { hasCustomInfo && "Custom Day Wrapper" }
         { timeslotWrapperProps.children }
       </div>
     )
   },
   eventWrapper: (eventWrapperProps) => {
     const style = {
-      border: '4px solid',
+      border: "4px solid",
       borderColor:
-        eventWrapperProps.event.start.getHours() % 2 === 0 ? 'green' : 'red',
-      padding: '5px',
+        eventWrapperProps.event.start.getHours() % 2 === 0 ? "green" : "red",
+      padding: "5px",
     }
     return <div style={ style }>{ eventWrapperProps.children }</div>
   },
@@ -59,13 +58,13 @@ const customComponents = {
       timeslotWrapperProps.value.getMinutes() !== 0
         ? {}
         : {
-          border: '4px solid',
+          border: "4px solid",
           backgroundColor:
               timeslotWrapperProps.value.getHours() >= 8 &&
               timeslotWrapperProps.value.getHours() <= 17
-                ? 'green'
-                : 'red',
-          padding: '5px',
+                ? "green"
+                : "red",
+          padding: "5px",
         }
     return <div style={ style }>{ timeslotWrapperProps.children }</div>
   },

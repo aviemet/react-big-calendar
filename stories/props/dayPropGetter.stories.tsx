@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './dayPropGetter.mdx'
-import '../resources/propGetter.scss'
+import React, { useCallback, useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./dayPropGetter.mdx"
+import "../resources/propGetter.scss"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -21,12 +21,12 @@ export function DayPropGetter() {
   const dayPropGetter = useCallback(
     (date) => ({
       ...(moment(date).day() === 2 && {
-        className: 'tuesday',
+        className: "tuesday",
       }),
       ...(moment(date).day() === 4 && {
         style: {
-          backgroundColor: 'darkgreen',
-          color: 'white',
+          backgroundColor: "darkgreen",
+          color: "white",
         },
       }),
     }),
@@ -47,4 +47,4 @@ export function DayPropGetter() {
     </div>
   )
 }
-DayPropGetter.storyName = 'dayPropGetter'
+DayPropGetter.storyName = "dayPropGetter"

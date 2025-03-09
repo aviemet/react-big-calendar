@@ -1,10 +1,9 @@
-import React from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import Selectable from './exampleCode/selectable'
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import Selectable from "./exampleCode/selectable"
 
 export default {
-  title: 'Examples',
+  title: "Examples",
   component: Calendar,
   parameters: {
     docs: {
@@ -18,4 +17,4 @@ const localizer = momentLocalizer(moment)
 export function Example2() {
   return <Selectable localizer={ localizer } />
 }
-Example2.storyName = 'Create Events'
+Example2.storyName = "Create Events"

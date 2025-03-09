@@ -1,18 +1,17 @@
-import { action } from '@storybook/addon-actions'
+import { action } from "@storybook/addon-actions"
 
-import moment from 'moment'
-import 'moment-timezone'
-import React from 'react'
+import moment from "moment"
+import "moment-timezone"
 
-import { Calendar as BaseCalendar, momentLocalizer } from '../../src'
+import { Calendar as BaseCalendar, momentLocalizer } from "../../src"
 
 // For Testing SASS styling
-import '../../src/sass/styles.scss'
-import '../../src/addons/dragAndDrop/styles.scss'
+import "../../src/sass/styles.scss"
+import "../../src/addons/dragAndDrop/styles.scss"
 
-import withDragAndDrop from '../../src/addons/dragAndDrop'
+import { withDragAndDrop } from "../../src/addons/dragAndDrop"
 
-export { Views } from '../../src'
+export { Views } from "../../src"
 
 // uncomment for timezone testing in Storybook
 //moment.tz.setDefault('America/Los_Angeles')
@@ -35,9 +34,9 @@ export const DragableCalendar = (props) => {
       popup
       selectable
       localizer={ localizer }
-      onEventDrop={ action('event dropped') }
-      onSelectEvent={ action('event selected') }
-      onSelectSlot={ action('slot selected') }
+      onEventDrop={ action("event dropped") }
+      onSelectEvent={ action("event selected") }
+      onSelectSlot={ action("slot selected") }
       { ...props }
     />
   )
@@ -45,102 +44,102 @@ export const DragableCalendar = (props) => {
 
 export const events = [
   {
-    title: 'example 1',
-    start: moment().startOf('month').add(1, 'hours').toDate(),
-    end: moment().startOf('month').add(2, 'hours').toDate(),
+    title: "example 1",
+    start: moment().startOf("month").add(1, "hours").toDate(),
+    end: moment().startOf("month").add(2, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'example 2',
-    start: moment().startOf('month').add(1, 'hours').toDate(),
-    end: moment().startOf('month').add(2, 'hours').toDate(),
+    title: "example 2",
+    start: moment().startOf("month").add(1, "hours").toDate(),
+    end: moment().startOf("month").add(2, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'example 3',
-    start: moment().startOf('month').add(1, 'hours').toDate(),
-    end: moment().startOf('month').add(2, 'hours').toDate(),
+    title: "example 3",
+    start: moment().startOf("month").add(1, "hours").toDate(),
+    end: moment().startOf("month").add(2, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'example 4',
-    start: moment().startOf('month').add(1, 'hours').toDate(),
-    end: moment().startOf('month').add(2, 'hours').toDate(),
+    title: "example 4",
+    start: moment().startOf("month").add(1, "hours").toDate(),
+    end: moment().startOf("month").add(2, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'example 5',
-    start: moment().startOf('month').add(1, 'hours').toDate(),
-    end: moment().startOf('month').add(2, 'hours').toDate(),
+    title: "example 5",
+    start: moment().startOf("month").add(1, "hours").toDate(),
+    end: moment().startOf("month").add(2, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'test',
-    start: moment().add(1, 'days').subtract(5, 'hours').toDate(),
-    end: moment().add(1, 'days').subtract(4, 'hours').toDate(),
+    title: "test",
+    start: moment().add(1, "days").subtract(5, "hours").toDate(),
+    end: moment().add(1, "days").subtract(4, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'test larger',
-    start: moment().startOf('day').add(5, 'hours').toDate(),
-    end: moment().startOf('day').add(10, 'hours').toDate(),
+    title: "test larger",
+    start: moment().startOf("day").add(5, "hours").toDate(),
+    end: moment().startOf("day").add(10, "hours").toDate(),
     allDay: false,
   },
 
   {
-    title: 'test larger',
-    start: moment().startOf('day').add(15, 'hours').toDate(),
-    end: moment().startOf('day').add(23, 'hours').toDate(),
+    title: "test larger",
+    start: moment().startOf("day").add(15, "hours").toDate(),
+    end: moment().startOf("day").add(23, "hours").toDate(),
     allDay: false,
   },
   {
-    title: 'test all day',
-    start: moment().startOf('day').toDate(),
-    end: moment().startOf('day').add(1, 'day').toDate(),
+    title: "test all day",
+    start: moment().startOf("day").toDate(),
+    end: moment().startOf("day").add(1, "day").toDate(),
     allDay: true,
   },
   {
-    title: 'test 2 days',
-    start: moment().startOf('day').toDate(),
-    end: moment().startOf('day').add(2, 'days').toDate(),
+    title: "test 2 days",
+    start: moment().startOf("day").toDate(),
+    end: moment().startOf("day").add(2, "days").toDate(),
     allDay: true,
   },
   {
-    title: 'test multi-day',
+    title: "test multi-day",
     start: moment().toDate(),
-    end: moment().add(3, 'days').toDate(),
+    end: moment().add(3, "days").toDate(),
     allDay: false,
   },
 ]
 
 export const backgroundEvents = [
   {
-    title: 'test background event',
-    start: moment().startOf('day').add(2, 'hours').toDate(),
-    end: moment().startOf('day').add(12, 'hours').toDate(),
+    title: "test background event",
+    start: moment().startOf("day").add(2, "hours").toDate(),
+    end: moment().startOf("day").add(12, "hours").toDate(),
     allDay: false,
   },
 ]
 
 export const resourceEvents = [
   {
-    title: 'event 1',
-    start: moment().startOf('day').add(1, 'hours').toDate(),
-    end: moment().startOf('day').add(2, 'hours').toDate(),
+    title: "event 1",
+    start: moment().startOf("day").add(1, "hours").toDate(),
+    end: moment().startOf("day").add(2, "hours").toDate(),
     allDay: false,
     resourceId: 1,
   },
   {
-    title: 'event 2',
-    start: moment().startOf('day').add(3, 'hours').toDate(),
-    end: moment().startOf('day').add(4, 'hours').toDate(),
+    title: "event 2",
+    start: moment().startOf("day").add(3, "hours").toDate(),
+    end: moment().startOf("day").add(4, "hours").toDate(),
     allDay: false,
     resourceId: [1, 2],
   },
   {
-    title: 'event 3',
-    start: moment().startOf('day').add(1, 'hours').toDate(),
-    end: moment().startOf('day').add(3, 'hours').toDate(),
+    title: "event 3",
+    start: moment().startOf("day").add(1, "hours").toDate(),
+    end: moment().startOf("day").add(3, "hours").toDate(),
     allDay: false,
     resourceId: 3,
   },
@@ -149,14 +148,14 @@ export const resourceEvents = [
 export const resources = [
   {
     id: 1,
-    name: 'Resource One',
+    name: "Resource One",
   },
   {
     id: 2,
-    name: 'Resource Two',
+    name: "Resource Two",
   },
   {
     id: 3,
-    name: 'Resource Three',
+    name: "Resource Three",
   },
 ]

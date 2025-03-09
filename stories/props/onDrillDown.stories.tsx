@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './onDrillDown.mdx'
+import React, { useState, useCallback } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./onDrillDown.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -42,4 +42,4 @@ export function OnDrillDown() {
     </div>
   )
 }
-OnDrillDown.storyName = 'onDrillDown'
+OnDrillDown.storyName = "onDrillDown"

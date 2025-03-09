@@ -1,5 +1,5 @@
 import { navigate } from "@/utils/move"
-import TimeGrid from "@/components/TimeGrid"
+import { TimeGrid } from "@/components/TimeGrid"
 import { BaseViewProps, createViewComponent, ViewComponent } from ".."
 import { DateLocalizer } from "@/localizers"
 import { useCalendarContext } from "@/components/Calendar"
@@ -19,7 +19,7 @@ const weekViewRange: ViewComponent<WeekViewProps>["range"] = (date: Date, { loca
   return { start, end }
 }
 
-const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewProps<TEvent>) => {
+const WeekViewComponent = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewProps<TEvent>) => {
   const { localizer, date } = useCalendarContext()
 
   /**
@@ -35,7 +35,7 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
     enableAutoScroll = true,
   } = props
 
-  const { start, end }  = weekViewRange(date, { localizer })
+  const { start, end } = weekViewRange(date, { localizer })
   const range = localizer.range(start, end)
 
   return (<>
@@ -52,7 +52,7 @@ const WeekView = <TEvent extends CalendarEvent = CalendarEvent>(props: WeekViewP
 
 }
 
-export default createViewComponent(WeekView, {
+export const WeekView = createViewComponent(WeekViewComponent, {
   range: weekViewRange,
 
   navigate: (date, action, { localizer }) => {

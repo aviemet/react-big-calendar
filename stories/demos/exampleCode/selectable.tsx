@@ -1,15 +1,15 @@
-import React, { Fragment, useState, useCallback, useMemo } from 'react'
+import React, { Fragment, useState, useCallback, useMemo } from "react"
 
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
 
 export default function Selectable({ localizer }) {
   const [myEvents, setEvents] = useState(events)
 
   const handleSelectSlot = useCallback(
     ({ start, end }) => {
-      const title = window.prompt('New Event name')
+      const title = window.prompt("New Event name")
       if(title) {
         setEvents((prev) => [...prev, { start, end, title }])
       }

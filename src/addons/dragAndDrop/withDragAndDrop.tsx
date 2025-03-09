@@ -1,14 +1,13 @@
-
 import { useState } from "react"
 import clsx from "clsx"
-import EventWrapper from "./EventWrapper"
-import EventContainerWrapper from "./EventContainerWrapper"
-import WeekWrapper from "./WeekWrapper"
+import { EventWrapper } from "./EventWrapper"
+import { EventContainerWrapper } from "./EventContainerWrapper"
+import { WeekWrapper } from "./WeekWrapper"
 import { mergeComponents } from "./common"
 import { DnDContext } from "./DnDContext"
-import CalendarComponent, { CalendarProps } from "@/components/Calendar"
+import { Calendar as CalendarComponent, CalendarProps } from "@/components/Calendar"
 
-interface DragAndDropCalendarProps extends CalendarProps {
+export interface DragAndDropCalendarProps extends CalendarProps {
   onEventDrop: (event: any) => void
   onEventResize: (event: any) => void
   onDragStart: (event: any) => void
@@ -21,7 +20,7 @@ interface DragAndDropCalendarProps extends CalendarProps {
   resizable: boolean
 }
 
-export default function withDragAndDrop(Calendar: typeof CalendarComponent) {
+function withDragAndDrop(Calendar: typeof CalendarComponent) {
   const DragAndDropCalendar = ({
     components,
     elementProps,
@@ -116,3 +115,5 @@ export default function withDragAndDrop(Calendar: typeof CalendarComponent) {
 
   return DragAndDropCalendar
 }
+
+export { withDragAndDrop }

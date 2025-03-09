@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './components.mdx'
-import CustomToolbar from './customComponents/CustomToolbar.component'
-import '../resources/customToolbar.scss'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./components.mdx"
+import CustomToolbar from "./customComponents/CustomToolbar.component"
+import "../resources/customToolbar.scss"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -40,4 +40,4 @@ export function Components() {
     </div>
   )
 }
-Components.storyName = 'components'
+Components.storyName = "components"

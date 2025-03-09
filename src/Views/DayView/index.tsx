@@ -1,5 +1,5 @@
 import { navigate } from "@/utils/move"
-import TimeGrid from "@/components/TimeGrid"
+import { TimeGrid } from "@/components/TimeGrid"
 import { BaseViewProps, createViewComponent } from "@/Views"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
@@ -16,7 +16,7 @@ export interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> exte
   eventOffset?: number
 }
 
-const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewProps<TEvent>) => {
+const DayViewComponent = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewProps<TEvent>) => {
   const { localizer, date } = useCalendarContext()
 
   /**
@@ -44,7 +44,7 @@ const DayView = <TEvent extends CalendarEvent = CalendarEvent>(props: DayViewPro
   )
 }
 
-export default createViewComponent(DayView, {
+export const DayView = createViewComponent(DayViewComponent, {
   range: (date: Date, { localizer }) => {
     return { start: localizer.startOf(date, "day"), end: localizer.endOf(date, "day") }
   },

@@ -39,4 +39,4 @@ const TimeSlotGroup = ({
   )
 }
 
-export default TimeSlotGroup
+export { TimeSlotGroup }

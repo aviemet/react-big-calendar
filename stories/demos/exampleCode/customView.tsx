@@ -1,18 +1,17 @@
-import React, { Fragment, useMemo } from 'react'
+import { Fragment, useMemo } from "react"
 
-
-import * as dates from 'date-arithmetic'
-import { Calendar, Views, Navigate, DateLocalizer } from 'react-big-calendar'
-import TimeGrid from '@/components/TimeGrid' // use 'react-big-calendar/lib/TimeGrid'. Can't 'alias' in Storybook
-import events from '../../resources/events'
-import DemoLink from '../../DemoLink.component'
+import * as dates from "date-arithmetic"
+import { Calendar, Views, Navigate, DateLocalizer } from "react-big-calendar"
+import { TimeGrid } from "@/components/TimeGrid" // use 'react-big-calendar/lib/TimeGrid'. Can't 'alias' in Storybook
+import events from "../../resources/events"
+import DemoLink from "../../DemoLink.component"
 
 function MyWeek({
   date,
   localizer,
-  max = localizer.endOf(new Date(), 'day'),
-  min = localizer.startOf(new Date(), 'day'),
-  scrollToTime = localizer.startOf(new Date(), 'day'),
+  max = localizer.endOf(new Date(), "day"),
+  min = localizer.startOf(new Date(), "day"),
+  scrollToTime = localizer.startOf(new Date(), "day"),
   ...props
 }) {
   const currRange = useMemo(
@@ -44,14 +43,14 @@ function MyWeek({
 
 MyWeek.range = (date, { localizer }) => {
   const start = date
-  const end = dates.add(start, 2, 'day')
+  const end = dates.add(start, 2, "day")
 
   let current = start
   const range = []
 
-  while(localizer.lte(current, end, 'day')) {
+  while(localizer.lte(current, end, "day")) {
     range.push(current)
-    current = localizer.add(current, 1, 'day')
+    current = localizer.add(current, 1, "day")
   }
 
   return range
@@ -60,10 +59,10 @@ MyWeek.range = (date, { localizer }) => {
 MyWeek.navigate = (date, action, { localizer }) => {
   switch(action) {
     case Navigate.PREVIOUS:
-      return localizer.add(date, -3, 'day')
+      return localizer.add(date, -3, "day")
 
     case Navigate.NEXT:
-      return localizer.add(date, 3, 'day')
+      return localizer.add(date, 3, "day")
 
     default:
       return date

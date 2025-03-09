@@ -436,4 +436,4 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
   })
 }
 
-export default luxonLocalizer
+export { luxonLocalizer }

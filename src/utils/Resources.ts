@@ -4,22 +4,20 @@ import { CalendarEvent } from "./components"
 export type Resource = {
   id: string | number
   title: string
-  [key: string | number]: any
+  [key: string | number]: unknown
 }
 
-type MapCallback = (resource: [string | number, Resource], index: number) => Resource[]
-
-export default function Resources(resources: Resource[], accessors: Accessors) {
+function Resources<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(resources: TResource[] | undefined, accessors: Accessors) {
   return {
-    map: (fn: MapCallback) => {
-      if(!resources) return [fn([{}, null], 0)]
+    map: <TReturn>(fn: (resource: [string | number, TResource | null], index: number) => TReturn) => {
+      if(!resources || resources.length < 1) return [fn([{}, null], 0)]
 
-      return resources.map((resource, Index) =>
+      return resources.map((resource, index) =>
         fn([accessors.resourceId(resource), resource], index)
       )
     },
 
-    groupEvents: (events: CalendarEvent[]) => {
+    groupEvents: (events: TEvent[]) => {
       const eventsByResource = new Map()
 
       if(!resources) {
@@ -48,3 +46,5 @@ export default function Resources(resources: Resource[], accessors: Accessors) {
     },
   }
 }
+
+export { Resources }

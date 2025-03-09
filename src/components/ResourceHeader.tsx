@@ -1,5 +1,3 @@
-import React from "react"
-
 export interface ResourceHeaderProps<TResource extends object = object> {
   label: React.ReactNode
   index: number
@@ -10,4 +8,4 @@ const ResourceHeader = ({ label, ...props }: ResourceHeaderProps) => {
   return <>{ label }</>
 }
 
-export default ResourceHeader
+export { ResourceHeader }

@@ -1,10 +1,9 @@
-import React from 'react'
-import { Calendar } from '../../src'
-import { accessorStoryArgs } from './storyDefaults'
-import mdx from './endAccessor.mdx'
+import { Calendar } from "../../src"
+import { accessorStoryArgs } from "./storyDefaults"
+import mdx from "./endAccessor.mdx"
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   argTypes: {
     localizer: { control: { type: null } },
@@ -29,5 +28,5 @@ const Template = (args) => (
 )
 
 export const EndAccessor = Template.bind({})
-EndAccessor.storyName = 'endAccessor'
+EndAccessor.storyName = "endAccessor"
 EndAccessor.args = accessorStoryArgs

@@ -1,8 +1,6 @@
-export interface HeaderProps {
-  label: string
-}
+import { ViewHeaderProps } from "."
 
-const Header = ({ label }: HeaderProps) => {
+const Header = ({ label }: ViewHeaderProps) => {
   return (
     <span role="columnheader" aria-sort="none">
       { label }
@@ -10,4 +8,4 @@ const Header = ({ label }: HeaderProps) => {
   )
 }
 
-export default Header
+export { Header }

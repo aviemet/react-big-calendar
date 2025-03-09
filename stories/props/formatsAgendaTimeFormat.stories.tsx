@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsAgendaTimeFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsAgendaTimeFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,7 +22,7 @@ export function FormatsAgendTimeFormat() {
       defaultDate: new Date(2015, 3, 13),
       formats: {
         agendaTimeFormat: (date, culture, localizer) =>
-          localizer.format(date, 'hh:mm A', culture),
+          localizer.format(date, "hh:mm A", culture),
       },
       views: [Views.WEEK, Views.DAY, Views.AGENDA],
     }),
@@ -42,4 +42,4 @@ export function FormatsAgendTimeFormat() {
     </div>
   )
 }
-FormatsAgendTimeFormat.storyName = 'formats.agendaTimeFormat'
+FormatsAgendTimeFormat.storyName = "formats.agendaTimeFormat"

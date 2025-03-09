@@ -1,8 +1,8 @@
-import React, { useMemo, Fragment } from 'react'
+import React, { useMemo, Fragment } from "react"
 
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
+import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
 
 export default function Timeslots({ localizer }) {
   const defaultDate = useMemo(() => new Date(2015, 3, 12), [])

@@ -1,17 +1,16 @@
-import React from "react"
 import clsx from "clsx"
 import scrollbarSize from "dom-helpers/scrollbarSize"
-import DateContentRow from "@/components/DateContentRow"
-import { Resource } from "@/utils/Resources"
+import { DateContentRow } from "@/components/DateContentRow"
+import { Resources, type Resource } from "@/utils/Resources"
 import { useCalendarContext } from "@/components/Calendar"
-import TimeGridHeaderCells from "./TimeGridHeaderCells"
 import { DateRange } from "@/localizers"
 import { CalendarEvent } from "@/utils/components"
+import { WeekdayHeader } from "../WeekdayHeader"
 
 interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  range: DateRange //Date[]
+  range: Date[]
   events: TEvent[]
-  resources: TResource[]
+  resources: ReturnType<typeof Resources<TEvent, TResource>>
   isOverflowing: boolean
   resizable: boolean
   width: number
@@ -49,8 +48,6 @@ const TimeGridHeader = ({
   longPressThreshold,
   selected,
 }: TimeGridHeaderProps) => {
-  const { localizer } = useCalendarContext ()
-
   const { accessors, rtl, getNow, components: {
     timeGutterHeader: TimeGutterHeader,
     resourceHeader: ResourceHeaderComponent,
@@ -63,145 +60,73 @@ const TimeGridHeader = ({
 
   const groupedEvents = resources.groupEvents(events)
 
-  const rangeArray = localizer.range(range.start, range.end)
-
   return (
     <div
       style={ style }
       ref={ scrollRef }
-      className={ clsx("rbc-time-header", isOverflowing && "rbc-overflowing") }
+      className={ clsx("rbc-time-header", { "rbc-overflowing": isOverflowing }) }
     >
       <div
         className="rbc-label rbc-time-header-gutter"
         style={ { width, minWidth: width, maxWidth: width } }
       >
-        { TimeGutterHeader && <TimeGutterHeader /> }
+        <TimeGutterHeader />
       </div>
 
-      { resources.map(([id, resource], Index) => (
-        <div className="rbc-time-header-content" key={ id || Index }>
-          { resource && (
-            <div className="rbc-row rbc-row-resource" key={ `resource_${Index}` }>
-              <div className="rbc-header">
-                <ResourceHeaderComponent
-                  index={ Index }
-                  label={ accessors.resourceTitle(resource) }
-                  resource={ resource }
-                />
+      { resources.map(([id, resource], index) => {
+        return (
+          <div className="rbc-time-header-content" key={ id || index }>
+
+            { resource && (
+              <div className="rbc-row rbc-row-resource" key={ `resource_${index}` }>
+                <div className="rbc-header">
+                  <ResourceHeaderComponent
+                    index={ index }
+                    label={ accessors.resourceTitle(resource) }
+                    resource={ resource }
+                  />
+                </div>
               </div>
+            ) }
+
+            <div
+              className={ clsx("rbc-row", "rbc-time-header-cell", {
+                " rbc-time-header-cell-single-day": range.length <= 1,
+              }) }
+            >
+              <WeekdayHeader
+                range={ range }
+                getDrilldownView={ getDrilldownView }
+                getNow={ getNow }
+                onDrillDown={ onDrillDown }
+              />
             </div>
-          ) }
-          <div
-            className={ `rbc-row rbc-time-header-cell${
-              rangeArray.length <= 1 ? " rbc-time-header-cell-single-day" : ""
-            }` }
-          >
-            { <TimeGridHeaderCells
-              range={ rangeArray }
-              getDrilldownView={ getDrilldownView }
-              getNow={ getNow }
-              onDrillDown={ onDrillDown }
-            /> }
+            <DateContentRow
+              isAllDay
+              minRows={ 2 }
+              // Add +1 to include showMore button row in the row limit
+              renderHeader={ false }
+              maxRows={ allDayMaxRows + 1 }
+              range={ range }
+              events={ groupedEvents.get(id) || [] }
+              resourceId={ resource && id }
+              className="rbc-allday-cell"
+              selectable={ selectable }
+              selected={ selected }
+              onSelect={ onSelectEvent }
+              onShowMore={ onShowMore }
+              onDoubleClick={ onDoubleClickEvent }
+              onKeyDown={ onKeyPressEvent }
+              onSelectSlot={ onSelectSlot }
+              longPressThreshold={ longPressThreshold }
+              resizable={ resizable }
+            />
           </div>
-          <DateContentRow
-            isAllDay
-            minRows={ 2 }
-            // Add +1 to include showMore button row in the row limit
-            maxRows={ allDayMaxRows + 1 }
-            range={ rangeArray }
-            events={ groupedEvents.get(id) || [] }
-            resourceId={ resource && id }
-            className="rbc-allday-cell"
-            selectable={ selectable }
-            selected={ selected }
-            onSelect={ onSelectEvent }
-            onShowMore={ onShowMore }
-            onDoubleClick={ onDoubleClickEvent }
-            onKeyDown={ onKeyPressEvent }
-            onSelectSlot={ onSelectSlot }
-            longPressThreshold={ longPressThreshold }
-            resizable={ resizable }
-          />
-        </div>
-      )) }
+        )
+      }) }
     </div>
   )
 
 }
 
-export default TimeGridHeader
-
-
-// This was never used?
-
-// interface RowProps {
-//   resource: Resource
-//   events: CalendarEvent[]
-//   rtl: boolean
-//   selectable: boolean | 'ignoreEvents'
-//   getNow: () => Date
-//   range: Date[]
-//   getters: Getters
-//   accessors: Accessors
-//   components: Components
-//   resizable: boolean
-//   allDayMaxRows: number
-//   onSelectEvent: (event: CalendarEvent) => void
-//   onShowMore: (events: CalendarEvent[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
-//   onDoubleClickEvent: (event: CalendarEvent) => void
-//   onKeyPressEvent: (event: CalendarEvent) => void
-//   onSelectSlot: (slot: Date[]) => void
-//   longPressThreshold: number
-// }
-
-// const Row = ({
-//   resource,
-//   events,
-//   rtl,
-//   selectable,
-//   getNow,
-//   range,
-//   getters,
-//   accessors,
-//   components,
-//   resizable,
-//   allDayMaxRows,
-//   onSelectEvent,
-//   onShowMore,
-//   onDoubleClickEvent,
-//   onKeyPressEvent,
-//   onSelectSlot,
-//   longPressThreshold,
-// }: RowProps) => {
-//   const resourceId = accessors.resourceId(resource)
-//   let eventsToDisplay = resource
-//     ? events.filter((event) => accessors.resource(event) === resourceId)
-//     : events
-
-//   return (
-//     <DateContentRow
-//       isAllDay
-//       rtl={ rtl }
-//       getNow={ getNow }
-//       minRows={ 2 }
-//       // Add +1 to include showMore button row in the row limit
-//       maxRows={ allDayMaxRows + 1 }
-//       range={ range }
-//       events={ eventsToDisplay }
-//       resourceId={ resourceId }
-//       className="rbc-allday-cell"
-//       selectable={ selectable }
-//       selected={ selected }
-//       components={ components }
-//       accessors={ accessors }
-//       getters={ getters }
-//       onSelect={ onSelectEvent }
-//       onShowMore={ onShowMore }
-//       onDoubleClick={ onDoubleClickEvent }
-//       onKeyPress={ onKeyPressEvent }
-//       onSelectSlot={ onSelectSlot }
-//       longPressThreshold={ longPressThreshold }
-//       resizable={ resizable }
-//     />
-//   )
-// }
+export { TimeGridHeader }

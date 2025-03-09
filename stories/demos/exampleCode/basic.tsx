@@ -1,21 +1,21 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from "react"
 
-import dayjs from 'dayjs'
+import dayjs from "dayjs"
 import {
   Calendar,
   Views,
   dayjsLocalizer,
-} from '../../../src'
-import DemoLink from '../../DemoLink.component'
-import events from '../../resources/events'
-import * as dates from '../../../src/utils/dates'
+} from "../../../src"
+import DemoLink from "../../DemoLink.component"
+import events from "../../resources/events"
+import * as dates from "../../../src/utils/dates"
 
 const dLocalizer = dayjsLocalizer(dayjs)
 
-const ColoredDateCellWrapper = ({ children }) =>(
+const ColoredDateCellWrapper = ({ children }) => (
   React.cloneElement(React.Children.only(children), {
     style: {
-      backgroundColor: 'lightblue',
+      backgroundColor: "lightblue",
     },
   })
 )
@@ -40,7 +40,7 @@ export default function Basic({
       //   },
       // },
       defaultDate: new Date(2015, 3, 1),
-      max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'),
+      max: dates.add(dates.endOf(new Date(2015, 17, 1), "day"), -1, "hours"),
       views: Object.keys(Views).map((k) => Views[k]),
     }),
     []

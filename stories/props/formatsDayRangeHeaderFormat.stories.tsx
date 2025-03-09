@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, Views, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './formatsDayRangeHeaderFormat.mdx'
+import React, { useMemo } from "react"
+import moment from "moment"
+import { Calendar, Views, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./formatsDayRangeHeaderFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -22,9 +22,9 @@ export function FormatsDayRangeHeaderFormat() {
       defaultDate: new Date(2015, 3, 13),
       formats: {
         dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
-          localizer.format(start, 'ddd D', culture) +
-          ' - ' +
-          localizer.format(end, 'ddd D', culture),
+          localizer.format(start, "ddd D", culture) +
+          " - " +
+          localizer.format(end, "ddd D", culture),
       },
       views: [Views.WEEK, Views.DAY],
     }),
@@ -44,4 +44,4 @@ export function FormatsDayRangeHeaderFormat() {
     </div>
   )
 }
-FormatsDayRangeHeaderFormat.storyName = 'formats.dayRangeHeaderFormat'
+FormatsDayRangeHeaderFormat.storyName = "formats.dayRangeHeaderFormat"

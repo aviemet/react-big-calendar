@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer, Views } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './onRangeChange.mdx'
+import React, { useState, useCallback } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer, Views } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./onRangeChange.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -18,7 +18,7 @@ export default {
 
 function buildMessage(range) {
   if(!range) {
-    return 'no range'
+    return "no range"
   }
   if(!Array.isArray(range)) {
     return `[onRangeChange] was given an object with
@@ -59,4 +59,4 @@ export function OnRangeChange() {
     </div>
   )
 }
-OnRangeChange.storyName = 'onRangeChange'
+OnRangeChange.storyName = "onRangeChange"

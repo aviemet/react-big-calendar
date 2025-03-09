@@ -1,7 +1,6 @@
 import { DateLocalizer } from "@/localizers"
 import * as dateArithmetic from "date-arithmetic"
-import { Unit } from "date-arithmetic"
-import { StartOfWeek } from "date-arithmetic"
+import { Unit, StartOfWeek } from "date-arithmetic"
 
 export {
   milliseconds,
@@ -65,6 +64,7 @@ export function visibleDays(date: Date, localizer: DateLocalizer) {
 
 export function ceil(date: Date, unit: Unit, startOfWeek?: StartOfWeek) {
   let floor
+
   if(unit === "week") {
     floor = dateArithmetic.startOf(date, unit, startOfWeek)
   } else {
@@ -75,8 +75,8 @@ export function ceil(date: Date, unit: Unit, startOfWeek?: StartOfWeek) {
 }
 
 export function range(start: Date, end: Date, unit: Unit = "day") {
-  let current = start,
-      days = []
+  let current = start
+  const days = []
 
   while(dateArithmetic.lte(current, end, unit)) {
     days.push(current)

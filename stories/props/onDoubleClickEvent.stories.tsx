@@ -1,13 +1,13 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from '../../src'
-import demoEvents from '../resources/events'
-import mdx from './onDoubleClickEvent.mdx'
+import React, { useCallback, useRef, useEffect, useMemo } from "react"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "../../src"
+import demoEvents from "../resources/events"
+import mdx from "./onDoubleClickEvent.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 
 export default {
-  title: 'props',
+  title: "props",
   component: Calendar,
   parameters: {
     docs: {
@@ -45,7 +45,7 @@ export function OnDoubleClickEvent() {
      */
     window.clearTimeout(clickRef?.current)
     clickRef.current = window.setTimeout(() => {
-      window.alert(buildMessage(calEvent, 'onSelectEvent'))
+      window.alert(buildMessage(calEvent, "onSelectEvent"))
     }, 250)
   }, [])
 
@@ -55,7 +55,7 @@ export function OnDoubleClickEvent() {
      */
     window.clearTimeout(clickRef?.current)
     clickRef.current = window.setTimeout(() => {
-      window.alert(buildMessage(calEvent, 'onDoubleClickEvent'))
+      window.alert(buildMessage(calEvent, "onDoubleClickEvent"))
     }, 250)
   }, [])
 
@@ -73,4 +73,4 @@ export function OnDoubleClickEvent() {
     </div>
   )
 }
-OnDoubleClickEvent.storyName = 'onDoubleClickEvent'
+OnDoubleClickEvent.storyName = "onDoubleClickEvent"
