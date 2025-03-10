@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import clsx from "clsx"
 import chunk from "lodash/chunk"
-import { navigate } from "@/utils/move"
+import { navigate } from "@/utils/moveDate"
 import getPosition from "dom-helpers/position"
 import { BaseViewProps, createViewComponent, ViewName, views } from "@/Views"
 import { useMonthViewState } from "./useMonthViewState"

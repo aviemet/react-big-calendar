@@ -1,4 +1,4 @@
-import { navigate } from "@/utils/move"
+import { navigate } from "@/utils/moveDate"
 import { TimeGrid } from "@/components/TimeGrid"
 import { BaseViewProps, createViewComponent, ViewComponent } from ".."
 import { DateLocalizer } from "@/localizers"

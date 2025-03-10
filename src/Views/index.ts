@@ -1,15 +1,23 @@
-import { NavigateAction } from "../utils/move"
+import { NavigateAction } from "../utils/moveDate"
 import { MonthView } from "./MonthView"
 import { WeekView } from "./WeekView"
 import { WorkWeekView } from "./WorkWeekView"
 import { DayView } from "./DayView"
 import { AgendaView } from "./AgendaView"
 import { DateLocalizer, DateRange } from "../localizers"
-import { CalendarProps } from "../components/Calendar"
 import { Resource } from "@/utils/Resources"
-import { CalendarEvent, SlotInfo } from "@/utils/components"
+import { CalendarEvent, Getters, SlotInfo } from "@/utils/components"
+import { Accessors } from "@/utils/accessors"
 
-export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
+export type ViewStaticMethodProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
+  date: Date
+  today: Date
+  localizer: DateLocalizer
+  events: TEvent[] | undefined
+  resources: TResource[] | undefined
+  accessors: Accessors<TEvent>
+  getters: Getters<TEvent>
+}
 
 export type ViewsProps =
     | ViewName[]
@@ -54,24 +62,25 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   // [key: string]: any
 }
 
-export type ViewComponent<TProps extends BaseViewProps = BaseViewProps> = React.ComponentType<TProps> & {
-  range: (date: Date, props?: CalendarPropsWithLocalizer) => DateRange
-  navigate: (date: Date, action: NavigateAction, props?: CalendarPropsWithLocalizer) => Date
-  title: (date: Date, props?: CalendarPropsWithLocalizer) => string
+export type ViewComponent<TProps extends BaseViewProps = BaseViewProps, TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = React.ComponentType<TProps> & {
+  range: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => DateRange
+  navigate: (date: Date, action: NavigateAction, props?: ViewStaticMethodProps<TEvent, TResource>) => Date
+  title: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => string
 }
 
 export function createViewComponent<
   TEvent extends CalendarEvent = CalendarEvent,
+  TResource extends Resource = Resource,
   TProps extends BaseViewProps<TEvent> = BaseViewProps<TEvent>
 >(
   component: React.ComponentType<TProps>,
   staticProps: {
-    range: ViewComponent<TProps>["range"]
-    navigate: ViewComponent<TProps>["navigate"]
-    title: ViewComponent<TProps>["title"]
+    range: ViewComponent<TProps, TEvent, TResource>["range"]
+    navigate: ViewComponent<TProps, TEvent, TResource>["navigate"]
+    title: ViewComponent<TProps, TEvent, TResource>["title"]
   }
-): ViewComponent<TProps> {
-  const viewComponent = component as ViewComponent<TProps>
+): ViewComponent<TProps, TEvent, TResource> {
+  const viewComponent = component as ViewComponent<TProps, TEvent, TResource>
   viewComponent.range = staticProps.range
   viewComponent.navigate = staticProps.navigate
   viewComponent.title = staticProps.title

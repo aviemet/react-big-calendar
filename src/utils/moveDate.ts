@@ -1,6 +1,7 @@
 import invariant from "invariant"
-import { VIEW_COMPONENTS, type ViewComponent } from "@/Views"
-import { DateLocalizer } from "@/localizers"
+import { VIEW_COMPONENTS, ViewStaticMethodProps, type ViewComponent } from "@/Views"
+import { CalendarEvent } from "./components"
+import { Resource } from "./Resources"
 
 export let navigate = {
   PREVIOUS: "PREV",
@@ -12,19 +13,13 @@ export let navigate = {
 export type NavigateKey = keyof typeof navigate
 export type NavigateAction = typeof navigate[NavigateKey]
 
-export type MoveDateOptions = {
+export type MoveDateOptions<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = ViewStaticMethodProps<TEvent, TResource> & {
   action: NavigateAction
-  date: Date
-  today: Date
-  localizer: DateLocalizer
-} // & CalendarProps
+}
 
-// TODO: Removed extra props passthrough because it was making the types difficult
-// need to assess if passing props to the ViewComponent static methods is required
-
-export const moveDate = (
+export const moveDate = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(
   View: ViewComponent,
-  { action, date, today, ...props }: MoveDateOptions
+  { action, date, today, ...props }: MoveDateOptions<TEvent, TResource>
 ) => {
   View = typeof View === "string" ? VIEW_COMPONENTS[View] : View
 

@@ -1,5 +1,5 @@
 import { useCalendarContext } from "./Calendar"
-import { navigate, NavigateAction } from "../utils/move"
+import { navigate, NavigateAction } from "../utils/moveDate"
 import { ViewName } from "../Views"
 import clsx from "clsx"
 

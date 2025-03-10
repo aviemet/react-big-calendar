@@ -10,7 +10,7 @@ import {
   moveDate,
   navigate,
   NavigateAction,
-} from "@/utils/move"
+} from "@/utils/moveDate"
 import { coerceDate } from "@/utils/helpers"
 import { Messages } from "@/utils/messages"
 import { transform } from "lodash-es"
@@ -837,17 +837,18 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     resources = [],
     dayLayoutAlgorithm = "overlap",
 
-    // popup = false,
-    // step = 30,
-    // allDayMaxRows = Infinity,
-    // longPressThreshold = 250,
-    // onSelecting,
-    // min,
-    // max,
-    // scrollToTime,
-    // enableAutoScroll,
-    // showAllEvents,
-    // selectable,
+    // Not used in Calendar, passed to View
+    popup = false,
+    step = 30,
+    allDayMaxRows = Infinity,
+    longPressThreshold = 250,
+    onSelecting,
+    min,
+    max,
+    scrollToTime,
+    enableAutoScroll,
+    showAllEvents,
+    selectable,
   } = controlledProps
 
   const getNow = props.getNow ?? (() => new Date())
@@ -977,7 +978,15 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       return
     }
 
-    onRangeChange?.(viewComponent.range(date, { localizer: localLocalizer }), view)
+    onRangeChange?.(viewComponent.range(date, {
+      localizer: localLocalizer,
+      date: coerceDate(date || getNow()),
+      today: getNow(),
+      events,
+      resources,
+      accessors,
+      getters,
+    }), view)
   }
 
   const handleNavigate = (action: NavigateAction, newDate: Date) => {
@@ -987,8 +996,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       localizer,
       action,
       today,
-      ...controlledProps,
       date: coerceDate(newDate || date || today),
+      accessors,
+      getters,
+      events,
+      resources,
     })
 
     onNavigate?.(movedDate, view, action)
@@ -1041,20 +1053,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   }
 
   const current = coerceDate(date || getNow())
-
-  const {
-    popup = false,
-    step = 30,
-    allDayMaxRows = Infinity,
-    longPressThreshold = 250,
-    onSelecting,
-    min,
-    max,
-    scrollToTime,
-    enableAutoScroll,
-    showAllEvents,
-    selectable,
-  } = controlledProps
 
   return (
     <CalendarProvider value={ {

@@ -17,10 +17,10 @@ export {
   dayjsLocalizer,
 } from "./localizers"
 
-export { moveDate as move } from "./utils/move"
+export { moveDate as move } from "./utils/moveDate"
 
 export {
   navigate as Navigate,
-} from "./utils/move"
+} from "./utils/moveDate"
 
 export { views as Views } from "./Views"
