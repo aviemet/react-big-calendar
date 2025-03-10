@@ -4,10 +4,15 @@ import { EventWrapper } from "./EventWrapper"
 import { EventContainerWrapper } from "./EventContainerWrapper"
 import { WeekWrapper } from "./WeekWrapper"
 import { mergeComponents } from "./common"
-import { DnDContext } from "./DnDContext"
 import { Calendar as CalendarComponent, CalendarProps } from "@/components/Calendar"
+import { CalendarEvent } from "@/utils/components"
+import { Resource } from "@/utils/Resources"
+import { createContext } from "@/hooks/createContext"
 
-export interface DragAndDropCalendarProps extends CalendarProps {
+const [useDndContext, DndContextProvider] = createContext()
+export { useDndContext }
+
+export type DragAndDropCalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = CalendarProps<TEvent, TResource> & {
   onEventDrop: (event: any) => void
   onEventResize: (event: any) => void
   onDragStart: (event: any) => void
@@ -91,7 +96,7 @@ function withDragAndDrop(Calendar: typeof CalendarComponent) {
     )
 
     return (
-      <DnDContext.Provider value={ {
+      <DndContextProvider value={ {
         draggable: {
           onStart: handleInteractionStart,
           onEnd: handleInteractionEnd,
@@ -108,7 +113,7 @@ function withDragAndDrop(Calendar: typeof CalendarComponent) {
           elementProps={ elementPropsWithDropFromOutside }
           components={ dndComponents }
         />
-      </DnDContext.Provider>
+      </DndContextProvider>
     )
   }
 
