@@ -53,7 +53,43 @@ type CalendarContext<TEvent extends CalendarEvent = CalendarEvent> = {
 const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
 export { useCalendarContext }
 
-export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
+type ControlledDateProps = {
+  /**
+   * The current date value of the calendar. Determines the visible view range.
+   * If `date` is omitted then the result of `getNow` is used otherwise the
+   * current date is used.
+   *
+   * @controllable onNavigate
+   */
+  date: string | Date
+
+  /**
+   * Callback fired when the `date` value changes.
+   *
+   * @controllable date
+   */
+  onNavigate: (newDate: Date, view: ViewName, action: NavigateAction) => Date
+
+  defaultDate?: never
+}
+
+type UncontrolledDateProps = {
+  /**
+   * Callback fired when the `date` value changes.
+   *
+   * @controllable date
+   */
+  onNavigate?: ((newDate: Date, view: ViewName, action: NavigateAction) => void) | undefined
+  /**
+   * Sets the initial date value in your calendar when you don't want it to
+   * be 'today', when not using getNow.
+   */
+  defaultDate?: string | Date
+
+  date?: never
+}
+
+type CalendarBaseProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
   children?: React.ReactNode
   className?: string | undefined
   style?: React.CSSProperties | undefined
@@ -86,7 +122,7 @@ export interface CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TRe
    * import {luxonLocalizer} from 'react-big-calendar'
    * import {DateTime, Settings} from 'luxon'
    * import useMemo from 'react';
-import { VIEW_COMPONENTS } from '@/Views';
+   *import { VIEW_COMPONENTS } from '@/Views';
    * // only use `Settings` if you require optional time zone support
    * Settings.defaultZone = 'America/Los_Angeles'
    * // end optional time zone support
@@ -107,15 +143,6 @@ import { VIEW_COMPONENTS } from '@/Views';
    *
    */
   elementProps?: React.HTMLAttributes<HTMLElement> | undefined
-
-  /**
-   * The current date value of the calendar. Determines the visible view range.
-   * If `date` is omitted then the result of `getNow` is used otherwise the
-   * current date is used.
-   *
-   * @controllable onNavigate
-   */
-  date?: string | Date | undefined
 
   /**
    * The current view of the calendar.
@@ -307,13 +334,6 @@ import { VIEW_COMPONENTS } from '@/Views';
    * @default () => new Date()
    */
   getNow?: (() => Date) | undefined
-
-  /**
-   * Callback fired when the `date` value changes.
-   *
-   * @controllable date
-   */
-  onNavigate?: ((newDate: Date, view: ViewName, action: NavigateAction) => void) | undefined
 
   /**
    * Callback fired when the `view` value changes.
@@ -699,87 +719,98 @@ import { VIEW_COMPONENTS } from '@/Views';
   formats?: Formats | undefined
 
   /**
-     * Customize how different sections of the calendar render by providing custom Components.
-     * In particular the `Event` component can be specified for the entire calendar, or you can
-     * provide an individual component for each view type.
-     *
-     * ```jsx
-     * let components = {
-     *   event: MyEvent, // used by each view (Month, Day, Week)
-     *   eventWrapper: MyEventWrapper,
-     *   eventContainerWrapper: MyEventContainerWrapper,
-     *   dateCellWrapper: MyDateCellWrapper,
-     *   timeslotWrapper: MyTimeSlotWrapper,
-     *   timeGutterHeader: MyTimeGutterWrapper,
-     *   timeGutterWrapper: MyTimeGutterWrapper,
-     *   resourceHeader: MyResourceHeader,
-     *   showMore: MyShowMoreEvent,
-     *   toolbar: MyToolbar,
-     *   agenda: {
-     *   	 event: MyAgendaEvent, // with the agenda view use a different component to render events
-     *     time: MyAgendaTime,
-     *     date: MyAgendaDate,
-     *   },
-     *   day: {
-     *     header: MyDayHeader,
-     *     event: MyDayEvent,
-     *   },
-     *   week: {
-     *     header: MyWeekHeader,
-     *     event: MyWeekEvent,
-     *   },
-     *   month: {
-     *     header: MyMonthHeader,
-     *     dateHeader: MyMonthDateHeader,
-     *     event: MyMonthEvent,
-     *   }
-     * }
-     * <Calendar components={components} />
-     * ```
-     */
+   * Customize how different sections of the calendar render by providing custom Components.
+   * In particular the `Event` component can be specified for the entire calendar, or you can
+   * provide an individual component for each view type.
+   *
+   * ```jsx
+   * let components = {
+   *   event: MyEvent, // used by each view (Month, Day, Week)
+   *   eventWrapper: MyEventWrapper,
+   *   eventContainerWrapper: MyEventContainerWrapper,
+   *   dateCellWrapper: MyDateCellWrapper,
+   *   timeslotWrapper: MyTimeSlotWrapper,
+   *   timeGutterHeader: MyTimeGutterWrapper,
+   *   timeGutterWrapper: MyTimeGutterWrapper,
+   *   resourceHeader: MyResourceHeader,
+   *   showMore: MyShowMoreEvent,
+   *   toolbar: MyToolbar,
+   *   agenda: {
+   *   	 event: MyAgendaEvent, // with the agenda view use a different component to render events
+   *     time: MyAgendaTime,
+   *     date: MyAgendaDate,
+   *   },
+   *   day: {
+   *     header: MyDayHeader,
+   *     event: MyDayEvent,
+   *   },
+   *   week: {
+   *     header: MyWeekHeader,
+   *     event: MyWeekEvent,
+   *   },
+   *   month: {
+   *     header: MyMonthHeader,
+   *     dateHeader: MyMonthDateHeader,
+   *     event: MyMonthEvent,
+   *   }
+   * }
+   * <Calendar components={components} />
+   * ```
+   */
   components?: Partial<Components<TEvent, TResource>> | undefined
 
   /**
-     * String messages used throughout the component, override to provide localizations
-     *
-     * ```jsx
-     * const messages = {
-     *   date: 'Date',
-     *   time: 'Time',
-     *   event: 'Event',
-     *   allDay: 'All Day',
-     *   week: 'Week',
-     *   work_week: 'Work Week',
-     *   day: 'Day',
-     *   month: 'Month',
-     *   previous: 'Back',
-     *   next: 'Next',
-     *   yesterday: 'Yesterday',
-     *   tomorrow: 'Tomorrow',
-     *   today: 'Today',
-     *   agenda: 'Agenda',
-     *
-     *   noEventsInRange: 'There are no events in this range.',
-     *
-     *   showMore: total => `+ ${total} more`,
-     * }
-     *
-     * <Calendar messages={messages} />
-     * ```
-     */
+   * String messages used throughout the component, override to provide localizations
+   *
+   * ```jsx
+   * const messages = {
+   *   date: 'Date',
+   *   time: 'Time',
+   *   event: 'Event',
+   *   allDay: 'All Day',
+   *   week: 'Week',
+   *   work_week: 'Work Week',
+   *   day: 'Day',
+   *   month: 'Month',
+   *   previous: 'Back',
+   *   next: 'Next',
+   *   yesterday: 'Yesterday',
+   *   tomorrow: 'Tomorrow',
+   *   today: 'Today',
+   *   agenda: 'Agenda',
+   *
+   *   noEventsInRange: 'There are no events in this range.',
+   *
+   *   showMore: total => `+ ${total} more`,
+   * }
+   *
+   * <Calendar messages={messages} />
+   * ```
+   */
   messages?: Messages<TEvent> | undefined
 
   /**
-     * A day event layout(arrangement) algorithm.
-     *
-     * `overlap` allows events to be overlapped.
-     *
-     * `no-overlap` resizes events to avoid overlap.
-     *
-     * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
-     */
+   * A day event layout(arrangement) algorithm.
+   *
+   * `overlap` allows events to be overlapped.
+   *
+   * `no-overlap` resizes events to avoid overlap.
+   *
+   * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
+   */
   dayLayoutAlgorithm?: DayLayoutAlgorithmProp<TEvent>
 }
+
+/**
+ * Use a discriminating set to provide feedback when passing incompatible props.
+ *
+ * If passing defaultDate, onNavigate is optional and should return void, and date is not allowed
+ *
+ * If passing date, onNavigate is required and must return a Date, and passing defaultDate is not allowed
+ */
+export type CalendarProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> =
+  (CalendarBaseProps<TEvent, TResource> & ControlledDateProps) |
+  (CalendarBaseProps<TEvent, TResource> & UncontrolledDateProps)
 
 const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>({
   components,
@@ -794,7 +825,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
   })
 
   const {
-    date,
+    date = props.defaultDate,
     events = [],
     backgroundEvents = [],
     elementProps = {},
@@ -833,6 +864,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     slotPropGetter,
     slotGroupPropGetter,
     dayPropGetter,
+    getNow = () => new Date(),
     resourceGroupingLayout,
     resources = [],
     dayLayoutAlgorithm = "overlap",
@@ -851,7 +883,6 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     selectable,
   } = controlledProps
 
-  const getNow = props.getNow ?? (() => new Date())
   const localLocalizer = mergeWithDefaults(localizer, culture, formats, messages)
 
   const viewNames = useMemo(() => {
@@ -891,13 +922,17 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           obj[key as string] = value
         }
       }, {} as Record<ViewName, ViewComponent> & Record<string, ViewComponent>)
-      // return mapValues(views, (value, key) => {
-      //   if(value === true) {
-      //     return VIEW_COMPONENTS[key as ViewName]
-      //   }
+      /*
+       * return mapValues(views, (value, key) => {
+       *   if(value === true) {
+       *     return VIEW_COMPONENTS[key as ViewName]
+       *   }
+       */
 
-      //   return value
-      // })
+      /*
+       *   return value
+       * })
+       */
     }
 
     return VIEW_COMPONENTS
@@ -944,9 +979,11 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     return {
       eventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
         (eventPropGetter && eventPropGetter(...args)) || {},
-      // TODO: Is this used? because it's not defined or a prop
-      // backgroundEventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
-      //   (backgroundEventPropGetter && backgroundEventPropGetter(...args)) || {},
+      /*
+       * TODO: Is this used? because it's not defined or a prop
+       * backgroundEventProp: (...args: Parameters<EventPropGetter<TEvent>>) =>
+       *   (backgroundEventPropGetter && backgroundEventPropGetter(...args)) || {},
+       */
       slotProp: (...args: Parameters<SlotPropGetter>) =>
         (slotPropGetter && slotPropGetter(...args)) || {},
       slotGroupProp: (...args: Parameters<SlotGroupPropGetter>) =>
@@ -1003,8 +1040,9 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       resources,
     })
 
-    onNavigate?.(movedDate, view, action)
+    onNavigate(movedDate, view, action)
     handleRangeChange(movedDate, ViewComponent)
+
   }
 
   const handleViewChange = (newView: ViewName) => {

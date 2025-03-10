@@ -32,13 +32,8 @@ export default function Basic({
   const { components, defaultDate, max, views } = useMemo(
     () => ({
       components: {
-        timeslotWrapper: ColoredDateCellWrapper,
+        timeSlotWrapper: ColoredDateCellWrapper,
       },
-      // components: {
-      //   month: {
-      //     header: () => <>BIG OL HEADER</>,
-      //   },
-      // },
       defaultDate: new Date(2015, 3, 1),
       max: dates.add(dates.endOf(new Date(2015, 17, 1), "day"), -1, "hours"),
       views: Object.keys(Views).map((k) => Views[k]),
@@ -52,7 +47,7 @@ export default function Basic({
       <div className="height600" { ...props }>
         <Calendar
           components={ components }
-          date={ defaultDate }
+          defaultDate={ defaultDate }
           events={ events }
           localizer={ localizer }
           max={ max }

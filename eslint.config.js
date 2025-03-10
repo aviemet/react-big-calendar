@@ -128,6 +128,18 @@ export default [
         after: true,
       }],
       "@stylistic/no-multi-spaces": "error",
+      "@stylistic/spaced-comment": ["error", "always", {
+        "line": {
+          "markers": ["/"],
+          "exceptions": ["-", "+"],
+        },
+        "block": {
+          "markers": ["!"],
+          "exceptions": ["*"],
+          "balanced": true,
+        },
+      }],
+      "@stylistic/multiline-comment-style":["error", "starred-block"],
       "no-trailing-spaces": ["error", {
         skipBlankLines: false,
         ignoreComments: false,
