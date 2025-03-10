@@ -39,7 +39,7 @@ export const moveDate = (
         View && typeof View.navigate === "function",
         "Calendar View components must implement a static `.navigate(date, action)` method.s"
       )
-      date = View.navigate(date, action /* , ...props */)
+      date = View.navigate(date, action, props)
   }
   return date
 }

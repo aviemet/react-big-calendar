@@ -33,7 +33,6 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource
   className: string
   dragThroughEvents: boolean
   resource: TResource
-  dayLayoutAlgorithm: DayLayoutAlgorithm
 }
 
 const DayColumn = (props: DayColumnProps) => {
@@ -56,7 +55,6 @@ const DayColumn = (props: DayColumnProps) => {
     onSelectEvent,
     onDoubleClickEvent,
     onKeyPressEvent,
-    dayLayoutAlgorithm,
   } = props
   const { localizer, getNow, getters, rtl, components: {
     dayColumnWrapper: DayColumnWrapperComponent,
@@ -283,7 +281,6 @@ const DayColumn = (props: DayColumnProps) => {
             resource={ resource }
             step={ step }
             timeslots={ timeslots }
-            dayLayoutAlgorithm={ dayLayoutAlgorithm }
             resizable={ resizable }
             slotMetrics={ slotMetrics }
             onSelectEvent={ onSelectEvent }
@@ -297,7 +294,6 @@ const DayColumn = (props: DayColumnProps) => {
             resource={ resource }
             step={ step }
             timeslots={ timeslots }
-            dayLayoutAlgorithm={ dayLayoutAlgorithm }
             resizable={ resizable }
             slotMetrics={ slotMetrics }
             onSelectEvent={ onSelectEvent }

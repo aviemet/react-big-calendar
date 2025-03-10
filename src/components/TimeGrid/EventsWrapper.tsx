@@ -14,7 +14,6 @@ interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TReso
   selected: any
   step: number
   timeslots: number
-  dayLayoutAlgorithm: DayLayoutAlgorithm
   resizable: boolean
   slotMetrics: TimeSlotMetrics
   onSelectEvent: CalendarProps["onSelectEvent"]
@@ -29,14 +28,13 @@ const EventsWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   selected,
   step,
   timeslots,
-  dayLayoutAlgorithm,
   resizable,
   slotMetrics,
   onSelectEvent,
   onDoubleClickEvent,
   onKeyPressEvent,
 }: EventsWrapperProps<TEvent>) => {
-  const { localizer, accessors } = useCalendarContext()
+  const { localizer, accessors, dayLayoutAlgorithm } = useCalendarContext()
 
   let styledEvents = DayEventLayout.getStyledEvents({
     events,

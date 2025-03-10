@@ -8,7 +8,6 @@ import { DateLocalizer, DateRange } from "../localizers"
 import { CalendarProps } from "../components/Calendar"
 import { Resource } from "@/utils/Resources"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
-import { DayLayoutAlgorithm, DayLayoutFunction } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 export type CalendarPropsWithLocalizer = CalendarProps & { localizer: DateLocalizer }
 
@@ -51,7 +50,6 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
       | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => ViewName | string)
       | null
       | undefined
-  dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent>
   className?: string | undefined
   // [key: string]: any
 }

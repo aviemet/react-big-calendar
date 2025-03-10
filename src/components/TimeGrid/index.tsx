@@ -43,7 +43,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     scrollToTime,
     getDrilldownView,
     resources,
-    resourceGroupingLayout,
+    resourceGroupingLayout = false,
     step,
     timeslots,
     range,
@@ -64,7 +64,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     onDoubleClickEvent,
     onKeyPressEvent,
     onDrillDown,
-    dayLayoutAlgorithm,
     showAllEvents,
     doShowMoreDrillDown,
     popup,
@@ -253,8 +252,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
 
     events.forEach((event) => {
       if(inRange(event, start, end, accessors, localizer)) {
-        let eStart = accessors.start(event),
-            eEnd = accessors.end(event)
+        const eStart = accessors.start(event)
+        const eEnd = accessors.end(event)
 
         if(
           accessors.allDay(event) ||
@@ -281,7 +280,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       rangeEvents,
       rangeBackgroundEvents,
     }
-  }, [events, backgroundEvents, range, accessors, localizer])
+  }, [range, events, backgroundEvents, accessors, localizer, showMultiDayTimes])
 
   const filterEventsInRange = (events: TEvent[], date: Date) => {
     return events.filter(event => (
@@ -294,6 +293,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     ))
   }
 
+  const localResources = memoizedResources(resources, accessors)
+
   const headerProps = {
     range,
     events: allDayEvents,
@@ -302,7 +303,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     allDayMaxRows: showAllEvents
       ? Infinity
       : allDayMaxRows ?? Infinity,
-    resources: memoizedResources(resources, accessors),
+    resources: localResources,
     selectable: selectable,
     scrollRef: scrollRef,
     isOverflowing: isOverflowing,
@@ -316,7 +317,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     getDrilldownView: getDrilldownView,
     resizable,
   }
-  const localResources = memoizedResources(resources, accessors)
 
   const DayColumnWrapper = resourceGroupingLayout
     ? (props) => <div style={ { display: "flex", minHeight: "100%", flex: 1 } } { ...props } />
@@ -364,22 +364,20 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         { range.map((date) => (
           <DayColumnWrapper key={ date.toISOString() }>
             { localResources.map(([id, resource]) => {
-              const daysEvents = localResources.groupEvents(events).get(id) || []
+              const daysEvents = localResources.groupEvents(rangeEvents).get(id) || []
               const groupedBackgroundEvents = localResources.groupEvents(backgroundEvents).get(id) || []
 
               return (
                 <DayColumn
                   { ...props }
+                  key={ `${id}-${date}` }
                   date={ date }
                   resource={ resource }
-                  localizer={ localizer }
                   min={ localizer.merge(date, min) }
                   max={ localizer.merge(date, max) }
                   isNow={ localizer.isSameDate(date, getNow()) }
-                  key={ `${resource.id}-${date}` }
                   events={ filterEventsInRange(daysEvents, date) }
                   backgroundEvents={ filterEventsInRange(groupedBackgroundEvents, date) }
-                  dayLayoutAlgorithm={ dayLayoutAlgorithm }
                 />
               )
             }) }

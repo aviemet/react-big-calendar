@@ -18,8 +18,6 @@ export type DayLayoutFunction<TEvent extends object = CalendarEvent> = (_: {
   }
 }>
 
-export type DayLayoutAlgorithm = "overlap" | "no-overlap"
-
 class LayoutAlgorithmEvent {
   start: number
   end: number

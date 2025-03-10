@@ -37,16 +37,17 @@ import {
   SlotInfo,
   SlotPropGetter,
 } from "@/utils/components"
-import { DayLayoutAlgorithm, DayLayoutFunction } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
+import { DayLayoutAlgorithmProp } from "@/utils/DayEventLayout"
 
-type CalendarContext = {
+type CalendarContext<TEvent extends CalendarEvent = CalendarEvent> = {
   localizer: DateLocalizer
-  components: CompiledComponents
+  components: CompiledComponents<TEvent>
   accessors: Accessors
   getters: Getters
   rtl: boolean
   date: Date
   getNow: () => Date
+  dayLayoutAlgorithm: DayLayoutAlgorithmProp
 }
 
 const [useCalendarContext, CalendarProvider] = createContext<CalendarContext>()
@@ -777,7 +778,7 @@ import { VIEW_COMPONENTS } from '@/Views';
      *
      * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
      */
-  dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined
+  dayLayoutAlgorithm?: DayLayoutAlgorithmProp<TEvent>
 }
 
 const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resource = Resource>({
@@ -834,11 +835,12 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     dayPropGetter,
     resourceGroupingLayout,
     resources = [],
+    dayLayoutAlgorithm = "overlap",
+
     // popup = false,
     // step = 30,
     // allDayMaxRows = Infinity,
     // longPressThreshold = 250,
-    // dayLayoutAlgorithm = 'overlap',
     // onSelecting,
     // min,
     // max,
@@ -984,9 +986,9 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     const movedDate = moveDate(ViewComponent, {
       localizer,
       action,
-      date: coerceDate(newDate || date || today),
       today,
-      // ...controlledProps, # Removed props drilldown to static view methods
+      ...controlledProps,
+      date: coerceDate(newDate || date || today),
     })
 
     onNavigate?.(movedDate, view, action)
@@ -1040,6 +1042,20 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
 
   const current = coerceDate(date || getNow())
 
+  const {
+    popup = false,
+    step = 30,
+    allDayMaxRows = Infinity,
+    longPressThreshold = 250,
+    onSelecting,
+    min,
+    max,
+    scrollToTime,
+    enableAutoScroll,
+    showAllEvents,
+    selectable,
+  } = controlledProps
+
   return (
     <CalendarProvider value={ {
       localizer: localLocalizer,
@@ -1049,6 +1065,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
       rtl,
       date: current,
       getNow,
+      dayLayoutAlgorithm,
     } }>
       <div
         { ...elementProps }
@@ -1088,7 +1105,17 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           // passing localizer to avoid breaking changes in custom view setups
           localizer={ localizer }
 
-          // { ...controlledProps }
+          popup={ popup }
+          step={ step }
+          allDayMaxRows={ allDayMaxRows }
+          longPressThreshold={ longPressThreshold }
+          onSelecting={ onSelecting }
+          min={ min }
+          max={ max }
+          scrollToTime={ scrollToTime }
+          enableAutoScroll={ enableAutoScroll }
+          showAllEvents={ showAllEvents }
+          selectable={ selectable }
         />
       </div>
     </CalendarProvider>

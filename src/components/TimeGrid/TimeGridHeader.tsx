@@ -7,7 +7,7 @@ import { DateRange } from "@/localizers"
 import { CalendarEvent } from "@/utils/components"
 import { WeekdayHeader } from "../WeekdayHeader"
 
-interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
+export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
   resources: ReturnType<typeof Resources<TEvent, TResource>>
