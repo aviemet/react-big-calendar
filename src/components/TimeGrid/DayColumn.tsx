@@ -7,7 +7,7 @@ import { CalendarProps, useCalendarContext } from "@/components/Calendar"
 import { EventsWrapper } from "./EventsWrapper"
 import { Resource } from "@/utils/Resources"
 import { CalendarEvent } from "@/utils/components"
-import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
+// import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]

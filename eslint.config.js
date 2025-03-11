@@ -139,7 +139,7 @@ export default [
           "balanced": true,
         },
       }],
-      "@stylistic/multiline-comment-style":["error", "starred-block"],
+      // "@stylistic/multiline-comment-style":["error", "starred-block"],
       "no-trailing-spaces": ["error", {
         skipBlankLines: false,
         ignoreComments: false,

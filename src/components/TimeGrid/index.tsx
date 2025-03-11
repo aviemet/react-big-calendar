@@ -179,7 +179,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
 
 
   const handleSelectEvent = (...args) => {
-    //cancel any pending selections so only the event click goes through.
+    // cancel any pending selections so only the event click goes through.
     // clearSelection()
     onSelectEvent?.(args)
   }

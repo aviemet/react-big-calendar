@@ -20,7 +20,7 @@ function Resources<TEvent extends CalendarEvent = CalendarEvent, TResource exten
     groupEvents: (events: TEvent[]) => {
       const eventsByResource = new Map()
 
-      if(!resources) {
+      if(!resources || resources.length < 1) {
         // Return all events if resources are not provided
         eventsByResource.set({}, events)
         return eventsByResource
@@ -41,7 +41,6 @@ function Resources<TEvent extends CalendarEvent = CalendarEvent, TResource exten
           eventsByResource.set(id, resourceEvents)
         }
       })
-
       return eventsByResource
     },
   }
