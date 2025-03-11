@@ -22,16 +22,16 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource
   culture: string
   timeslots: number
   selected: any
-  selectable: boolean | "ignoreEvents"
+  selectable?: boolean | "ignoreEvents"
   eventOffset: number
   longPressThreshold: number
-  onSelecting: CalendarProps["onSelecting"]
-  onSelectSlot: CalendarProps["onSelectSlot"]
-  onSelectEvent: CalendarProps["onSelectEvent"]
-  onDoubleClickEvent: CalendarProps["onDoubleClickEvent"]
-  onKeyPressEvent: CalendarProps["onKeyPressEvent"]
-  className: string
-  dragThroughEvents: boolean
+  onSelecting?: CalendarProps["onSelecting"]
+  onSelectSlot?: CalendarProps["onSelectSlot"]
+  onSelectEvent?: CalendarProps["onSelectEvent"]
+  onDoubleClickEvent?: CalendarProps["onDoubleClickEvent"]
+  onKeyPressEvent?: CalendarProps["onKeyPressEvent"]
+  className?: string
+  dragThroughEvents?: boolean
   resource: TResource
 }
 
@@ -289,7 +289,6 @@ const DayColumn = (props: DayColumnProps) => {
           />
           <EventsWrapper
             events={ events }
-            rtl={ rtl }
             selected={ selected }
             resource={ resource }
             step={ step }

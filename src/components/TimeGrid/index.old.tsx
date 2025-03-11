@@ -86,6 +86,9 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   const rafHandleRef = useRef<number>(null)
   const measureGutterAnimationFrameRequestRef = useRef<number>(null)
 
+  // const windowSize = useResizeObserver(window)
+  // console.log({ windowSize })
+
   const checkOverflow = useCallback(() => {
     if(updatingOverflowRef.current === true) return
 
@@ -227,6 +230,17 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     setOverlay(null)
   }
 
+  // const clearSelection = () => {
+  //   clearTimeout and _pendingSelection were never used or defined elsewhere
+  //   clearTimeout(_selectTimer)
+  //   _pendingSelection = []
+  // }
+
+
+  // render()
+
+  // Pretty sure this was totally unused
+  // slots = range.length
 
   const { allDayEvents, rangeEvents, rangeBackgroundEvents } = useMemo(() => {
     const start = range[0]
@@ -268,10 +282,19 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     }
   }, [range, events, backgroundEvents, accessors, localizer, showMultiDayTimes])
 
+  const filterEventsInRange = (events: TEvent[], date: Date) => {
+    return events.filter(event => (
+      localizer.inRange(
+        date,
+        accessors.start(event),
+        accessors.end(event),
+        "day"
+      )
+    ))
+  }
+
   const localResources = memoizedResources(resources, accessors)
-  const groupedEvents = localResources.groupEvents(rangeEvents)
-  const groupedBackgroundEvents = localResources.groupEvents(rangeBackgroundEvents)
-  // console.log({ localResources, rangeEvents, rangeBackgroundEvents, groupedEvents, groupedBackgroundEvents })
+
   const headerProps = {
     range,
     events: allDayEvents,
@@ -295,19 +318,23 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     resizable,
   }
 
+  const DayColumnWrapper = resourceGroupingLayout
+    ? (props) => <div style={ { display: "flex", minHeight: "100%", flex: 1 } } { ...props } />
+    : NoopWrapper
+
   return (
     <div
       ref={ containerRef }
-      className={ clsx("rbc-time-view", {
-        "rbc-time-view-resources": resources && resources.length > 1,
-      }) }
+      className={ clsx(
+        "rbc-time-view",
+        { "rbc-time-view-resources": resources && resources.length > 1 }
+      ) }
     >
       {
         resources && resources.length > 1 && resourceGroupingLayout
           ? <TimeGridHeaderResources { ...headerProps } />
           : <TimeGridHeader { ...headerProps } />
       }
-
       { popup && <PopOverlay
         ref={ containerRef }
         overlay={ overlay }
@@ -321,108 +348,241 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         overlayDisplay={ overlayDisplay }
         onHide={ () => setOverlay(null) }
       /> }
-
       <div
         ref={ contentRef }
         className="rbc-time-content"
         onScroll={ handleScroll }
       >
         <TimeGutter
-          date={ range[0] }
           ref={ gutterRef }
           min={ localizer.merge(range[0], min) }
           max={ localizer.merge(range[0], max) }
           step={ step }
           timeslots={ timeslots }
-          className="rbc-time-gutter"
         />
-
-        { !resourceGroupingLayout
-          ? localResources.map(([id, resource]) => {
-
-            return range.map((date) => (
-              <DayColumnWrapper
-                key={ date.toISOString() }
-                date={ date }
-                id={ id }
-                resource={ resource }
-                groupedEvents={ groupedEvents }
-                groupedBackgroundEvents={ groupedBackgroundEvents }
-              />
-            ))
-          })
-          : range.map((date) => {
-            return (
-              <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
-                { localResources.map(([id, resource]) => (
-                  <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
-                    <DayColumnWrapper
-                      date={ date }
-                      id={ id }
-                      resource={ resource }
-                      groupedEvents={ groupedEvents }
-                      groupedBackgroundEvents={ groupedBackgroundEvents }
-                    />
-                  </div>
-                )) }
-              </div>
-            )
-          }) }
+        { resourceGroupingLayout
+          ? <RangeFirst
+            range={ range }
+            resources={ localResources }
+            groupedEvents={ localResources.groupEvents(events) }
+            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+            min={ localizer.merge(range[0], min) }
+            max={ localizer.merge(range[0], max) }
+          />
+          : <ResourcesFirst
+            range={ range }
+            resources={ localResources }
+            groupedEvents={ localResources.groupEvents(events) }
+            groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+            accessors={ accessors }
+            min={ localizer.merge(range[0], min) }
+            max={ localizer.merge(range[0], max) }
+          />
+        }
       </div>
     </div>
   )
-
 }
 
 export { TimeGrid }
 
-interface DayColumnWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  date: Date
-  id: string | number
-  resource: Resource
-  groupedEvents: TEvent[]
-  groupedBackgroundEvents: TEvent[]
-  min: Date
-  max: Date
+
+// const DayColumnWrapper = (props) => {
+//   const {
+//     date,
+//     id,
+//     resource,
+//     groupedEvents,
+//     groupedBackgroundEvents,
+//     accessors,
+//     dayLayoutAlgorithm,
+//     now,
+//     min,
+//     max,
+//   } = props
+
+//   const { localizer } = useCalendarContext()
+
+//   const daysEvents = (groupedEvents.get(id) || []).filter((event) =>
+//     localizer.inRange(
+//       date,
+//       accessors.start(event),
+//       accessors.end(event),
+//       "day"
+//     )
+//   )
+
+//   const daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(
+//     (event) => localizer.inRange(
+//       date,
+//       accessors.start(event),
+//       accessors.end(event),
+//       "day"
+//     )
+//   )
+
+//   return (
+//     <DayColumn
+//       { ...props }
+//       localizer={ localizer }
+//       min={ localizer.merge(date, min) }
+//       max={ localizer.merge(date, max) }
+//       resource={ resource && id }
+//       isNow={ localizer.isSameDate(date, now) }
+//       key={ `${id}-${date}` }
+//       date={ date }
+//       events={ daysEvents }
+//       backgroundEvents={ daysBackgroundEvents }
+//       dayLayoutAlgorithm={ dayLayoutAlgorithm }
+//     />
+//   )
+// }
+
+interface ResourcesFirstProps<TResource extends Resource = Resource> {
+  range: Date[]
+  resources: TResource
+  min: number
+  max: number
 }
 
-const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>({
-  date,
-  id,
-  resource,
-  groupedEvents,
-  groupedBackgroundEvents,
+const ResourcesFirst = <TResource extends Resource = Resource>({
+  range,
+  resources,
   min,
   max,
-}: DayColumnWrapperProps<TEvent, TResource>) => {
-  const { localizer, accessors, getNow } = useCalendarContext()
+  ...props
+}: ResourcesFirstProps<TResource>) => {
+  const { localizer } = useCalendarContext()
 
-  const daysEvents = (groupedEvents.get(id) || []).filter((event) =>
-    localizer.inRange(
-      date,
-      accessors.start(event),
-      accessors.end(event),
-      "day"
+  return resources.map(([id, resource]) =>
+    range.map((date) =>
+      <DayColumn
+        { ...props }
+        resource={ resource }
+        localizer={ localizer }
+        min={ localizer.merge(date, min) }
+        max={ localizer.merge(date, max) }
+        isNow={ localizer.isSameDate(date, now) }
+        key={ `${id}-${date}` }
+        date={ date }
+        events={ daysEvents }
+        backgroundEvents={ daysBackgroundEvents }
+        dayLayoutAlgorithm={ dayLayoutAlgorithm }
+      />
+      // <DayColumnWrapper
+      //   resource={ resource }
+      //   { ...props }
+      // />
     )
   )
-
-  const daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter((event) => localizer.inRange(
-    date,
-    accessors.start(event),
-    accessors.end(event),
-    "day"
-  ))
-
-  return (
-    <DayColumn
-      key={ `${id}-${date}` }
-      min={ localizer.merge(date, min) }
-      max={ localizer.merge(date, max) }
-      resource={ resource && id }
-      isNow={ localizer.isSameDate(date, getNow()) }
-      date={ date }
-      events={ daysEvents }
-      backgroundEvents={ daysBackgroundEvents }
-    />
-  )
 }
+
+interface RangeFirstProps<TResource extends Resource = Resource> {
+  range: Date[]
+  resources: TResource
+  min: number
+  max: number
+}
+
+const RangeFirst = <TResource extends Resource = Resource>({
+  range,
+  resources,
+  min,
+  max,
+  ...props
+}: RangeFirstProps<TResource>) => {
+  const { accessors, localizer } = useCalendarContext()
+
+  return range.map((date) => (
+    <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
+      { resources.map(([id, resource]) => (
+        <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+          <DayColumn
+            { ...props }
+            date={ date }
+            resource={ resource }
+            min={ localizer.merge(date, min) }
+            max={ localizer.merge(date, max) }
+            isNow={ localizer.isSameDate(date, now) }
+            key={ `${id}-${date}` }
+            events={ daysEvents }
+            backgroundEvents={ daysBackgroundEvents }
+            dayLayoutAlgorithm={ dayLayoutAlgorithm }
+          />
+          { /* <DayColumnWrapper
+            date={ date }
+            resource={ resource }
+            accessors={ accessors }
+            { ...props }
+          /> */ }
+        </div>
+      )) }
+    </div>
+  ))
+}
+
+
+// { resourceGroupingLayout
+//   ? range.map((date) => (
+//     <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
+//       { resources.map((resource) => (
+//         <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+//           <DayColumn
+//             { ...props }
+//             date={ date }
+//             resource={ resource }
+//             min={ localizer.merge(date, min) }
+//             max={ localizer.merge(date, max) }
+//             isNow={ localizer.isSameDate(date, now) }
+//             key={ `${resource.id}-${date}` }
+//             events={ filterEventsInRange(localResources.groupEvents(events), date) }
+//             backgroundEvents={ filterEventsInRange(localResources.groupEvents(backgroundEvents), date) }
+//             dayLayoutAlgorithm={ dayLayoutAlgorithm }
+//           />
+//           { /* <DayColumnWrapper
+//             date={ date }
+//             resource={ resource }
+//             accessors={ accessors }
+//             { ...props }
+//           /> */ }
+//         </div>
+//       )) }
+//     </div>
+//   ))
+//   // <RangeFirst
+//   //   resources={ localResources }
+//   //   groupedEvents={ localResources.groupEvents(events) }
+//   //   groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+//   //   min={ min }
+//   //   max={ max }
+//   // />
+//   : resources.map((resource) =>
+//     range.map((date) =>
+//       <DayColumn
+//         { ...props }
+//         resource={ resource }
+//         localizer={ localizer }
+//         min={ localizer.merge(date, min) }
+//         max={ localizer.merge(date, max) }
+//         isNow={ localizer.isSameDate(date, now) }
+//         key={ `${resource.id}-${date}` }
+//         date={ date }
+//         events={ filterEventsInRange(localResources.groupEvents(events), date) }
+//         backgroundEvents={ filterEventsInRange(localResources.groupEvents(backgroundEvents), date) }
+//         dayLayoutAlgorithm={ dayLayoutAlgorithm }
+//       />
+//       // <DayColumnWrapper
+//       //   resource={ resource }
+//       //   { ...props }
+//       // />
+//     )
+//   )
+//   // <ResourcesFirst
+//   //   resources={ localResources }
+//   //   groupedEvents={ localResources.groupEvents(events) }
+//   //   groupedBackgroundEvents={ localResources.groupEvents(backgroundEvents) }
+//   //   accessors={ accessors }
+//   //   min={ min }
+//   //   max={ max }
+//   // />
+// }

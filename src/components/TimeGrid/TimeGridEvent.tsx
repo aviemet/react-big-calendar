@@ -46,15 +46,6 @@ function TimeGridEvent(props: TimeGridEventProps) {
 
   let userProps = getters.eventProp(event, start, end, selected)
 
-  const inner = [
-    <div key="1" className="rbc-event-label">
-      { label }
-    </div>,
-    <div key="2" className="rbc-event-content">
-      { Event ? <Event event={ event } title={ title } /> : title }
-    </div>,
-  ]
-
   const { height, top, width, xOffset } = style
 
   const eventStyle = {
@@ -90,7 +81,13 @@ function TimeGridEvent(props: TimeGridEventProps) {
           }
         ) }
       >
-        { inner }
+        <div key="1" className="rbc-event-label">
+          { label }
+        </div>
+
+        <div key="2" className="rbc-event-content">
+          { Event ? <Event event={ event } title={ title } /> : title }
+        </div>
       </div>
     </EventWrapper>
   )
