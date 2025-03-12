@@ -3,16 +3,13 @@ import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { TimeSlotGroup } from "./TimeSlotGroup"
 import clsx from "clsx"
 import { useCalendarContext } from "@/Calendar"
-import { Resource } from "@/utils/Resources"
-import { Getters } from "@/utils/components"
 
-interface TimeGutterProps<TResource extends Resource = Resource> {
+interface TimeGutterProps {
   min: Date
   max: Date
   timeslots: number
   step: number
-  resource: TResource
-  getters: Getters
+  resource?: string | number
 }
 
 const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
@@ -22,7 +19,6 @@ const TimeGutter = forwardRef<HTMLDivElement, TimeGutterProps>((
     timeslots = 2,
     step = 30,
     resource,
-    getters,
   },
   ref
 ) => {

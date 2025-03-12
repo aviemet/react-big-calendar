@@ -3,7 +3,6 @@ import clsx from "clsx"
 import * as animationFrame from "dom-helpers/animationFrame"
 import getPosition from "dom-helpers/position"
 import getWidth from "dom-helpers/width"
-import { DayColumn } from "./DayColumn"
 import { PopOverlay } from "../PopOverlay"
 import { TimeGridHeader } from "./TimeGridHeader"
 import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
@@ -345,7 +344,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
           max={ localizer.merge(range[0], max) }
           step={ step }
           timeslots={ timeslots }
-          className="rbc-time-gutter"
         />
 
         { !resourceGroupingLayout

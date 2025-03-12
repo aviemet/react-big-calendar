@@ -84,6 +84,7 @@ export interface TimeGutterWrapperProps {
 }
 
 export interface TimeSlotWrapperProps {
+  children: React.ReactNode
   value: Date
   resource: string | number | null | undefined
 }

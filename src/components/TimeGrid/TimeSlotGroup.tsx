@@ -3,7 +3,7 @@ import clsx from "clsx"
 
 interface TimeSlotGroupProps {
   renderSlot?: (value: any, index: number) => React.ReactNode
-  resource: string | number
+  resource?: string | number
   group: Date[]
 }
 
