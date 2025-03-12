@@ -1,4 +1,4 @@
-import { useCalendarContext } from "./Calendar"
+import { useCalendarContext } from "../Calendar"
 import { Header } from "./Header"
 import { ViewHeaderProps } from "."
 import clsx from "clsx"

@@ -1,6 +1,6 @@
 // import { EventWrapper } from "@/addons/dragAndDrop/EventWrapper"
 import clsx from "clsx"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 interface EventCellProps {

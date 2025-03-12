@@ -1,4 +1,4 @@
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import clsx from "clsx"
 
@@ -14,8 +14,8 @@ interface TimeGridEventProps<TEvent extends CalendarEvent = CalendarEvent> {
   label: React.ReactNode
   continuesPrior: boolean
   continuesAfter: boolean
-  onClick: () => void
-  onDoubleClick: () => void
+  onClick: React.MouseEventHandler<HTMLDivElement>
+  onDoubleClick: React.MouseEventHandler<HTMLDivElement>
   isBackgroundEvent: boolean
   onKeyPress: () => void
 }

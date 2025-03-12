@@ -2,7 +2,7 @@ import { useEffect, useCallback, useMemo, forwardRef } from "react"
 import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { TimeSlotGroup } from "./TimeSlotGroup"
 import clsx from "clsx"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { Resource } from "@/utils/Resources"
 import { Getters } from "@/utils/components"
 

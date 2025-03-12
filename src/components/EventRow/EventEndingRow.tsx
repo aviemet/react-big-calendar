@@ -2,7 +2,7 @@ import { Event, EventRowSpan } from "./EventRowMixin"
 import { eventLevels } from "@/utils/eventLevels"
 import { range } from "lodash-es"
 import clsx from "clsx"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 

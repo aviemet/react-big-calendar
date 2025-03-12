@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import clsx from "clsx"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { ViewHeaderProps } from ".."
 
 interface DummyProps {

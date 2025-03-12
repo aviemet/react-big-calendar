@@ -19,7 +19,7 @@ function ResourceManager<TEvent extends CalendarEvent = CalendarEvent, TResource
       )
     },
 
-    groupEvents: (events: TEvent[]) => {
+    groupEvents: (events: TEvent[]): Map<string | number, TEvent> => {
       const eventsByResource = new Map()
 
       if(!resources || resources.length < 1) {

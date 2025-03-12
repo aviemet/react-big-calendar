@@ -4,7 +4,7 @@ import { DateContentRow } from "@/components/DateContentRow"
 import { Header } from "@/components/Header"
 import { ResourceHeader } from "@/components/ResourceHeader"
 import { Resource, ResourceManager } from "@/utils/Resources"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import { TimeGridHeaderProps } from "./TimeGridHeader"
 

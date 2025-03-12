@@ -5,7 +5,7 @@ import { getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
 import { dragAccessors, eventTimes } from "./common"
 import { useDndContext } from "./withDragAndDrop"
 import { useEffect, useRef, useState } from "react"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 
 interface WeekWrapperProps {

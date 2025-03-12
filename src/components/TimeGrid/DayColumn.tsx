@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { Selection, getBoundsForNode, isEvent } from "@/utils/selection"
 import { TimeSlotGroup } from "./TimeSlotGroup"
 import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
-import { CalendarProps, useCalendarContext } from "@/components/Calendar"
+import { CalendarProps, useCalendarContext } from "@/Calendar"
 import { EventsWrapper } from "./EventsWrapper"
 import { Resource } from "@/utils/Resources"
 import { CalendarEvent } from "@/utils/components"
@@ -32,7 +32,7 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource
   onKeyPressEvent?: CalendarProps["onKeyPressEvent"]
   className?: string
   dragThroughEvents?: boolean
-  resource: TResource
+  resource: string | number
 }
 
 const DayColumn = (props: DayColumnProps) => {

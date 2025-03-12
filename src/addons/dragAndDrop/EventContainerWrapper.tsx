@@ -8,7 +8,7 @@ import {
 } from "@/utils/selection"
 import { TimeGridEvent } from "@/components/TimeGrid/TimeGridEvent"
 import { dragAccessors, eventTimes, pointInColumn } from "./common"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { Resource } from "@/utils/Resources"
 import { CalendarEvent } from "@/utils/components"
 import { useDndContext } from "./withDragAndDrop"

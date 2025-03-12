@@ -1,4 +1,4 @@
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import clsx from "clsx"
 
 interface TimeSlotGroupProps {

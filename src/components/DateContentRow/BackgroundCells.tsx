@@ -3,7 +3,7 @@ import { coerceDate } from "@/utils/helpers"
 import { dateCellSelection, getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
 import { Selection, getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
 import clsx from "clsx"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 interface BackgroundCellsProps {

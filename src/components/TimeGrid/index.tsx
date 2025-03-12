@@ -11,11 +11,11 @@ import { TimeGutter } from "./TimeGutter"
 import { inRange, sortEvents } from "@/utils/eventLevels"
 import { BaseViewProps } from "@/Views"
 import { ResourceManager, Resource } from "@/utils/Resources"
-import { Accessors } from "@/utils/accessors"
 import { Overlay } from "react-overlays"
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import { useResizeObserver } from "@/hooks/useResizeListener"
+import { DayColumnWrapper } from "@/components/TimeGrid/DayColumnWrapper"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -359,6 +359,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
                 resource={ resource }
                 groupedEvents={ groupedEvents }
                 groupedBackgroundEvents={ groupedBackgroundEvents }
+                min={ min }
+                max={ max }
               />
             ))
           })
@@ -373,6 +375,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
                       resource={ resource }
                       groupedEvents={ groupedEvents }
                       groupedBackgroundEvents={ groupedBackgroundEvents }
+                      min={ min }
+                      max={ max }
                     />
                   </div>
                 )) }
@@ -386,54 +390,3 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
 }
 
 export { TimeGrid }
-
-interface DayColumnWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
-  date: Date
-  id: string | number
-  resource: Resource
-  groupedEvents: TEvent[]
-  groupedBackgroundEvents: TEvent[]
-  min: Date
-  max: Date
-}
-
-const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>({
-  date,
-  id,
-  resource,
-  groupedEvents,
-  groupedBackgroundEvents,
-  min,
-  max,
-}: DayColumnWrapperProps<TEvent, TResource>) => {
-  const { localizer, accessors, getNow } = useCalendarContext()
-
-  const daysEvents = (groupedEvents.get(id) || []).filter((event) =>
-    localizer.inRange(
-      date,
-      accessors.start(event),
-      accessors.end(event),
-      "day"
-    )
-  )
-
-  const daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter((event) => localizer.inRange(
-    date,
-    accessors.start(event),
-    accessors.end(event),
-    "day"
-  ))
-
-  return (
-    <DayColumn
-      key={ `${id}-${date}` }
-      min={ localizer.merge(date, min) }
-      max={ localizer.merge(date, max) }
-      resource={ resource && id }
-      isNow={ localizer.isSameDate(date, getNow()) }
-      date={ date }
-      events={ daysEvents }
-      backgroundEvents={ daysBackgroundEvents }
-    />
-  )
-}

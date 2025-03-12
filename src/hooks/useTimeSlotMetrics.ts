@@ -1,4 +1,4 @@
-import { useCalendarContext } from "@/components/Calendar"
+import { useCalendarContext } from "@/Calendar"
 import { DateLocalizer } from "@/localizers"
 import { useMemo } from "react"
 
