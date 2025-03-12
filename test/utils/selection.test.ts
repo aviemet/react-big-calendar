@@ -1,4 +1,4 @@
-import { isSelected } from "@/utils/selection"
+import { isSelected } from "@/utils/eventSelectionHelpers"
 
 describe("isSelected", () => {
   test("it returns true if it is the same object by reference", () => {
@@ -15,11 +15,11 @@ describe("isSelected", () => {
       y: 1,
     }
 
-    const equalivalentValue = {
+    const equivalentValue = {
       x: { sample: "value" },
       y: 1,
     }
-    expect(isSelected(value, equalivalentValue)).toBeTruthy()
+    expect(isSelected(value, equivalentValue)).toBeTruthy()
   })
 
   test("it returns false if the object is not equal", () => {
@@ -28,11 +28,11 @@ describe("isSelected", () => {
       y: 1,
     }
 
-    const nonEqualivalentValue = {
+    const nonEquivalentValue = {
       x: { sample: "value" },
       y: 2,
     }
 
-    expect(isSelected(value, nonEqualivalentValue)).toBeFalsy()
+    expect(isSelected(value, nonEquivalentValue)).toBeFalsy()
   })
 })

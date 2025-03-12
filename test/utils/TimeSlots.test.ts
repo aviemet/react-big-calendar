@@ -26,8 +26,8 @@ describe("getTimeSlotMetrics", () => {
     expect(slotMetrics.closestSlotToPosition(1)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition(100)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition(-100)).toBeDefined()
-    expect(slotMetrics.closestSlotToPosition()).toBeUndefined()
-    expect(slotMetrics.closestSlotToPosition("asd")).toBeUndefined()
+    expect(slotMetrics.closestSlotToPosition(undefined)).toBeUndefined()
+    expect(slotMetrics.closestSlotToPosition("asd" as unknown as number)).toBeUndefined()
   })
 
   test("getTimeSlotMetrics.closestSlotToPosition: returns last timeslot with correct time", () => {

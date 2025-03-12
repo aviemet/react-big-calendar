@@ -1,24 +1,25 @@
-import { DateLocalizer } from "."
+import { Unit } from "date-arithmetic"
+import { Culture, DateLocalizer, Formats } from "."
 
-const weekRangeFormat = ({ start, end }, culture, local) =>
+const weekRangeFormat: Formats["dayRangeHeaderFormat"] = ({ start, end }, culture, local) =>
   local.format(start, "MMMM DD", culture) +
   " – " +
   // updated to use this localizer 'eq()' method
   local.format(end, local.eq(start, end, "month") ? "DD" : "MMMM DD", culture)
 
-const dateRangeFormat = ({ start, end }, culture, local) =>
+const dateRangeFormat: Formats["agendaHeaderFormat"] = ({ start, end }, culture, local) =>
   local.format(start, "L", culture) + " – " + local.format(end, "L", culture)
 
-const timeRangeFormat = ({ start, end }, culture, local) =>
+const timeRangeFormat: Formats["selectRangeFormat"] = ({ start, end }, culture, local) =>
   local.format(start, "LT", culture) + " – " + local.format(end, "LT", culture)
 
-const timeRangeStartFormat = ({ start }, culture, local) =>
+const timeRangeStartFormat: Formats["eventTimeRangeStartFormat"] = ({ start }, culture, local) =>
   local.format(start, "LT", culture) + " – "
 
-const timeRangeEndFormat = ({ end }, culture, local) =>
+const timeRangeEndFormat: Formats["eventTimeRangeEndFormat"] = ({ end }, culture, local) =>
   " – " + local.format(end, "LT", culture)
 
-export const formats = {
+export const formats: Formats = {
   dateFormat: "DD",
   dayFormat: "DD ddd",
   weekdayFormat: "ddd",
@@ -40,7 +41,7 @@ export const formats = {
   agendaTimeRangeFormat: timeRangeFormat,
 }
 
-function fixUnit(unit) {
+function fixUnit(unit: Unit) {
   let datePart = unit ? unit.toLowerCase() : unit
   if(datePart === "FullYear") {
     datePart = "year"
@@ -50,8 +51,10 @@ function fixUnit(unit) {
   return datePart
 }
 
-function momentLocalizer(moment): DateLocalizer {
-  const locale = (m, c) => (c ? m.locale(c) : m)
+type MomentJs = typeof import("moment")
+
+function momentLocalizer(moment: MomentJs): DateLocalizer {
+  const locale = (m: ReturnType<MomentJs>, c: Culture) => (c ? m.locale(c) : m)
 
   function getTimezoneOffset(date) {
     // ensures this gets cast to timezone
@@ -84,7 +87,7 @@ function momentLocalizer(moment): DateLocalizer {
     return getDstOffset(dayStart, start)
   }
 
-  /*** BEGIN localized date arithmetic methods with moment ***/
+  /** * BEGIN localized date arithmetic methods with moment ***/
   function defineComparators(a, b, unit) {
     const datePart = fixUnit(unit)
     const dtA = datePart ? moment(a).startOf(datePart) : moment(a)
@@ -234,7 +237,7 @@ function momentLocalizer(moment): DateLocalizer {
 
     return days
   }
-  /*** END localized date arithmetic methods with moment ***/
+  /** * END localized date arithmetic methods with moment ***/
 
   /**
    * Moved from TimeSlots.js, this method overrides the method of the same name

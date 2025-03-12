@@ -26,7 +26,12 @@ export function getStyledEvents<TEvent extends CalendarEvent = CalendarEvent>({
   slotMetrics: TimeSlotMetrics
   accessors: Accessors
   dayLayoutAlgorithm: DayLayoutAlgorithmProp
-}) {
+}): (TEvent & {
+    style: React.CSSProperties & {
+      xOffset?: number
+    }
+  }
+  )[] {
   let algorithm
   if(typeof dayLayoutAlgorithm === "string"
     && dayLayoutAlgorithm in DefaultAlgorithms) {

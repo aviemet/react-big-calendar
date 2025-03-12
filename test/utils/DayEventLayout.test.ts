@@ -9,13 +9,14 @@ import { getStyledEvents } from "@/utils/DayEventLayout"
 // import { getSlotMetrics } from '@/utils/TimeSlots'
 import * as dates from "@/utils/dates"
 import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
 
 const localizer = momentLocalizer(moment)
 // const localizer = dayjsLocalizer(dayjs)
 // const localizer = luxonLocalizer(DateTime)
 
 describe("getStyledEvents", () => {
-  const d = (...args) => new Date(2015, 3, 1, ...args)
+  const d = (...args: number[]) => new Date(2015, 3, 1, ...args)
   const min = dates.startOf(d(), "day")
   const max = dates.endOf(d(), "day")
   const slotMetrics = getTimeSlotMetrics({
@@ -25,7 +26,7 @@ describe("getStyledEvents", () => {
     timeslots: 4,
     localizer,
   })
-  const accessors = { start: (e) => e.start, end: (e) => e.end }
+  const accessors = { start: (e: CalendarEvent) => e.start, end: (e: CalendarEvent) => e.end }
 
   describe("with overlap dayLayoutAlgorithm", () => {
     it.each([
@@ -118,7 +119,7 @@ describe("getStyledEvents", () => {
       })
 
       const results = styledEvents.map((result) => ({
-        width: Math.floor(result.style.width),
+        width: Math.floor(Number(result.style.width)),
         xOffset: Math.floor(result.style.xOffset),
       }))
 

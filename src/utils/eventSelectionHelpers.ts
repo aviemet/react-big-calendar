@@ -1,16 +1,16 @@
 import { isEqual } from "lodash-es"
 import { CalendarEvent } from "./components"
 
-type Box = {
-  top: number
-  bottom: number
-  right: number
-  left: number
-  x: number
-  y: number
+export type Box = {
+  top?: number
+  bottom?: number
+  right?: number
+  left?: number
+  x?: number
+  y?: number
 }
 
-export function isSelected(event: CalendarEvent, selected: CalendarEvent | null) {
+export function isSelected(event: Box, selected: CalendarEvent | null) {
   if(!event || selected === null) return false
   return isEqual(event, selected)
 }
@@ -83,7 +83,7 @@ export function dateCellSelection(
 
     if(isCurrentRow) {
       if(currentSlot < startIndex) startIndex = currentSlot
-      else endIndex = currentSlot //select current range
+      else endIndex = currentSlot // select current range
     } else if(start.y < box.y) {
       // the current row is below start row
       // select cells to the right of the start cell

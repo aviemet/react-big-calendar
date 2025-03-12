@@ -16,7 +16,7 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
@@ -41,6 +41,7 @@
     "stories", 
     ".storybook/**/*", 
     "eslint.config.js", 
-    "jest.config.ts"
+    "jest.config.ts",
+    "rollup.config.ts"
   ]
 }

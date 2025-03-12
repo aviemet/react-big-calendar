@@ -19,6 +19,7 @@ export interface CalendarEvent {
   start?: Date | undefined
   end?: Date | undefined
   resource?: any
+  style?: React.CSSProperties
 }
 
 export interface EventProps<TEvent extends object = CalendarEvent> {

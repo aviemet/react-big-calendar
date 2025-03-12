@@ -149,7 +149,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
     return getDstOffset(dayStart as unknown as Date, start)
   }
 
-  /*** BEGIN localized date arithmetic methods with dayjs ***/
+  /** * BEGIN localized date arithmetic methods with dayjs ***/
   function defineComparators(a: Date, b: Date, unit?: Unit): [Dayjs, Dayjs, OpUnitType | undefined] {
     const datePart = fixUnit(unit)
     const dtA = datePart ? dayjs(a).startOf(datePart) : dayjs(a)
@@ -301,7 +301,7 @@ function dayjsLocalizer(dayjsLib: DayjsLib): DateLocalizer {
 
     return days
   }
-  /*** END localized date arithmetic methods with dayjs ***/
+  /** * END localized date arithmetic methods with dayjs ***/
 
   /**
    * Moved from TimeSlots.js, this method overrides the method of the same name
