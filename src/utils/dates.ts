@@ -121,8 +121,8 @@ type DateArithmeticUnit = "milliseconds" | "seconds" | "minutes" | "hours" | "da
 export function duration(start: Date, end: Date, unit: DateArithmeticUnit | "week" | "day", firstOfWeek?: StartOfWeek) {
   if(unit === "week" || unit === "weekday") {
     return Math.abs(
-      dateArithmetic.weekday(start, undefined, firstOfWeek) -
-      dateArithmetic.weekday(end, undefined, firstOfWeek)
+      dateArithmetic.weekday(start, undefined, firstOfWeek).getTime() -
+      dateArithmetic.weekday(end, undefined, firstOfWeek).getTime()
     )
   }
 
@@ -153,7 +153,7 @@ export function duration(start: Date, end: Date, unit: DateArithmeticUnit | "wee
 //   )
 // }
 
-export function diff(dateA: Date, dateB: Date, unit: Unit) {
+export function diff(dateA: Date, dateB: Date, unit: keyof typeof MILLI | "milliseconds") {
   if(!unit || unit === "milliseconds") return Math.abs(+dateA - +dateB)
 
   // the .round() handles an edge case
@@ -161,8 +161,8 @@ export function diff(dateA: Date, dateB: Date, unit: Unit) {
   // since one day in the range may be shorter/longer by an hour
   return Math.round(
     Math.abs(
-      +dateArithmetic.startOf(dateA, unit) / MILLI[unit] -
-        +dateArithmetic.startOf(dateB, unit) / MILLI[unit]
+      dateArithmetic.startOf(dateA, unit).getTime() / MILLI[unit] -
+        dateArithmetic.startOf(dateB, unit).getTime() / MILLI[unit]
     )
   )
 }
@@ -191,7 +191,7 @@ export function week(date: Date) {
   const d = new Date(date)
   d.setHours(0, 0, 0)
   d.setDate(d.getDate() + 4 - (d.getDay() || 7))
-  return Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7)
+  return Math.ceil(((d.getTime() - new Date(d.getFullYear(), 0, 1).getTime()) / 8.64e7 + 1) / 7)
 }
 
 export function today() {

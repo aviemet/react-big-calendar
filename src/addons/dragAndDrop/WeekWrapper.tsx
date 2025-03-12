@@ -9,12 +9,14 @@ import { useCalendarContext } from "@/components/Calendar"
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 
 interface WeekWrapperProps {
+  children: React.ReactNode
   isAllDay?: boolean
   slotMetrics: DateSlotMetrics
   resourceId: number
 }
 
 const WeekWrapper = ({
+  children,
   isAllDay,
   slotMetrics,
   resourceId,

@@ -1,7 +1,7 @@
-module.exports = function (api) {
+export default function (api) {
   const isESMBuild = process.env.RBC_ESM_BUILD === 'true'
   const isTest = api.env('test')
-  const optionalPlugins = []
+  const optionalPlugins: [string, Record<string, unknown>][] = []
 
   if(isESMBuild) {
     optionalPlugins.push([

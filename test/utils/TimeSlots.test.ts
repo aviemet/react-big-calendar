@@ -1,48 +1,48 @@
-import moment from 'moment'
-import momentLocalizer from '../../src/localizers/moment'
+import moment from "moment"
+import { momentLocalizer } from "@/localizers/moment"
 // import dayjs from 'dayjs'
-// import dayjsLocalizer from '../../src/localizers/dayjs'
-//import { DateTime } from 'luxon'
-//import luxonLocalizer from '../../src/localizers/luxon'
-import { getSlotMetrics } from '../../src/utils/TimeSlots'
-import * as dates from '../../src/utils/dates'
+// import dayjsLocalizer from '@/localizers/dayjs'
+// import { DateTime } from 'luxon'
+// import luxonLocalizer from '@/localizers/luxon'
+import * as dates from "@/utils/dates"
+import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 
 const localizer = momentLocalizer(moment)
 // const localizer = dayjsLocalizer(dayjs)
-//const localizer = luxonLocalizer(DateTime)
+// const localizer = luxonLocalizer(DateTime)
 
-describe('getSlotMetrics', () => {
-  const min = dates.startOf(new Date(2018, 0, 29, 0, 0, 0), 'day')
-  const max = dates.endOf(new Date(2018, 0, 29, 59, 59, 59), 'day')
-  const slotMetrics = getSlotMetrics({
+describe("getTimeSlotMetrics", () => {
+  const min = dates.startOf(new Date(2018, 0, 29, 0, 0, 0), "day")
+  const max = dates.endOf(new Date(2018, 0, 29, 59, 59, 59), "day")
+  const slotMetrics = getTimeSlotMetrics({
     min,
     max,
     step: 60,
     timeslots: 1,
     localizer,
   })
-  test('getSlotMetrics.closestSlotToPosition: always returns timeslot if valid percentage is given', () => {
+  test("getTimeSlotMetrics.closestSlotToPosition: always returns timeslot if valid percentage is given", () => {
     expect(slotMetrics.closestSlotToPosition(0)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition(1)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition(100)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition(-100)).toBeDefined()
     expect(slotMetrics.closestSlotToPosition()).toBeUndefined()
-    expect(slotMetrics.closestSlotToPosition('asd')).toBeUndefined()
+    expect(slotMetrics.closestSlotToPosition("asd")).toBeUndefined()
   })
 
-  test('getSlotMetrics.closestSlotToPosition: returns last timeslot with correct time', () => {
+  test("getTimeSlotMetrics.closestSlotToPosition: returns last timeslot with correct time", () => {
     const secondLastSlot = slotMetrics.groups[slotMetrics.groups.length - 1][0]
     const shouldBeLast = slotMetrics.closestSlotToPosition(1)
-    const diff = dates.diff(secondLastSlot, shouldBeLast, 'minutes')
+    const diff = dates.diff(secondLastSlot, shouldBeLast, "minutes")
 
     expect(diff).toBe(60)
   })
 })
 
-describe('getRange', () => {
-  const min = dates.startOf(new Date(2018, 0, 29, 0, 0, 0), 'day')
-  const max = dates.endOf(new Date(2018, 0, 29, 59, 59, 59), 'day')
-  const slotMetrics = getSlotMetrics({
+describe("getRange", () => {
+  const min = dates.startOf(new Date(2018, 0, 29, 0, 0, 0), "day")
+  const max = dates.endOf(new Date(2018, 0, 29, 59, 59, 59), "day")
+  const slotMetrics = getTimeSlotMetrics({
     min,
     max,
     step: 60,
@@ -50,7 +50,7 @@ describe('getRange', () => {
     localizer,
   })
 
-  test('getRange: 15 minute start of day appointment stays within calendar', () => {
+  test("getRange: 15 minute start of day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 0, 0, 0),
       new Date(2018, 0, 29, 0, 15, 0)
@@ -59,7 +59,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: 1 hour start of day appointment stays within calendar', () => {
+  test("getRange: 1 hour start of day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 0, 0, 0),
       new Date(2018, 0, 29, 1, 0, 0)
@@ -68,7 +68,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: 1 hour mid range appointment stays within calendar', () => {
+  test("getRange: 1 hour mid range appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 14, 0, 0),
       new Date(2018, 0, 29, 15, 0, 0)
@@ -77,7 +77,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: 3 hour mid range appointment stays within calendar', () => {
+  test("getRange: 3 hour mid range appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 14, 0, 0),
       new Date(2018, 0, 29, 17, 0, 0)
@@ -86,7 +86,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: full day appointment stays within calendar', () => {
+  test("getRange: full day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 0, 0, 0),
       new Date(2018, 0, 29, 23, 59, 0)
@@ -95,7 +95,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: 1 hour end of day appointment stays within calendar', () => {
+  test("getRange: 1 hour end of day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 23, 0, 0),
       new Date(2018, 0, 29, 23, 59, 0)
@@ -104,7 +104,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: 15 minute end of day appointment stays within calendar', () => {
+  test("getRange: 15 minute end of day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 23, 45, 0),
       new Date(2018, 0, 29, 23, 59, 0)
@@ -113,7 +113,7 @@ describe('getRange', () => {
     expect(range.height).toBeGreaterThan(0)
   })
 
-  test('getRange: multi day appointment stays within calendar', () => {
+  test("getRange: multi day appointment stays within calendar", () => {
     let range = slotMetrics.getRange(
       new Date(2018, 0, 29, 0, 0, 0),
       new Date(2018, 0, 30, 4, 0, 0)

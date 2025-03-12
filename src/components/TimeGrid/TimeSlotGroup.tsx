@@ -1,10 +1,9 @@
 import { useCalendarContext } from "@/components/Calendar"
-import { Resource } from "@/utils/Resources"
 import clsx from "clsx"
 
-interface TimeSlotGroupProps<TResource extends Resource = Resource> {
+interface TimeSlotGroupProps {
   renderSlot?: (value: any, index: number) => React.ReactNode
-  resource: TResource
+  resource: string | number
   group: Date[]
 }
 
@@ -19,10 +18,10 @@ const TimeSlotGroup = ({
 
   const groupProps = getters ? getters.slotGroupProp(group) : {}
 
-
   return (
     <div className={ clsx("rbc-timeslot-group") } { ...groupProps }>
       { group.map((value, index) => {
+
         const slotProps = getters ? getters.slotProp(value, resource) : {}
 
         return (

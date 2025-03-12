@@ -36,10 +36,10 @@ interface UseTimeSlotMetricsProps {
 export function useTimeSlotMetrics(props: UseTimeSlotMetricsProps): TimeSlotMetrics {
   const { localizer } = useCalendarContext()
 
-  return useMemo(() => getSlotMetrics({ ...props, localizer }), [localizer, props])
+  return useMemo(() => getTimeSlotMetrics({ ...props, localizer }), [localizer, props])
 }
 
-function getSlotMetrics({
+export function getTimeSlotMetrics({
   min,
   max,
   step,
@@ -114,7 +114,7 @@ function getSlotMetrics({
   return {
     groups,
     update(args) {
-      if(getKey(args) !== key) return getSlotMetrics(args)
+      if(getKey(args) !== key) return getTimeSlotMetrics(args)
       return this
     },
 

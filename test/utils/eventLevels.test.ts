@@ -1,9 +1,9 @@
 import moment from "moment"
-import momentLocalizer from "../../src/localizers/moment"
+import { momentLocalizer } from "@/localizers/moment"
 // import dayjs from 'dayjs'
-// import dayjsLocalizer from '../../src/localizers/dayjs'
-//import { DateTime } from 'luxon'
-//import luxonLocalizer from '../../src/localizers/luxon'
+// import dayjsLocalizer from '@/localizers/dayjs'
+// import { DateTime } from 'luxon'
+// import luxonLocalizer from '@/localizers/luxon'
 import {
   endOfRange,
   eventSegments,
@@ -11,11 +11,11 @@ import {
   inRange,
   segmentsOverlap,
   sortEvents,
-} from "../../src/utils/eventLevels"
+} from "@/utils/eventLevels"
 
 const localizer = momentLocalizer(moment)
 // const localizer = dayjsLocalizer(dayjs)
-//const localizer = luxonLocalizer(DateTime)
+// const localizer = luxonLocalizer(DateTime)
 
 describe("endOfRange", () => {
   test("it adds one day by default", () => {

@@ -11,6 +11,7 @@ import { Resource } from "./Resources"
 import { Toolbar, ToolbarProps } from "@/components/Toolbar"
 import { ViewHeaderProps } from "@/components"
 import { WeekdayHeader } from "@/components/WeekdayHeader"
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 
 export interface CalendarEvent {
   allDay?: boolean | undefined
@@ -76,6 +77,16 @@ export interface DateCellWrapperProps {
   children: React.JSX.Element
 }
 
+export interface TimeGutterWrapperProps {
+  children: React.ReactNode
+  slotMetrics: TimeSlotMetrics
+}
+
+export interface TimeSlotWrapperProps {
+  value: Date
+  resource: string | number | null | undefined
+}
+
 export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
   localizer: DateLocalizer
   slot: number
@@ -116,9 +127,9 @@ interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, TResour
   dateCellWrapper: React.ComponentType<DateCellWrapperProps>
   dayColumnWrapper: React.ComponentType
   weekWrapper: React.ComponentType
-  timeslotWrapper: React.ComponentType
+  timeslotWrapper: React.ComponentType<TimeSlotWrapperProps>
   timeGutterHeader: React.ComponentType
-  timeGutterWrapper: React.ComponentType
+  timeGutterWrapper: React.ComponentType<TimeGutterWrapperProps>
   toolbar: React.ComponentType<ToolbarProps>
 
   // components used as a header for each column in the TimeGridHeader

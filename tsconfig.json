@@ -23,7 +23,7 @@
     "typeRoots": ["./node_modules/@types"],
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "types": ["react"],
+    "types": ["react", "jest"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -35,5 +35,12 @@
       ]
     }
   },
-  "include": ["src", "tests", "stories", ".storybook/**/*", "eslint.config.js"]
+  "include": [
+    "src", 
+    "test",  
+    "stories", 
+    ".storybook/**/*", 
+    "eslint.config.js", 
+    "jest.config.ts"
+  ]
 }

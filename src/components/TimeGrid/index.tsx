@@ -15,6 +15,7 @@ import { Accessors } from "@/utils/accessors"
 import { Overlay } from "react-overlays"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
+import { useResizeObserver } from "@/hooks/useResizeListener"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -68,7 +69,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     handleDragStart,
     popupOffset,
   } = props
-
   const { localizer, accessors } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
@@ -83,6 +83,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   const updatingOverflowRef = useRef<boolean>(false)
   const rafHandleRef = useRef<number>(null)
   const measureGutterAnimationFrameRequestRef = useRef<number>(null)
+
+  const containerSize = useResizeObserver(containerRef)
 
   const checkOverflow = useCallback(() => {
     if(updatingOverflowRef.current === true) return
@@ -123,11 +125,13 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     checkOverflow()
   }, [checkOverflow])
 
-  useEffect(() => {
-    if(width === null) {
+  useLayoutEffect(() => {
+    if(!width) {
       measureGutter()
     }
+  }, [width, measureGutter])
 
+  useEffect(() => {
     const diffMillis = localizer.diff(
       localizer.merge(scrollToTime, min),
       scrollToTime,
@@ -144,19 +148,42 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       // Only do this once
       scrollRatioRef.current = null
     }
+  }, [enableAutoScroll, localizer, max, min, scrollToTime])
 
-    window.addEventListener("resize", handleResize)
+  // useEffect(() => {
+  //   if(!width) {
+  //     measureGutter()
+  //   }
 
-    return () => {
-      window.removeEventListener("resize", handleResize)
+  //   const diffMillis = localizer.diff(
+  //     localizer.merge(scrollToTime, min),
+  //     scrollToTime,
+  //     "milliseconds"
+  //   )
+  //   const totalMillis = localizer.diff(min, max, "milliseconds")
 
-      animationFrame.cancel(rafHandleRef.current)
+  //   scrollRatioRef.current = diffMillis / totalMillis
 
-      if(measureGutterAnimationFrameRequestRef.current) {
-        window.cancelAnimationFrame(measureGutterAnimationFrameRequestRef.current)
-      }
-    }
-  }, [enableAutoScroll, handleResize, localizer, max, measureGutter, min, scrollToTime, width])
+  //   // If auto-scroll is disabled, we don't actually apply the scroll
+  //   if(scrollRatioRef.current !== null && enableAutoScroll === true) {
+  //     const content = contentRef.current
+  //     content.scrollTop = content.scrollHeight * scrollRatioRef.current
+  //     // Only do this once
+  //     scrollRatioRef.current = null
+  //   }
+
+  //   window.addEventListener("resize", handleResize)
+
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize)
+
+  //     animationFrame.cancel(rafHandleRef.current)
+
+  //     if(measureGutterAnimationFrameRequestRef.current) {
+  //       window.cancelAnimationFrame(measureGutterAnimationFrameRequestRef.current)
+  //     }
+  //   }
+  // }, [enableAutoScroll, handleResize, localizer, max, measureGutter, min, scrollToTime, width])
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if(scrollRef.current) {
@@ -190,10 +217,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       })
     } else if(doShowMoreDrillDown) {
       onDrillDown?.([date, getDrilldownView?.(date) || views.DAY])
-      // notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
     }
     onShowMore?.(events, date, slot)
-    // notify(onShowMore, [events, date, slot])
   }
 
   const handleSelectAllDaySlot = (slots, slotInfo) => {
@@ -208,19 +233,11 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       action: slotInfo.action,
       resourceId: slotInfo.resourceId,
     })
-    // notify(onSelectSlot, {
-    //   slots,
-    //   start,
-    //   end,
-    //   action: slotInfo.action,
-    //   resourceId: slotInfo.resourceId,
-    // })
   }
 
   const overlayDisplay = () => {
     setOverlay(null)
   }
-
 
   const { allDayEvents, rangeEvents, rangeBackgroundEvents } = useMemo(() => {
     const start = range[0]
@@ -323,7 +340,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         onScroll={ handleScroll }
       >
         <TimeGutter
-          date={ range[0] }
           ref={ gutterRef }
           min={ localizer.merge(range[0], min) }
           max={ localizer.merge(range[0], max) }
