@@ -9,7 +9,7 @@ export type Resource = {
   [key: string | number]: unknown
 }
 
-function Resources<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(resources: TResource[] | undefined, accessors: Accessors) {
+function ResourceManager<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(resources: TResource[] | undefined, accessors: Accessors) {
   return {
     map: <TReturn>(fn: (resource: [string | number, TResource | null], index: number) => TReturn) => {
       if(!resources || resources.length < 1) return [fn([NONE, null], 0)]
@@ -48,4 +48,4 @@ function Resources<TEvent extends CalendarEvent = CalendarEvent, TResource exten
   }
 }
 
-export { Resources }
+export { ResourceManager }

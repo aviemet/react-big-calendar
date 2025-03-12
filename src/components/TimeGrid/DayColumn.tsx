@@ -244,6 +244,9 @@ const DayColumn = (props: DayColumnProps) => {
     })
   }
 
+  // console.log({ resource })
+  // console.log({ slotMetrics })
+
   return (
     <DayColumnWrapperComponent
       ref={ containerRef }

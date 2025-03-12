@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import scrollbarSize from "dom-helpers/scrollbarSize"
 import { DateContentRow } from "@/components/DateContentRow"
-import { Resources, type Resource } from "@/utils/Resources"
+import { ResourceManager, type Resource } from "@/utils/Resources"
 import { useCalendarContext } from "@/components/Calendar"
 import { DateRange } from "@/localizers"
 import { CalendarEvent } from "@/utils/components"
@@ -10,7 +10,7 @@ import { WeekdayHeader } from "../WeekdayHeader"
 export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
-  resources: ReturnType<typeof Resources<TEvent, TResource>>
+  resources: ReturnType<typeof ResourceManager<TEvent, TResource>>
   isOverflowing: boolean
   resizable: boolean
   width: number

@@ -10,13 +10,11 @@ import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
 import { TimeGutter } from "./TimeGutter"
 import { inRange, sortEvents } from "@/utils/eventLevels"
 import { BaseViewProps } from "@/Views"
-import { Resources, Resource } from "@/utils/Resources"
+import { ResourceManager, Resource } from "@/utils/Resources"
 import { Accessors } from "@/utils/accessors"
 import { Overlay } from "react-overlays"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
-import { NoopWrapper } from "../NoopWrapper"
-import { useResizeObserver } from "@/hooks/useResizeListener"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -71,7 +69,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     popupOffset,
   } = props
 
-  const { localizer, getNow, accessors } = useCalendarContext()
+  const { localizer, accessors } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
   const [isOverflowing, setIsOverflowing] = useState(false)
@@ -159,10 +157,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       }
     }
   }, [enableAutoScroll, handleResize, localizer, max, measureGutter, min, scrollToTime, width])
-
-  const memoizedResources = useCallback((resources: Resource[], accessors: Accessors) => (
-    Resources(resources, accessors)
-  ), [])
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if(scrollRef.current) {
@@ -268,10 +262,11 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     }
   }, [range, events, backgroundEvents, accessors, localizer, showMultiDayTimes])
 
-  const localResources = memoizedResources(resources, accessors)
-  const groupedEvents = localResources.groupEvents(rangeEvents)
-  const groupedBackgroundEvents = localResources.groupEvents(rangeBackgroundEvents)
-  // console.log({ localResources, rangeEvents, rangeBackgroundEvents, groupedEvents, groupedBackgroundEvents })
+  const resourceManager = useMemo(() => ResourceManager(resources, accessors), [accessors, resources])
+
+  const groupedEvents = resourceManager.groupEvents(rangeEvents)
+  const groupedBackgroundEvents = resourceManager.groupEvents(rangeBackgroundEvents)
+
   const headerProps = {
     range,
     events: allDayEvents,
@@ -280,7 +275,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     allDayMaxRows: showAllEvents
       ? Infinity
       : allDayMaxRows ?? Infinity,
-    resources: localResources,
+    resources: resourceManager,
     selectable: selectable,
     scrollRef: scrollRef,
     isOverflowing: isOverflowing,
@@ -338,7 +333,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         />
 
         { !resourceGroupingLayout
-          ? localResources.map(([id, resource]) => {
+          ? resourceManager.map(([id, resource]) => {
 
             return range.map((date) => (
               <DayColumnWrapper
@@ -354,7 +349,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
           : range.map((date) => {
             return (
               <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
-                { localResources.map(([id, resource]) => (
+                { resourceManager.map(([id, resource]) => (
                   <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
                     <DayColumnWrapper
                       date={ date }

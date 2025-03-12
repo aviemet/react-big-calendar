@@ -3,7 +3,7 @@ import scrollbarSize from "dom-helpers/scrollbarSize"
 import { DateContentRow } from "@/components/DateContentRow"
 import { Header } from "@/components/Header"
 import { ResourceHeader } from "@/components/ResourceHeader"
-import { Resource, Resources } from "@/utils/Resources"
+import { Resource, ResourceManager } from "@/utils/Resources"
 import { useCalendarContext } from "@/components/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import { TimeGridHeaderProps } from "./TimeGridHeader"
@@ -11,7 +11,7 @@ import { TimeGridHeaderProps } from "./TimeGridHeader"
 interface TimeGridHeaderResourcesProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
-  resources: ReturnType<typeof Resources<TEvent, TResource>>
+  resources: ReturnType<typeof ResourceManager<TEvent, TResource>>
   isOverflowing: boolean
   resizable: boolean
   width: number

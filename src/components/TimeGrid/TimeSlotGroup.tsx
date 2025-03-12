@@ -3,9 +3,9 @@ import { Resource } from "@/utils/Resources"
 import clsx from "clsx"
 
 interface TimeSlotGroupProps<TResource extends Resource = Resource> {
-  renderSlot: (value: any, index: number) => React.ReactNode
+  renderSlot?: (value: any, index: number) => React.ReactNode
   resource: TResource
-  group: any[]
+  group: Date[]
 }
 
 const TimeSlotGroup = ({
@@ -14,25 +14,26 @@ const TimeSlotGroup = ({
   group,
 }: TimeSlotGroupProps) => {
   const { getters, components: {
-    timeslotWrapper: Wrapper,
+    timeslotWrapper: TimeslotWrapper,
   } } = useCalendarContext()
 
   const groupProps = getters ? getters.slotGroupProp(group) : {}
 
+
   return (
     <div className={ clsx("rbc-timeslot-group") } { ...groupProps }>
-      { group.map((value, Index) => {
+      { group.map((value, index) => {
         const slotProps = getters ? getters.slotProp(value, resource) : {}
 
         return (
-          <Wrapper key={ Index } value={ value } resource={ resource }>
+          <TimeslotWrapper key={ index } value={ value } resource={ resource }>
             <div
               { ...slotProps }
               className={ clsx("rbc-time-slot", slotProps.className) }
             >
-              { renderSlot && renderSlot(value, Index) }
+              { renderSlot && renderSlot(value, index) }
             </div>
-          </Wrapper>
+          </TimeslotWrapper>
         )
       }) }
     </div>
