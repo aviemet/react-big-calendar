@@ -5,11 +5,10 @@ import { TimeSlotGroup } from "./TimeSlotGroup"
 import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarProps, useCalendarContext } from "@/Calendar"
 import { EventsWrapper } from "./EventsWrapper"
-import { Resource } from "@/utils/Resources"
 import { CalendarEvent } from "@/utils/components"
 // import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
-interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
+interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
   backgroundEvents: TEvent[]
   step: number

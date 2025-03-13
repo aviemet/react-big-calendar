@@ -23,6 +23,12 @@ export function coerceDate(date: string | Date) {
   return date
 }
 
+export function coerceArray<T>(value: T | T[]) {
+  if(Array.isArray(value)) return value
+
+  return [value]
+}
+
 export function stringifyPercent(v: number | string) {
   return typeof v === "string" ? v : v + "%"
 }

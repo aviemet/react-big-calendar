@@ -3,9 +3,8 @@ import scrollbarSize from "dom-helpers/scrollbarSize"
 import { DateContentRow } from "@/components/DateContentRow"
 import { ResourceManager, type Resource } from "@/utils/Resources"
 import { useCalendarContext } from "@/Calendar"
-import { DateRange } from "@/localizers"
 import { CalendarEvent } from "@/utils/components"
-import { WeekdayHeader } from "../WeekdayHeader"
+import { WeekdayHeader } from "./WeekdayHeader"
 
 export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
@@ -53,10 +52,9 @@ const TimeGridHeader = ({
     resourceHeader: ResourceHeaderComponent,
   } } = useCalendarContext()
 
-  let style = {}
-  if(isOverflowing) {
-    style[rtl ? "marginLeft" : "marginRight"] = `${scrollbarSize() - 1}px`
-  }
+  const style = isOverflowing
+    ? { [rtl ? "marginLeft" : "marginRight"]: `${scrollbarSize() - 1}px` }
+    : {}
 
   const groupedEvents = resources.groupEvents(events)
 
@@ -67,7 +65,7 @@ const TimeGridHeader = ({
       className={ clsx("rbc-time-header", { "rbc-overflowing": isOverflowing }) }
     >
       <div
-        className="rbc-label rbc-time-header-gutter"
+        className={ clsx("rbc-label", "rbc-time-header-gutter") }
         style={ { width, minWidth: width, maxWidth: width } }
       >
         <TimeGutterHeader />
@@ -78,7 +76,7 @@ const TimeGridHeader = ({
           <div className="rbc-time-header-content" key={ id || index }>
 
             { resource && (
-              <div className="rbc-row rbc-row-resource" key={ `resource_${index}` }>
+              <div className={ clsx("rbc-row", "rbc-row-resource") } key={ `resource_${id || index}` }>
                 <div className="rbc-header">
                   <ResourceHeaderComponent
                     index={ index }
@@ -102,10 +100,10 @@ const TimeGridHeader = ({
               />
             </div>
             <DateContentRow
-              isAllDay
+              isAllDaya
               minRows={ 2 }
-              // Add +1 to include showMore button row in the row limit
               renderHeader={ false }
+              // Add +1 to include showMore button row in the row limit
               maxRows={ allDayMaxRows + 1 }
               range={ range }
               events={ groupedEvents.get(id) || [] }

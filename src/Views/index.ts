@@ -41,6 +41,7 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   min?: Date | undefined
   max?: Date | undefined
   scrollToTime?: Date | undefined
+  enableAutoScroll?: boolean
   showMultiDayTimes?: boolean | undefined
   width?: number | undefined
   selected?: object | undefined

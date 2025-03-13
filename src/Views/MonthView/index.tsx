@@ -11,13 +11,11 @@ import { PopOverlay } from "@/components/PopOverlay"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
 import { useResizeObserver } from "@/hooks/useResizeListener"
 import { DateContentRow } from "@/components/DateContentRow"
-import { ViewHeaderProps } from "@/components"
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   showAllEvents?: boolean
   popup?: boolean
   popupOffset?: number | { x: number, y: number }
-  enableAutoScroll?: boolean
   resizable?: boolean
   doShowMoreDrillDown?: boolean
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
@@ -160,7 +158,7 @@ const MonthViewComponent = <TEvent extends CalendarEvent = CalendarEvent>(
 
   const handleHeadingClick = useCallback((
     date: Date,
-    view: ViewHeaderProps,
+    view: ViewName,
     e: React.MouseEvent<HTMLElement>
   ) => {
     e.preventDefault()

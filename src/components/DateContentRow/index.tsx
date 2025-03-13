@@ -11,7 +11,7 @@ import clsx from "clsx"
 import { useCalendarContext } from "@/Calendar"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
-import { ViewHeaderProps } from ".."
+import { ViewHeaderProps } from "../Header"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
