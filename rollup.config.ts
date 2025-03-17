@@ -17,7 +17,8 @@ const name = "ReactBigCalendar"
 const babelOptions = {
   exclude: /node_modules/,
   babelHelpers: "runtime",
-}
+} as const
+
 const globals = {
   react: "React",
   "react-dom": "ReactDOM",

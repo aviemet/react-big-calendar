@@ -7,8 +7,8 @@ interface DayColumnWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TR
   date: Date
   id: string | number
   resource: TResource
-  groupedEvents: Map<string | number, TEvent>
-  groupedBackgroundEvents: Map<string | number, TEvent>
+  groupedEvents: Map<string | number, TEvent[]>
+  groupedBackgroundEvents: Map<string | number, TEvent[]>
   min: Date
   max: Date
 }
@@ -45,7 +45,7 @@ const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResourc
       key={ `${id}-${date}` }
       min={ localizer.merge(date, min) }
       max={ localizer.merge(date, max) }
-      resource={ resource && id }
+      resourceId={ resource && id }
       isNow={ localizer.isSameDate(date, getNow()) }
       date={ date }
       events={ daysEvents }

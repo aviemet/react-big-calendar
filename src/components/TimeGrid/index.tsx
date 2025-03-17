@@ -32,42 +32,41 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource 
   }
 }
 
-const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(props: TimeGridProps<TEvent, TResource>) => {
-  const {
-    events,
-    backgroundEvents,
-    min,
-    max,
-    scrollToTime,
-    getDrilldownView,
-    resources,
-    resourceGroupingLayout = false,
-    step,
-    timeslots,
-    range,
-    enableAutoScroll,
-    showMultiDayTimes,
-    resizable,
-    width,
-    allDayMaxRows,
-    selected,
-    selectable,
-    longPressThreshold,
-    onNavigate,
-    onSelectSlot,
-    onSelectEnd,
-    onSelectStart,
-    onSelectEvent,
-    onShowMore,
-    onDoubleClickEvent,
-    onKeyPressEvent,
-    onDrillDown,
-    showAllEvents,
-    doShowMoreDrillDown,
-    popup,
-    handleDragStart,
-    popupOffset,
-  } = props
+const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>({
+  events,
+  backgroundEvents,
+  min,
+  max,
+  scrollToTime,
+  getDrilldownView,
+  resources,
+  resourceGroupingLayout = false,
+  step,
+  timeslots,
+  range,
+  enableAutoScroll,
+  showMultiDayTimes,
+  resizable,
+  width,
+  allDayMaxRows,
+  selected,
+  selectable,
+  longPressThreshold,
+  onNavigate,
+  onSelectSlot,
+  onSelectEnd,
+  onSelectStart,
+  onSelectEvent,
+  onShowMore,
+  onDoubleClickEvent,
+  onKeyPressEvent,
+  onDrillDown,
+  showAllEvents,
+  doShowMoreDrillDown,
+  popup,
+  handleDragStart,
+  popupOffset,
+}: TimeGridProps<TEvent, TResource>) => {
   const { localizer, accessors } = useCalendarContext()
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
@@ -125,12 +124,10 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   }, [checkOverflow])
 
   useLayoutEffect(() => {
-    if(!width) {
-      measureGutter()
-    }
+    if(!width) measureGutter()
   }, [width, measureGutter])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const diffMillis = localizer.diff(
       localizer.merge(scrollToTime, min),
       scrollToTime,
@@ -149,51 +146,24 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     }
   }, [enableAutoScroll, localizer, max, min, scrollToTime])
 
-  // useEffect(() => {
-  //   if(!width) {
-  //     measureGutter()
-  //   }
+  useLayoutEffect(() => {
+    animationFrame.cancel(rafHandleRef.current)
+    rafHandleRef.current = animationFrame.request(checkOverflow)
 
-  //   const diffMillis = localizer.diff(
-  //     localizer.merge(scrollToTime, min),
-  //     scrollToTime,
-  //     "milliseconds"
-  //   )
-  //   const totalMillis = localizer.diff(min, max, "milliseconds")
+    return () => {
+      animationFrame.cancel(rafHandleRef.current)
 
-  //   scrollRatioRef.current = diffMillis / totalMillis
-
-  //   // If auto-scroll is disabled, we don't actually apply the scroll
-  //   if(scrollRatioRef.current !== null && enableAutoScroll === true) {
-  //     const content = contentRef.current
-  //     content.scrollTop = content.scrollHeight * scrollRatioRef.current
-  //     // Only do this once
-  //     scrollRatioRef.current = null
-  //   }
-
-  //   window.addEventListener("resize", handleResize)
-
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize)
-
-  //     animationFrame.cancel(rafHandleRef.current)
-
-  //     if(measureGutterAnimationFrameRequestRef.current) {
-  //       window.cancelAnimationFrame(measureGutterAnimationFrameRequestRef.current)
-  //     }
-  //   }
-  // }, [enableAutoScroll, handleResize, localizer, max, measureGutter, min, scrollToTime, width])
+      if(measureGutterAnimationFrameRequestRef.current) {
+        window.cancelAnimationFrame(measureGutterAnimationFrameRequestRef.current)
+      }
+    }
+  }, [checkOverflow, containerSize])
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if(scrollRef.current) {
       scrollRef.current.scrollLeft = e.target.scrollLeft
     }
   }
-
-  // componentDidUpdate() {
-  //   applyScroll()
-  // }
-
 
   const handleSelectEvent = (...args) => {
     // cancel any pending selections so only the event click goes through.

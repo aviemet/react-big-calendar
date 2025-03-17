@@ -431,7 +431,7 @@ type CalendarBaseProps<TEvent extends CalendarEvent = CalendarEvent, TResource e
    * (range: { start: Date, end: Date, resourceId: (number|string) }) => ?boolean
    * ```
    */
-  onSelecting?: (range: DateRange) => boolean | undefined
+  onSelecting?: (options: { start: Date, end: Date, resourceId: number | string }) => boolean | undefined
 
   /**
    * Callback fired when a +{count} more is clicked

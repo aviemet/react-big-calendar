@@ -31,30 +31,30 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   onKeyPressEvent?: CalendarProps["onKeyPressEvent"]
   className?: string
   dragThroughEvents?: boolean
-  resource: string | number
+  resourceId: string | number
 }
 
-const DayColumn = (props: DayColumnProps) => {
-  let {
-    events,
-    backgroundEvents,
-    step = 1,
-    date,
-    min,
-    max,
-    isNow = false,
-    resizable = false,
-    timeslots = 2,
-    selected,
-    selectable,
-    longPressThreshold,
-    resource,
-    onSelecting,
-    onSelectSlot,
-    onSelectEvent,
-    onDoubleClickEvent,
-    onKeyPressEvent,
-  } = props
+const DayColumn = ({
+  events,
+  backgroundEvents,
+  step = 1,
+  date,
+  min,
+  max,
+  isNow = false,
+  resizable = false,
+  timeslots = 2,
+  selected,
+  selectable,
+  longPressThreshold,
+  resourceId,
+  onSelecting,
+  onSelectSlot,
+  onSelectEvent,
+  onDoubleClickEvent,
+  onKeyPressEvent,
+}: DayColumnProps) => {
+
   const { localizer, getNow, getters, rtl, components: {
     dayColumnWrapper: DayColumnWrapperComponent,
     eventContainerWrapper: EventContainer,
@@ -144,7 +144,7 @@ const DayColumn = (props: DayColumnProps) => {
         if(
           (localizer.eq(selectState.startDate, start, "minutes") &&
             localizer.eq(selectState.endDate, end, "minutes")) ||
-          onSelecting({ start, end, resourceId: resource }) === false
+          onSelecting({ start, end, resourceId }) === false
         )
           return
       }
@@ -236,7 +236,7 @@ const DayColumn = (props: DayColumnProps) => {
       slots,
       start: startDate,
       end: endDate,
-      resourceId: resource,
+      resourceId,
       action,
       bounds,
       box,
@@ -250,9 +250,9 @@ const DayColumn = (props: DayColumnProps) => {
     <DayColumnWrapperComponent
       ref={ containerRef }
       date={ date }
-      style={ getters.dayProp(max, resource).style }
+      style={ getters.dayProp(max, resourceId).style }
       className={ clsx(
-        getters.dayProp(max, resource).className,
+        getters.dayProp(max, resourceId).className,
         "rbc-day-slot",
         "rbc-time-column",
         {
@@ -262,17 +262,17 @@ const DayColumn = (props: DayColumnProps) => {
         }
       ) }
       slotMetrics={ slotMetrics }
-      resource={ resource }
+      resource={ resourceId }
     >
       { slotMetrics.groups.map((group, index) => (
         <TimeSlotGroup
           key={ index }
           group={ group }
-          resource={ resource }
+          resource={ resourceId }
         />
       )) }
       <EventContainer
-        resource={ resource }
+        resource={ resourceId }
         slotMetrics={ slotMetrics }
       >
         <div className={ clsx("rbc-events-container", { rtl }) }>
@@ -280,7 +280,7 @@ const DayColumn = (props: DayColumnProps) => {
             events={ backgroundEvents }
             isBackgroundEvent={ true }
             selected={ selected }
-            resource={ resource }
+            resource={ resourceId }
             step={ step }
             timeslots={ timeslots }
             resizable={ resizable }
@@ -292,7 +292,7 @@ const DayColumn = (props: DayColumnProps) => {
           <EventsWrapper
             events={ events }
             selected={ selected }
-            resource={ resource }
+            resource={ resourceId }
             step={ step }
             timeslots={ timeslots }
             resizable={ resizable }
