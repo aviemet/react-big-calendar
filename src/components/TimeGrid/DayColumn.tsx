@@ -37,7 +37,7 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
 const DayColumn = ({
   events,
   backgroundEvents,
-  step = 1,
+  step,
   date,
   min,
   max,
@@ -54,7 +54,6 @@ const DayColumn = ({
   onDoubleClickEvent,
   onKeyPressEvent,
 }: DayColumnProps) => {
-
   const { localizer, getNow, getters, rtl, components: {
     dayColumnWrapper: DayColumnWrapperComponent,
     eventContainerWrapper: EventContainer,
@@ -68,7 +67,7 @@ const DayColumn = ({
     startDate?: Date
     endDate?: Date
   }>({})
-
+  console.log({ step, timeslots })
   const slotMetrics = useTimeSlotMetrics({ min, max, step, timeslots })
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -244,7 +243,7 @@ const DayColumn = ({
   }
 
   // console.log({ resource })
-  // console.log({ slotMetrics })
+  // console.log({ groups: slotMetrics.groups })
 
   return (
     <DayColumnWrapperComponent

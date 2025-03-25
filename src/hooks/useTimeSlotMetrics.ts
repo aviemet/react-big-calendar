@@ -70,7 +70,6 @@ export function getTimeSlotMetrics({
   }
 
   const key = getKey({ min, max, step, timeslots, localizer })
-
   // Ensure totalMin is at least 1 to prevent array length issues
   const totalMin = Math.max(1, localizer.getTotalMin(min, max))
   const minutesFromMidnight = localizer.getMinutesFromMidnight(min)

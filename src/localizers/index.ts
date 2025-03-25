@@ -258,7 +258,7 @@ export interface DateLocalizerSpec {
   ceil?: (date: Date, unit: Unit) => Date
   min?: typeof min
   max?: typeof max
-  minutes?: typeof minutes
+  minutes?: (date: Date) => number
   firstVisibleDay?: (date: Date, localizer: any) => Date
   lastVisibleDay?: (date: Date, localizer: any) => Date
   visibleDays?: (date: Date, localizer: any) => Date[]
@@ -266,6 +266,8 @@ export interface DateLocalizerSpec {
   getSlotDate?: (date: Date, minutesFromMidnight: number, offset: number) => Date
   getTimezoneOffset?: (date: Date) => number
   getDstOffset?: (date: Date, dateB: Date) => number
+  // TODO: Needs to be renamed to getTotalMinutes
+  // getTotalMin is used near a variable called `min` which makes this naming ambiguous and confusing
   getTotalMin?: (dateA: Date, dateB: Date) => number
   getMinutesFromMidnight?: (date: Date) => number
   continuesPrior?: (dateA: Date, dateB: Date) => boolean

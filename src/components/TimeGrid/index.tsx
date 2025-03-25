@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
 import clsx from "clsx"
 import * as animationFrame from "dom-helpers/animationFrame"
 import getPosition from "dom-helpers/position"
@@ -15,6 +15,16 @@ import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 import { useResizeObserver } from "@/hooks/useResizeListener"
 import { DayColumnWrapper } from "@/components/TimeGrid/DayColumnWrapper"
+import { ResourcesLayout } from "./ResourcesLayout"
+import { DayLayout } from "./DayLayout"
+import { createContext } from "@/hooks/createContext"
+import { TimeGridAction, TimeGridState, useTimeGridState } from "./useTimeGridState"
+
+const [useTimeGridContext, TimeGridContextProvider] = createContext<{
+  timeGridState: TimeGridState
+  timeGridDispatch: TimeGridAction
+}>()
+export { useTimeGridContext }
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -25,7 +35,6 @@ interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource 
   doShowMoreDrillDown?: boolean
   popup?: boolean
   handleDragStart?: () => void
-  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
   popupOffset?: number | {
     x: number
     y: number
@@ -41,7 +50,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   getDrilldownView,
   resources,
   resourceGroupingLayout = false,
-  step,
+  step = 30,
   timeslots,
   range,
   enableAutoScroll,
@@ -68,6 +77,20 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   popupOffset,
 }: TimeGridProps<TEvent, TResource>) => {
   const { localizer, accessors } = useCalendarContext()
+
+  const [timeGridState, timeGridDispatch] = useTimeGridState({
+    callbacks: {
+      onNavigate,
+      onSelectSlot,
+      onSelectEnd,
+      onSelectStart,
+      onSelectEvent,
+      onShowMore,
+      onDoubleClickEvent,
+      onKeyPressEvent,
+      onDrillDown,
+    },
+  })
 
   const [gutterWidth, setGutterWidth] = useState<number | undefined>(undefined)
   const [isOverflowing, setIsOverflowing] = useState(false)
@@ -277,82 +300,89 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   }
 
   return (
-    <div
-      ref={ containerRef }
-      className={ clsx("rbc-time-view", {
-        "rbc-time-view-resources": resources && resources.length > 1,
-      }) }
-    >
-      {
-        resources && resources.length > 1 && resourceGroupingLayout
-          ? <TimeGridHeaderResources { ...headerProps } />
-          : <TimeGridHeader { ...headerProps } />
-      }
-
-      { popup && <PopOverlay
-        ref={ containerRef }
-        overlay={ overlay }
-        selected={ selected }
-        popupOffset={ popupOffset }
-        handleKeyPressEvent={ (e) => onKeyPressEvent?.(e) }
-        handleSelectEvent={ handleSelectEvent }
-        handleDoubleClickEvent={ (event, e) => onDoubleClickEvent?.(event, e) }
-        handleDragStart={ handleDragStart }
-        show={ !!overlay?.position }
-        overlayDisplay={ overlayDisplay }
-        onHide={ () => setOverlay(null) }
-      /> }
-
+    <TimeGridContextProvider value={ {
+      timeGridState,
+      timeGridDispatch,
+    } }>
       <div
-        ref={ contentRef }
-        className="rbc-time-content"
-        onScroll={ handleScroll }
+        ref={ containerRef }
+        className={ clsx("rbc-time-view", {
+          "rbc-time-view-resources": resources && resources.length > 1,
+        }) }
       >
-        <TimeGutter
-          ref={ gutterRef }
-          min={ localizer.merge(range[0], min) }
-          max={ localizer.merge(range[0], max) }
-          step={ step }
-          timeslots={ timeslots }
-        />
+        {
+          resources && resources.length > 1 && resourceGroupingLayout
+            ? <TimeGridHeaderResources { ...headerProps } />
+            : <TimeGridHeader { ...headerProps } />
+        }
 
-        { !resourceGroupingLayout
-          ? resourceManager.map(([id, resource]) => {
+        { popup && <PopOverlay
+          ref={ containerRef }
+          overlay={ overlay }
+          selected={ selected }
+          popupOffset={ popupOffset }
+          handleKeyPressEvent={ (e) => onKeyPressEvent?.(e) }
+          handleSelectEvent={ handleSelectEvent }
+          handleDoubleClickEvent={ (event, e) => onDoubleClickEvent?.(event, e) }
+          handleDragStart={ handleDragStart }
+          show={ !!overlay?.position }
+          overlayDisplay={ overlayDisplay }
+          onHide={ () => setOverlay(null) }
+        /> }
 
-            return range.map((date) => (
-              <DayColumnWrapper
-                key={ date.toISOString() }
-                date={ date }
-                id={ id }
-                resource={ resource }
-                groupedEvents={ groupedEvents }
-                groupedBackgroundEvents={ groupedBackgroundEvents }
-                min={ min }
-                max={ max }
-              />
-            ))
-          })
-          : range.map((date) => {
-            return (
-              <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
-                { resourceManager.map(([id, resource]) => (
-                  <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
-                    <DayColumnWrapper
-                      date={ date }
-                      id={ id }
-                      resource={ resource }
-                      groupedEvents={ groupedEvents }
-                      groupedBackgroundEvents={ groupedBackgroundEvents }
-                      min={ min }
-                      max={ max }
-                    />
-                  </div>
-                )) }
-              </div>
-            )
-          }) }
+        <div
+          ref={ contentRef }
+          className="rbc-time-content"
+          onScroll={ handleScroll }
+        >
+          <TimeGutter
+            ref={ gutterRef }
+            min={ localizer.merge(range[0], min) }
+            max={ localizer.merge(range[0], max) }
+            step={ step }
+            timeslots={ timeslots }
+          />
+
+          { !resourceGroupingLayout
+            ? resourceManager.map(([id, resource]) => {
+
+              return range.map((date) => (
+                <DayColumnWrapper
+                  key={ date.toISOString() }
+                  date={ date }
+                  id={ id }
+                  resource={ resource }
+                  groupedEvents={ groupedEvents }
+                  groupedBackgroundEvents={ groupedBackgroundEvents }
+                  min={ min }
+                  max={ max }
+                  step={ step }
+                />
+              ))
+            })
+            : range.map((date) => {
+              return (
+                <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
+                  { resourceManager.map(([id, resource]) => (
+                    <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
+                      <DayColumnWrapper
+                        date={ date }
+                        id={ id }
+                        resource={ resource }
+                        groupedEvents={ groupedEvents }
+                        groupedBackgroundEvents={ groupedBackgroundEvents }
+                        min={ min }
+                        max={ max }
+                        step={ step }
+                      />
+                    </div>
+                  )) }
+                </div>
+              )
+            }) }
+        </div>
       </div>
-    </div>
+    </TimeGridContextProvider>
   )
 
 }

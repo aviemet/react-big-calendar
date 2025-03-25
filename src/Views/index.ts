@@ -31,7 +31,24 @@ export type ViewsProps =
 
 export type Selectable = boolean | "ignoreEvents"
 
-export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
+export interface BaseViewCallbacks<TEvent extends CalendarEvent = CalendarEvent> {
+  onNavigate?: ((action: NavigateAction, newDate?: Date) => void) | undefined
+  onSelectSlot?: ((slotInfo: SlotInfo) => void) | undefined
+  onSelectEnd?: ((...args: any[]) => any) | undefined
+  onSelectStart?: ((...args: any[]) => any) | undefined
+  onSelectEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
+  onDoubleClickEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
+  onKeyPressEvent?: ((...args: any[]) => any) | undefined
+  onDrillDown?: ((date: Date, view: ViewName | string) => void) | undefined
+  getDrilldownView?:
+      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => ViewName | string)
+      | null
+      | undefined
+  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: HTMLElement, target: HTMLElement) => void
+}
+
+export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>
+  extends BaseViewCallbacks<TEvent> {
   events?: TEvent[] | undefined
   backgroundEvents?: TEvent[] | undefined
   resources?: TResource[] | undefined
@@ -47,18 +64,6 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
   selected?: object | undefined
   selectable?: Selectable | undefined
   longPressThreshold?: number | undefined
-  onNavigate?: ((action: NavigateAction, newDate?: Date) => void) | undefined
-  onSelectSlot?: ((slotInfo: SlotInfo) => void) | undefined
-  onSelectEnd?: ((...args: any[]) => any) | undefined
-  onSelectStart?: ((...args: any[]) => any) | undefined
-  onSelectEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
-  onDoubleClickEvent?: ((event: TEvent, e: React.SyntheticEvent<HTMLElement>) => void) | undefined
-  onKeyPressEvent?: ((...args: any[]) => any) | undefined
-  onDrillDown?: ((date: Date, view: ViewName | string) => void) | undefined
-  getDrilldownView?:
-      | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => ViewName | string)
-      | null
-      | undefined
   className?: string | undefined
   // [key: string]: any
 }
@@ -66,7 +71,10 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps, TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = React.ComponentType<TProps> & {
   range: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => DateRange
   navigate: (date: Date, action: NavigateAction, props?: ViewStaticMethodProps<TEvent, TResource>) => Date
-  title: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => string
+  title: (date: Date, props: {
+    localizer: DateLocalizer
+    length?: number
+  } & Partial<ViewStaticMethodProps<TEvent, TResource>> ) => string
 }
 
 export function createViewComponent<
