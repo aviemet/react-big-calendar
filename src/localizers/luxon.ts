@@ -78,7 +78,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
     return DateTime.fromJSDate(value).setLocale(culture).toFormat(format)
   }
 
-  /*** BEGIN localized date arithmetic methods with Luxon ***/
+  /** * BEGIN localized date arithmetic methods with Luxon ***/
   function defineComparators(a, b, unit) {
     const datePart = fixUnit(unit)
     const dtA = datePart
@@ -280,7 +280,7 @@ const luxonLocalizer: LuxonLocalizer = (DateTime, { firstDayOfWeek = 7 } = {}) =
 
     return days
   }
-  /*** END localized date arithmetic methods with moment ***/
+  /** * END localized date arithmetic methods with moment ***/
 
   /**
    * Moved from TimeSlots.js, this method overrides the method of the same name

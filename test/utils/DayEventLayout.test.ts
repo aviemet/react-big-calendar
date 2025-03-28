@@ -1,15 +1,16 @@
 import moment from "moment"
+
+import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { momentLocalizer } from "@/localizers/moment"
 // import dayjs from 'dayjs'
 // import dayjsLocalizer from '@/localizers/dayjs'
 // import { DateTime } from 'luxon'
 // import luxonLocalizer from '@/localizers/luxon'
 
+import { CalendarEvent } from "@/utils/components"
+import * as dates from "@/utils/dates"
 import { getStyledEvents } from "@/utils/DayEventLayout"
 // import { getSlotMetrics } from '@/utils/TimeSlots'
-import * as dates from "@/utils/dates"
-import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
-import { CalendarEvent } from "@/utils/components"
 
 const localizer = momentLocalizer(moment)
 // const localizer = dayjsLocalizer(dayjs)

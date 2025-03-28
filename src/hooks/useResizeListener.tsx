@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react"
 
-const observerCache = new Map<Element | Window | Document, {
+const observerCache = new Map<Element, {
   observer: ResizeObserver
-  referenceCount: Set<React.RefObject<HTMLElement> | Window | Document>
+  referenceCount: Set<React.RefObject<HTMLElement>>
 }>()
 
-export function useResizeObserver<T extends HTMLElement>(target: React.RefObject<T> | Window | Document) {
+/**
+ * Creates a ResizeObserver for the target element.
+ * All observers are cached preventing multiple observers from being created on the same element.
+ */
+export function useResizeObserver<T extends HTMLElement>(target: React.RefObject<T>) {
   const [size, setSize] = useState<{ width: number, height: number }>({
     width: 0,
     height: 0,
   })
 
   useEffect(() => {
-    let element
-    if(!("current" in target)) {
-      element = target
-    } else {
-      element = target.current
-    }
-    if(!element) return
+    const element = ("current" in target) ? target.current : target
+    if(!element) return () => {}
 
     // Check if there's an existing observer for this element
     let cached = observerCache.get(element)

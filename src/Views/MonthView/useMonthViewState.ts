@@ -1,5 +1,6 @@
-import { CalendarEvent } from "@/utils/components"
 import { useReducer } from "react"
+
+import { CalendarEvent } from "@/utils/components"
 
 export interface MonthViewState<TEvent extends CalendarEvent = CalendarEvent> {
   rowLimit: number

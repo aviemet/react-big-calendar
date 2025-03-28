@@ -1,6 +1,8 @@
-import { CalendarEvent } from "@/utils/components"
-import { Event, EventRowSpan } from "./EventRowMixin"
 import clsx from "clsx"
+
+import { CalendarEvent } from "@/utils/components"
+
+import { Event, EventRowSpan } from "./EventRowMixin"
 
 interface EventRowProps<TEvent extends CalendarEvent> {
   segments: TEvent[]

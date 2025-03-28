@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./longPressThreshold.mdx"
 import { Calendar, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./longPressThreshold.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

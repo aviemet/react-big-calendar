@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./popup.mdx"
 import { Calendar, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./popup.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

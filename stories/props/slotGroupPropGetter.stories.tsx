@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo } from "react"
 import moment from "moment"
+import React, { useCallback, useMemo } from "react"
+
+import mdx from "./slotGroupPropGetter.mdx"
 import { Calendar, Views, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./slotGroupPropGetter.mdx"
 import "../resources/propGetter.scss"
 
 const mLocalizer = momentLocalizer(moment)

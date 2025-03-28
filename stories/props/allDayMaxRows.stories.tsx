@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./allDayMaxRows.mdx"
 import { Calendar, Views, momentLocalizer } from "../../src"
 import allDayEvents from "../resources/allDayEvents"
-import mdx from "./allDayMaxRows.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

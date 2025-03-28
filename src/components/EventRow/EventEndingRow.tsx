@@ -1,10 +1,12 @@
-import { Event, EventRowSpan } from "./EventRowMixin"
-import { eventLevels } from "@/utils/eventLevels"
-import { range } from "lodash-es"
 import clsx from "clsx"
+import { range } from "lodash-es"
+
 import { useCalendarContext } from "@/Calendar"
-import { CalendarEvent } from "@/utils/components"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
+import { eventLevels } from "@/utils/eventLevels"
+
+import { Event, EventRowSpan } from "./EventRowMixin"
 
 const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
 const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {

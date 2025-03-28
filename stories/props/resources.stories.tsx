@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./resources.mdx"
 import { Calendar, Views, momentLocalizer } from "../../src"
 import resourceData from "../resources/resourceEvents"
-import mdx from "./resources.mdx"
 
 const { events: resourceEvents, list: resources } = resourceData
 

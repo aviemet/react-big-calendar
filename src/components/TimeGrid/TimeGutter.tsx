@@ -1,8 +1,10 @@
-import { useEffect, useCallback, useMemo, forwardRef } from "react"
-import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
-import { TimeSlotGroup } from "./TimeSlotGroup"
 import clsx from "clsx"
+import { useEffect, useCallback, useMemo, forwardRef } from "react"
+
 import { useCalendarContext } from "@/Calendar"
+import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+
+import { TimeSlotGroup } from "./TimeSlotGroup"
 
 interface TimeGutterProps {
   min: Date

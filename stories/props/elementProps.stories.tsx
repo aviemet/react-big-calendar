@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./elementProps.mdx"
 import { Calendar, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./elementProps.mdx"
 import "../resources/propGetter.scss"
 
 const mLocalizer = momentLocalizer(moment)

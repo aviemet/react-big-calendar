@@ -1,6 +1,7 @@
+import clsx from "clsx"
+
 import { useCalendarContext } from "../../Calendar"
 import { Header, ViewHeaderProps } from "../Header"
-import clsx from "clsx"
 
 const WeekdayHeader = ({ range, drilldownView, onDrillDown }: ViewHeaderProps) => {
   const { localizer, getNow, getters, components: {

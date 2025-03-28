@@ -1,8 +1,10 @@
 import clsx from "clsx"
+import React from "react"
+
 import { accessor as get } from "@/utils/accessors"
 import { CalendarEvent } from "@/utils/components"
+
 import { useDndContext } from "./withDragAndDrop"
-import React from "react"
 
 interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
   children: React.ReactNode

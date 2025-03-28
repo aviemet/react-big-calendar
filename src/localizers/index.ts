@@ -4,7 +4,10 @@ export { momentLocalizer } from "./moment"
 export { globalizeLocalizer } from "./globalize"
 export { luxonLocalizer } from "./luxon"
 
+import { StartOfWeek, type Unit } from "date-arithmetic"
 import invariant from "invariant"
+
+import { CalendarEvent } from "@/utils/components"
 import { merge,
   inRange,
   lt,
@@ -28,9 +31,7 @@ import { merge,
   minutes,
   isJustDate,
 } from "@/utils/dates"
-import { StartOfWeek, type Unit } from "date-arithmetic"
 import { buildMessages, type Messages } from "@/utils/messages"
-import { CalendarEvent } from "@/utils/components"
 
 export type DateRange = { start: Date, end: Date }
 

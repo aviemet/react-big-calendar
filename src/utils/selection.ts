@@ -1,5 +1,5 @@
-import contains from "dom-helpers/contains"
 import closest from "dom-helpers/closest"
+import contains from "dom-helpers/contains"
 import listen from "dom-helpers/listen"
 
 function addEventListener(type, handler, target = document) {

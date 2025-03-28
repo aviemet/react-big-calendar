@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect, useMemo } from "react"
-import { Calendar, luxonLocalizer, Views } from "react-big-calendar"
 import { DateTime, Settings } from "luxon"
-import DemoLink from "../../DemoLink.component"
+import React, { Fragment, useState, useEffect, useMemo } from "react"
 
+import { Calendar, luxonLocalizer, Views } from "react-big-calendar"
+
+import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"
 import TimezoneSelect from "../TimezoneSelect"
 

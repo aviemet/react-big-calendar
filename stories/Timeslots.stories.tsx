@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions"
-import { Calendar } from "../src"
 
+import { Calendar } from "../src"
 import { Calendar as BaseCalendar, Views, events } from "./helpers"
 
 export default {

@@ -1,16 +1,18 @@
-import React, { forwardRef, useEffect, useRef } from "react"
+import clsx from "clsx"
 import getHeight from "dom-helpers/height"
 import qsa from "dom-helpers/querySelectorAll"
-import { BackgroundCells } from "./BackgroundCells"
+import React, { forwardRef, useEffect, useRef } from "react"
+
+import { useCalendarContext } from "@/Calendar"
 import { EventRow } from "@/components/EventRow"
 import { EventEndingRow } from "@/components/EventRow/EventEndingRow"
 import { NoopWrapper } from "@/components/NoopWrapper"
 import { ScrollableWeekWrapper } from "@/components/ScrollableWeekWrapper"
-import { Dummy } from "./Dummy"
-import clsx from "clsx"
-import { useCalendarContext } from "@/Calendar"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
+
+import { BackgroundCells } from "./BackgroundCells"
+import { Dummy } from "./Dummy"
 import { ViewHeaderProps } from "../Header"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {

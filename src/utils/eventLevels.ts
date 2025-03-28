@@ -1,5 +1,7 @@
-import { DateLocalizer } from "@/localizers"
 import { findIndex } from "lodash-es"
+
+import { DateLocalizer } from "@/localizers"
+
 import { Accessors } from "./accessors"
 import { CalendarEvent } from "./components"
 

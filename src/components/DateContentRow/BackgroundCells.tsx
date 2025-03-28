@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react"
-import { coerceDate } from "@/utils/helpers"
-import { dateCellSelection, getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
-import { Selection, getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
 import clsx from "clsx"
+import { useEffect, useRef, useState } from "react"
+
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
+import { dateCellSelection, getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
+import { coerceDate } from "@/utils/helpers"
+import { Selection, getBoundsForNode, isEvent, isShowMore } from "@/utils/selection"
 
 interface BackgroundCellsProps {
   container?: () => HTMLElement

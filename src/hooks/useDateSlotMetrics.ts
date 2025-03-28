@@ -1,9 +1,11 @@
-import { eventSegments, endOfRange, eventLevels } from "../utils/eventLevels"
 import { useMemo } from "react"
-import { Accessors } from "@/utils/accessors"
+
 import { useCalendarContext } from "@/Calendar"
 import { DateLocalizer } from "@/localizers"
+import { Accessors } from "@/utils/accessors"
 import { CalendarEvent } from "@/utils/components"
+
+import { eventSegments, endOfRange, eventLevels } from "../utils/eventLevels"
 
 let isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => {
   return seg.left <= slot && seg.right >= slot

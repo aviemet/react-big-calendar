@@ -1,9 +1,10 @@
-import { overlap } from "./layout-algorithms/overlap"
-import { noOverlap } from "./layout-algorithms/no-overlap"
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+
 import { Accessors } from "./accessors"
 import { CalendarEvent } from "./components"
-import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { DayLayoutFunction } from "./layout-algorithms/LayoutAlgorithmEvent"
+import { noOverlap } from "./layout-algorithms/no-overlap"
+import { overlap } from "./layout-algorithms/overlap"
 
 const DefaultAlgorithms = {
   overlap: overlap,

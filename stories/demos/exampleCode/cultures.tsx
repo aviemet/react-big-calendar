@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useCallback, useMemo } from "react"
+import Layout from "react-tackle-box/Layout"
 
 import { Calendar, DateLocalizer } from "react-big-calendar"
+
 import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"
-import Layout from "react-tackle-box/Layout"
 
 const cultures = ["en", "en-GB", "es", "fr", "ar-AE"]
 const lang = {

@@ -1,6 +1,7 @@
-import { DateLocalizer } from "@/localizers"
 import * as dateArithmetic from "date-arithmetic"
 import { Unit, StartOfWeek } from "date-arithmetic"
+
+import { DateLocalizer } from "@/localizers"
 
 export {
   milliseconds,

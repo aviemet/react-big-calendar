@@ -1,6 +1,8 @@
-import { Fragment, useState, useEffect, useMemo } from "react"
-import { Calendar, momentLocalizer, Views } from "react-big-calendar"
 import moment from "moment"
+import { Fragment, useState, useEffect, useMemo } from "react"
+
+import { Calendar, momentLocalizer, Views } from "react-big-calendar"
+
 import "moment-timezone"
 import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"

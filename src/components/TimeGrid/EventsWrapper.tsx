@@ -1,10 +1,11 @@
-import * as DayEventLayout from "@/utils/DayEventLayout"
-import { TimeGridEvent } from "./TimeGridEvent"
-import { isSelected } from "@/utils/eventSelectionHelpers"
 import { CalendarProps, useCalendarContext } from "@/Calendar"
-import { Resource } from "@/utils/Resources"
-import { CalendarEvent } from "@/utils/components"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
+import * as DayEventLayout from "@/utils/DayEventLayout"
+import { isSelected } from "@/utils/eventSelectionHelpers"
+import { Resource } from "@/utils/Resources"
+
+import { TimeGridEvent } from "./TimeGridEvent"
 
 interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   events: TEvent[]

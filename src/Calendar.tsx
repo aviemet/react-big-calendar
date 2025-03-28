@@ -1,4 +1,9 @@
+import clsx from "clsx"
+import { transform } from "lodash-es"
 import React, { useCallback, useMemo } from "react"
+import { useUncontrolled } from "uncontrollable"
+
+import { createContext } from "@/hooks/createContext"
 import {
   DateLocalizer,
   DateRange,
@@ -6,25 +11,7 @@ import {
   type Culture,
   type Formats,
 } from "@/localizers"
-import {
-  moveDate,
-  navigate,
-  NavigateAction,
-} from "@/utils/moveDate"
-import { coerceDate } from "@/utils/helpers"
-import { Messages } from "@/utils/messages"
-import { transform } from "lodash-es"
 import { Accessors } from "@/utils/accessors"
-import {
-  VIEW_COMPONENTS,
-  ViewComponent,
-  ViewName,
-  views as viewStrings,
-} from "@/Views"
-import clsx from "clsx"
-import { Resource } from "@/utils/Resources"
-import { createContext } from "@/hooks/createContext"
-import { useUncontrolled } from "uncontrollable"
 import {
   CalendarEvent,
   CompiledComponents,
@@ -38,6 +25,20 @@ import {
   SlotPropGetter,
 } from "@/utils/components"
 import { DayLayoutAlgorithmProp } from "@/utils/DayEventLayout"
+import { coerceDate } from "@/utils/helpers"
+import { Messages } from "@/utils/messages"
+import {
+  moveDate,
+  navigate,
+  NavigateAction,
+} from "@/utils/moveDate"
+import { Resource } from "@/utils/Resources"
+import {
+  VIEW_COMPONENTS,
+  ViewComponent,
+  ViewName,
+  views as viewStrings,
+} from "@/Views"
 
 type CalendarContext<TEvent extends CalendarEvent = CalendarEvent> = {
   localizer: DateLocalizer

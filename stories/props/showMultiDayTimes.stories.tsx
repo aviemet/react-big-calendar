@@ -1,6 +1,7 @@
 import moment from "moment"
-import { Calendar, Views, momentLocalizer } from "../../src"
+
 import mdx from "./showMultiDayTimes.mdx"
+import { Calendar, Views, momentLocalizer } from "../../src"
 
 const mLocalizer = momentLocalizer(moment)
 

@@ -1,9 +1,11 @@
 import clsx from "clsx"
 import scrollbarSize from "dom-helpers/scrollbarSize"
-import { DateContentRow } from "@/components/DateContentRow"
-import { ResourceManager, type Resource } from "@/utils/Resources"
+
 import { useCalendarContext } from "@/Calendar"
+import { DateContentRow } from "@/components/DateContentRow"
 import { CalendarEvent } from "@/utils/components"
+import { ResourceManager, type Resource } from "@/utils/Resources"
+
 import { WeekdayHeader } from "./WeekdayHeader"
 
 export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
@@ -71,57 +73,55 @@ const TimeGridHeader = ({
         <TimeGutterHeader />
       </div>
 
-      { resources.map(([id, resource], index) => {
-        return (
-          <div className="rbc-time-header-content" key={ id || index }>
+      { resources.map(([id, resource], index) => (
+        <div className="rbc-time-header-content" key={ id || index }>
 
-            { resource && (
-              <div className={ clsx("rbc-row", "rbc-row-resource") } key={ `resource_${id || index}` }>
-                <div className="rbc-header">
-                  <ResourceHeaderComponent
-                    index={ index }
-                    label={ accessors.resourceTitle(resource) }
-                    resource={ resource }
-                  />
-                </div>
+          { resource && (
+            <div className={ clsx("rbc-row", "rbc-row-resource") } key={ `resource_${id || index}` }>
+              <div className="rbc-header">
+                <ResourceHeaderComponent
+                  index={ index }
+                  label={ accessors.resourceTitle(resource) }
+                  resource={ resource }
+                />
               </div>
-            ) }
-
-            <div
-              className={ clsx("rbc-row", "rbc-time-header-cell", {
-                " rbc-time-header-cell-single-day": range.length <= 1,
-              }) }
-            >
-              <WeekdayHeader
-                range={ range }
-                getDrilldownView={ getDrilldownView }
-                getNow={ getNow }
-                onDrillDown={ onDrillDown }
-              />
             </div>
-            <DateContentRow
-              isAllDaya
-              minRows={ 2 }
-              renderHeader={ false }
-              // Add +1 to include showMore button row in the row limit
-              maxRows={ allDayMaxRows + 1 }
+          ) }
+
+          <div
+            className={ clsx("rbc-row", "rbc-time-header-cell", {
+              " rbc-time-header-cell-single-day": range.length <= 1,
+            }) }
+          >
+            <WeekdayHeader
               range={ range }
-              events={ groupedEvents.get(id) || [] }
-              resourceId={ resource && id }
-              className="rbc-allday-cell"
-              selectable={ selectable }
-              selected={ selected }
-              onSelect={ onSelectEvent }
-              onShowMore={ onShowMore }
-              onDoubleClick={ onDoubleClickEvent }
-              onKeyDown={ onKeyPressEvent }
-              onSelectSlot={ onSelectSlot }
-              longPressThreshold={ longPressThreshold }
-              resizable={ resizable }
+              getDrilldownView={ getDrilldownView }
+              getNow={ getNow }
+              onDrillDown={ onDrillDown }
             />
           </div>
-        )
-      }) }
+          <DateContentRow
+            isAllDaya
+            minRows={ 2 }
+            renderHeader={ false }
+            // Add +1 to include showMore button row in the row limit
+            maxRows={ allDayMaxRows + 1 }
+            range={ range }
+            events={ groupedEvents.get(id) || [] }
+            resourceId={ resource && id }
+            className={ clsx("rbc-allday-cell") }
+            selectable={ selectable }
+            selected={ selected }
+            onSelect={ onSelectEvent }
+            onShowMore={ onShowMore }
+            onDoubleClick={ onDoubleClickEvent }
+            onKeyDown={ onKeyPressEvent }
+            onSelectSlot={ onSelectSlot }
+            longPressThreshold={ longPressThreshold }
+            resizable={ resizable }
+          />
+        </div>
+      )) }
     </div>
   )
 

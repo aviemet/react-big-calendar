@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./resizable.mdx"
 import { Calendar, momentLocalizer } from "../../../../src"
 import Basic from "../../../demos/exampleCode/resizable"
-import mdx from "./resizable.mdx"
 
 export default {
   title: "Addons/Drag and Drop/props",

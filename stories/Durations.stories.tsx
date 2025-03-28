@@ -1,3 +1,5 @@
+import moment from "moment"
+
 import {
   Calendar,
   Views,
@@ -5,9 +7,9 @@ import {
   globalizeLocalizer,
   luxonLocalizer,
 } from "react-big-calendar"
+
 import { withDragAndDrop } from "../src/addons/dragAndDrop"
 
-import moment from "moment"
 import "moment-timezone/builds/moment-timezone-with-data-1970-2030"
 import globalize from "globalize"
 import { DateTime } from "luxon"

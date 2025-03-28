@@ -1,12 +1,15 @@
+import { useEffect, useRef, useState } from "react"
+
+import { useCalendarContext } from "@/Calendar"
 import { EventRow } from "@/components/EventRow"
-import { Selection, getBoundsForNode } from "@/utils/selection"
+import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { eventSegments } from "@/utils/eventLevels"
 import { getSlotAtX, pointInBox } from "@/utils/eventSelectionHelpers"
+import { Selection, getBoundsForNode } from "@/utils/selection"
+
 import { dragAccessors, eventTimes } from "./common"
 import { useDndContext } from "./withDragAndDrop"
-import { useEffect, useRef, useState } from "react"
-import { useCalendarContext } from "@/Calendar"
-import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
+
 
 interface WeekWrapperProps {
   children: React.ReactNode

@@ -1,9 +1,10 @@
 import React, { Fragment, useMemo, useState, useCallback } from "react"
 
 import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+
+import { withDragAndDrop } from "../../../src/addons/dragAndDrop"
 import DemoLink from "../../DemoLink.component"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
-import { withDragAndDrop } from "../../../src/addons/dragAndDrop"
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import "../../../src/addons/dragAndDrop/styles.scss"
 

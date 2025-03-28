@@ -1,8 +1,11 @@
-import { Fragment, useMemo, useState, useCallback } from "react"
 import LinkTo from "@storybook/addon-links/react"
-import { Calendar, DateLocalizer, Views } from "react-big-calendar"
-import DemoLink from "../../DemoLink.component"
+import { Fragment, useMemo, useState, useCallback } from "react"
+
 import { withDragAndDrop } from "@/addons/dragAndDrop"
+import { Calendar, DateLocalizer, Views } from "react-big-calendar"
+
+import DemoLink from "../../DemoLink.component"
+
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 const resources = [

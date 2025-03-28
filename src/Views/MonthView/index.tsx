@@ -1,16 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
 import clsx from "clsx"
-import chunk from "lodash/chunk"
-import { navigate } from "@/utils/moveDate"
 import getPosition from "dom-helpers/position"
-import { BaseViewProps, createViewComponent, ViewName, views } from "@/Views"
-import { useMonthViewState } from "./useMonthViewState"
+import chunk from "lodash/chunk"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+
 import { useCalendarContext } from "@/Calendar"
-import { inRange, sortWeekEvents } from "@/utils/eventLevels"
-import { PopOverlay } from "@/components/PopOverlay"
-import { CalendarEvent, SlotInfo } from "@/utils/components"
-import { useResizeObserver } from "@/hooks/useResizeListener"
 import { DateContentRow } from "@/components/DateContentRow"
+import { PopOverlay } from "@/components/PopOverlay"
+import { useResizeObserver } from "@/hooks/useResizeListener"
+import { CalendarEvent, SlotInfo } from "@/utils/components"
+import { inRange, sortWeekEvents } from "@/utils/eventLevels"
+import { navigate } from "@/utils/moveDate"
+import { BaseViewProps, createViewComponent, ViewName, views } from "@/Views"
+
+import { useMonthViewState } from "./useMonthViewState"
+
 
 export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   showAllEvents?: boolean

@@ -1,8 +1,10 @@
-import { BaseViewProps, createViewComponent, ViewComponent } from "@/Views"
-import { TimeGrid } from "@/components/TimeGrid"
-import { WeekView } from "../WeekView"
 import { useCalendarContext } from "@/Calendar"
+import { TimeGrid } from "@/components/TimeGrid"
 import { CalendarEvent } from "@/utils/components"
+import { BaseViewProps, createViewComponent, ViewComponent } from "@/Views"
+
+import { WeekView } from "../WeekView"
+
 
 const workWeekRange: ViewComponent<WorkWeekProps>["range"] = (date, { localizer }) => {
   let start = localizer.startOf(date, "week", 1)

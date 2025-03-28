@@ -1,6 +1,7 @@
 import React, { useMemo, Fragment } from "react"
 
 import { Calendar, Views, DateLocalizer } from "react-big-calendar"
+
 import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"
 

@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react"
 import clsx from "clsx"
-import { Selection, getBoundsForNode, isEvent } from "@/utils/selection"
-import { TimeSlotGroup } from "./TimeSlotGroup"
-import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { useEffect, useRef, useState } from "react"
+
 import { CalendarProps, useCalendarContext } from "@/Calendar"
+import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarEvent, SlotInfo } from "@/utils/components"
+import { Selection, getBoundsForNode, isEvent } from "@/utils/selection"
+
 import { EventsWrapper } from "./EventsWrapper"
-import { CalendarEvent } from "@/utils/components"
+import { TimeSlotGroup } from "./TimeSlotGroup"
 // import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
@@ -16,9 +18,8 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   min: Date
   max: Date
   isNow: boolean
-  resizable: boolean
+  resizable?: boolean
   showMultiDayTimes: boolean
-  culture: string
   timeslots: number
   selected: any
   selectable?: boolean | "ignoreEvents"
@@ -37,7 +38,7 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
 const DayColumn = ({
   events,
   backgroundEvents,
-  step = 1,
+  step = 30,
   date,
   min,
   max,
@@ -156,8 +157,8 @@ const DayColumn = ({
       if(!isEvent(containerRef.current, box)) {
         const { startDate, endDate } = selectionState(box)
         selectSlot({
-          startDate,
-          endDate,
+          start: startDate,
+          end: endDate,
           action: actionType,
           box,
         })
@@ -221,21 +222,19 @@ const DayColumn = ({
     }, 60000)
   }
 
-  const selectSlot = ({ startDate, endDate, action, bounds, box }:
-  { startDate: Date, endDate: Date, action: string, bounds: any, box: any }
-  ) => {
-    let current = startDate
+  const selectSlot = ({ start, end, action, bounds, box }: SlotInfo) => {
+    let current = start
     const slots = []
 
-    while(localizer.lte(current, endDate)) {
+    while(localizer.lte(current, end)) {
       slots.push(current)
       current = new Date(+current + step * 60 * 1000)
     }
 
     onSelectSlot({
       slots,
-      start: startDate,
-      end: endDate,
+      start,
+      end,
       resourceId,
       action,
       bounds,

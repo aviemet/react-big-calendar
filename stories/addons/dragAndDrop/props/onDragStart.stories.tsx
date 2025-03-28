@@ -1,7 +1,8 @@
 import moment from "moment"
+
+import mdx from "./onDragStart.mdx"
 import { Calendar, momentLocalizer } from "../../../../src"
 import Basic from "../../../demos/exampleCode/dndOutsideSource"
-import mdx from "./onDragStart.mdx"
 
 export default {
   title: "Addons/Drag and Drop/props",

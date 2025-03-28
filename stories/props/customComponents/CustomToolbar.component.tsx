@@ -1,4 +1,5 @@
 import clsx from "clsx"
+
 import { Navigate as navigate } from "../../../src"
 
 function ViewNamesGroup({ views: viewNames, view, messages, onView }) {

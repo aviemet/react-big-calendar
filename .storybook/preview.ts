@@ -9,7 +9,7 @@ const preview: Preview = {
     },
     controls: {
       // TODO: refactor jsDocs in Calendar control
-      //expanded: true,
+      // expanded: true,
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/,

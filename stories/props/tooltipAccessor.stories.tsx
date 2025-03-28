@@ -1,6 +1,6 @@
-import { Calendar } from "../../src"
 import { accessorStoryArgs } from "./storyDefaults"
 import mdx from "./tooltipAccessor.mdx"
+import { Calendar } from "../../src"
 
 export default {
   title: "props",

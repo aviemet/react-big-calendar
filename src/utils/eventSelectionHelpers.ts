@@ -1,4 +1,5 @@
 import { isEqual } from "lodash-es"
+
 import { CalendarEvent } from "./components"
 
 export type Box = {

@@ -1,7 +1,8 @@
 import { useCalendarContext } from "@/Calendar"
-import { DayColumn } from "./DayColumn"
 import { CalendarEvent } from "@/utils/components"
 import { Resource } from "@/utils/Resources"
+
+import { DayColumn } from "./DayColumn"
 
 interface DayColumnWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   date: Date
@@ -11,6 +12,8 @@ interface DayColumnWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TR
   groupedBackgroundEvents: Map<string | number, TEvent[]>
   min: Date
   max: Date
+  step?: number
+  timeslots: number
 }
 
 const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>({
@@ -21,6 +24,8 @@ const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResourc
   groupedBackgroundEvents,
   min,
   max,
+  step = 30,
+  timeslots,
 }: DayColumnWrapperProps<TEvent, TResource>) => {
   const { localizer, accessors, getNow } = useCalendarContext()
 
@@ -45,11 +50,18 @@ const DayColumnWrapper = <TEvent extends CalendarEvent = CalendarEvent, TResourc
       key={ `${id}-${date}` }
       min={ localizer.merge(date, min) }
       max={ localizer.merge(date, max) }
+      step={ step }
       resourceId={ resource && id }
       isNow={ localizer.isSameDate(date, getNow()) }
       date={ date }
       events={ daysEvents }
       backgroundEvents={ daysBackgroundEvents }
+      timeslots={ timeslots }
+      showMultiDayTimes
+      // selected
+      // eventOffset
+      // longPressThreshold
+      // showMultiDayTimes
     />
   )
 }

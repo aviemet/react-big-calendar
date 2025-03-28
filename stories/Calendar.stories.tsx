@@ -1,8 +1,6 @@
 import { action } from "@storybook/addon-actions"
 
-import demoEvents from "./resources/events"
 import { Calendar } from "../src"
-
 import {
   events,
   Calendar as BaseCalendar,
@@ -10,9 +8,9 @@ import {
   resourceEvents,
   resources,
 } from "./helpers"
-
 import createEvents from "./helpers/createEvents"
 import customComponents from "./resources/customComponents"
+import demoEvents from "./resources/events"
 
 export default {
   title: "Additional Examples",

@@ -1,5 +1,7 @@
 import invariant from "invariant"
+
 import { VIEW_COMPONENTS, ViewStaticMethodProps, type ViewComponent } from "@/Views"
+
 import { CalendarEvent } from "./components"
 import { Resource } from "./Resources"
 

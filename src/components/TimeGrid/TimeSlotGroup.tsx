@@ -1,5 +1,6 @@
-import { useCalendarContext } from "@/Calendar"
 import clsx from "clsx"
+
+import { useCalendarContext } from "@/Calendar"
 
 interface TimeSlotGroupProps {
   renderSlot?: (value: any, index: number) => React.ReactNode

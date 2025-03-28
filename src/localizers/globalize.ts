@@ -1,6 +1,7 @@
 // TODO: fix the globalizeLocalizer to work with globalize 1.x
-import * as dates from "../utils/dates"
 import { globalize as oldGlobalize } from "./oldGlobalize"
+import * as dates from "../utils/dates"
+
 import { DateLocalizer } from "."
 
 let dateRangeFormat = ({ start, end }, culture, local) =>
@@ -70,7 +71,7 @@ const globalizeLocalizer = (globalize: object): DateLocalizer => {
       }
       // maybe cldr supplemental is not loaded? revert to original method
       const date = new Date()
-      //cldr-data doesn't seem to be zero based
+      // cldr-data doesn't seem to be zero based
       let localeDay = Math.max(
         parseInt(locale(culture).formatDate(date, { raw: "e" }), 10) - 1,
         0

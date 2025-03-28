@@ -1,13 +1,15 @@
-import { NavigateAction } from "../utils/moveDate"
+import { Accessors } from "@/utils/accessors"
+import { CalendarEvent, Getters, SlotInfo } from "@/utils/components"
+import { Resource } from "@/utils/Resources"
+
+import { AgendaView } from "./AgendaView"
+import { DayView } from "./DayView"
 import { MonthView } from "./MonthView"
 import { WeekView } from "./WeekView"
 import { WorkWeekView } from "./WorkWeekView"
-import { DayView } from "./DayView"
-import { AgendaView } from "./AgendaView"
 import { DateLocalizer, DateRange } from "../localizers"
-import { Resource } from "@/utils/Resources"
-import { CalendarEvent, Getters, SlotInfo } from "@/utils/components"
-import { Accessors } from "@/utils/accessors"
+import { NavigateAction } from "../utils/moveDate"
+
 
 export type ViewStaticMethodProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
   date: Date

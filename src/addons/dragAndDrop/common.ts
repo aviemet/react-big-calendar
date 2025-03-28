@@ -1,7 +1,8 @@
+import { ComponentClass, createElement, FunctionComponent } from "react"
+
 import { DateLocalizer } from "@/localizers"
 import { Accessors, wrapAccessor } from "@/utils/accessors"
 import { CalendarEvent } from "@/utils/components"
-import { ComponentClass, createElement, FunctionComponent } from "react"
 
 function createFactory(type: string | FunctionComponent<{}> | ComponentClass<{}, any>) {
   return createElement(type).bind(null, type)

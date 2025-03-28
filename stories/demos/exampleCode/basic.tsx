@@ -1,14 +1,14 @@
+import dayjs from "dayjs"
 import React, { useMemo } from "react"
 
-import dayjs from "dayjs"
 import {
   Calendar,
   Views,
   dayjsLocalizer,
 } from "../../../src"
+import * as dates from "../../../src/utils/dates"
 import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"
-import * as dates from "../../../src/utils/dates"
 
 const dLocalizer = dayjsLocalizer(dayjs)
 

@@ -1,7 +1,8 @@
-import { CalendarEvent } from "@/utils/components"
-import { EventCell } from "./EventCell"
-import { isSelected } from "@/utils/eventSelectionHelpers"
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
+import { isSelected } from "@/utils/eventSelectionHelpers"
+
+import { EventCell } from "./EventCell"
 
 interface EventProps<TEvent extends CalendarEvent = CalendarEvent> {
   event: TEvent

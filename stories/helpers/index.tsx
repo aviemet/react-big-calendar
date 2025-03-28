@@ -1,5 +1,4 @@
 import { action } from "@storybook/addon-actions"
-
 import moment from "moment"
 import "moment-timezone"
 
@@ -14,7 +13,7 @@ import { withDragAndDrop } from "../../src/addons/dragAndDrop"
 export { Views } from "../../src"
 
 // uncomment for timezone testing in Storybook
-//moment.tz.setDefault('America/Los_Angeles')
+// moment.tz.setDefault('America/Los_Angeles')
 
 const localizer = momentLocalizer(moment)
 

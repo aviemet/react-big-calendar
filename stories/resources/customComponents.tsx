@@ -1,4 +1,5 @@
 import { action } from "@storybook/addon-actions"
+
 import CustomDayColumnWrapper from "./CustomDayColumnWrapper"
 
 const customComponents = {

@@ -1,6 +1,7 @@
+import clsx from "clsx"
+
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
-import clsx from "clsx"
 
 function stringifyPercent(v: string | number) {
   return typeof v === "string" ? v : v + "%"

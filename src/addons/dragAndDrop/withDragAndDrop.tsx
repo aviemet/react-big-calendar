@@ -1,13 +1,16 @@
-import { useState } from "react"
 import clsx from "clsx"
-import { EventWrapper } from "./EventWrapper"
-import { EventContainerWrapper } from "./EventContainerWrapper"
-import { WeekWrapper } from "./WeekWrapper"
-import { mergeComponents } from "./common"
+import { useState } from "react"
+
 import { Calendar as CalendarComponent, CalendarProps } from "@/Calendar"
+import { createContext } from "@/hooks/createContext"
 import { CalendarEvent } from "@/utils/components"
 import { Resource } from "@/utils/Resources"
-import { createContext } from "@/hooks/createContext"
+
+import { mergeComponents } from "./common"
+import { EventContainerWrapper } from "./EventContainerWrapper"
+import { EventWrapper } from "./EventWrapper"
+import { WeekWrapper } from "./WeekWrapper"
+
 
 const [useDndContext, DndContextProvider] = createContext()
 export { useDndContext }

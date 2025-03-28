@@ -1,11 +1,11 @@
 import { fixupPluginRules } from "@eslint/compat"
 import stylistic from "@stylistic/eslint-plugin"
-import reactHooksPlugin from "eslint-plugin-react-hooks"
 import tsParser from "@typescript-eslint/parser"
-import storybook from "eslint-plugin-storybook"
-import importPlugin from "eslint-plugin-import"
 import checkFile from "eslint-plugin-check-file"
+import importPlugin from "eslint-plugin-import"
 import jestPlugin from "eslint-plugin-jest"
+import reactHooksPlugin from "eslint-plugin-react-hooks"
+import storybook from "eslint-plugin-storybook"
 
 const rules = {
   "react/jsx-uses-react": "off",
@@ -107,6 +107,21 @@ const rules = {
   "eqeqeq": "error",
   "no-console": "warn",
   "eol-last": ["error", "always"],
+  "import/order": ["error", {
+    "groups": [
+      "builtin",
+      "external",
+      "internal",
+      ["parent", "sibling"],
+      "index",
+      "object",
+    ],
+    "alphabetize": {
+      "order": "asc",
+      "caseInsensitive": true,
+    },
+    "newlines-between": "always",
+  }],
   "import/no-default-export": "error",
   "import/newline-after-import": "error",
   "import/consistent-type-specifier-style": ["error", "prefer-inline"],

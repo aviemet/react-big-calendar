@@ -1,11 +1,12 @@
 import moment from "moment"
+
+import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { momentLocalizer } from "@/localizers/moment"
 // import dayjs from 'dayjs'
 // import dayjsLocalizer from '@/localizers/dayjs'
 // import { DateTime } from 'luxon'
 // import luxonLocalizer from '@/localizers/luxon'
 import * as dates from "@/utils/dates"
-import { getTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 
 const localizer = momentLocalizer(moment)
 // const localizer = dayjsLocalizer(dayjs)

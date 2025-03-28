@@ -1,10 +1,11 @@
 import React, { Fragment, useMemo } from "react"
 
 import { Calendar, Views, DateLocalizer } from "@/index"
-import DemoLink from "../../DemoLink.component"
-import events from "../../resources/events"
-import backgroundEvents from "../../resources/backgroundEvents"
+
 import * as dates from "../../../src/utils/dates"
+import DemoLink from "../../DemoLink.component"
+import backgroundEvents from "../../resources/backgroundEvents"
+import events from "../../resources/events"
 
 let allViews = Object.keys(Views).map((k) => Views[k])
 

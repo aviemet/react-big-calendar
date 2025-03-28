@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from "react"
 import moment from "moment"
+import React, { useState, useCallback } from "react"
+
+import mdx from "./onView.mdx"
 import { Calendar, Views, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./onView.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

@@ -1,8 +1,9 @@
-import React, { useMemo } from "react"
 import moment from "moment"
+import React, { useMemo } from "react"
+
+import mdx from "./formatsAgendaHeaderFormat.mdx"
 import { Calendar, Views, momentLocalizer } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./formatsAgendaHeaderFormat.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

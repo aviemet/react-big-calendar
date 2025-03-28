@@ -1,16 +1,18 @@
-import { DateLocalizer } from "@/localizers"
 import { defaults, omit } from "lodash-es"
-import { Accessors } from "./accessors"
+
 import { DateHeader } from "@/components/DateHeader"
-import { ResourceHeader, ResourceHeaderProps } from "@/components/ResourceHeader"
-import { ViewName } from "@/Views"
-import { NoopWrapper } from "@/components/NoopWrapper"
-import { Header, ViewHeaderProps } from "@/components/Header"
 import { DayColumnWrapper } from "@/components/DayColumnWrapper"
-import { Resource } from "./Resources"
-import { Toolbar, ToolbarProps } from "@/components/Toolbar"
+import { Header, ViewHeaderProps } from "@/components/Header"
+import { NoopWrapper } from "@/components/NoopWrapper"
+import { ResourceHeader, ResourceHeaderProps } from "@/components/ResourceHeader"
 import { WeekdayHeader } from "@/components/TimeGrid/WeekdayHeader"
+import { Toolbar, ToolbarProps } from "@/components/Toolbar"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { DateLocalizer } from "@/localizers"
+import { ViewName } from "@/Views"
+
+import { Accessors } from "./accessors"
+import { Resource } from "./Resources"
 
 export interface CalendarEvent {
   allDay?: boolean | undefined
@@ -35,7 +37,7 @@ export interface EventProps<TEvent extends object = CalendarEvent> {
 export interface SlotInfo {
   start: Date
   end: Date
-  slots: Date[]
+  slots?: Date[]
   action: "select" | "click" | "doubleClick"
   /** For "TimeGrid" views */
   resourceId?: number | string | undefined

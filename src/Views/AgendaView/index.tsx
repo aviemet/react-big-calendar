@@ -1,13 +1,15 @@
-import { useRef, useEffect } from "react"
 import addClass from "dom-helpers/addClass"
 import removeClass from "dom-helpers/removeClass"
-import getWidth from "dom-helpers/width"
 import scrollbarSize from "dom-helpers/scrollbarSize"
-import { navigate } from "@/utils/moveDate"
-import { inRange } from "@/utils/eventLevels"
-import { BaseViewProps, createViewComponent } from ".."
+import getWidth from "dom-helpers/width"
+import { useRef, useEffect } from "react"
+
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
+import { inRange } from "@/utils/eventLevels"
+import { navigate } from "@/utils/moveDate"
+
+import { BaseViewProps, createViewComponent } from ".."
 import { Day } from "./AgendaDay"
 
 const DEFAULT_LENGTH = 30

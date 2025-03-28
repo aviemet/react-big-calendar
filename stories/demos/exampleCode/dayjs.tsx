@@ -1,6 +1,9 @@
-import React, { Fragment, useMemo } from "react"
 import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import React, { Fragment, useMemo } from "react"
+
 import { Calendar, Views, dayjsLocalizer } from "react-big-calendar"
+
 import DemoLink from "../../DemoLink.component"
 import events from "../../resources/events"
 
@@ -14,7 +17,6 @@ import events from "../../resources/events"
 // - UTC
 
 // add optional time zone support
-import timezone from "dayjs/plugin/timezone"
 dayjs.extend(timezone)
 
 const djLocalizer = dayjsLocalizer(dayjs)

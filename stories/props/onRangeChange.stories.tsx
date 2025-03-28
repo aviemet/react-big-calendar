@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from "react"
 import moment from "moment"
+import React, { useState, useCallback } from "react"
+
+import mdx from "./onRangeChange.mdx"
 import { Calendar, momentLocalizer, Views } from "../../src"
 import demoEvents from "../resources/events"
-import mdx from "./onRangeChange.mdx"
 
 const mLocalizer = momentLocalizer(moment)
 

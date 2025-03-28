@@ -1,6 +1,7 @@
+import { useMemo } from "react"
+
 import { useCalendarContext } from "@/Calendar"
 import { DateLocalizer } from "@/localizers"
-import { useMemo } from "react"
 
 export type TimeSlotMetrics = {
   groups: Date[][]

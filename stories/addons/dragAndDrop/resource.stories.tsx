@@ -1,4 +1,5 @@
 import moment from "moment"
+
 import { Calendar, momentLocalizer } from "../../../src"
 import DnDResource from "../../demos/exampleCode/dndresource"
 

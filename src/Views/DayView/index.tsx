@@ -1,8 +1,8 @@
-import { navigate } from "@/utils/moveDate"
-import { TimeGrid } from "@/components/TimeGrid"
-import { BaseViewProps, createViewComponent } from "@/Views"
 import { useCalendarContext } from "@/Calendar"
+import { TimeGrid } from "@/components/TimeGrid"
 import { CalendarEvent } from "@/utils/components"
+import { navigate } from "@/utils/moveDate"
+import { BaseViewProps, createViewComponent } from "@/Views"
 
 export interface DayViewProps<TEvent extends CalendarEvent = CalendarEvent> extends BaseViewProps<TEvent> {
   enableAutoScroll?: boolean

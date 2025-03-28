@@ -1,4 +1,5 @@
 import { sortBy } from "lodash-es"
+
 import { LayoutAlgorithmEvent, DayLayoutFunction } from "./LayoutAlgorithmEvent"
 
 /**

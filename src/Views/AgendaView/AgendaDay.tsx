@@ -1,7 +1,7 @@
-import { inRange } from "@/utils/eventLevels"
-import { isSelected } from "@/utils/eventSelectionHelpers"
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
+import { inRange } from "@/utils/eventLevels"
+import { isSelected } from "@/utils/eventSelectionHelpers"
 
 interface DayProps<TEvent extends CalendarEvent = CalendarEvent> {
   day: Date

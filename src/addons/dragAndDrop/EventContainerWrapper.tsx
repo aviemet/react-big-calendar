@@ -1,18 +1,21 @@
-import React, { useEffect, useRef, useState } from "react"
 import { scrollParent, scrollTop } from "dom-helpers"
 import qsa from "dom-helpers/cjs/querySelectorAll"
+import React, { useEffect, useRef, useState } from "react"
+
+import { useCalendarContext } from "@/Calendar"
+import { TimeGridEvent } from "@/components/TimeGrid/TimeGridEvent"
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+import { CalendarEvent } from "@/utils/components"
+import { Resource } from "@/utils/Resources"
 import {
   Selection,
   getBoundsForNode,
   getEventNodeFromPoint,
 } from "@/utils/selection"
-import { TimeGridEvent } from "@/components/TimeGrid/TimeGridEvent"
+
 import { dragAccessors, eventTimes, pointInColumn } from "./common"
-import { useCalendarContext } from "@/Calendar"
-import { Resource } from "@/utils/Resources"
-import { CalendarEvent } from "@/utils/components"
 import { useDndContext } from "./withDragAndDrop"
-import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+
 
 type DndPositionState<TEvent extends CalendarEvent = CalendarEvent> = {
   top: number

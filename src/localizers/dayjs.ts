@@ -1,3 +1,17 @@
+// import dayjs plugins
+// Note that the timezone plugin is not imported here
+// this plugin can be optionally loaded by the user
+import { Unit } from "date-arithmetic"
+import dayjs, { Dayjs, OpUnitType, ManipulateType } from "dayjs"
+import isBetween from "dayjs/plugin/isBetween"
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
+import localeData from "dayjs/plugin/localeData"
+import localizedFormat from "dayjs/plugin/localizedFormat"
+import minMax from "dayjs/plugin/minMax"
+import utc from "dayjs/plugin/utc"
+
+
 import {
   DateLocalizer,
   EventComparison,
@@ -8,20 +22,6 @@ import {
   Culture,
   Formats,
 } from "."
-
-// import dayjs plugins
-// Note that the timezone plugin is not imported here
-// this plugin can be optionally loaded by the user
-import isBetween from "dayjs/plugin/isBetween"
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
-import localeData from "dayjs/plugin/localeData"
-import localizedFormat from "dayjs/plugin/localizedFormat"
-import minMax from "dayjs/plugin/minMax"
-import utc from "dayjs/plugin/utc"
-
-import { Unit } from "date-arithmetic"
-import dayjs, { Dayjs, OpUnitType, ManipulateType } from "dayjs"
 
 const weekRangeFormat: RangeFunction = ({ start, end }, culture, locale) => {
   return locale.format(start, "MMMM DD", culture) +
