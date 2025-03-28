@@ -6,9 +6,8 @@ import { useTimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
 import { Selection, getBoundsForNode, isEvent } from "@/utils/selection"
 
-import { EventsWrapper } from "./EventsWrapper"
-import { TimeSlotGroup } from "./TimeSlotGroup"
-// import { DayLayoutAlgorithm } from "@/utils/layout-algorithms/LayoutAlgorithmEvent"
+import { EventsWrapper } from "../EventsWrapper"
+import { TimeSlotGroup } from "../TimeSlotGroup"
 
 interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -21,9 +20,9 @@ interface DayColumnProps<TEvent extends CalendarEvent = CalendarEvent> {
   resizable?: boolean
   showMultiDayTimes: boolean
   timeslots: number
-  selected: any
+  selected: object
   selectable?: boolean | "ignoreEvents"
-  eventOffset: number
+  eventOffset?: number
   longPressThreshold: number
   onSelecting?: CalendarProps["onSelecting"]
   onSelectSlot?: CalendarProps["onSelectSlot"]

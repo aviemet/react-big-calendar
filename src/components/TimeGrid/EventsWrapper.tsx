@@ -11,7 +11,7 @@ interface EventsWrapperProps<TEvent extends CalendarEvent = CalendarEvent, TReso
   events: TEvent[]
   resource: TResource
   isBackgroundEvent?: boolean
-  selected: any
+  selected: object
   step: number
   timeslots: number
   resizable: boolean

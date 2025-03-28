@@ -6,19 +6,16 @@ import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "
 import { Overlay } from "react-overlays"
 
 import { useCalendarContext } from "@/Calendar"
-import { DayColumnWrapper } from "@/components/TimeGrid/DayColumnWrapper"
 import { useResizeObserver } from "@/hooks/useResizeListener"
 import { CalendarEvent } from "@/utils/components"
 import { inRange, sortEvents } from "@/utils/eventLevels"
 import { ResourceManager, Resource } from "@/utils/Resources"
 import { BaseViewProps } from "@/Views"
 
+import { DayColumns } from "./DayColumns"
 import { TimeGutter } from "./TimeGutter"
 import { PopOverlay } from "../PopOverlay"
-import { TimeGridHeader } from "./TimeGridHeader/index"
-
-// import { TimeGridHeader } from "./TimeGridHeader"
-// import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
+import { TimeGridHeader } from "./TimeGridHeader"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -175,7 +172,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     onSelectEvent?.(args)
   }
 
-
   const handleShowMore = (events: TEvent[], date: Date, cell, slot, target) => {
     // clearSelection()
 
@@ -290,12 +286,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
     >
       <TimeGridHeader { ...headerProps } />
 
-      { /* {
-        resources && resources.length > 1 && resourceGroupingLayout
-          ? <TimeGridHeaderResources { ...headerProps } />
-          : <TimeGridHeader { ...headerProps } />
-      } */ }
-
       { popup && <PopOverlay
         ref={ containerRef }
         overlay={ overlay }
@@ -323,7 +313,21 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
           timeslots={ timeslots }
         />
 
-        { !resourceGroupingLayout
+        <DayColumns
+          range={ range }
+          resourceManager={ resourceManager }
+          groupedEvents={ groupedEvents }
+          groupedBackgroundEvents={ groupedBackgroundEvents }
+          selected={ selected }
+          min={ min }
+          max={ max }
+          step={ step }
+          timeslots={ timeslots }
+          showMultiDayTimes={ showMultiDayTimes }
+          longPressThreshold={ longPressThreshold }
+        />
+
+        { /* { !resourceGroupingLayout
           ? resourceManager.map(([id, resource]) => {
 
             return range.map((date) => (
@@ -361,7 +365,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
                 )) }
               </div>
             )
-          }) }
+          }) } */ }
       </div>
     </div>
   )

@@ -7,7 +7,12 @@ export type Resource = {
   [key: string | number]: unknown
 }
 
-function ResourceManager<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(resources: TResource[] | undefined, accessors: Accessors) {
+export type GroupedResourceManager<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
+  map: <TReturn>(fn: (resource: [string | number, TResource], index: number) => TReturn) => TReturn[]
+  groupEvents: (events: CalendarEvent[]) => Map<string | number | null, TEvent[]>
+}
+
+function ResourceManager<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(resources: TResource[] | undefined, accessors: Accessors): GroupedResourceManager<TEvent, TResource> {
   return {
     map: <TReturn>(fn: (resource: [string | number, TResource | null], index: number) => TReturn) => {
       if(!resources || resources.length < 1) return [fn([null, null], 0)]
