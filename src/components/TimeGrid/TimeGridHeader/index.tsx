@@ -8,7 +8,6 @@ import { Resource, ResourceManager } from "@/utils/Resources"
 import { DatesHeader } from "./DatesHeader"
 import { ResourcesHeader } from "./ResourcesHeader"
 
-
 export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   range: Date[]
   events: TEvent[]
@@ -34,24 +33,9 @@ export interface TimeGridHeaderProps<TEvent extends CalendarEvent = CalendarEven
 const TimeGridHeader = <TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource>(props: TimeGridHeaderProps<TEvent, TResource>) => {
   const {
     width,
-    resources,
     resourceGroupingLayout,
-    range,
-    events,
-    selectable,
     scrollRef,
     isOverflowing,
-    resizable,
-    allDayMaxRows,
-    onSelectSlot,
-    onSelectEvent,
-    onDoubleClickEvent,
-    onKeyPressEvent,
-    onDrillDown,
-    onShowMore,
-    getDrilldownView,
-    longPressThreshold,
-    selected,
   } = props
 
   const { rtl, components: {

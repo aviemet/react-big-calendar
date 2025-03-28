@@ -1,20 +1,24 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import clsx from "clsx"
 import * as animationFrame from "dom-helpers/animationFrame"
 import getPosition from "dom-helpers/position"
 import getWidth from "dom-helpers/width"
-import { PopOverlay } from "../PopOverlay"
-import { TimeGridHeader } from "./TimeGridHeader"
-import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
-import { TimeGutter } from "./TimeGutter"
-import { inRange, sortEvents } from "@/utils/eventLevels"
-import { BaseViewProps } from "@/Views"
-import { ResourceManager, Resource } from "@/utils/Resources"
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Overlay } from "react-overlays"
+
 import { useCalendarContext } from "@/Calendar"
-import { CalendarEvent } from "@/utils/components"
-import { useResizeObserver } from "@/hooks/useResizeListener"
 import { DayColumnWrapper } from "@/components/TimeGrid/DayColumnWrapper"
+import { useResizeObserver } from "@/hooks/useResizeListener"
+import { CalendarEvent } from "@/utils/components"
+import { inRange, sortEvents } from "@/utils/eventLevels"
+import { ResourceManager, Resource } from "@/utils/Resources"
+import { BaseViewProps } from "@/Views"
+
+import { TimeGutter } from "./TimeGutter"
+import { PopOverlay } from "../PopOverlay"
+import { TimeGridHeader } from "./TimeGridHeader/index"
+
+// import { TimeGridHeader } from "./TimeGridHeader"
+// import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
@@ -41,7 +45,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
   getDrilldownView,
   resources,
   resourceGroupingLayout = false,
-  step,
+  step = 30,
   timeslots,
   range,
   enableAutoScroll,
@@ -262,6 +266,7 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
       ? Infinity
       : allDayMaxRows ?? Infinity,
     resources: resourceManager,
+    resourceGroupingLayout: resources && resources.length > 1 && resourceGroupingLayout,
     selectable: selectable,
     scrollRef: scrollRef,
     isOverflowing: isOverflowing,
@@ -283,11 +288,13 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
         "rbc-time-view-resources": resources && resources.length > 1,
       }) }
     >
-      {
+      <TimeGridHeader { ...headerProps } />
+
+      { /* {
         resources && resources.length > 1 && resourceGroupingLayout
           ? <TimeGridHeaderResources { ...headerProps } />
           : <TimeGridHeader { ...headerProps } />
-      }
+      } */ }
 
       { popup && <PopOverlay
         ref={ containerRef }
@@ -329,6 +336,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
                 groupedBackgroundEvents={ groupedBackgroundEvents }
                 min={ min }
                 max={ max }
+                step={ step }
+                timeslots={ timeslots }
               />
             ))
           })
@@ -345,6 +354,8 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
                       groupedBackgroundEvents={ groupedBackgroundEvents }
                       min={ min }
                       max={ max }
+                      step={ step }
+                      timeslots={ timeslots }
                     />
                   </div>
                 )) }

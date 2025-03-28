@@ -1,22 +1,27 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import clsx from "clsx"
 import * as animationFrame from "dom-helpers/animationFrame"
 import getPosition from "dom-helpers/position"
 import getWidth from "dom-helpers/width"
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { Overlay } from "react-overlays"
+
+import { useCalendarContext } from "@/Calendar"
+import { useResizeObserver } from "@/hooks/useResizeListener"
+import { Accessors } from "@/utils/accessors"
+import { CalendarEvent } from "@/utils/components"
+import { inRange, sortEvents } from "@/utils/eventLevels"
+import { ResourceManager, Resource } from "@/utils/Resources"
+import { BaseViewProps } from "@/Views"
+
 import { DayColumn } from "./DayColumn"
 import { PopOverlay } from "../PopOverlay"
 import { TimeGridHeader } from "./TimeGridHeader"
 import { TimeGridHeaderResources } from "./TimeGridHeaderResources"
 import { TimeGutter } from "./TimeGutter"
-import { inRange, sortEvents } from "@/utils/eventLevels"
-import { BaseViewProps } from "@/Views"
-import { ResourceManager, Resource } from "@/utils/Resources"
-import { Accessors } from "@/utils/accessors"
-import { Overlay } from "react-overlays"
-import { useCalendarContext } from "@/Calendar"
-import { CalendarEvent } from "@/utils/components"
+
+
 import { NoopWrapper } from "../NoopWrapper"
-import { useResizeObserver } from "@/hooks/useResizeListener"
+
 
 interface TimeGridProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> extends BaseViewProps<TEvent, TResource> {
   resourceGroupingLayout?: boolean
