@@ -1,9 +1,9 @@
+import { Overlay } from "@restart/ui"
 import clsx from "clsx"
 import * as animationFrame from "dom-helpers/animationFrame"
 import getPosition from "dom-helpers/position"
 import getWidth from "dom-helpers/width"
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { Overlay } from "react-overlays"
 
 import { useCalendarContext } from "@/Calendar"
 import { useResizeObserver } from "@/hooks/useResizeListener"
@@ -327,45 +327,6 @@ const TimeGrid = <TEvent extends CalendarEvent = CalendarEvent, TResource extend
           longPressThreshold={ longPressThreshold }
         />
 
-        { /* { !resourceGroupingLayout
-          ? resourceManager.map(([id, resource]) => {
-
-            return range.map((date) => (
-              <DayColumnWrapper
-                key={ date.toISOString() }
-                date={ date }
-                id={ id }
-                resource={ resource }
-                groupedEvents={ groupedEvents }
-                groupedBackgroundEvents={ groupedBackgroundEvents }
-                min={ min }
-                max={ max }
-                step={ step }
-                timeslots={ timeslots }
-              />
-            ))
-          })
-          : range.map((date) => {
-            return (
-              <div style={ { display: "flex", minHeight: "100%", flex: 1 } } key={ date.toISOString() }>
-                { resourceManager.map(([id, resource]) => (
-                  <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
-                    <DayColumnWrapper
-                      date={ date }
-                      id={ id }
-                      resource={ resource }
-                      groupedEvents={ groupedEvents }
-                      groupedBackgroundEvents={ groupedBackgroundEvents }
-                      min={ min }
-                      max={ max }
-                      step={ step }
-                      timeslots={ timeslots }
-                    />
-                  </div>
-                )) }
-              </div>
-            )
-          }) } */ }
       </div>
     </div>
   )

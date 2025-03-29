@@ -7,6 +7,7 @@ import { useClickOutside } from "@/hooks/useClickOutside"
 import { CalendarEvent } from "@/utils/components"
 import { isSelected } from "@/utils/eventSelectionHelpers"
 
+// TODO: Replaced react-overlays with @restart/ui, let's see if that changes anything
 /**
  * Changes to react-overlays cause issue with auto positioning,
  * so we need to manually calculate the position of the popper,

@@ -1,19 +1,21 @@
+import { Overlay } from "@restart/ui"
 import React, { forwardRef, useRef } from "react"
-import { Overlay } from "react-overlays"
 
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
 import { Popup } from "./Popup"
 
+type Overlay = {
+  position: { x: number, y: number }
+  events: CalendarEvent[]
+  date: Date
+  end: Date
+}
+
 interface PopOverlayProps {
   popupOffset: number | { x: number, y: number }
-  overlay: {
-    position: { x: number, y: number }
-    events: CalendarEvent[]
-    date: Date
-    end: Date
-  }
+  overlay: Overlay
   selected: object
   handleSelectEvent: (event: CalendarEvent) => void
   handleDoubleClickEvent: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
@@ -42,10 +44,9 @@ const PopOverlay = forwardRef<HTMLDivElement, PopOverlayProps>((
 
   if(!overlay.position) return null
 
-  let offset = popupOffset
-  if(!isNaN(popupOffset)) {
-    offset = { x: popupOffset, y: popupOffset }
-  }
+  const offset = typeof popupOffset === "number"
+    ? { x: popupOffset, y: popupOffset }
+    : popupOffset
 
   const { position, events, date, end } = overlay
   return (
