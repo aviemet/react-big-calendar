@@ -7,6 +7,7 @@ import { NoopWrapper } from "@/components/NoopWrapper"
 import { ResourceHeader, ResourceHeaderProps } from "@/components/ResourceHeader"
 import { WeekdayHeader } from "@/components/TimeGrid/WeekdayHeader"
 import { Toolbar, ToolbarProps } from "@/components/Toolbar"
+import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { DateLocalizer } from "@/localizers"
 import { ViewName } from "@/Views"
@@ -122,18 +123,25 @@ export interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent>
   continuesLater: boolean
 }
 
-interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
+export interface WeekWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
+  children: React.ReactNode
+  isAllDay?: boolean
+  slotMetrics: DateSlotMetrics<TEvent>
+  resourceId?: string | number
+}
+
+export interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> {
   event: React.ComponentType<EventProps<TEvent>>
   backgroundEventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
   eventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
   eventContainerWrapper: React.ComponentType
   dateCellWrapper: React.ComponentType<DateCellWrapperProps>
   dayColumnWrapper: React.ComponentType
-  weekWrapper: React.ComponentType
+  weekWrapper?: React.ComponentType<WeekWrapperProps<TEvent>>
   timeslotWrapper: React.ComponentType<TimeSlotWrapperProps>
   timeGutterHeader: React.ComponentType
   timeGutterWrapper: React.ComponentType<TimeGutterWrapperProps>
-  toolbar: React.ComponentType<ToolbarProps>
+  toolbar?: React.ComponentType<ToolbarProps>
 
   // components used as a header for each column in the TimeGridHeader
   header?: React.ComponentType<ViewHeaderProps>
