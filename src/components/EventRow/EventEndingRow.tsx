@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { range } from "lodash-es"
 
 import { useCalendarContext } from "@/Calendar"
+import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarEvent } from "@/utils/components"
 import { eventLevels } from "@/utils/eventLevels"

@@ -22,7 +22,7 @@ export interface MonthViewProps<TEvent extends CalendarEvent = CalendarEvent> ex
   resizable?: boolean
   doShowMoreDrillDown?: boolean
   handleDragStart?: (event: React.MouseEvent<HTMLElement>) => void
-  onShowMore?: (events: TEvent[], date: Date, slot: number) => void
+  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   onSelectEvent?: (event: TEvent) => void
   onDoubleClickEvent?: (event: TEvent) => void
   onKeyPressEvent?: (event: TEvent) => void
@@ -152,7 +152,7 @@ const MonthViewComponent = <TEvent extends CalendarEvent = CalendarEvent>(
       if(view) onDrillDown(date, view)
     }
 
-    onShowMore?.(events, date, slot)
+    onShowMore?.(events, date, cell, slot, target)
   }, [resizeListener, popup, doShowMoreDrillDown, onDrillDown, getDrilldownView, onShowMore, dispatch])
 
   const hideOverlay = useCallback(() => {

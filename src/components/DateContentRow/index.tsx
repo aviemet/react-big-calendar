@@ -11,6 +11,7 @@ import { ScrollableWeekWrapper } from "@/components/ScrollableWeekWrapper"
 import { useDateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent, SlotInfo } from "@/utils/components"
 import { Box } from "@/utils/eventSelectionHelpers"
+import { ViewName } from "@/Views"
 
 import { BackgroundCells, SelectSlotInfo } from "./BackgroundCells"
 import { Dummy } from "./Dummy"
@@ -41,7 +42,7 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   onDoubleClick?: (event: TEvent) => void
   onKeyPress?: (event: TEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
-  onHeadingClick?: (date: Date, drilldownView: ViewHeaderProps, e: React.MouseEvent<HTMLElement>) => void
+  onHeadingClick?: (date: Date, drilldownView: ViewName, e: React.MouseEvent<HTMLElement>) => void
   isAllDay?: boolean
   minRows?: number
   maxRows?: number
@@ -139,10 +140,16 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
     })
   }
 
-  const handleShowMore = (slot: number, target: HTMLElement) => {
+  const handleShowMore = (slot: number, e: React.MouseEvent<HTMLElement>) => {
     if(!onShowMore) return
 
-    const row = qsa(containerRef.current, ".rbc-row-bg")[0]
+    const target = e.currentTarget
+    if(!(target instanceof HTMLElement)) return
+
+    const containerElement = typeof ref === "function" ? null : ref?.current
+    if(!containerElement) return
+
+    const row = qsa(containerElement, ".rbc-row-bg")[0]
     const cell = row?.children[slot - 1]
 
     if(!(cell instanceof HTMLElement)) return
