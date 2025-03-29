@@ -5,19 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@4c/layout@npm:^0.2.0":
-  version: 0.2.3
-  resolution: "@4c/layout@npm:0.2.3"
-  dependencies:
-    "@types/react": "npm:^16.8.12"
-    classnames: "npm:^2.2.6"
-    prop-types: "npm:^15.7.2"
-  peerDependencies:
-    react: ^16.4.1
-  checksum: 10c0/0fd28cc2ee8a678118f27eaacf8c680e5349c8b332857d9ee9d7a9a1300de664c606eecb5a86423312d6bb9651e64f0dc2aaf4acc7a9173d3f5723156feabdc3
-  languageName: node
-  linkType: hard
-
 "@adobe/css-tools@npm:^4.4.0":
   version: 4.4.2
   resolution: "@adobe/css-tools@npm:4.4.2"
@@ -4534,13 +4521,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/invariant@npm:^2.2.37":
-  version: 2.2.37
-  resolution: "@types/invariant@npm:2.2.37"
-  checksum: 10c0/f57ed8445036ebda8bc93804f088c2a13050bbeef4e4bc6ed531a70e2869250dbe59413f2a9ed7d8f3efa960f191e8dfca9d25414d63cbf604d348428f8c5b75
-  languageName: node
-  linkType: hard
-
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.6
   resolution: "@types/istanbul-lib-coverage@npm:2.0.6"
@@ -4654,13 +4634,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.14
-  resolution: "@types/prop-types@npm:15.7.14"
-  checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:^19.0.4":
   version: 19.0.4
   resolution: "@types/react-dom@npm:19.0.4"
@@ -4676,17 +4649,6 @@ __metadata:
   dependencies:
     csstype: "npm:^3.0.2"
   checksum: 10c0/41884cca21850c8b2d6578b172ca0ca4fff6021251a68532b19f2031ac23dc5a9222470208065f8d9985d367376047df2f49ece8d927f7d04cdc94922b1eb34b
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^16.8.12":
-  version: 16.14.62
-  resolution: "@types/react@npm:16.14.62"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    "@types/scheduler": "npm:^0.16"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/3c913ae6c49b3ee8504e2e6f603db6440a0b99d737b607b2df8f39a50484b089c547f239294615de6b877f5db5217f23bc2610b232034612985afd4621ca8ace
   languageName: node
   linkType: hard
 
@@ -4710,13 +4672,6 @@ __metadata:
   version: 1.20.6
   resolution: "@types/resolve@npm:1.20.6"
   checksum: 10c0/a9b0549d816ff2c353077365d865a33655a141d066d0f5a3ba6fd4b28bc2f4188a510079f7c1f715b3e7af505a27374adce2a5140a3ece2a059aab3d6e1a4244
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:^0.16":
-  version: 0.16.8
-  resolution: "@types/scheduler@npm:0.16.8"
-  checksum: 10c0/f86de504945b8fc41b1f391f847444d542e2e4067cf7e5d9bfeb5d2d2393d3203b1161bc0ef3b1e104d828dabfb60baf06e8d2c27e27ff7e8258e6e618d8c4ec
   languageName: node
   linkType: hard
 
@@ -5475,13 +5430,6 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10c0/dbd36c1ed1d2fa3550140000371fcf721578095b18777b85a79df231ca093b08edc6858d75d6e48c73e431c174dcf9214edbd7e6fa5911b93bd8abfa54e47123
-  languageName: node
-  linkType: hard
-
-"add@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "add@npm:2.0.6"
-  checksum: 10c0/6b21d5f2e58cf5e15d56cc6f9ebce04f04f4c33ae25f09d600ddacf8df00036ba521f17feb1b3f81307b7c6d2ef0bed8b511a0f86f062eb90c2f909b48b588ae
   languageName: node
   linkType: hard
 
@@ -6500,13 +6448,6 @@ __metadata:
   version: 1.4.3
   resolution: "cjs-module-lexer@npm:1.4.3"
   checksum: 10c0/076b3af85adc4d65dbdab1b5b240fe5b45d44fcf0ef9d429044dd94d19be5589376805c44fb2d4b3e684e5fe6a9b7cf3e426476a6507c45283c5fc6ff95240be
-  languageName: node
-  linkType: hard
-
-"classnames@npm:^2.2.6":
-  version: 2.5.1
-  resolution: "classnames@npm:2.5.1"
-  checksum: 10c0/afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69
   languageName: node
   linkType: hard
 
@@ -11901,13 +11842,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "memoize-one@npm:6.0.0"
-  checksum: 10c0/45c88e064fd715166619af72e8cf8a7a17224d6edf61f7a8633d740ed8c8c0558a4373876c9b8ffc5518c2b65a960266adf403cc215cb1e90f7e262b58991f54
-  languageName: node
-  linkType: hard
-
 "memoizerific@npm:^1.11.3":
   version: 1.11.3
   resolution: "memoizerific@npm:1.11.3"
@@ -13783,7 +13717,6 @@ __metadata:
     "@storybook/theming": "npm:8.6.11"
     "@stylistic/eslint-plugin": "npm:^4.2.0"
     "@types/date-arithmetic": "npm:^4.1.4"
-    "@types/invariant": "npm:^2.2.37"
     "@types/jest": "npm:^29.5.14"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/mocha": "npm:^10.0.10"
@@ -13792,7 +13725,6 @@ __metadata:
     "@types/react-dom": "npm:^19.0.4"
     "@typescript-eslint/eslint-plugin": "npm:^8.28.0"
     "@typescript-eslint/parser": "npm:^8.28.0"
-    add: "npm:^2.0.6"
     autoprefixer: "npm:^10.4.21"
     babel-plugin-transform-react-remove-prop-types: "npm:^0.4.24"
     babel-plugin-transform-rename-import: "npm:^2.3.0"
@@ -13816,14 +13748,12 @@ __metadata:
     globalize: "npm:^1.7.0"
     globalize-webpack-plugin: "npm:^3.0.0"
     husky: "npm:^9.1.7"
-    invariant: "npm:^2.2.4"
     is-ci: "npm:^4.1.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     lint-staged: "npm:^15.5.0"
     lodash-es: "npm:^4.17.21"
     luxon: "npm:^3.6.0"
-    memoize-one: "npm:^6.0.0"
     moment: "npm:^2.30.1"
     moment-timezone: "npm:^0.5.48"
     pinst: "npm:^3.0.0"
@@ -13833,7 +13763,6 @@ __metadata:
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     react-overlays: "npm:^5.2.1"
-    react-tackle-box: "npm:^2.1.0"
     regenerator-runtime: "npm:^0.14.1"
     rollup: "npm:^4.37.0"
     rollup-plugin-delete: "npm:^3.0.1"
@@ -13948,19 +13877,6 @@ __metadata:
     react: ">=16.3.0"
     react-dom: ">=16.3.0"
   checksum: 10c0/61836490040cfcdebc792b6eddcfac47b7b7e159f99304165371e9eb389a6875f20ddba3433421413ccfb918e8da6042ab2829f9b1f6f5dd9f8476aa16ddcfbe
-  languageName: node
-  linkType: hard
-
-"react-tackle-box@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "react-tackle-box@npm:2.1.0"
-  dependencies:
-    "@4c/layout": "npm:^0.2.0"
-    invariant: "npm:^2.2.4"
-  peerDependencies:
-    react: ^16.4.1
-    react-dom: ^16.4.1
-  checksum: 10c0/ed426f673c3586fda1591ec1665c5a2260bb00403fe1943d6acf8839afd5a07967719355e5f658285458a59f32e8afc9d9831f1f7da760d1b5d58654b0214fcd
   languageName: node
   linkType: hard
 

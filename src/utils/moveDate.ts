@@ -1,8 +1,7 @@
-import invariant from "invariant"
-
 import { VIEW_COMPONENTS, ViewStaticMethodProps, type ViewComponent } from "@/Views"
 
 import { CalendarEvent } from "./components"
+import { invariant } from "./invariant"
 import { Resource } from "./Resources"
 
 export let navigate = {

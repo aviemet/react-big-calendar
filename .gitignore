@@ -35,4 +35,7 @@ node_modules
 # Mac OS X
 .DS_Store
 
+# Yarn cache
+.yarn
+
 *storybook.log

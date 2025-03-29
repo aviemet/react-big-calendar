@@ -5,7 +5,6 @@ export { globalizeLocalizer } from "./globalize"
 export { luxonLocalizer } from "./luxon"
 
 import { StartOfWeek, type Unit } from "date-arithmetic"
-import invariant from "invariant"
 
 import { CalendarEvent } from "@/utils/components"
 import { merge,
@@ -31,6 +30,7 @@ import { merge,
   minutes,
   isJustDate,
 } from "@/utils/dates"
+import { invariant } from "@/utils/invariant"
 import { buildMessages, type Messages } from "@/utils/messages"
 
 export type DateRange = { start: Date, end: Date }

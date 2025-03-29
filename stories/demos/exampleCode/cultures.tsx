@@ -1,5 +1,4 @@
-import React, { Fragment, useState, useCallback, useMemo } from "react"
-import Layout from "react-tackle-box/Layout"
+import { Fragment, useState, useCallback, useMemo } from "react"
 
 import { Calendar, DateLocalizer } from "react-big-calendar"
 
@@ -72,7 +71,7 @@ export default function CulturesDemo({ localizer }: { localizer: DateLocalizer }
   return (
     <Fragment>
       <DemoLink fileName="cultures">
-        <Layout direction="column" align="center">
+        <div>
           <label>Select a Culture</label>{ " " }
           <select
             className="form-control"
@@ -86,7 +85,7 @@ export default function CulturesDemo({ localizer }: { localizer: DateLocalizer }
               </option>
             )) }
           </select>
-        </Layout>
+        </div>
       </DemoLink>
       <div className="height600">
         <Calendar

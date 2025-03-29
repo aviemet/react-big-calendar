@@ -1,5 +1,4 @@
 import moment from "moment"
-import Layout from "react-tackle-box/Layout"
 import "moment-timezone"
 
 const allZones = moment.tz.names()
@@ -16,7 +15,7 @@ export default function TimezoneSelect({
 
   return (
     <div>
-      <Layout direction="column" align="center">
+      <div>
         { title ? <strong style={ { marginBottom: 10 } }>{ title }</strong> : null }
         <label>Select a Timezone</label>{ " " }
         <select
@@ -31,7 +30,7 @@ export default function TimezoneSelect({
             </option>
           )) }
         </select>
-      </Layout>
+      </div>
     </div>
   )
 }
