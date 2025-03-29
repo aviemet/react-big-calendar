@@ -1,4 +1,4 @@
-import { ViewHeaderProps } from "."
+import { ViewHeaderProps } from "./Header"
 
 const DateHeader = ({ label, drilldownView, onDrillDown }: ViewHeaderProps) => {
   if(!drilldownView) {

@@ -1,9 +1,14 @@
 import React, { forwardRef } from "react"
 
-interface DayColumnWrapperProps {
-  children: React.ReactNode
+import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
+
+export interface DayColumnWrapperProps {
+  children?: React.ReactNode
   className?: string
   style?: React.CSSProperties
+  date?: Date
+  slotMetrics: TimeSlotMetrics
+  resourceId: string | number
 }
 
 const DayColumnWrapper = forwardRef<HTMLDivElement, DayColumnWrapperProps>((

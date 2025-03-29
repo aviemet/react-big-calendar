@@ -39,25 +39,28 @@ function getPosition(
   }
 }
 
-interface PopupProps {
+interface PopupProps<TEvent extends CalendarEvent = CalendarEvent> {
   containerRef: React.RefObject<HTMLDivElement>
-  selected: object
+  selected: TEvent
   position: { x: number, y: number, width: number }
   show: () => void
-  events: CalendarEvent[]
+  events: TEvent[]
   slotStart: Date
   slotEnd: Date
-  onSelect: (event: CalendarEvent) => void
-  onDoubleClick: (event: CalendarEvent) => void
-  onKeyPress: (event: CalendarEvent) => void
-  handleDragStart: (event: CalendarEvent) => void
+  onSelect: (event: TEvent) => void
+  onDoubleClick: (event: TEvent) => void
+  onKeyPress: (event: TEvent) => void
+  handleDragStart: (event: TEvent) => void
   popperRef: React.RefObject<HTMLDivElement>
   target: HTMLElement
   offset: { x: number, y: number }
 }
 
-const Popup = forwardRef<HTMLDivElement, PopupProps>((
-  {
+const PopupComponent = <TEvent extends CalendarEvent = CalendarEvent>(
+  props: PopupProps<TEvent>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
+  const {
     containerRef,
     selected,
     position,
@@ -71,24 +74,23 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
     handleDragStart,
     target,
     offset,
-  },
-  ref
-) => {
+  } = props
+
   const { localizer, accessors } = useCalendarContext()
 
   useClickOutside({ ref: ref, callback: show })
 
   useLayoutEffect(() => {
-    if(!ref) return
+    if(!ref || !("current" in ref)) return
 
     const { topOffset, leftOffset } = getPosition({
       target,
       offset,
       container: containerRef.current,
-      box: ref,
+      box: ref.current,
     })
-    ref.style.top = `${topOffset}px`
-    ref.style.left = `${leftOffset}px`
+    ref.current.style.top = `${topOffset}px`
+    ref.current.style.left = `${leftOffset}px`
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offset.x, offset.y, target])
 
@@ -105,7 +107,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
       { events.map((event, Index) => (
         <EventCell
           key={ Index }
-          type="popup"
+          type="popup" // type was not implemented, chose to implement rather than remove
           event={ event }
           onSelect={ onSelect }
           onDoubleClick={ onDoubleClick }
@@ -115,13 +117,13 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((
           slotStart={ slotStart }
           slotEnd={ slotEnd }
           selected={ isSelected(event, selected) }
-          draggable={ true }
+          draggable={ true } // TODO: EventCell signature can be different when dragable addon is enabled
           onDragStart={ () => handleDragStart(event) }
           onDragEnd={ () => show() }
         />
       )) }
     </div>
   )
-})
+}
 
-export { Popup }
+export const Popup = forwardRef(PopupComponent)

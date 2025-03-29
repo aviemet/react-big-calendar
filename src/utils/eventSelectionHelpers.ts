@@ -16,11 +16,13 @@ export type Box = {
   y?: number
 }
 
-export function isSelected(event: Box, selected: CalendarEvent | null) {
+// Checks if an event box matches the currently selected calendar event
+export function isSelected<TEvent extends CalendarEvent = CalendarEvent>(event: TEvent, selected: TEvent | null) {
   if(!event || selected === null) return false
   return isEqual(event, selected)
 }
 
+// Calculates the width of a single slot given a row's dimensions and number of slots
 export function slotWidth(rowBox: Box, slots: number) {
   let rowWidth = rowBox.right - rowBox.left
   let cellWidth = rowWidth / slots
@@ -28,6 +30,7 @@ export function slotWidth(rowBox: Box, slots: number) {
   return cellWidth
 }
 
+// Determines which slot contains the given x coordinate
 export function getSlotAtX(rowBox: Box, x: number, rtl: boolean, slots: number) {
   const cellWidth = slotWidth(rowBox, slots)
   return rtl
@@ -35,10 +38,12 @@ export function getSlotAtX(rowBox: Box, x: number, rtl: boolean, slots: number) 
     : Math.floor((x - rowBox.left) / cellWidth)
 }
 
+// Checks if a point (x,y) falls within a given box
 export function pointInBox(box: Box, { x, y }: Point) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
 }
 
+// Calculates selection range indices for date cells based on start point and current position
 export function dateCellSelection(
   start: Box,
   rowBox: Box,

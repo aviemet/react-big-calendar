@@ -152,7 +152,7 @@ const DayColumn = ({
       setSelectState(state)
     }
 
-    const selectorClicksHandler = (box, actionType) => {
+    const selectorClicksHandler = (box: SlotInfo["box"], actionType: SlotInfo["action"]) => {
       if(!isEvent(containerRef.current, box)) {
         const { startDate, endDate } = selectionState(box)
         selectSlot({
@@ -241,9 +241,6 @@ const DayColumn = ({
     })
   }
 
-  // console.log({ resource })
-  // console.log({ slotMetrics })
-
   return (
     <DayColumnWrapperComponent
       ref={ containerRef }
@@ -260,7 +257,7 @@ const DayColumn = ({
         }
       ) }
       slotMetrics={ slotMetrics }
-      resource={ resourceId }
+      resourceId={ resourceId }
     >
       { slotMetrics.groups.map((group, index) => (
         <TimeSlotGroup
@@ -270,7 +267,7 @@ const DayColumn = ({
         />
       )) }
       <EventContainer
-        resource={ resourceId }
+        resourceId={ resourceId }
         slotMetrics={ slotMetrics }
       >
         <div className={ clsx("rbc-events-container", { rtl }) }>

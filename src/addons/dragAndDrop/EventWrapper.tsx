@@ -2,22 +2,15 @@ import clsx from "clsx"
 import React from "react"
 
 import { accessor as get } from "@/utils/accessors"
-import { CalendarEvent } from "@/utils/components"
+import { CalendarEvent, EventWrapperProps } from "@/utils/components"
 
 import { useDndContext } from "./withDragAndDrop"
 
-interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
-  children: React.ReactNode
-  type: "date" | "time"
-  event: TEvent
+interface DraggableEventWrapperProps<TEvent extends CalendarEvent = CalendarEvent>
+  extends EventWrapperProps<TEvent> {
   draggable: boolean
-  allDay: boolean
-  isRow: boolean
-  continuesPrior: boolean
-  continuesAfter: boolean
   isDragging: boolean
   isResizing: boolean
-  resource: number
   resizable: boolean
 }
 
@@ -34,7 +27,7 @@ const EventWrapper = <TEvent extends CalendarEvent = CalendarEvent>({
   isResizing,
   resource,
   resizable,
-}: EventWrapperProps<TEvent>) => {
+}: DraggableEventWrapperProps<TEvent>) => {
   const context = useDndContext()
 
   const handleResizeUp = (e) => {

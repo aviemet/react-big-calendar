@@ -15,7 +15,6 @@ import { ViewName } from "@/Views"
 
 import { BackgroundCells, SelectSlotInfo } from "./BackgroundCells"
 import { Dummy } from "./Dummy"
-import { ViewHeaderProps } from "../Header"
 
 interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   events: TEvent[]
@@ -28,8 +27,8 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   selected?: TEvent | null
   selectable?: boolean | "ignoreEvents"
   longPressThreshold?: number
-  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   showAllEvents?: boolean
+  onShowMore?: (events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void
   onSelectSlot?: (range: Date[], slotInfo: SlotInfo) => void
   onSelect?: (event: TEvent) => void
   onSelectEnd?: (state: {
@@ -42,7 +41,7 @@ interface DateContentRowProps<TEvent extends CalendarEvent = CalendarEvent> {
   onDoubleClick?: (event: TEvent) => void
   onKeyPress?: (event: TEvent) => void
   dayPropGetter?: (date: Date) => { className: string, style: React.CSSProperties }
-  onHeadingClick?: (date: Date, drilldownView: ViewName, e: React.MouseEvent<HTMLElement>) => void
+  onHeadingClick?: (date: Date, drilldownView: ViewName) => void
   isAllDay?: boolean
   minRows?: number
   maxRows?: number
@@ -122,7 +121,6 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
         headingRowRef={ headingRowRef }
         eventRowRef={ eventRowRef }
         range={ range }
-        onHeadingClick={ onHeadingClick }
       />
     )
   }
@@ -218,7 +216,7 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
                     date={ date }
                     drilldownView={ drilldownView }
                     isOffRange={ isOffRange }
-                    onDrillDown={ (e) => onHeadingClick?.(date, drilldownView, e) }
+                    onDrillDown={ () => onHeadingClick?.(date, drilldownView) }
                     range={ range }
                   />
                 ) }
@@ -237,7 +235,6 @@ const DateContentRow = forwardRef<HTMLDivElement, DateContentRowProps>((props, r
             { slotMetrics.levels.map((segs, index) => (
               <EventRow
                 key={ index }
-                weekIndex={ index }
                 segments={ segs }
                 slotMetrics={ slotMetrics }
                 { ...eventRowProps }

@@ -3,14 +3,16 @@ import React from "react"
 
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent } from "@/utils/components"
+import { EventSegment } from "@/utils/eventLevels"
+import { isSelected } from "@/utils/eventSelectionHelpers"
 
-import { Event, EventRowSpan } from "./EventRowMixin"
+import { EventCell } from "./EventCell"
+import { EventRowSpan } from "./EventRowSpan"
 
 interface EventRowProps<TEvent extends CalendarEvent> {
-  segments: TEvent[]
+  segments: EventSegment<TEvent>[]
   slotMetrics: DateSlotMetrics<TEvent>
-  className: string
-  weekIndex: number
+  className?: string
   selected?: TEvent | null
   onSelect?: (event: TEvent) => void
   onDoubleClick?: (event: TEvent) => void
@@ -19,34 +21,63 @@ interface EventRowProps<TEvent extends CalendarEvent> {
   resizable?: boolean
 }
 
-const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) => {
-  const {
-    segments,
-    slotMetrics,
-    weekIndex,
-    className,
-  } = props
-
+const EventRow = <TEvent extends CalendarEvent = CalendarEvent>({
+  segments,
+  slotMetrics,
+  className,
+  selected,
+  onSelect,
+  onDoubleClick,
+  onKeyPress,
+  resizable,
+}: EventRowProps<TEvent>) => {
   let lastEnd = 1
+
+  // Use reduce to build the array of row elements
+  const rowElements = segments.reduce<React.ReactNode[]>((row, { event, left, right, span }) => {
+    const key = `event_${event.id}_${span}_${left}_${right}`
+    const gap = left - lastEnd
+
+    if(gap > 0) {
+      row.push(
+        <EventRowSpan
+          key={ `${key}_gap` }
+          slots={ slotMetrics.slots }
+          len={ gap }
+        />
+      )
+    }
+
+    row.push(
+      <EventRowSpan
+        key={ key }
+        slots={ slotMetrics.slots }
+        len={ span }
+      >
+        <EventCell
+          event={ event }
+          continuesPrior={ slotMetrics.continuesPrior(event) }
+          continuesAfter={ slotMetrics.continuesAfter(event) }
+          slotStart={ slotMetrics.first }
+          slotEnd={ slotMetrics.last }
+          selected={ isSelected(event, selected) }
+          onSelect={ onSelect }
+          onDoubleClick={ onDoubleClick }
+          onKeyPress={ onKeyPress }
+          resizable={ resizable }
+
+        />
+      </EventRowSpan>
+    )
+
+    lastEnd = right + 1
+
+    return row
+  }, [])
 
   return (
     <div className={ clsx(className, "rbc-row") }>
-      { segments.map(({ event, left, right, span }, li) => {
-
-        let key = `row_${weekIndex}_lvl_${li}`
-        let gap = left - lastEnd
-
-        lastEnd = right + 1
-
-        return (
-          <React.Fragment key={ `${key}_gap_${++gap}` }>
-            { Boolean(gap) && <EventRowSpan slots={ slotMetrics.slots } len={ gap } /> }
-            <EventRowSpan slots={ slotMetrics.slots } len={ span }>
-              <Event event={ event } { ...props } />
-            </EventRowSpan>
-          </React.Fragment>
-        )
-      }) }
+      { rowElements }
     </div>
   )
 }

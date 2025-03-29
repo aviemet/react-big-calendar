@@ -3,7 +3,7 @@ import React, { forwardRef } from "react"
 
 import { useCalendarContext } from "@/Calendar"
 
-import { ViewHeaderProps } from ".."
+import { ViewHeaderProps } from "../Header"
 
 interface DummyProps {
   className?: string
@@ -52,7 +52,6 @@ const Dummy = forwardRef<HTMLDivElement, DummyProps>((
                   date={ date }
                   drilldownView={ drilldownView }
                   isOffRange={ isOffRange }
-                  onDrillDown={ onHeadingClick }
                 />
               </div>
             </>

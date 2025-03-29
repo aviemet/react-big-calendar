@@ -21,21 +21,20 @@ interface TimeGridEventProps<TEvent extends CalendarEvent = CalendarEvent> {
   onKeyPress: () => void
 }
 
-function TimeGridEvent(props: TimeGridEventProps) {
-  const {
-    style,
-    className,
-    event,
-    selected,
-    label,
-    continuesPrior,
-    continuesAfter,
-    onClick,
-    onDoubleClick,
-    isBackgroundEvent,
-    onKeyPress,
-  } = props
-  const { accessors, getters, rtl, components: {
+function TimeGridEvent({
+  style,
+  className,
+  event,
+  selected,
+  label,
+  continuesPrior,
+  continuesAfter,
+  onClick,
+  onDoubleClick,
+  isBackgroundEvent,
+  onKeyPress,
+}: TimeGridEventProps) {
+  const { accessors, getters, rtl, localizer, components: {
     event: Event,
     eventWrapper: EventWrapper,
   } } = useCalendarContext()
@@ -58,7 +57,11 @@ function TimeGridEvent(props: TimeGridEventProps) {
   }
 
   return (
-    <EventWrapper type="time" { ...props }>
+    <EventWrapper type="time"
+      event={ event }
+      continuesAfter={ continuesAfter }
+      continuesPrior={ continuesPrior }
+    >
       <div
         role="button"
         tabIndex={ 0 }
@@ -87,7 +90,19 @@ function TimeGridEvent(props: TimeGridEventProps) {
         </div>
 
         <div key="2" className="rbc-event-content">
-          { Event ? <Event event={ event } title={ title } /> : title }
+          { Event
+            ? (
+              <Event
+                event={ event }
+                title={ title }
+                continuesPrior={ continuesPrior }
+                continuesAfter={ continuesAfter }
+                slotStart={ accessors.start(event) }
+                slotEnd={ accessors.end(event) }
+                localizer={ localizer }
+              />
+            )
+            : title }
         </div>
       </div>
     </EventWrapper>

@@ -1,22 +1,22 @@
-import clsx from "clsx"
 import { range } from "lodash-es"
 
-import { useCalendarContext } from "@/Calendar"
 import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
-import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { CalendarEvent } from "@/utils/components"
 import { eventLevels } from "@/utils/eventLevels"
 
-import { Event, EventRowSpan } from "./EventRowMixin"
+import { EventCell } from "./EventCell"
+import { EventRowSpan } from "./EventRowSpan"
+import { ShowMore } from "./ShowMore"
 
-const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
-const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
+export const isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => seg.left <= slot && seg.right >= slot
+
+export const eventsInSlot = (segments: { event: CalendarEvent }[], slot: number) => {
   return segments.filter((seg) => isSegmentInSlot(seg, slot)).map((seg) => seg.event)
 }
 
 interface EventEndingRowProps {
   segments: CalendarEvent[]
-  slotMetrics: TimeSlotMetrics
+  slotMetrics: DateSlotMetrics
   onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
 }
 
@@ -56,7 +56,13 @@ const EventEndingRow = ({
 
     if(canRenderSlotEvent(left, span)) {
       // const content = EventRowMixin.renderEvent(props, event)
-      const content = <Event event={ event } slotMetrics={ slotMetrics } />
+      const content = <EventCell
+        event={ event }
+        continuesPrior={ slotMetrics.continuesPrior(event) }
+        continuesAfter={ slotMetrics.continuesAfter(event) }
+        slotStart={ slotMetrics.first }
+        slotEnd={ slotMetrics.last }
+      />
 
       if(Boolean(gap)) {
         // row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
@@ -101,52 +107,3 @@ const EventEndingRow = ({
 
 export { EventEndingRow }
 
-
-interface ShowMoreProps {
-  segments: CalendarEvent[]
-  slotMetrics: SlotMetrics
-  slot: number
-  onShowMore: (slot: number, e: React.MouseEvent<HTMLElement>) => void
-}
-
-const ShowMore = ({ segments, slotMetrics, slot, onShowMore }: ShowMoreProps) => {
-  const { localizer, components: {
-    showMore: ShowMoreComponent,
-  } } = useCalendarContext()
-
-  const events = slotMetrics.getEventsForSlot(slot)
-  const remainingEvents = eventsInSlot(segments, slot)
-  const count = remainingEvents.length
-
-  const showMore = (slot, e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onShowMore(slot, e.target)
-  }
-
-  if(ShowMoreComponent) {
-    // The received slot seems to be 1-based, but the range we use to pull the date is 0-based
-    const slotDate = slotMetrics.getDateForSlot(slot - 1)
-
-    return count
-      ? <ShowMoreComponent
-        slotDate={ slotDate }
-        slot={ slot }
-        count={ count }
-        events={ events }
-        remainingEvents={ remainingEvents }
-      />
-      : false
-  }
-
-  return count
-    ? <button
-      type="button"
-      key={ "sm_" + slot }
-      className={ clsx("rbc-button-link", "rbc-show-more") }
-      onClick={ (e) => showMore(slot, e) }
-    >
-      { localizer.messages.showMore(count, remainingEvents, events) }
-    </button>
-    : <></>
-}

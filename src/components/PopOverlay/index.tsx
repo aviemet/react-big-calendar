@@ -1,4 +1,5 @@
 import { Overlay } from "@restart/ui"
+import { DOMContainer } from "@restart/ui/useWaitForDOMRef"
 import React, { forwardRef, useRef } from "react"
 
 import { useCalendarContext } from "@/Calendar"
@@ -11,6 +12,7 @@ type Overlay = {
   events: CalendarEvent[]
   date: Date
   end: Date
+  target: DOMContainer
 }
 
 interface PopOverlayProps {

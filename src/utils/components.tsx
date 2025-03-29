@@ -1,7 +1,7 @@
 import { defaults, omit } from "lodash-es"
 
 import { DateHeader } from "@/components/DateHeader"
-import { DayColumnWrapper } from "@/components/DayColumnWrapper"
+import { DayColumnWrapper, DayColumnWrapperProps } from "@/components/DayColumnWrapper"
 import { Header, ViewHeaderProps } from "@/components/Header"
 import { NoopWrapper } from "@/components/NoopWrapper"
 import { ResourceHeader, ResourceHeaderProps } from "@/components/ResourceHeader"
@@ -12,10 +12,11 @@ import { TimeSlotMetrics } from "@/hooks/useTimeSlotMetrics"
 import { DateLocalizer } from "@/localizers"
 import { ViewName } from "@/Views"
 
-import { Accessors } from "./accessors"
+import { Box } from "./eventSelectionHelpers"
 import { Resource } from "./Resources"
 
 export interface CalendarEvent {
+  id?: string | number
   allDay?: boolean | undefined
   title?: React.ReactNode | undefined
   start?: Date | undefined
@@ -25,14 +26,15 @@ export interface CalendarEvent {
 }
 
 export interface EventProps<TEvent extends object = CalendarEvent> {
+  children?: React.ReactNode
   event: TEvent
-  title: string
   continuesPrior: boolean
   continuesAfter: boolean
   isAllDay?: boolean
-  localizer: DateLocalizer
   slotStart: Date
   slotEnd: Date
+  title: string // Keeping for backwards compatibility
+  localizer: DateLocalizer // Keeping for backwards compatibility
 }
 
 export interface SlotInfo {
@@ -43,16 +45,7 @@ export interface SlotInfo {
   /** For "TimeGrid" views */
   resourceId?: number | string | undefined
   /** For "select" action */
-  bounds?:
-			| {
-			  x: number
-			  y: number
-			  top: number
-			  bottom: number
-			  left: number
-			  right: number
-			}
-			| undefined
+  bounds?: Box | undefined
   /** For "click" or "doubleClick" actions */
   box?:
 			| {
@@ -77,18 +70,24 @@ export type SlotGroupPropGetter = () => React.HTMLAttributes<HTMLDivElement>
 export interface DateCellWrapperProps {
   range: Date[]
   value: Date
-  children: React.JSX.Element
+  children: React.ReactNode
 }
 
 export interface TimeGutterWrapperProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   slotMetrics: TimeSlotMetrics
 }
 
 export interface TimeSlotWrapperProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   value: Date
   resource: string | number | null | undefined
+}
+
+export interface EventContainerProps {
+  children?: React.ReactNode
+  resourceId: string | number
+  slotMetrics: TimeSlotMetrics
 }
 
 export interface ShowMoreProps<TEvent extends object = CalendarEvent> {
@@ -108,19 +107,14 @@ export type Getters<TEvent extends object = CalendarEvent> = {
 }
 
 export interface EventWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
-  // https://github.com/intljusticemission/react-big-calendar/blob/27a2656b40ac8729634d24376dff8ea781a66d50/src/TimeGridEvent.js#L28
-  style?: (React.CSSProperties & { xOffset: number }) | undefined
-  className: string
+  children?: React.ReactNode
   event: TEvent
-  isRtl: boolean
-  getters: Getters<TEvent>
-  onClick: (e: React.MouseEvent<HTMLElement>) => void
-  onDoubleClick: (e: React.MouseEvent<HTMLElement>) => void
-  accessors: Accessors<TEvent>
-  selected: boolean
-  label: string
-  continuesEarlier: boolean
-  continuesLater: boolean
+  resource?: number
+  isRow?: boolean
+  allDay?: boolean
+  continuesPrior?: boolean
+  continuesAfter?: boolean
+  type?: "date" | "time"
 }
 
 export interface WeekWrapperProps<TEvent extends CalendarEvent = CalendarEvent> {
@@ -134,9 +128,9 @@ export interface CommonComponents<TEvent extends CalendarEvent = CalendarEvent, 
   event: React.ComponentType<EventProps<TEvent>>
   backgroundEventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
   eventWrapper: React.ComponentType<EventWrapperProps<TEvent>>
-  eventContainerWrapper: React.ComponentType
+  eventContainerWrapper: React.ComponentType<EventContainerProps>
   dateCellWrapper: React.ComponentType<DateCellWrapperProps>
-  dayColumnWrapper: React.ComponentType
+  dayColumnWrapper: React.ForwardRefExoticComponent<DayColumnWrapperProps & React.RefAttributes<HTMLDivElement>>
   weekWrapper?: React.ComponentType<WeekWrapperProps<TEvent>>
   timeslotWrapper: React.ComponentType<TimeSlotWrapperProps>
   timeGutterHeader: React.ComponentType

@@ -1,42 +1,43 @@
-// import { EventWrapper } from "@/addons/dragAndDrop/EventWrapper"
 import clsx from "clsx"
 
 import { useCalendarContext } from "@/Calendar"
 import { CalendarEvent } from "@/utils/components"
 
-interface EventCellProps {
-  event: CalendarEvent
+export interface EventCellProps<TEvent extends CalendarEvent = CalendarEvent> {
+  event: TEvent
   slotStart: Date
   slotEnd: Date
-  resizable: boolean
-  selected: boolean
-  isAllDay: boolean
-  continuesPrior: boolean
-  continuesAfter: boolean
-  onSelect: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
-  onDoubleClick: (event: CalendarEvent, e: React.MouseEvent<HTMLElement>) => void
-  onKeyPress: (event: CalendarEvent, e: React.KeyboardEvent<HTMLElement>) => void
+  resizable?: boolean
+  selected?: boolean
+  isAllDay?: boolean
+  continuesPrior?: boolean
+  continuesAfter?: boolean
+  onSelect?: (event: TEvent, e: React.MouseEvent<HTMLElement>) => void
+  onDoubleClick?: (event: TEvent, e: React.MouseEvent<HTMLElement>) => void
+  onKeyPress?: (event: TEvent, e: React.KeyboardEvent<HTMLElement>) => void
   children?: Function
   style?: React.CSSProperties
   className?: string
+  type?: "date" | "time"
 }
 
-const EventCell = ({
+const EventCell = <TEvent extends CalendarEvent = CalendarEvent>({
   style,
   className,
   event,
-  selected,
-  isAllDay,
+  selected = false,
+  isAllDay = false,
   onSelect,
   onDoubleClick,
   onKeyPress,
-  continuesPrior,
-  continuesAfter,
+  continuesPrior = false,
+  continuesAfter = false,
   children,
   slotStart,
   slotEnd,
+  type = "date",
   ...props
-}: EventCellProps) => {
+}: EventCellProps<TEvent>) => {
   const { localizer, accessors, getters, components: {
     event: Event,
     eventWrapper: EventWrapper,
@@ -55,11 +56,15 @@ const EventCell = ({
 
   const userProps = getters.eventProp(event, start, end, selected)
 
-  // Todo: EventWrapper is possibly redeclared for drag and drop addon
   return (
-    <EventWrapper { ...props } type="date">
+    <EventWrapper
+      type={ type }
+      event={ event }
+      allDay={ isAllDay }
+      continuesAfter={ continuesAfter }
+      continuesPrior={ continuesPrior }
+    >
       <div
-        { ...props }
         style={ { ...userProps.style, ...style } }
         className={ clsx("rbc-event", className, userProps.className, {
           "rbc-selected": selected,
@@ -67,9 +72,9 @@ const EventCell = ({
           "rbc-event-continues-prior": continuesPrior,
           "rbc-event-continues-after": continuesAfter,
         }) }
-        onClick={ (e) => onSelect && onSelect(event, e) }
-        onDoubleClick={ (e) => onDoubleClick && onDoubleClick(event, e) }
-        onKeyDown={ (e) => onKeyPress && onKeyPress(event, e) }
+        onClick={ (e) => onSelect?.(event, e) }
+        onDoubleClick={ (e) => onDoubleClick?.(event, e) }
+        onKeyDown={ (e) => onKeyPress?.(event, e) }
       >
         <div className="rbc-event-content" title={ tooltip || undefined }>
           <Event
@@ -80,6 +85,7 @@ const EventCell = ({
             isAllDay={ allDay }
             slotStart={ slotStart }
             slotEnd={ slotEnd }
+            localizer={ localizer }
           >
             { title }
           </Event>
