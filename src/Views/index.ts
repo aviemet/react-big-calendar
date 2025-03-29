@@ -10,17 +10,6 @@ import { WorkWeekView } from "./WorkWeekView"
 import { DateLocalizer, DateRange } from "../localizers"
 import { NavigateAction } from "../utils/moveDate"
 
-
-export type ViewStaticMethodProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
-  date: Date
-  today: Date
-  localizer: DateLocalizer
-  events: TEvent[] | undefined
-  resources: TResource[] | undefined
-  accessors: Accessors<TEvent>
-  getters: Getters<TEvent>
-}
-
 export type ViewsProps =
     | ViewName[]
     | {
@@ -61,14 +50,36 @@ export interface BaseViewProps<TEvent extends CalendarEvent = CalendarEvent, TRe
       | ((targetDate: Date, currentViewName: ViewName, configuredViewNames: ViewName[]) => ViewName | string)
       | null
       | undefined
+  onShowMore?: ((events: TEvent[], date: Date, cell: HTMLElement, slot: number, target: HTMLElement) => void) | undefined
   className?: string | undefined
-  // [key: string]: any
+  doShowMoreDrillDown?: boolean
+  resourceGroupingLayout?: boolean
+  length?: number
+  localizer?: DateLocalizer
+  popup?: boolean
+  allDayMaxRows?: number
+  onSelecting?: (options: {
+    start: Date
+    end: Date
+    resourceId: number | string
+  }) => boolean | undefined
+  showAllEvents?: boolean
+}
+
+export type ViewStaticMethodProps<TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = {
+  date: Date
+  today: Date
+  localizer: DateLocalizer
+  events: TEvent[] | undefined
+  resources: TResource[] | undefined
+  accessors: Accessors<TEvent>
+  getters: Getters<TEvent>
 }
 
 export type ViewComponent<TProps extends BaseViewProps = BaseViewProps, TEvent extends CalendarEvent = CalendarEvent, TResource extends Resource = Resource> = React.ComponentType<TProps> & {
   range: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => DateRange
   navigate: (date: Date, action: NavigateAction, props?: ViewStaticMethodProps<TEvent, TResource>) => Date
-  title: (date: Date, props?: ViewStaticMethodProps<TEvent, TResource>) => string
+  title: (date: Date, props?: { length?: number } & ViewStaticMethodProps<TEvent, TResource>) => string
 }
 
 export function createViewComponent<

@@ -47,7 +47,6 @@ const DayColumns = <TEvent extends CalendarEvent = CalendarEvent, TResource exte
     selected,
     // eventOffset
     longPressThreshold,
-    key: `${id}-${date}`,
     resourceId: resource && id,
     min: localizer.merge(date, min),
     max: localizer.merge(date, max),
@@ -75,6 +74,7 @@ const DayColumns = <TEvent extends CalendarEvent = CalendarEvent, TResource exte
             return (
               <div style={ { flex: 1 } } key={ accessors.resourceId(resource) }>
                 <DayColumn
+                  key={ `${id}-${date}` }
                   { ...commonProps(date, resource, id) }
                 />
               </div>
@@ -88,6 +88,7 @@ const DayColumns = <TEvent extends CalendarEvent = CalendarEvent, TResource exte
   return <>{ resourceManager.map(([id, resource]) => {
     return range.map((date) => (
       <DayColumn
+        key={ `${id}-${date}` }
         { ...commonProps(date, resource, id) }
       />
     ))

@@ -15,7 +15,7 @@ interface WeekWrapperProps {
   children: React.ReactNode
   isAllDay?: boolean
   slotMetrics: DateSlotMetrics
-  resourceId: number
+  resourceId: number | string
 }
 
 const WeekWrapper = ({

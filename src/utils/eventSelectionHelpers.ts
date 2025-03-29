@@ -2,6 +2,11 @@ import { isEqual } from "lodash-es"
 
 import { CalendarEvent } from "./components"
 
+export type Point = {
+  x: number
+  y: number
+}
+
 export type Box = {
   top?: number
   bottom?: number
@@ -30,7 +35,7 @@ export function getSlotAtX(rowBox: Box, x: number, rtl: boolean, slots: number) 
     : Math.floor((x - rowBox.left) / cellWidth)
 }
 
-export function pointInBox(box: Box, { x, y }: { x: number, y: number }) {
+export function pointInBox(box: Box, { x, y }: Point) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
 }
 

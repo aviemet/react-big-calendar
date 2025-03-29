@@ -46,12 +46,23 @@ export function eventSegments<TEvent extends CalendarEvent>(
   }
 }
 
-export function eventLevels(rowSegments, limit = Infinity) {
+export type EventSegment<TEvent extends CalendarEvent = CalendarEvent> = {
+  event: TEvent
+  left: number
+  right: number
+  span: number
+  level?: number
+}
+
+export function eventLevels<TEvent extends CalendarEvent = CalendarEvent>(
+  rowSegments: EventSegment<TEvent>[],
+  limit: number = Infinity
+) {
   let i
   let j
   let seg
-  const levels = []
-  const extra = []
+  const levels: EventSegment<TEvent>[][] = []
+  const extra: EventSegment<TEvent>[] = []
 
   for(i = 0; i < rowSegments.length; i++) {
     seg = rowSegments[i]
@@ -61,12 +72,13 @@ export function eventLevels(rowSegments, limit = Infinity) {
     if(j >= limit) {
       extra.push(seg)
     } else {
-      ;(levels[j] || (levels[j] = [])).push(seg)
+      levels[j] ||= []
+      levels[j].push(seg)
     }
   }
 
   for(i = 0; i < levels.length; i++) {
-    levels[i].sort((a, b) => a.left - b.left)
+    levels[i].sort((a, b) => a.left - b.right)
   }
 
   return { levels, extra }
@@ -82,7 +94,7 @@ export function inRange<TEvent extends CalendarEvent>(e: TEvent, start: Date, en
   return localizer.inEventRange({ event, range })
 }
 
-export function segmentsOverlap(seg, otherSegs) {
+export function segmentsOverlap<TEvent extends CalendarEvent>(seg: EventSegment<TEvent>, otherSegs: EventSegment<TEvent>[]) {
   return otherSegs.some(
     (otherSeg) => otherSeg.left <= seg.right && otherSeg.right >= seg.left
   )
@@ -121,11 +133,16 @@ export function sortEvents<TEvent extends CalendarEvent>(eventA: TEvent, eventB:
     end: accessors.end(eventA),
     allDay: accessors.allDay(eventA),
   }
+
   const evtB = {
     start: accessors.start(eventB),
     end: accessors.end(eventB),
     allDay: accessors.allDay(eventB),
   }
 
-  return localizer.sortEvents({ evtA, evtB })
+  const result = localizer.sortEvents({ evtA, evtB })
+
+  if(result < 0 ) return -1
+  if(result > 0) return 1
+  return 0
 }

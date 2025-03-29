@@ -1,14 +1,22 @@
 import clsx from "clsx"
+import React from "react"
 
+import { DateSlotMetrics } from "@/hooks/useDateSlotMetrics"
 import { CalendarEvent } from "@/utils/components"
 
 import { Event, EventRowSpan } from "./EventRowMixin"
 
 interface EventRowProps<TEvent extends CalendarEvent> {
   segments: TEvent[]
-  slotMetrics: { slots: number }
+  slotMetrics: DateSlotMetrics<TEvent>
   className: string
   weekIndex: number
+  selected?: TEvent | null
+  onSelect?: (event: TEvent) => void
+  onDoubleClick?: (event: TEvent) => void
+  onKeyPress?: (event: TEvent) => void
+  resourceId?: string | number
+  resizable?: boolean
 }
 
 const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) => {
@@ -31,12 +39,12 @@ const EventRow = <TEvent extends CalendarEvent>(props: EventRowProps<TEvent>) =>
         lastEnd = right + 1
 
         return (
-          <>
-            { Boolean(gap) && <EventRowSpan slots={ slotMetrics.slots } len={ gap } key={ `${key}_gap_${gap}` } /> }
-            <EventRowSpan slots={ slotMetrics.slots } len={ span } key={ `${key}_gap_${++gap}` }>
+          <React.Fragment key={ `${key}_gap_${++gap}` }>
+            { Boolean(gap) && <EventRowSpan slots={ slotMetrics.slots } len={ gap } /> }
+            <EventRowSpan slots={ slotMetrics.slots } len={ span }>
               <Event event={ event } { ...props } />
             </EventRowSpan>
-          </>
+          </React.Fragment>
         )
       }) }
     </div>

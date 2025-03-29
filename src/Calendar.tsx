@@ -6,7 +6,6 @@ import { useUncontrolled } from "uncontrollable"
 import { createContext } from "@/hooks/createContext"
 import {
   DateLocalizer,
-  DateRange,
   mergeWithDefaults,
   type Culture,
   type Formats,
@@ -1106,14 +1105,23 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
     } }>
       <div
         { ...elementProps }
-        className={ clsx(className, "rbc-calendar", rtl && "rbc-rtl") }
+        className={ clsx(className, "rbc-calendar", { "rbc-rtl": rtl }) }
         style={ style }
       >
         { toolbar && (
           <ToolbarComponent
             view={ view }
             views={ viewNames }
-            label={ ViewComponent.title(current, { localizer: localLocalizer, length }) }
+            label={ ViewComponent.title(current, {
+              date: current,
+              today: getNow(),
+              events,
+              resources,
+              accessors,
+              getters,
+              localizer: localLocalizer,
+              length,
+            }) }
             onView={ handleViewChange }
             onNavigate={ handleNavigate }
           />
@@ -1140,7 +1148,7 @@ const Calendar = <TEvent extends object = CalendarEvent, TResource extends Resou
           length={ length }
 
           // passing localizer to avoid breaking changes in custom view setups
-          localizer={ localizer }
+          localizer={ localLocalizer }
 
           popup={ popup }
           step={ step }

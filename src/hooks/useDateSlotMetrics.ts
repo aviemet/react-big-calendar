@@ -5,7 +5,7 @@ import { DateLocalizer } from "@/localizers"
 import { Accessors } from "@/utils/accessors"
 import { CalendarEvent } from "@/utils/components"
 
-import { eventSegments, endOfRange, eventLevels } from "../utils/eventLevels"
+import { eventSegments, endOfRange, eventLevels, type EventSegment } from "../utils/eventLevels"
 
 let isSegmentInSlot = (seg: { left: number, right: number }, slot: number) => {
   return seg.left <= slot && seg.right >= slot
@@ -24,8 +24,8 @@ type DateSlotMetricsOptions<TEvent extends CalendarEvent = CalendarEvent> = {
 export type DateSlotMetrics<TEvent extends CalendarEvent = CalendarEvent> = {
   first: Date
   last: Date
-  levels: any[][]
-  extra: any[]
+  levels: EventSegment[][]
+  extra: unknown[]
   range: Date[]
   slots: number
   clone: (args: DateSlotMetricsOptions & {
@@ -33,7 +33,7 @@ export type DateSlotMetrics<TEvent extends CalendarEvent = CalendarEvent> = {
   }) => DateSlotMetrics
   getDateForSlot: (slotNumber: number) => Date
   getSlotForDate: (date: Date) => Date
-  getEventsForSlot: (slot: number) => void
+  getEventsForSlot: (slot: number) => TEvent[]
   continuesPrior: (event: TEvent) => boolean
   continuesAfter(event: TEvent): boolean
 }
